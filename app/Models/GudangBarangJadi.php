@@ -7,17 +7,29 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Produk;
 use App\Models\NoseriBarangJadi;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class GudangBarangJadi extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $table = "gdg_barang_jadi";
-    protected $fillable = ['produk_id', 'variasi', 'stok', 'ruang', 'updated_by', 'created_by'];
-
+    protected $fillable = ['produk_id', 'nama', 'stok', 'ruang', 'updated_by', 'created_by'];
+    protected static $logName = 'GBJ - Produk';
+    protected static $logAttributes = ['produk_id', 'nama', 'stok', 'deskripsi', 'user.nama', 'user1.nama'];
     public function noseri()
     {
         return $this->hasMany(NoseriBarangJadi::class, 'gdg_barang_jadi_id');
+    }
+
+    function user()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    function user1()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     function history()

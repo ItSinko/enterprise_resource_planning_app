@@ -5,6 +5,7 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\SparepartController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,7 @@ Route::get('/home', function () {
 })->middleware('auth');
 
 Route::get("/test", function () {
-    return view('test');
+    return Activity::all();
 });
 
 Route::middleware('auth')->prefix('/ppic')->group(function () {
