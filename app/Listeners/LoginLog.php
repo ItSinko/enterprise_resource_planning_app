@@ -32,7 +32,7 @@ class LoginLog
 
         activity($event->subject)
             ->by($event->user)
-            ->withProperties(['status' => 'online', 'last_login' => Carbon::now()])
+            ->withProperties(['status' => 'online', 'last_login' => Carbon::now(), 'nama' => $event->user->nama])
             ->log($event->description);
     }
 }

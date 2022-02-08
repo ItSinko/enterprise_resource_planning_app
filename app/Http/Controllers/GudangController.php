@@ -988,6 +988,11 @@ class GudangController extends Controller
                 ->update(['status_cek' => 4, 'checked_by' => $request->userid]);
         }
 
+        activity('GBJ')
+            ->causedBy($request->userid)
+            ->withProperties(['produk' => [$key]])
+            ->log('Prepare Sales Order '.$h->so.' ');
+
         // $cek = DetailPesananProduk::whereIn('detail_pesanan_id', $dt)->where('status_cek', 4)->get()->count();
         // $cek_prd = DetailPesananProduk::whereIn('detail_pesanan_id', $dt)->get()->count();
         // if ($cek == $cek_prd) {

@@ -92,6 +92,11 @@ class ProduksiController extends Controller
             $i++;
         }
 
+        activity('GBJ')
+            ->causedBy($request->userid)
+            ->withProperties(['produk' => [$request->gdg_brg_jadi_id], 'jumlah' => [$request->qty[$i]] ])
+            ->log('Transfer Tanpa SO');
+
         return response()->json(['msg' => 'Successfully']);
     }
 
@@ -1969,12 +1974,20 @@ class ProduksiController extends Controller
     function closeRakit(Request $request)
     {
         JadwalPerakitan::find($request->jadwal_id)->update(['keterangan' => $request->keterangan, 'status_tf' => 14]);
+
+        activity('Produksi')
+            ->withProperties(['keterangan' => $request->keterangan])
+            ->log('Finish Perakitan '.$request->jadwal_id.' ');
         return response()->json(['msg' => 'Data Berhasil disimpan']);
     }
 
     function closeTransfer(Request $request)
     {
         JadwalPerakitan::find($request->jadwal_id)->update(['keterangan_transfer' => $request->keterangan_transfer, 'status_tf' => 14]);
+
+        activity('Produksi')
+            ->withProperties(['keterangan_transfer' => $request->keterangan_transfer])
+            ->log('Finish Transfer Perakitan '.$request->jadwal_id.' ');
         return response()->json(['msg' => 'Data Berhasil disimpan']);
     }
 
@@ -2105,6 +2118,10 @@ class ProduksiController extends Controller
             $total_rakit->save();
         }
 
+        activity('Produksi')
+            ->causedBy($request->userid)
+            ->withProperties(['waktu_tf' => $request->tgl_transfer, 'transfer_by' => $request->userid, 'noseri' => [$request->noseri]])
+            ->log('Transfer Noseri Ke Gudang sejumlah '.count($request->noseri).' ');
         return response()->json(['msg' => 'Berhasil Transfer ke Gudang']);
     }
 
@@ -2112,9 +2129,13 @@ class ProduksiController extends Controller
     {
         $cek_data = JadwalRakitNoseri::where('id', $request->noseriid)->where('jadwal_id', $request->jadwal_id)->get()->count();
         if ($cek_data > 0) {
+            $a = JadwalRakitNoseri::where('id', $request->noseriid)->where('jadwal_id', $request->jadwal_id)->first();
+            activity('Produksi')
+                ->withProperties(['noseri' => $a->noseri])
+                ->log('Hapus Noseri');
+
             JadwalRakitNoseri::where('id', $request->noseriid)->where('jadwal_id', $request->jadwal_id)->delete();
             JadwalPerakitan::find($request->jadwal_id)->update(['status_tf' => 12]);
-
             return response()->json(['msg' => 'Data Berhasil Dihapus']);
         } else {
             return response()->json(['error' => 'Data Tidak Ada']);
@@ -2127,6 +2148,9 @@ class ProduksiController extends Controller
         if ($cek_data > 0) {
             JadwalRakitNoseri::where('id', $request->noseriid)->where('jadwal_id', $request->jadwal_id)->update(['noseri' => $request->noseri]);
 
+            activity('Produksi')
+                ->withProperties(['noseri' => $request->noseri])
+                ->log('Ubah Noseri');
             return response()->json(['msg' => 'Data Berhasil diubah']);
         } else {
             return response()->json(['error' => 'Data Tidak Ada']);
@@ -2135,6 +2159,16 @@ class ProduksiController extends Controller
 
     function deleteAllSeri(Request $request)
     {
+        $a = JadwalRakitNoseri::whereIn('noseri', $request->noseri)->where('jadwal_id', $request->jadwal_id)->get();
+        $aa = [];
+        foreach($a as $a) {
+            $aa[] = $a->noseri;
+        }
+        // return $aa;
+        activity('Produksi')
+            ->withProperties(['noseri' => [$aa]])
+            ->log('Hapus Noseri');
+
         // dd($request->all());
         JadwalRakitNoseri::whereIn('noseri', $request->noseri)->where('jadwal_id', $request->jadwal_id)->delete();
         JadwalPerakitan::find($request->jadwal_id)->update(['status_tf' => 12]);
@@ -2299,6 +2333,13 @@ class ProduksiController extends Controller
                 }
             }
         }
+
+        activity('GBJ')
+                ->causedBy($request->userid)
+                ->withProperties(['produk' => $g->gdg_barang_jadi_id, 'jumlah' => count($request->seri)])
+                ->log('Terima Seri');
+
+
         return response()->json(['msg' => 'Successfully']);
     }
 

@@ -65,7 +65,7 @@ class SparepartController extends Controller
             ->make(true);
     }
 
-    function get_unit() 
+    function get_unit()
     {
         $data = GudangKarantinaDetail::select('*', DB::raw('sum(qty_unit) as jml'))
             ->whereNotNull('t_gk_detail.gbj_id')
@@ -968,10 +968,6 @@ class SparepartController extends Controller
             ->make(true);
     }
 
-    function terimaSeri(Request $request) {
-
-    }
-
     // cek
     function cekNoseriTerima(Request $request)
     {
@@ -1135,6 +1131,11 @@ class SparepartController extends Controller
             }
         }
 
+        activity('Gudang Karantina')
+        ->causedBy($request->userid)
+        ->withProperties(['keterangan' => $request->deskripsi,'sparepart' => $request->sparepart, 'unit' => $request->unit, 'date_out' => $request->date_out, 'ke' => $request->ke])
+        ->log('Transfer Produk');
+
         return response()->json(['msg' => 'Data Berhasil ditransfer']);
     }
 
@@ -1296,6 +1297,11 @@ class SparepartController extends Controller
                 }
             }
         }
+
+        activity('Gudang Karantina')
+            ->causedBy($request->userid)
+            ->withProperties(['sparepart' => $request->sparepart_id[$k], 'unit' => $request->gbj_id[$j], 'date_in' => $request->date_in, 'dari' => $request->dari])
+            ->log('Terima Produk');
 
         return response()->json(['msg' => 'Data Berhasil Diterima']);
     }
