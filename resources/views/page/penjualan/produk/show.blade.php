@@ -167,6 +167,7 @@
                                                         <th width="5%">No</th>
                                                         <th width="16%">No AKD</th>
                                                         <th width="12%">Merk</th>
+                                                        <th width="50%">Nama Alias</th>
                                                         <th width="50%">Nama Produk</th>
                                                         <th width="12%">Harga</th>
                                                         <th width="5%">Aksi</th>
@@ -348,6 +349,11 @@
                 {
                     data: 'merk',
                     className: 'nowrap-text align-center',
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: 'nama_alias',
                     orderable: true,
                     searchable: true
                 },

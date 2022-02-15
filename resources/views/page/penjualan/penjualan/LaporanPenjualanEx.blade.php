@@ -128,7 +128,13 @@
             </td>
             <td style="text-align:left">
                 @if(isset($d->PenjualanProduk))
+
+                @if($d->PenjualanProduk->nama_alias != '')
+                {{$d->PenjualanProduk->nama_alias}}
+                @else
                 {{$d->PenjualanProduk->nama}}
+                @endif
+
                 @else
                 {{$d->Sparepart->nama}}
                 @endif
