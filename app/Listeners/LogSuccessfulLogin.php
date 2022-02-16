@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -30,10 +31,11 @@ class LogSuccessfulLogin
     public function handle(Login $event)
     {
         $user = $event->user;
+
         DB::table('users')
             ->where('id', $user->id)
             ->update([
-                'last_login'    => date('Y-m-d H:i:s'),
+                'last_login'    => Carbon::now(),
                 'status'    => 'online',
                 'updated_at' => Carbon::now(),
             ]);
