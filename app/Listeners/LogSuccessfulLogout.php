@@ -31,7 +31,7 @@ class LogSuccessfulLogout
     {
         $user = $event->user;
         DB::table('users')
-            ->where('id', $user->id)
+            ->where('nama', $user->id)
             ->update([
                 // 'last_login'    => date('Y-m-d H:i:s'),
                 'status'    => 'offline',
