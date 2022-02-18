@@ -471,6 +471,7 @@
         $('#table_produk_perakitan').css("width", "100%");
     var id = '';
     $(document).on('click', '.detailmodal', function () {
+        // console.log($(this).parent().prev().html());
         $('#tgl_perakitan').daterangepicker({
             singleDatePicker: true,
             minYear: 1901,
@@ -567,15 +568,7 @@
                     }
                 });
             } else {
-            //    console.log(arr.length);
-                $('span#no_seri').text(arr.length);
-            //    Swal.fire({
-            //         position: 'center',
-            //         icon: 'success',
-            //         title: 'Noseri yang terisi sejumlah '+ arr.length,
-            //         showConfirmButton: false,
-            //         timer: 1500
-            //     })
+                $('span#no_seri').text(arr.length +'/'+jml);
             }
 
         })
