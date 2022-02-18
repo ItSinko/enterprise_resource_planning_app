@@ -217,6 +217,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-footer">
+                        No Seri Yang Diisi : <span id="no_seri"></span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -565,13 +568,14 @@
                 });
             } else {
             //    console.log(arr.length);
-               Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Noseri yang terisi sejumlah'+ arr.length,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
+                $('span#no_seri').text(arr.length);
+            //    Swal.fire({
+            //         position: 'center',
+            //         icon: 'success',
+            //         title: 'Noseri yang terisi sejumlah '+ arr.length,
+            //         showConfirmButton: false,
+            //         timer: 1500
+            //     })
             }
 
         })
