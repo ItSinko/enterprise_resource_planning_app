@@ -312,7 +312,7 @@
                                     <form action="" id="noseriForm" name="noseriForm">
                                         <input type="hidden" name="action_by" id="actionby" value="{{ Auth::user()->id }}">
                                         <input type="hidden" name="gbjid" id="gbjid" value="">
-                                        <table class="table scan-produk">
+                                        <table class="table scan-produk" width=100%>
                                             <thead>
                                                 <tr>
                                                     <th><input type="checkbox" id="head-cb"></th>
@@ -328,12 +328,12 @@
                                 </div>
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
-                                    <table class="table scan-produk1">
+                                    <table class="table scan-produk1" width=100%>
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" id="head-cb1"></th>
-                                                <th>No. Seri</th>
-                                                <th>Nomor</th>
+                                                <th  style="min-width: 900px">No. Seri</th>
+                                                <th  style="min-width: 600px">Nomor</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -347,9 +347,9 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>No. Seri Lama</th>
-                                            <th>No. Seri Baru</th>
-                                            <th>Permintaan</th>
+                                            <th style="min-width: 300px">No. Seri Lama</th>
+                                            <th style="min-width: 300px">No. Seri Baru</th>
+                                            <th style="min-width: 400px">Permintaan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -362,11 +362,11 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>No. Seri</th>
-                                            <th>No. Seri Baru</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
-                                        </tr>
+                                            <th style="min-width: 250px">No. Seri</th>
+                                            <th style="min-width: 250px">No. Seri Baru</th>
+                                            <th style="min-width: 250px">Status</th>
+                                            <th style="min-width: 250px">Aksi</th>
+                                        </tr>   
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -377,7 +377,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary simpanSeri" id="simpanSeriBelumDigunakan">Simpan</button>
+                <button class="btn btn-primary" id="btnShowModalComment">Simpan</button>
                 <button type="button" class="btn btn-success ubahLayout" data-toggle="modal" data-target=".edit-stok">Ubah
                     Layout</button>
                 <button type="button" class="btn btn-danger hapusSeri">Hapus</button>
@@ -580,17 +580,43 @@
         </button>
       </div>
       <div class="modal-body">
-        <label for="">Alasan Dihapus</label>
-        <textarea name="" id="komentar_noseri" cols="10" rows="10" disabled class="form-control">
+        <label for="">Alasan Dihapus Dari Staff</label>
+        <textarea name="" id="komentar_noseri_staff" cols="10" rows="10" disabled class="form-control">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, quaerat? Cum, exercitationem expedita. Aliquid, temporibus, modi est exercitationem voluptatum soluta tempora amet nostrum dolorem, distinctio cumque saepe. Natus, nesciunt repellat.
+        </textarea>
+        <label for="">Alasan Dihapus Dari Manager</label>
+        <textarea name="" id="komentar_noseri_mgr" cols="10" rows="10" disabled class="form-control">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, quaerat? Cum, exercitationem expedita. Aliquid, temporibus, modi est exercitationem voluptatum soluta tempora amet nostrum dolorem, distinctio cumque saepe. Natus, nesciunt repellat.
         </textarea>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal fade modalComment" id="" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Alasan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="">Alasan</label>
+        <textarea class="form-control alasan" name="" id="" cols="30" rows="10"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary simpanSeri" style="" id="simpanSeriBelumDigunakan">Simpan</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <style>
     img {
@@ -714,6 +740,7 @@
 
     $(document).ready(function () {
         // load data
+        $('.alasan').val('');
         var datatable = $('#gudang-barang').DataTable({
             processing: true,
             deferRender: true,
@@ -881,7 +908,17 @@
         $('.hapusSeri').hide()
         $('.simpanSeri').hide()
         $('.ubahLayout').hide()
+        $('#btnShowModalComment').hide()
 
+        $('.hapusSeri').prop('disabled', true);
+        $('.simpanSeri').prop('disabled', true);
+    });
+
+    $('#custom-tabs-four-history-tab').click(function () {
+        $('.hapusSeri').hide()
+        $('.simpanSeri').hide()
+        $('.ubahLayout').hide()
+        $('#btnShowModalComment').hide();
         $('.hapusSeri').prop('disabled', true);
         $('.simpanSeri').prop('disabled', true);
     });
@@ -1216,6 +1253,7 @@
         $('span#nm_produk').text($(this).parent().prev().prev().prev().prev().html());
 
         $('.scan-produk').DataTable({
+            scrollY: 300,
             destroy: true,
             "ordering": false,
             "autoWidth": false,
@@ -1246,6 +1284,7 @@
         });
 
         $('.scan-produk1').DataTable({
+            scrollY: 300,
             destroy: true,
             "ordering": false,
             "autoWidth": false,
@@ -1274,6 +1313,7 @@
 
         $('.scan-produk2').DataTable({
             destroy: true,
+            scrollY: 300,
             "ordering": false,
             "autoWidth": false,
             "lengthChange": false,
@@ -1308,6 +1348,7 @@
             "lengthChange": false,
             processing: true,
             serverSide: false,
+            scrollY: 300,
             pageLength: 5,
             ajax: {
                 url: '/api/v2/gbj/riwayat_perubahan_noseri',
@@ -1491,6 +1532,7 @@
         $('.tambah_seri').modal('show');
     });
 
+
     $(document).on('click', '#save_data', function () {
         let datalength = $('#jumlah_noseri').val();
         let no_seri = $('.tambah_noseri_tableee').DataTable().column(0).nodes().to$().find('input[type=text]')
@@ -1617,10 +1659,16 @@
         }
         console.log("noseri", arr.length != datalength);
 
+    });
+
+    $(document).on('click', '#btnShowModalComment', function (e) {
+        e.preventDefault();
+        $('.modalComment').modal('show');
     })
 
     $(document).on('click', '#simpanSeriSudahDigunakan', function () {
         let seri = {};
+        let alasan = $('.alasan').val();
         const cekid = [];
         const serii = [];
         const ori = [];
@@ -1641,7 +1689,14 @@
             confirmButtonText: 'Yes, change it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
+                    if(serii.length == 0){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Tidak ada data yang dipilih!',
+                        })
+                    }else{
+                        $.ajax({
                         url: '/api/v2/gbj/edit-noseri',
                         type: 'post',
                         data: {
@@ -1649,6 +1704,7 @@
                             data: cekid,
                             gbjid: $('#gbjid').val(),
                             new: serii,
+                            alasan: alasan,
                             actionby: $('#actionby').val()
                         },
                         dataType: 'json',
@@ -1671,6 +1727,7 @@
                             }
                         }
                     })
+                    }
                 }
             })
     });
@@ -1680,6 +1737,7 @@
         const cekid = [];
         const serii = [];
         const ori = [];
+        let alasan = $('.alasan').val();
         let a = $('.scan-produk').DataTable().column(0).nodes()
             .to$().find('input[type=checkbox]:checked');
         $(a).each(function (index, elm) {
@@ -1697,13 +1755,21 @@
         confirmButtonText: 'Yes, change it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
+                if(serii.length == 0){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Tidak ada data yang dipilih!',
+                    })
+                }else{
+                    $.ajax({
                     url: '/api/v2/gbj/edit-noseri',
                     type: 'post',
                     data: {
                         "_token": "{{ csrf_token() }}",
                         data: cekid,
                         new: serii,
+                        alasan: alasan,
                         gbjid: $('#gbjid').val(),
                         actionby: $('#actionby').val()
                     },
@@ -1727,6 +1793,7 @@
                         }
                     }
                 })
+                }
             }
         })
 
