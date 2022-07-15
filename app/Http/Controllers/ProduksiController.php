@@ -912,7 +912,7 @@ class ProduksiController extends Controller
                     when substring_index(substring_index(pesanan.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
                     when substring_index(substring_index(pesanan.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
                     when pesanan.so is null then c_ekat.nama
-                end as divisi"), 'e.tgl_kontrak', 'pesanan.id')
+                end as divisi"), 'e.tgl_kontrak', 'pesanan.id', 'pesanan.tgl_po')
                     ->leftJoin('m_state as ms', 'ms.id', '=', 'pesanan.log_id')
                     ->leftJoin('ekatalog as e', 'e.pesanan_id', '=', 'pesanan.id')
                     ->leftJoin('customer as c_ekat', 'c_ekat.id', '=', 'e.customer_id')
@@ -928,6 +928,9 @@ class ProduksiController extends Controller
             ->addIndexColumn()
             ->addColumn('so', function ($data) {
                 return $data->so;
+            })
+            ->addColumn('tgl_po', function ($data) {
+                return $data->tgl_po;
             })
             ->addColumn('nama_customer', function ($data) {
                 return $data->divisi;
