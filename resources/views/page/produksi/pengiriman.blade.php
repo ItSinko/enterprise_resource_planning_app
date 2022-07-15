@@ -92,7 +92,8 @@
                                     <th rowspan="2">Nomor BPPB</th>
                                     <th rowspan="2">Produk</th>
                                     <th rowspan="2">Jumlah</th>
-                                    <th rowspan="2">Status</th>
+                                    <th rowspan="2">Progress</th>
+                                    {{-- <th rowspan="2">Status</th> --}}
                                     <th rowspan="2">Aksi</th>
                                 </tr>
                                 <tr>
@@ -417,7 +418,7 @@
                     data: "jml"
                 },
                 {
-                    data: "status"
+                    data: "progress"
                 },
                 {
                     data: "action"
@@ -430,7 +431,7 @@
             "columnDefs": [{
                 "targets": [7],
                 "visible": document.getElementById('auth').value == '2' ? false : true
-            }]
+            }],
         });
 
         $('#kt_datepicker_1').daterangepicker({
@@ -507,8 +508,6 @@
     var prd = '';
     var jml = '';
 
-
-
     $(document).on('click', '.detailmodal', function () {
         $('.modalRakit').modal('show');
         $('.scan-produk tbody').empty();
@@ -544,7 +543,7 @@
             ordering: false,
             ajax: "/api/prd/detailSeri1/" + prd + '/' + jadwal,
             columns: [{
-                    data: "no_seri"
+                    data: "id"
                 },
                 {
                     data: "no_seri"
@@ -624,13 +623,15 @@
                                 tgl_transfer: datetime,
                             },
                             success: function (res) {
-                                // console.log(res);
+                                console.log(res);
                                 Swal.fire(
                                     'Berhasil!',
                                     'Data berhasil di transfer!',
                                     'success'
                                 ).then(function () {
                                     location.reload();
+                                    // $('.modalRakit').modal('hide');
+                                    // $('.table_produk_perakitan').DataTable().ajax.reload();
                                 });
                             }
                         })
@@ -722,7 +723,8 @@
                             'Data berhasil di hapus!',
                             'success'
                         ).then(function () {
-                            location.reload();
+                            // location.reload();
+                            $('.scan-produk').DataTable().ajax.reload();
                         });
                     }
                 });
@@ -759,7 +761,8 @@
                                 res.msg,
                                 'success'
                             ).then(function () {
-                                location.reload();
+                                // location.reload();
+                                $('.scan-produk').DataTable().ajax.reload();
                             });
                         }
                     })
@@ -812,6 +815,7 @@
                                 'success'
                             ).then(function () {
                                 location.reload();
+
                             });
                         }
                     })

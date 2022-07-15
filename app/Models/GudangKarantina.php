@@ -9,18 +9,17 @@ class GudangKarantina extends Model
 {
     use HasFactory;
 
-    protected $table = 't_gk';
+    protected $table = 'gdg_karantina';
+    protected $fillable = ['gbj_id', 'sparepart_id', 'stok', 'created_by', 'updated_by'];
 
-    function detail() {
-        return $this->belongsToMany(GudangKarantinaDetail::class, 'gk_id');
-    }
-    function from() {
-        return $this->belongsTo(Divisi::class, 'dari');
-    }
-
-    function to() {
-        return $this->belongsTo(Divisi::class, 'ke');
+    function unit()
+    {
+        return $this->belongsTo(GudangBarangJadi::class, 'gbj_id');
     }
 
+    function part()
+    {
+        return $this->belongsTo(Sparepart::class, 'sparepart_id');
+    }
 
 }

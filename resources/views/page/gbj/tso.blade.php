@@ -257,7 +257,7 @@
             },
             success: function (res) {
                 console.log(res);
-                if(res.stok < stok) {
+                if(res.stok_siap < stok) {
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
@@ -275,7 +275,7 @@
                             confirmButtonText: 'Oke',
                         })
                     } else {
-                            Swal.fire({
+                        Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: 'Successfully',
@@ -399,7 +399,7 @@
                             else
                                 return '<span class="badge badge-info">Sudah Digunakan</span>'
                         } else {
-                            if (data.is_change == 0) {
+                            if (data.is_change == 1) {
                                 return `<span class="badge badge-warning">Noseri Tidak Bisa Digunakan</span>`
                             } else {
                                 return `<input type="checkbox" class="cb-child" name="noseri_id[][]"  value="${data.ids}">`
@@ -527,7 +527,6 @@
     $(document).on('click', '.btn-simpan', function(e) {
         e.preventDefault();
 
-
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -548,6 +547,7 @@
                         data: prd1
                     },
                     success: function (res) {
+                        // console.log(res);
                         if (res.error == true) {
                             Swal.fire({
                                 icon: 'error',

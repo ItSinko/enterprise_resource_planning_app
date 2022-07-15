@@ -16,7 +16,7 @@ class JadwalPerakitan extends Model
 
     function noseri()
     {
-        return $this->hasMany(JadwalRakitNoseri::class, 'jadwal_id');
+        return $this->hasMany(NoseriBarangJadi::class, 'jadwal_id');
     }
 
     function log()
@@ -38,8 +38,8 @@ class JadwalPerakitan extends Model
     function cekTotalRakit()
     {
         $id = $this->id;
-        $jumlah = JadwalRakitNoseri::whereHas('header', function($q) use($id) {
-            $q->where('id', $id);
+        $jumlah = NoseriRakit::whereHas('serii', function($q) use($id) {
+            $q->where('jadwal_id', $id);
         })->count();
         return $jumlah;
     }
@@ -47,8 +47,8 @@ class JadwalPerakitan extends Model
     function cekTotalKirim()
     {
         $id = $this->id;
-        $jumlah = JadwalRakitNoseri::whereHas('header', function($q) use($id) {
-            $q->where('id', $id);
+        $jumlah = NoseriRakit::whereHas('serii', function($q) use($id) {
+            $q->where('jadwal_id', $id);
         })->where('status', 14)->count();
         return $jumlah;
     }

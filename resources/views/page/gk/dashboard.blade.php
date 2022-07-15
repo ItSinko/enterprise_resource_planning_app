@@ -202,7 +202,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-6">
                 <div class="card">
                     <div class="card-header">
@@ -251,14 +251,6 @@
                                         <div class="form-group">
                                             <label for="jenis_penjualan">Kerusakan</label>
                                         </div>
-                                        {{-- <div class="form-group">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="All" id="all" />
-                                                <label class="form-check-label" for="jenis1">
-                                                    All
-                                                </label>
-                                            </div>
-                                        </div> --}}
                                         <div class="form-group">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="Level 1" id="level1" />
@@ -332,7 +324,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </section>
 @stop
@@ -403,20 +395,21 @@
             $('.produk-masuk-6-bulan-table').addClass('hidden');
             $('.produk-masuk-3-bulan-table').addClass('hidden');
         })
-        $.ajax({
-                url: '/api/gk/gklayout',
-                type: 'POST',
-                dataType: 'json',
-                success: function(res) {
-                    // ii++;
-                    console.log(res);
-                    $.each(res, function(key, value) {
-                        // $("#change_layout").append('<option value="'+value.id+'">'+value.ruang+'</option');
-                        $(".layout").append('<option value="'+value.layout.ruang+'">'+value.layout.ruang+'</option');
-                    });
-                }
-            });
+        // $.ajax({
+        //     url: '/api/gk/gklayout',
+        //     type: 'POST',
+        //     dataType: 'json',
+        //     success: function(res) {
+        //         // ii++;
+        //         console.log(res);
+        //         $.each(res, function(key, value) {
+        //             // $("#change_layout").append('<option value="'+value.id+'">'+value.ruang+'</option');
+        //             $(".layout").append('<option value="'+value.layout.ruang+'">'+value.layout.ruang+'</option');
+        //         });
+        //     }
+        // });
         $('.select2').select2({});
+
         $.ajax({
             url: "/api/gk/dashboard/stok/34/h",
             type: "post",
@@ -443,6 +436,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
             }
         });
+
         $.ajax({
             url: "/api/gk/dashboard/stok/510/h",
             type: "post",
@@ -469,6 +463,7 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
             }
         });
+
         $.ajax({
             url: "/api/gk/dashboard/stok/10/h",
             type: "post",
@@ -495,213 +490,218 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
             }
         });
-        $.ajax({
-            url: "/api/gk/dashboard/in/36/h",
-            type: "post",
-            success: function(res) {
-                $('h4#h4').text(res);
-            }
-        })
-        $('.waktu-produk1').DataTable({
-            destroy: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            "lengthChange": false,
-            ajax: {
-                url: "/api/gk/dashboard/in/36",
-                type: "post"
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'in'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
-        $.ajax({
-            url: "/api/gk/dashboard/in/612/h",
-            type: "post",
-            success: function(res) {
-                $('h4#h5').text(res);
-            }
-        })
-        $('.waktu-produk2').DataTable({
-            destroy: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            "lengthChange": false,
-            ajax: {
-                url: "/api/gk/dashboard/in/612",
-                type: "post"
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'in'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
-        $.ajax({
-            url: "/api/gk/dashboard/in/1236/h",
-            type: "post",
-            success: function(res) {
-                $('h4#h6').text(res);
-            }
-        })
-        $('.waktu-produk3').DataTable({
-            destroy: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            "lengthChange": false,
-            ajax: {
-                url: "/api/gk/dashboard/in/1236",
-                type: "post"
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'in'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
-        $.ajax({
-            url: "/api/gk/dashboard/in/36plus/h",
-            type: "post",
-            success: function(res) {
-                $('h4#h7').text(res);
-            }
-        })
-        $('.waktu-produk4').DataTable({
-            destroy: true,
-            processing: true,
-            autoWidth: false,
-            serverSide: true,
-            "lengthChange": false,
-            ajax: {
-                url: "/api/gk/dashboard/in/36plus",
-                type: "post"
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'in'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
-        var tableStok = $('.tableStokLayout').DataTable({
-            destroy: true,
-            "ordering": true,
-            "autoWidth": false,
-            "lengthChange": false,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "/api/gk/dashboard/layout",
-                type: "post"
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-                {data: 'layout'}
-            ],
-            "columnDefs":[{
-                "targets": '_all',
-                "createdCell": function (td, cellData, rowData, row, ) {
-                    $(td).css('padding', '18.3px');
-                }
-            }],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
 
-        $('#layoutTable').on('change', function() {
-            var search = [];
+        // $.ajax({
+        //     url: "/api/gk/dashboard/in/36/h",
+        //     type: "post",
+        //     success: function(res) {
+        //         $('h4#h4').text(res);
+        //     }
+        // })
+        // $('.waktu-produk1').DataTable({
+        //     destroy: true,
+        //     processing: true,
+        //     autoWidth: false,
+        //     serverSide: true,
+        //     "lengthChange": false,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/in/36",
+        //         type: "post"
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'in'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //     ],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
 
-            $.each($('#layoutTable option:selected'), function () {
-                 search.push($(this).val());
-            });
-            search = search.join('|');
-            console.log(search);
-            tableStok.columns(3).search(search, true, false).draw();
-        });
+        // $.ajax({
+        //     url: "/api/gk/dashboard/in/612/h",
+        //     type: "post",
+        //     success: function(res) {
+        //         $('h4#h5').text(res);
+        //     }
+        // })
+        // $('.waktu-produk2').DataTable({
+        //     destroy: true,
+        //     processing: true,
+        //     autoWidth: false,
+        //     serverSide: true,
+        //     "lengthChange": false,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/in/612",
+        //         type: "post"
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'in'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //     ],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
+
+        // $.ajax({
+        //     url: "/api/gk/dashboard/in/1236/h",
+        //     type: "post",
+        //     success: function(res) {
+        //         $('h4#h6').text(res);
+        //     }
+        // })
+        // $('.waktu-produk3').DataTable({
+        //     destroy: true,
+        //     processing: true,
+        //     autoWidth: false,
+        //     serverSide: true,
+        //     "lengthChange": false,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/in/1236",
+        //         type: "post"
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'in'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //     ],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
+
+        // $.ajax({
+        //     url: "/api/gk/dashboard/in/36plus/h",
+        //     type: "post",
+        //     success: function(res) {
+        //         $('h4#h7').text(res);
+        //     }
+        // })
+        // $('.waktu-produk4').DataTable({
+        //     destroy: true,
+        //     processing: true,
+        //     autoWidth: false,
+        //     serverSide: true,
+        //     "lengthChange": false,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/in/36plus",
+        //         type: "post"
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'in'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //     ],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
+
+        // var tableStok = $('.tableStokLayout').DataTable({
+        //     destroy: true,
+        //     "ordering": true,
+        //     "autoWidth": false,
+        //     "lengthChange": false,
+        //     processing: true,
+        //     serverSide: true,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/layout",
+        //         type: "post"
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //         {data: 'layout'}
+        //     ],
+        //     "columnDefs":[{
+        //         "targets": '_all',
+        //         "createdCell": function (td, cellData, rowData, row, ) {
+        //             $(td).css('padding', '18.3px');
+        //         }
+        //     }],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
+
+        // $('#layoutTable').on('change', function() {
+        //     var search = [];
+
+        //     $.each($('#layoutTable option:selected'), function () {
+        //          search.push($(this).val());
+        //     });
+        //     search = search.join('|');
+        //     console.log(search);
+        //     tableStok.columns(3).search(search, true, false).draw();
+        // });
 
 
-        $('#sparepart').click(function () {
-            if ($(this).prop('checked') == true) {
-                table.column(5).search($(this).val()).draw();
-            }else{
-                table.column(5).search('').draw();
-            }
-        })
+        // $('#sparepart').click(function () {
+        //     if ($(this).prop('checked') == true) {
+        //         table.column(5).search($(this).val()).draw();
+        //     }else{
+        //         table.column(5).search('').draw();
+        //     }
+        // })
 
-        $('#unit').click(function () {
-            if ($(this).prop('checked') == true) {
-                table.column(5).search($(this).val()).draw();
-            }else{
-                table.column(5).search('').draw();
-            }
-        })
+        // $('#unit').click(function () {
+        //     if ($(this).prop('checked') == true) {
+        //         table.column(5).search($(this).val()).draw();
+        //     }else{
+        //         table.column(5).search('').draw();
+        //     }
+        // })
 
-        $('#level1').click(function () {
-            if ($(this).prop('checked') == true) {
-                table.column(4).search($(this).val()).draw();
-            }else{
-                table.column(4).search('').draw();
-            }
-        })
-        $('#level2').click(function () {
-            if ($(this).prop('checked') == true) {
-                table.column(4).search($(this).val()).draw();
-            }else{
-                table.column(4).search('').draw();
-            }
-        })
-        $('#level3').click(function () {
-            if ($(this).prop('checked') == true) {
-                table.column(4).search($(this).val()).draw();
-            }else{
-                table.column(4).search('').draw();
-            }
-        })
+        // $('#level1').click(function () {
+        //     if ($(this).prop('checked') == true) {
+        //         table.column(4).search($(this).val()).draw();
+        //     }else{
+        //         table.column(4).search('').draw();
+        //     }
+        // })
+        // $('#level2').click(function () {
+        //     if ($(this).prop('checked') == true) {
+        //         table.column(4).search($(this).val()).draw();
+        //     }else{
+        //         table.column(4).search('').draw();
+        //     }
+        // })
+        // $('#level3').click(function () {
+        //     if ($(this).prop('checked') == true) {
+        //         table.column(4).search($(this).val()).draw();
+        //     }else{
+        //         table.column(4).search('').draw();
+        //     }
+        // })
 
-        var table = $('.tableKerusakan').DataTable({
-            dom: 'frtip',
-            processing: true,
-            serverSide: true,
-            autoWidth: false,
-            ajax: {
-                url: "/api/gk/dashboard/tingkat",
-                type: "post",
-            },
-            columns: [
-                {data: 'DT_RowIndex'},
-                {data: 'kode'},
-                {data: 'produk'},
-                {data: 'jumlah'},
-                {data: 'tingkat'},
-                {data: 'jenis'},
-                {data: 'button'},
-            ],
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-            }
-        });
+        // var table = $('.tableKerusakan').DataTable({
+        //     dom: 'frtip',
+        //     processing: true,
+        //     serverSide: true,
+        //     autoWidth: false,
+        //     ajax: {
+        //         url: "/api/gk/dashboard/tingkat",
+        //         type: "post",
+        //     },
+        //     columns: [
+        //         {data: 'DT_RowIndex'},
+        //         {data: 'kode'},
+        //         {data: 'produk'},
+        //         {data: 'jumlah'},
+        //         {data: 'tingkat'},
+        //         {data: 'jenis'},
+        //         {data: 'button'},
+        //     ],
+        //     "language": {
+        //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+        //     }
+        // });
 </script>
 @stop

@@ -401,58 +401,59 @@
         order: [[0, 'desc']],
     });
      // Tanggal Masuk
-     $('#kt_datepicker_1').daterangepicker({
+    $('#kt_datepicker_1').daterangepicker({
             autoUpdateInput: false
-        });
+    });
 
-        $('#kt_datepicker_1').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
-                'DD-MM-YYYY'));
-            start_date = picker.startDate.format('DD-MM-YYYY');
-            end_date = picker.endDate.format('DD-MM-YYYY');
-            $.fn.dataTableExt.afnFiltering.push(DateFilterFunction);
-            $dTable.draw();
-        });
+    $('#kt_datepicker_1').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
+            'DD-MM-YYYY'));
+        start_date = picker.startDate.format('DD-MM-YYYY');
+        end_date = picker.endDate.format('DD-MM-YYYY');
+        $.fn.dataTableExt.afnFiltering.push(DateFilterFunction);
+        $dTable.draw();
+    });
 
-        $('#kt_datepicker_1').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            start_date = '';
-            end_date = '';
-            $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction, 1));
-            $dTable.draw();
-        });
+    $('#kt_datepicker_1').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+        start_date = '';
+        end_date = '';
+        $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction, 1));
+        $dTable.draw();
+    });
 
-        // Tanggal Keluar
-        $('#kt_datepicker_2').daterangepicker({
-            autoUpdateInput: false
-        });
+    // Tanggal Keluar
+    $('#kt_datepicker_2').daterangepicker({
+        autoUpdateInput: false
+    });
 
-        $('#kt_datepicker_2').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
-                'DD-MM-YYYY'));
-            start_date2 = picker.startDate.format('DD-MM-YYYY');
-            end_date2 = picker.endDate.format('DD-MM-YYYY');
-            $.fn.dataTableExt.afnFiltering.push(DateFilterFunction2);
-            $dTable.draw();
-        });
+    $('#kt_datepicker_2').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
+            'DD-MM-YYYY'));
+        start_date2 = picker.startDate.format('DD-MM-YYYY');
+        end_date2 = picker.endDate.format('DD-MM-YYYY');
+        $.fn.dataTableExt.afnFiltering.push(DateFilterFunction2);
+        $dTable.draw();
+    });
 
-        $('#kt_datepicker_2').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            start_date2 = '';
-            end_date2 = '';
-            $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction2, 1));
-            $dTable.draw();
-        });
+    $('#kt_datepicker_2').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+        start_date2 = '';
+        end_date2 = '';
+        $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction2, 1));
+        $dTable.draw();
+    });
 
 
-        $("#divisi").on("change", function () {
-            console.log($(this).val());
-            $dTable.columns(2).search($(this).val()).draw();
-        });
+    $("#divisi").on("change", function () {
+        console.log($(this).val());
+        $dTable.columns(2).search($(this).val()).draw();
+    });
 
-        $("#kt_datatable_search_query").on("keyup", function () {
-            $dTable.search($(this).val()).draw();
-        });
+    $("#kt_datatable_search_query").on("keyup", function () {
+        $dTable.search($(this).val()).draw();
+    });
+
     $(document).ready(function () {
 
         var gudangbarang = $('#gudang-barang').dataTable({
@@ -548,9 +549,7 @@
             {data: 'logs'},
             {data: function(data) {
                 if (userid != 2) {
-                    // console.log(data)
-                    // return
-                    return `<td><a href="export_spb/`+data.pesanan.id+`">
+                    return `<td><a href="export_spb/`+data.id+`">
                         <button class="btn btn-outline-primary"><i class="fas fa-print"></i> Cetak</button>
                         </a></td>`
                 } else {
@@ -573,22 +572,22 @@
         autoUpdateInput: false
     });
 
-        $('#daterange1').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
-                'DD-MM-YYYY'));
-            start_date3 = picker.startDate.format('DD-MM-YYYY');
-            end_date3 = picker.endDate.format('DD-MM-YYYY');
-            $.fn.dataTableExt.afnFiltering.push(DateFilterFunction3);
-            soTable.draw();
-        });
+    $('#daterange1').on('apply.daterangepicker', function (ev, picker) {
+        $(this).val(picker.startDate.format('DD-MM-YYYY') + ' - ' + picker.endDate.format(
+            'DD-MM-YYYY'));
+        start_date3 = picker.startDate.format('DD-MM-YYYY');
+        end_date3 = picker.endDate.format('DD-MM-YYYY');
+        $.fn.dataTableExt.afnFiltering.push(DateFilterFunction3);
+        soTable.draw();
+    });
 
-        $('#daterange1').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            start_date3 = '';
-            end_date3 = '';
-            $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction3, 1));
-            soTable.draw();
-        });
+    $('#daterange1').on('cancel.daterangepicker', function (ev, picker) {
+        $(this).val('');
+        start_date3 = '';
+        end_date3 = '';
+        $.fn.dataTable.ext.search.splice($.fn.dataTable.ext.search.indexOf(DateFilterFunction3, 1));
+        soTable.draw();
+    });
 
 </script>
 @stop

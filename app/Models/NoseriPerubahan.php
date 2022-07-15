@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NoseriBrgJadiLog extends Model
+class NoseriPerubahan extends Model
 {
     use HasFactory;
 
-    protected $table = 'noseri_brg_jadi_log';
+    protected $table = 'tbl_noseri_perubahan';
 
-    protected $fillable = ['noseri_id', 'data_lama', 'data_baru', 'action', 'action_by', 'acc_by', 'status', 'komentar', 'gbj_id'];
+    protected $fillable = ['gdg_brg_jadi_id','noseri_id', 'data_lama', 'data_baru', 'action', 'action_by', 'acc_by', 'status', 'komentar'];
 
     function noseri()
     {
@@ -31,5 +31,10 @@ class NoseriBrgJadiLog extends Model
     function acc()
     {
         return $this->belongsTo(User::class, 'acc_by');
+    }
+
+    function gudang()
+    {
+        return $this->belongsTo(GudangBarangJadi::class, 'gdg_brg_jadi_id');
     }
 }

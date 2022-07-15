@@ -698,6 +698,7 @@
             $('.tableNoseri').DataTable({
                 destroy: true,
                 "autoWidth": false,
+                ordering: false,
                 processing: true,
                 scrollY: "250px",
                 lengthChange: false,

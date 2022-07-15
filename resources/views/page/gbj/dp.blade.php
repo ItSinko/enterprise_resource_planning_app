@@ -35,6 +35,7 @@
 <!-- Modal Detail-->
 <div class="modal fade terima-produk" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <input type="hidden" name="userid" id="userid" value="{{ Auth::user()->id }}">
+    <input type="hidden" name="" id="gbjid" value="">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -189,14 +190,17 @@
         $('#ubah-layout').modal('hide');
     }
 
+    var nama = '';
     $(document).on('click', '.editmodal', function () {
         var id = $(this).data('id');
-        var nama = $(this).data('produk');
-        var tipe = $(this).data('var');
+        nama = $(this).data('produk');
+        // var tipe = $(this).data('var');
         var tgl = $(this).data('tgl');
         var brgid = $(this).data('brgid');
         console.log(id);
-        $('span#title').text(nama.concat(' ', tipe));
+        $('#gbjid').val(brgid)
+        // $('span#title').text(nama.concat(' ', tipe));
+        $('span#title').text(nama);
 
         $('.scan-produk').DataTable().destroy();
         $('.scan-produk').DataTable({
@@ -252,6 +256,7 @@
         var tgl = $(this).data('tgl');
         var brgid = $(this).data('brgid');
         console.log(tgl);
+        $('#gbjid').val(brgid)
         $('span#titlee').text(nama.concat(' ', tipe));
 
         $('.table-seri').DataTable().destroy();
@@ -289,12 +294,14 @@
     $('#form-terima').on('submit', function(e) {
         console.log('test');
     })
+    let arr = {};
     $(document).on('click', '#simpanseri', function () {
         let no_seri = [];
         let layout = [];
         let a = $('.scan-produk').DataTable().column(0).nodes()
             .to$().find('input[type=checkbox]:checked');
         $(a).each(function (index, elm) {
+            arr[$(elm).val()] = $(elm).parent().next().next().children().val()
             no_seri.push($(elm).val());
             layout.push($(elm).parent().next().next().children().val());
         });
@@ -322,39 +329,42 @@
             confirmButtonText: 'Ya, Terima!'
         }).then((result) => {
             if (result.value) {
-                $(this).prop('disabled', true);
-                Swal.fire({
-                        title: 'Please wait',
-                        text: 'Data is transferring...',
-                        allowOutsideClick: false,
-                        showConfirmButton: false
-                    });
+                // $(this).prop('disabled', true);
+                // Swal.fire({
+                //         title: 'Please wait',
+                //         text: 'Data is transferring...',
+                //         allowOutsideClick: false,
+                //         showConfirmButton: false
+                //     });
                 $.ajax({
                     url: "/api/prd/terimaseri",
                     type: "post",
                     data: {
                         "_token": "{{ csrf_token() }}",
                         userid: $('#userid').val(),
-                        seri: no_seri,
-                        layout: layout,
+                        // seri: no_seri,
+                        produk: nama,
+                        // layout: layout,
+                        gbj: $('#gbjid').val(),
+                        data: arr,
                     },
                     success: function (res) {
                         console.log(res);
-                        if (res.msg == 'Successfully') {
-                            Swal.fire(
-                                'Terima!',
-                                'Produk berhasil diterima',
-                                'success'
-                            )
-                            $('.terima-produk').modal('hide');
-                            location.reload();
-                        } else {
-                            Swal.fire(
-                                'Gagal!',
-                                'Produk gagal diterima',
-                                'error'
-                            )
-                        }
+                        // if (res.msg == 'Successfully') {
+                        //     Swal.fire(
+                        //         'Terima!',
+                        //         'Produk berhasil diterima',
+                        //         'success'
+                        //     )
+                        //     $('.terima-produk').modal('hide');
+                        //     location.reload();
+                        // } else {
+                        //     Swal.fire(
+                        //         'Gagal!',
+                        //         'Produk gagal diterima',
+                        //         'error'
+                        //     )
+                        // }
                     }
                 })
             }

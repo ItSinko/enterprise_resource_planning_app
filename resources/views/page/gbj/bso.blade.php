@@ -275,25 +275,6 @@
                             </tbody>
                         </table>
                     </div>
-                    {{-- <div class="col-6">
-                        <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Preview No Seri Setelah Scan</h5>
-                        </div>
-                          <div class="card-body">
-                            <span class="card-text ">
-                                <table class="table table-striped preview-scan">
-                                    <thead>
-                                        <tr>
-                                            <th>Nomor Seri</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="listseri"></tbody>
-                                </table>
-                            </span>
-                          </div>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -593,14 +574,14 @@
                 processData: false,
                 success: function(data) {
                     console.log(data);
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Berhasil',
-                    //     text: data.msg,
-                    // }).then((res) => {
-                    //     // console.log(res);
-                    //     location.reload()
-                    // })
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: data.msg,
+                    }).then((res) => {
+                        // console.log(res);
+                        location.reload()
+                    })
                 }
             })
         })
@@ -777,7 +758,7 @@
                             else
                                 return '<span class="badge badge-info">Sudah Digunakan</span>'
                         } else {
-                            if (data.ischange == 0) {
+                            if (data.ischange == 1) {
                                 return `<input type="checkbox" class="cb-child" name="noseri_id[][]"  value="${data.ids}" disabled title="Noseri Tidak Bisa Digunakan">`
                             } else {
                                 return `<input type="checkbox" class="cb-child" name="noseri_id[][]"  value="${data.ids}">`

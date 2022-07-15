@@ -41,9 +41,9 @@
                 <div class="col-sm-6">
                     <nav>
                         <div class="nav nav-tabs topnav" id="nav-tab" role="tablist">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                                aria-controls="home" aria-selected="true">Sparepart</a>
-                            <a id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                            {{-- <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                aria-controls="home" aria-selected="true">Sparepart</a> --}}
+                            <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
                                 aria-selected="false">Unit</a>
                         </div>
                     </nav>
@@ -52,7 +52,7 @@
         </div><!-- /.container-fluid -->
     </div>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        {{-- <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -77,7 +77,6 @@
                                     <tr>
                                         <th>Kode Sparepart</th>
                                         <th>Nama</th>
-                                        {{-- <th>Unit</th> --}}
                                         <th>Jumlah</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -88,8 +87,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        </div> --}}
+        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -113,7 +112,6 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Kode Unit</th>
-                                        <th>Merk</th>
                                         <th>Nama</th>
                                         <th>Jumlah</th>
                                         <th>Aksi</th>
@@ -131,40 +129,40 @@
 @stop
 @section('adminlte_js')
 <script>
-    var tableSparepart = $('.tableSparepart').dataTable({
-        destroy: true,
-        "paging": true,
-        lengthChange: false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        bSortClasses: true,
-        bDeferRender: true,
-        processing: true,
-        ajax: {
-            url: "/api/spr/data",
-        },
-        columns: [
-            {data: 'kode'},
-            {data: 'produk'},
-            // {data: 'unit'},
-            {data: 'jml'},
-            {data: 'button'},
-        ],
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-        }
-    });
-    $('#search-sparepart').on('keyup', function () {
-        tableSparepart.api().search(this.value).draw();
-    });
+    // var tableSparepart = $('.tableSparepart').dataTable({
+    //     destroy: true,
+    //     "paging": true,
+    //     lengthChange: false,
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false,
+    //     "responsive": true,
+    //     bSortClasses: true,
+    //     bDeferRender: true,
+    //     processing: true,
+    //     // ajax: {
+    //     //     url: "/api/spr/data",
+    //     // },
+    //     // columns: [
+    //     //     {data: 'kode'},
+    //     //     {data: 'produk'},
+    //     //     // {data: 'unit'},
+    //     //     {data: 'jml'},
+    //     //     {data: 'button'},
+    //     // ],
+    //     "language": {
+    //         "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+    //     }
+    // });
+    // $('#search-sparepart').on('keyup', function () {
+    //     tableSparepart.api().search(this.value).draw();
+    // });
     var tableUnit = $('.tableUnit').dataTable({
         destroy: true,
         "paging": true,
         lengthChange: false,
         "searching": true,
-        "ordering": true,
+        "ordering": false,
         "info": true,
         "autoWidth": false,
         "responsive": true,
@@ -176,22 +174,23 @@
         },
         columns: [
             {data: 'kode_produk'},
-            {data: 'merk'},
-            {data: 'nama_produk'},
-            {data: 'jumlah'},
-            {data: 'button'},
+            {data: 'produk'},
+            {data: 'stok'},
+            {data: 'aksi'},
         ],
         "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+            processing: `<span class='fa-stack fa-md'>\n\
+                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                       </span>&emsp;Mohon Tunggu ...`,
         }
     });
     $('#search-unit').on('keyup', function () {
         tableUnit.api().search(this.value).draw();
     });
 
-    function sparepartDetail() {
-        $('.sparepartDetail').modal('show');
-    }
+    // function sparepartDetail() {
+    //     $('.sparepartDetail').modal('show');
+    // }
 
     function unitDetail() {
         $('.unitDetail').modal('show');

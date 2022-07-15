@@ -9,22 +9,20 @@ class NoseriBarangJadi extends Model
 {
     use HasFactory;
 
-    protected $table = "noseri_barang_jadi";
+    protected $table = "tbl_noseri";
 
-    protected $fillable = ['is_aktif', 'is_ready', 'is_delete' ,'used_by', 'layout_id', 'gdg_barang_jadi_id', 'dari', 'noseri', 'jenis', 'created_by', 'is_change'];
+    protected $fillable = ['gdg_barang_jadi_id', 'jadwal_id', 'noseri', 'layout_id', 'dari', 'is_aktif', 'is_ready', 'is_rakit', 'is_repair', 'is_change', 'is_delete', 'log_id', 'created_by', 'updated_by'];
 
     function from()
     {
         return $this->belongsTo(Divisi::class, 'dari');
     }
-    function to()
-    {
-        return $this->belongsTo(Divisi::class, 'ke');
-    }
+
     function gudang()
     {
         return $this->belongsTo(GudangBarangJadi::class, 'gdg_barang_jadi_id');
     }
+
     function NoseriTGbj()
     {
         return $this->hasMany(NoseriTGbj::class);
@@ -35,9 +33,9 @@ class NoseriBarangJadi extends Model
         return $this->belongsTo(Layout::class, 'layout_id');
     }
 
-    function pesanan()
+    function perakitan()
     {
-        return $this->belongsTo(Pesanan::class, 'used_by');
+        return $this->belongsTo(JadwalPerakitan::class, 'jadwal_id');
     }
 
     function noseri_log()
@@ -45,5 +43,9 @@ class NoseriBarangJadi extends Model
         return $this->hasOne(NoseriBrgJadiLog::class, 'noseri_id');
     }
 
+    function posisi()
+    {
+        return $this->belongsTo(Divisi::class, 'log_id');
+    }
 
 }

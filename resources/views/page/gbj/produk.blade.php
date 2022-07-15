@@ -65,7 +65,7 @@
                                                             value="Alat Kesehatan" />
                                                         <label class="form-check-label" for="sp_kelompok">
                                                             Alat Kesehatan
-                                                        </label> 
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -271,27 +271,13 @@
                             </div>
                             <div class="col">
                                 <label for="">Dari</label>
-                                <select name="" id="" class="form-control dari"></select>
+                                <select name="" id="dariid" class="form-control dari"></select>
                             </div>
                         </div>
                         <button class=" btn btn-primary tambah_noseri mt-2">Tambah</button>
                     </div>
                 </div>
                 <form action="" id="noseriForm" name="noseriForm">
-                    {{-- <table class="table scan-produk">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" id="head-cb"></th>
-                                <th>No. Seri</th>
-                                <th>Layout</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-
-                    </table> --}}
                     <div class="card card-primary card-outline card-outline-tabs">
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
@@ -348,7 +334,7 @@
                                                 <th><input type="checkbox" id="head-cb1"></th>
                                                 <th>No. Seri</th>
                                                 <th>Nomor</th>
-                                                <th>Digunakan</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -377,35 +363,12 @@
                                         <tr>
                                             <th>No</th>
                                             <th>No. Seri</th>
+                                            <th>No. Seri Baru</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>123456789</td>
-                                            <td><span class="badge badge-success">Edit Diterima</span></td>
-                                            <td><button class="btn btn-outline-info btn-sm openModalHistory"><i class="fas fa-eye"></i>Detail</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>123456789</td>
-                                            <td><span class="badge badge-danger">Edit Ditolak</span></td>
-                                            <td><button class="btn btn-outline-info btn-sm openModalHistory"><i class="fas fa-eye"></i>Detail</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>123456789</td>
-                                            <td><span class="badge badge-success">Hapus Diterima</span></td>
-                                            <td><button class="btn btn-outline-info btn-sm openModalHistory"><i class="fas fa-eye"></i>Detail</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>123456789</td>
-                                            <td><span class="badge badge-danger">Hapus Ditolak</span></td>
-                                            <td><button class="btn btn-outline-info btn-sm openModalHistory"><i class="fas fa-eye"></i>Detail</button></td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -415,7 +378,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary simpanSeri" id="simpanSeriBelumDigunakan">Simpan</button>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".edit-stok">Ubah
+                <button type="button" class="btn btn-success ubahLayout" data-toggle="modal" data-target=".edit-stok">Ubah
                     Layout</button>
                 <button type="button" class="btn btn-danger hapusSeri">Hapus</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
@@ -434,7 +397,7 @@
                 <h5 class="modal-title">
                     <div class="row">
                         <div class="col">
-                            <b>Produk</b>
+                            <b>Riwayat Penerimaan Produk</b>
                             <p id="namaa">Ambulatory</p>
                         </div>
 
@@ -446,32 +409,43 @@
             </div>
             <div class="modal-body">
 
-                <table class="table
-                {{-- view_produk --}}
-                ">
+                <table class="table view_produk">
                     <thead>
                         <tr>
                             <th>Tanggal Masuk</th>
                             <th>Dari</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Selasa, 14 Juni 2019</td>
-                            <td>Admin</td>
-                        </tr>
-                        <tr>
-                            <td>Rabu, 15 Juni 2019</td>
-                            <td>Admin</td>
-                        </tr>
-                        <tr>
-                            <td>Rabu, 15 Juni 2019</td>
-                            <td>Admin</td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalNoseriHis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Riwayat Pengeluaran Noseri</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-bordered" id="tableHisNoseri" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Digunakan</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
 </div>
 
@@ -499,7 +473,7 @@
         </div>
     </div>
 </div>
- 
+
 <div class="modal fade import-seri importSeri" id="" role="dialog" aria-labelledby="modelTitleId">
     <div class="modal-dialog dialogModal modal-xl" role="document">
         <div class="modal-content">
@@ -522,8 +496,8 @@
             </form>
         </div>
         <form name="formStoreImport" id="formStoreImport" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="userid" id="userid" value="{{ Auth::user()->id }}">
             <div class="modal-footer" id="csv_data_file" style="width:100%; height:400px; overflow:auto;">
-
             </div>
             <div class="modal-footer justify-content-between" id="footer-btn">
                 <p id="bodyNoseri">Noseri Yang Terdaftar:
@@ -582,7 +556,7 @@
                             <th style="min-width: 500px">No Seri</th>
                             <th style="min-width: 500px">Layout</th>
                         </tr>
-                    </thead>    
+                    </thead>
                     <tbody class="tambah_noseri_table">
                     </tbody>
                 </table>
@@ -607,7 +581,7 @@
       </div>
       <div class="modal-body">
         <label for="">Alasan Dihapus</label>
-        <textarea name="" id="" cols="10" rows="10" disabled class="form-control">
+        <textarea name="" id="komentar_noseri" cols="10" rows="10" disabled class="form-control">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, quaerat? Cum, exercitationem expedita. Aliquid, temporibus, modi est exercitationem voluptatum soluta tempora amet nostrum dolorem, distinctio cumque saepe. Natus, nesciunt repellat.
         </textarea>
         </div>
@@ -627,10 +601,21 @@
 @stop
 
 @section('adminlte_js')
-{{-- <script src="{{ asset('native/js/gbj/produk.js') }}"></script> --}}
-<script>
+
+{{-- data --}}
+<script type="text/javascript">
+    // initial
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $('#footer-btn').hide()
+    $('#bodyNoseri').hide()
+    var authid = $('#authid').val();
     let layout = [];
     $("#head-cb").prop('checked', false);
+
     $('#inputGroupFile02').on('change', function () {
         //get the file name
         var fileName = $(this).val();
@@ -646,92 +631,66 @@
     $('.viewProduk').click(function (e) {
         $('.modal-view').modal('show');
     });
-    $(document).ready(function () {
-        $('.produk-add').select2({
-            placeholder: "Choose ...",
-            allowClear: true
-        });
-        $('.layout-add').select2();
-        $("#head-cb").on('click', function () {
-            var isChecked = $("#head-cb").prop('checked')
-            // $('.cb-child').prop('checked', isChecked)
+
+    $('.produk-add').select2({
+        placeholder: "Choose ...",
+        allowClear: true
+    });
+    $('.layout-add').select2();
+    $("#head-cb").on('click', function () {
+        var isChecked = $("#head-cb").prop('checked')
+        // $('.cb-child').prop('checked', isChecked)
+        $('.scan-produk').DataTable()
+            .column(0)
+            .nodes()
+            .to$()
+            .find('input[type=checkbox]')
+            .prop('checked', isChecked);
+
+        if (isChecked) {
             $('.scan-produk').DataTable()
-                .column(0)
-                .nodes()
-                .to$()
-                .find('input[type=checkbox]')
-                .prop('checked', isChecked);
+            .column(1)
+            .nodes()
+            .to$()
+            .find('input[type=text]')
+            .prop('disabled', false);
+        } else {
+            $('.scan-produk').DataTable()
+            .column(1)
+            .nodes()
+            .to$()
+            .find('input[type=text]')
+            .prop('disabled', true);
+        }
 
-            if (isChecked) {
-                $('.scan-produk').DataTable()
-                .column(1)
-                .nodes()
-                .to$()
-                .find('input[type=text]')
-                .prop('disabled', false);
-            } else {
-                $('.scan-produk').DataTable()
-                .column(1)
-                .nodes()
-                .to$()
-                .find('input[type=text]')
-                .prop('disabled', true);
-            }
-
-        });
-
-        $("#head-cb1").on('click', function () {
-            var isChecked = $("#head-cb1").prop('checked')
-            // $('.cb-child').prop('checked', isChecked)
-            $('.scan-produk1').DataTable()
-                .column(0)
-                .nodes()
-                .to$()
-                .find('input[type=checkbox]')
-                .prop('checked', isChecked);
-
-            if (isChecked) {
-                $('.scan-produk1').DataTable()
-                .column(1)
-                .nodes()
-                .to$()
-                .find('input[type=text]')
-                .prop('disabled', false);
-            } else {
-                $('.scan-produk1').DataTable()
-                .column(1)
-                .nodes()
-                .to$()
-                .find('input[type=text]')
-                .prop('disabled', true);
-            }
-        });
-
-        $.ajax({
-            url: '/api/gbj/sel-divisi',
-            type: 'GET',
-            dataType: 'json',
-            success: function (res) {
-                // ii++;
-                console.log(res);
-                $.each(res, function (key, value) {
-                    $('.dari').append(
-                        '<option value="' + value.id + '">' + value.nama + '</option>'
-                    );
-                });
-            }
-        });
     });
 
-    function ubahData() {
-        let checkbox_terpilih = $('.scan-produk').DataTable().column(0).nodes()
-            .to$().find('input[type=checkbox]:checked');
-        let layout = $('#change_layout').val();
-        $.each(checkbox_terpilih, function (index, elm) {
-            let b = $(checkbox_terpilih).parent().next().next().children().val(layout);
-        });
-        $('.edit-stok').modal('hide');
-    }
+    $("#head-cb1").on('click', function () {
+        var isChecked = $("#head-cb1").prop('checked')
+        // $('.cb-child').prop('checked', isChecked)
+        $('.scan-produk1').DataTable()
+            .column(0)
+            .nodes()
+            .to$()
+            .find('input[type=checkbox]')
+            .prop('checked', isChecked);
+
+        if (isChecked) {
+            $('.scan-produk1').DataTable()
+            .column(1)
+            .nodes()
+            .to$()
+            .find('input[type=text]')
+            .prop('disabled', false);
+        } else {
+            $('.scan-produk1').DataTable()
+            .column(1)
+            .nodes()
+            .to$()
+            .find('input[type=text]')
+            .prop('disabled', true);
+        }
+    });
 
     $('.stokProduct').click(function (e) {
         $('.daftar-stok').modal('show');
@@ -748,172 +707,98 @@
         placeholder: "Choose...",
         allowClear: true
     });
-
-    // hidden hapus
-    $('#custom-tabs-four-profile-tab').click(function () {
-        $('.simpanSeri').prop('disabled', false);
-        $('.hapusSeri').prop('disabled', true);
-        $('.simpanSeri').removeAttr('id');
-        $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
+    $('#dariid').select2({
+        placeholder: "Choose...",
+        allowClear: true
     });
 
-    $('#custom-tabs-four-home-tab').click(function () {
-        $('.simpanSeri').prop('disabled', false);
-        $('.hapusSeri').prop('disabled', false);
-        $('.simpanSeri').removeAttr('id');
-        $('.simpanSeri').attr('id', 'simpanSeriBelumDigunakan');
-    });
-
-    $('#custom-tabs-four-wait-approved-tab').click(function () {
-        $('.hapusSeri').prop('disabled', true);
-        $('.simpanSeri').prop('disabled', true);
-    });
-
-</script>
-
-{{-- data --}}
-<script type="text/javascript">
-    $('#footer-btn').hide()
-    $('#bodyNoseri').hide()
-    var authid = $('#authid').val();
-    // initial
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    $('#downloadTemplate').click(function () {
-        // console.log('download');
-        window.location = window.location.origin + '/api/v2/gbj/template_noseri'
-    })
-
-    $('#importTemplate').click(function () {
-        $('.notice').modal('show')
-    })
-
-    $('.btnNext').click(function () {
-        $('.notice').modal('hide')
-        $('#template_noseri').val('');
-        $('.import-seri').modal('show');
-    })
-
-    $('.import-seri').on('hidden.bs.modal', function () {
-        $('#template_noseri').val('');
-        $('#footer-btn').hide()
-        $('#csv_data_file').empty()
-
-    })
-
-    // load data
-    var datatable = $('#gudang-barang').DataTable({
-        processing: true,
-        deferRender: true,
-        ajax: {
-            'type': 'POST',
-            'datatype': 'JSON',
-            'url': '/api/gbj/data',
-            'headers': {
-                'X-CSRF-TOKEN': '{{csrf_token()}}'
-            }
-        },
-        columns: [{
-                data: 'DT_RowIndex',
-                name: 'DT_RowIndex'
+    $(document).ready(function () {
+        // load data
+        var datatable = $('#gudang-barang').DataTable({
+            processing: true,
+            deferRender: true,
+            ordering: false,
+            ajax: {
+                'type': 'POST',
+                'datatype': 'JSON',
+                'url': '/api/gbj/data',
+                'headers': {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                }
             },
-            {
-                data: 'kode_produk',
-                name: 'kode_produk'
-            },
-            {
-                data: "merk"
-            },
-            {
-                data: 'nama_produk',
-                name: 'nama_produk'
-            },
-            {
-                data: 'jumlah'
-            },
-            {
-                data: 'jumlah1'
-            },
-            {
-                data: 'kelompok'
-            },
-            // {
-            //     data: 'action'
-            // }
-            {
-                data: function (data) {
-                    if (authid != 2) {
-                        // console.log(data)
-                        // return
-                        return `<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id=` +
-                            data.id + `>
-                            <button class="btn btn-outline-success btn-sm" type="button" >
-                            <i class="far fa-edit"></i>&nbsp;Edit
-                            </button>
-                        </a>
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'kode_produk',
+                    name: 'kode_produk'
+                },
+                {
+                    data: "merk"
+                },
+                {
+                    data: 'nama_produk',
+                    name: 'nama_produk'
+                },
+                {
+                    data: 'jumlah'
+                },
+                {
+                    data: 'jumlah1'
+                },
+                {
+                    data: 'kelompok'
+                },
+                // {
+                //     data: 'action'
+                // }
+                {
+                    data: function (data) {
+                        if (authid != 2) {
+                            // console.log(data)
+                            // return
+                            return `<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id=` +
+                                data.id + `>
+                                <button class="btn btn-outline-success btn-sm" type="button" >
+                                <i class="far fa-edit"></i>&nbsp;Edit
+                                </button>
+                            </a>
 
-                        <a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id=` +
-                            data.id + `>
-                            <button class="btn btn-outline-info btn-sm" type="button" >
-                            <i class="far fa-eye"></i>&nbsp;Detail
-                            </button>
-                        </a>
-
-                        <a data-toggle="modal" data-target="#stokmodal" class="stokmodal" data-attr=""  data-id=` +
-                            data.id + `>
-                            <button class="btn btn-outline-warning btn-sm" type="button" >
-                            <i class="far fa-eye"></i>&nbsp;Daftar Stok
-                            </button>
-                        </a>`
-                    } else {
-                        return `<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id=` +
-                            data.id + `>
+                            <a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id=` +
+                                data.id + `>
                                 <button class="btn btn-outline-info btn-sm" type="button" >
                                 <i class="far fa-eye"></i>&nbsp;Detail
                                 </button>
-                            </a>`;
+                            </a>
+
+                            <a data-toggle="modal" data-target="#stokmodal" class="stokmodal" data-attr=""  data-id=` +
+                                data.id + `>
+                                <button class="btn btn-outline-warning btn-sm" type="button" >
+                                <i class="far fa-eye"></i>&nbsp;Daftar Stok
+                                </button>
+                            </a>`
+                        } else {
+                            return `<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id=` +
+                                data.id + `>
+                                    <button class="btn btn-outline-info btn-sm" type="button" >
+                                    <i class="far fa-eye"></i>&nbsp;Detail
+                                    </button>
+                                </a>`;
+                        }
+
                     }
-
                 }
+            ],
+            "order": [[ 3, "asc" ]],
+            language: {
+                search: "Cari:",
+                processing: `<span class='fa-stack fa-md'>\n\
+                                <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                        </span>&emsp;Mohon Tunggu ...`,
             }
-        ],
-        "order": [[ 3, "asc" ]],
-        language: {
-            search: "Cari:",
-            processing: `<span class='fa-stack fa-md'>\n\
-                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                       </span>&emsp;Mohon Tunggu ...`,
-        }
+        });
     });
-
-    $('#alkes').click(function () {
-        if ($(this).prop('checked') == true) {
-            datatable.column(6).search($(this).val()).draw();
-        } else {
-            datatable.column(6).search('').draw();
-        }
-    })
-
-    $('#sarkes').click(function () {
-        if ($(this).prop('checked') == true) {
-            datatable.column(6).search($(this).val()).draw();
-        } else {
-            datatable.column(6).search('').draw();
-        }
-    })
-
-    $('#water').click(function () {
-        if ($(this).prop('checked') == true) {
-            datatable.column(6).search($(this).val()).draw();
-        } else {
-            datatable.column(6).search('').draw();
-        }
-    })
-
 
     // load produk
     $.ajax({
@@ -954,6 +839,97 @@
             }
         }
     });
+
+    // load layout
+    $.ajax({
+        url: '/api/gbj/sel-layout',
+        type: 'GET',
+        dataType: 'json',
+        success: function (res) {
+            console.log(res);
+            $("#change_layout").empty();
+            $.each(res, function (key, value) {
+                layout.push([value.id, value.ruang]);
+                $("#change_layout").append('<option value="' + value.id + '">' + value.ruang +
+                    '</option');
+            });
+        }
+    });
+
+    // hidden hapus
+    $('#custom-tabs-four-profile-tab').click(function () {
+        $('.hapusSeri').hide()
+        $('.simpanSeri').show()
+        $('.ubahLayout').hide()
+        $('.simpanSeri').prop('disabled', false);
+        $('.hapusSeri').prop('disabled', true);
+        $('.simpanSeri').removeAttr('id');
+        $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
+    });
+
+    $('#custom-tabs-four-home-tab').click(function () {
+        $('.hapusSeri').show()
+        $('.simpanSeri').show()
+        $('.ubahLayout').show()
+        $('.simpanSeri').prop('disabled', false);
+        $('.hapusSeri').prop('disabled', false);
+        $('.simpanSeri').removeAttr('id');
+        $('.simpanSeri').attr('id', 'simpanSeriBelumDigunakan');
+    });
+
+    $('#custom-tabs-four-wait-approved-tab').click(function () {
+        $('.hapusSeri').hide()
+        $('.simpanSeri').hide()
+        $('.ubahLayout').hide()
+
+        $('.hapusSeri').prop('disabled', true);
+        $('.simpanSeri').prop('disabled', true);
+    });
+
+    $('#downloadTemplate').click(function () {
+        window.location = window.location.origin + '/api/v2/gbj/template_noseri'
+    })
+
+    $('#importTemplate').click(function () {
+        $('.notice').modal('show')
+    })
+
+    $('.btnNext').click(function () {
+        $('.notice').modal('hide')
+        $('#template_noseri').val('');
+        $('.import-seri').modal('show');
+    })
+
+    $('.import-seri').on('hidden.bs.modal', function () {
+        $('#template_noseri').val('');
+        $('#footer-btn').hide()
+        $('#csv_data_file').empty()
+
+    })
+
+    $('#alkes').click(function () {
+        if ($(this).prop('checked') == true) {
+            datatable.column(6).search($(this).val()).draw();
+        } else {
+            datatable.column(6).search('').draw();
+        }
+    })
+
+    $('#sarkes').click(function () {
+        if ($(this).prop('checked') == true) {
+            datatable.column(6).search($(this).val()).draw();
+        } else {
+            datatable.column(6).search('').draw();
+        }
+    })
+
+    $('#water').click(function () {
+        if ($(this).prop('checked') == true) {
+            datatable.column(6).search($(this).val()).draw();
+        } else {
+            datatable.column(6).search('').draw();
+        }
+    })
 
     // load modal create edit
     $('#create').click(function (e) {
@@ -1145,20 +1121,6 @@
         })
     })
 
-    function select_layout() {
-        $.ajax({
-            url: '/api/gbj/sel-layout',
-            type: 'GET',
-            dataType: 'json',
-            success: function (res) {
-                $.each(res, function (key, value) {
-                    $("#layout_id").append('<option value="' + value.id + '">' + value.ruang +
-                        '</option');
-                });
-            }
-        });
-    }
-
     $('.hapusSeri').click(function(e){
         const cekid = [];
         const layout = [];
@@ -1213,14 +1175,44 @@
             })
     })
 
-
     var title = $(this).parent().prev().prev().prev().prev().html();
     // modal noseri
     $(document).on('click', '.stokmodal', function () {
         var id = $(this).data('id');
         $('.seri_id').val(id);
         $('#gbjid').val(id);
-        console.log('gbjid',id);
+
+        $.ajax({
+            url: '/api/gbj/sel-divisi',
+            type: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                if (res) {
+                    $(".dari").empty();
+                    $(".dari").append('<option selected></option>');
+                    $.each(res, function (key, value) {
+                        $('.dari').append(
+                            '<option value="' + value.id + '">' + value.nama + '</option>'
+                        );
+                    });
+                } else {
+                    $(".dari").empty();
+                }
+            }
+        });
+
+        $.ajax({
+            url: '/api/gbj/sel-layout',
+            type: 'GET',
+            dataType: 'json',
+            success: function (res) {
+                $.each(res, function (key, value) {
+                    $("#layout_id").append('<option value="' + value.id + '">' + value.ruang +
+                        '</option');
+                });
+            }
+        });
+
         $('span#nm_produk').text($(this).parent().prev().prev().prev().prev().html());
 
         $('.scan-produk').DataTable({
@@ -1271,8 +1263,8 @@
                 },
                 {data: 'nomor'},
                 {
-                    data: 'used'
-                },
+                    data: 'aksi'
+                }
             ],
             "aoColumnDefs": [
                 { "bSearchable": true, "bVisible": false, "aTargets": [ 2 ] },
@@ -1309,6 +1301,38 @@
             ],
         });
 
+        $('.history-produk').DataTable({
+            destroy: true,
+            "ordering": false,
+            "autoWidth": false,
+            "lengthChange": false,
+            processing: true,
+            serverSide: false,
+            pageLength: 5,
+            ajax: {
+                url: '/api/v2/gbj/riwayat_perubahan_noseri',
+                type: 'post',
+                data: {
+                    gbj: id
+                },
+            },
+            columns: [{
+                    data: 'DT_RowIndex'
+                },
+                {data: 'data_lama'},
+
+                {
+                    data: 'data_baru'
+                },
+                {
+                    data: 'status'
+                },
+                {
+                    data: 'aksi'
+                },
+            ],
+        });
+
         $('.daftar-stok').modal('show');
     });
 
@@ -1330,26 +1354,32 @@
 
     // modal history
     $(document).on('click', '.viewStock', function () {
-        var id = $(this).parent().prev().prev().children().eq(1).val();
+        var id = $(this).data('id');
+        let noseri = $(this).data('noseri')
         let judul_detail = $('#nm_produk').text();
         $('p#namaa').text(judul_detail);
+        console.log(id);
         var i = 0;
-        $('.view_produk').DataTable().destroy();
-        $('view_produk tbody').empty();
         $('.view_produk').DataTable({
             destroy: true,
             "ordering": false,
             "autoWidth": false,
             "lengthChange": false,
             processing: true,
+            pageLength: 5,
             ajax: {
-                url: '/api/gbj/history/' + id,
+                url: '/api/v2/gbj/detail-noseri-history-produk',
+                type: 'post',
+                data: {
+                    gbj: id,
+                    noseri: noseri
+                },
             },
             columns: [{
-                    data: 'tanggal'
+                    data: 'tgl'
                 },
                 {
-                    data: 'dari'
+                    data: 'from'
                 },
             ],
         });
@@ -1357,21 +1387,33 @@
         $('.modalViewStock').modal('show');
     });
 
-    // load layout
-    $.ajax({
-        url: '/api/gbj/sel-layout',
-        type: 'GET',
-        dataType: 'json',
-        success: function (res) {
-            console.log(res);
-            $("#change_layout").empty();
-            $.each(res, function (key, value) {
-                layout.push([value.id, value.ruang]);
-                $("#change_layout").append('<option value="' + value.id + '">' + value.ruang +
-                    '</option');
-            });
-        }
-    });
+    $(document).on('click', '.historyStok', function() {
+        var id = $(this).data('id');
+        let noseri = $(this).data('noseri')
+        $('#tableHisNoseri').DataTable({
+            processing: true,
+            destroy: true,
+            ordering: false,
+            pageLength: 5,
+            lengthChange: false,
+            ajax: {
+                url: '/api/v2/gbj/detaildone-noseri-history-produk',
+                type: 'post',
+                data: {
+                    gbj: id,
+                    noseri: noseri
+                },
+            },
+            columns: [
+                {data: 'DT_RowIndex'},
+                {
+                    data: 'tgl'
+                },
+                { data: 'pesanan'}
+            ],
+        })
+        $('#modalNoseriHis').modal('show')
+    })
 
     // modal ubah layout
     $(document).on('click', '.editStok', function () {
@@ -1667,7 +1709,7 @@
                     },
                     dataType: 'json',
                     success: function(res) {
-                        // console.log(res);
+                        console.log(res);
                         if (res.error == true) {
                             Swal.fire({
                                 icon: 'error',
@@ -1692,10 +1734,34 @@
 
     $(document).on('click', '.openModalHistory', function (e) {
         e.preventDefault();
-        $('.history_seri').modal('show');
-        let nomor_seri = $(this).parent().prev().text();
+        let nomor_seri = $(this).parent().prev().prev().prev().text();
         $('.nomor_seri_history').text(nomor_seri);
+        let ids = $(this).data('id')
+        // console.log(ids);
+        $.ajax({
+            url: '/api/v2/gbj/detail_riwayat_perubahan_noseri',
+            type: 'post',
+            data: {
+                id:ids
+            },
+            dataType: 'json',
+            success: function (res) {
+               $('#komentar_noseri').text(res.data)
+            }
+        })
+
+        $('.history_seri').modal('show');
     })
+
+    function ubahData() {
+        let checkbox_terpilih = $('.scan-produk').DataTable().column(0).nodes()
+            .to$().find('input[type=checkbox]:checked');
+        let layout = $('#change_layout').val();
+        $.each(checkbox_terpilih, function (index, elm) {
+            let b = $(checkbox_terpilih).parent().next().next().children().val(layout);
+        });
+        $('.edit-stok').modal('hide');
+    }
 
 </script>
 @stop

@@ -145,21 +145,12 @@
                                                         <th>Nomor SO</th>
                                                         <th>Nomor PO</th>
                                                         <th>Customer</th>
-                                                        <th>Batas Transfer</th>
+                                                        <th>Status</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>SO-00001</td>
-                                                        <td>PO-00001</td>
-                                                        <td>PT. ABC</td>
-                                                        <td>20 Desember 2019</td>
-                                                        <td>
-                                                            <button class="btn btn-sm btn-outline-success button_batal"><i class="fas fa-eye"></i> Detail</button>
-                                                        </td>
-                                                    </tr>
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -468,8 +459,31 @@
             $('.cb-child-so').prop('checked', isChecked)
         });
 
-        if (auth !== 31) {
-            $('#belum-dicek').DataTable({
+        belum()
+        if (auth == 31) {
+            batal()
+        }
+        $('#pills-proses_kirim-tab').click(function(e){
+            sudahDestroy()
+            batalDestroy()
+            belum()
+
+        })
+        $('#pills-selesai_kirim-tab').click(function(e){
+            belumDestroy()
+            batalDestroy()
+            sudah()
+        })
+        $('#pills-batal_po-tab').click(function(e){
+            belumDestroy()
+            sudahDestroy()
+            batal()
+        })
+
+    });
+
+    function belum(){
+        $('#belum-dicek').DataTable({
             destroy: true,
             processing: true,
             serverSide: false,
@@ -500,8 +514,10 @@
                 { "width": "10%", "targets": 5 }
             ]
         });
+    }
 
-        $('#sudah-dicek').DataTable({ 
+    function sudah(){
+        $('#sudah-dicek').DataTable({
             destroy: true,
             processing: true,
             serverSide: false,
@@ -532,8 +548,9 @@
                 { "width": "10%", "targets": 5 }
             ]
         });
-        }
+    }
 
+    function batal(){
         $('#batal-po').DataTable({
             destroy: true,
             processing: true,
@@ -558,7 +575,19 @@
                                 </span>&emsp;Mohon Tunggu ...",
             },
         })
-    });
+    }
+
+    function belumDestroy(){
+        $('#belum-dicek').DataTable().clear().destroy();
+    }
+
+    function sudahDestroy(){
+        $('#sudah-dicek').DataTable().clear().destroy();
+    }
+
+    function batalDestroy(){
+        $('#batal-po').DataTable().clear().destroy();
+    }
 
     var id = '';
     $(document).on('click', '.editmodal', function(e) {
@@ -640,7 +669,7 @@
                 }
             })
 
-            Swal.fire({
+        Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -676,9 +705,9 @@
                         }
                     })
                 }
-            })
-
         })
+
+    })
 
     $(document).on('click', '.detailmodal', function(e) {
         var x = $(this).data('value');

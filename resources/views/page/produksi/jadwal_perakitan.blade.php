@@ -132,11 +132,6 @@
                         <div class="row">
                             <div class="col-sm">
                                 <label for="">Nomor BPPB</label>
-                                {{-- <div class="card" style="background-color: #C8E1A7">
-                                    <div class="card-body">
-                                        <span id="bppb">89798797856456</span>
-                                    </div>
-                                </div> --}}
                                 <div class="card">
                                     <div class="card-body">
                                         <input type="text" name="no_bppb" id="no_bppb" class="form-control" style="text-transform:uppercase">
@@ -193,6 +188,7 @@
                                 <div class="form-group">
                                     <label for="">Tanggal Perakitan</label>
                                     <input type="text" class="form-control" id="tgl_perakitan" name="tgl_perakitan" placeholder="Tanggal Perakitan">
+                                    <input type="hidden" name="gdg_barang_jadi_id" id="gbjid">
                                 </div>
                             </div>
                             <div class="col-sm-4"></div>
@@ -470,6 +466,7 @@
         });
         $('#table_produk_perakitan').css("width", "100%");
     var id = '';
+    var pid = '';
     $(document).on('click', '.detailmodal', function () {
         $('#tgl_perakitan').daterangepicker({
             singleDatePicker: true,
@@ -480,6 +477,7 @@
             }
         });
         id = $(this).data('id');
+        pid = $(this).data('produk');
         console.log(id);
         var jml = $(this).data('jml');
         console.log(jml);
@@ -553,16 +551,16 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, save it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Please wait',
-                        text: 'Data is transferring...',
-                        allowOutsideClick: false,
-                        showConfirmButton: false
-                    });
-                    $(this).prop('disabled', true);
+                    // Swal.fire({
+                    //     title: 'Please wait',
+                    //     text: 'Data is transferring...',
+                    //     allowOutsideClick: false,
+                    //     showConfirmButton: false
+                    // });
+                    // $(this).prop('disabled', true);
 
                     if (duplicates(count(arr)).length > 0) {
                         $('.noseri').removeClass('is-invalid');
@@ -619,6 +617,7 @@
                                             no_bppb: $('#no_bppb').val(),
                                             noseri: arr,
                                             userid: $('#userid').val(),
+                                            gbjid: pid,
                                             jadwal_id: id,
                                             tgl_perakitan: datetime,
                                         },
@@ -634,7 +633,7 @@
                                             $('.scan-produk tbody').empty();
                                             $('#table_produk_perakitan').DataTable().ajax
                                                 .reload();
-                                            location.reload();
+                                            // location.reload();
                                         }
                                     })
                                 }
