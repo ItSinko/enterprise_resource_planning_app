@@ -463,6 +463,7 @@
             autoWidth: false,
             ajax: {
                 url: "/api/transaksi/history",
+                type: "post",
             },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex'},

@@ -301,13 +301,13 @@ class GudangController extends Controller
     {
         try {
             $data = GudangBarangJadi::distinct()
-                ->select('gdg_barang_jadi.id',DB::raw('concat(p.nama," ",gdg_barang_jadi.nama) as produkk'),DB::raw('concat(gdg_barang_jadi.stok," ",ms.nama) as stok_gudang'),'gdg_barang_jadi.stok','kp.nama as kel_produk','ms.nama as satuan')
-                ->join(DB::raw('t_gbj_detail tgd'),'tgd.gdg_brg_jadi_id','=','gdg_barang_jadi.id')
+                ->select('gdg_barang_jadi.id',DB::raw("concat(p.nama,' ',gdg_barang_jadi.nama) as produkk"),DB::raw("concat(gdg_barang_jadi.stok,'',ms.nama) as stok_gudang"),'gdg_barang_jadi.stok','kp.nama as kel_produk','ms.nama as satuan')
+                ->leftjoin(DB::raw('t_gbj_detail tgd'),'tgd.gdg_brg_jadi_id','=','gdg_barang_jadi.id')
                 ->join(DB::raw('produk p'),'p.id','=','gdg_barang_jadi.produk_id')
                 ->join(DB::raw('kelompok_produk kp'),'kp.id','=','p.kelompok_produk_id')
                 ->join(DB::raw('m_satuan ms'),'ms.id','=','gdg_barang_jadi.satuan_id')
                 ->whereNotNull('tgd.gdg_brg_jadi_id')
-                ->orderByRaw('concat(p.nama," ",gdg_barang_jadi.nama)','ASC')
+                ->orderByRaw("concat(p.nama,' ',gdg_barang_jadi.nama)",'ASC')
                 ->get();
 
             return datatables()->of($data)

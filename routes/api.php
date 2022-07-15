@@ -195,7 +195,7 @@ Route::prefix('/draft')->group(function () {
 
 Route::prefix('/transaksi')->group(function () {
     Route::get('/all', [GudangController::class, 'getAllTransaksi']);
-    Route::get('/history', [GudangController::class, 'getHistorybyProduk']);
+    Route::post('/history', [GudangController::class, 'getHistorybyProduk']);
     Route::get('/history-detail/{id}', [GudangController::class, 'getDetailHistory']);
     Route::get('/history-detail-seri/{id}', [GudangController::class, 'getDetailHistorySeri']);
     Route::get('/all-detail/{id}', [GudangController::class, 'getDetailAll']);
