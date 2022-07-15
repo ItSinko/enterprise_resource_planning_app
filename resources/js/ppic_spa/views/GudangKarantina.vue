@@ -104,7 +104,7 @@ export default {
       $("#table-sparepart").DataTable();
 
       await axios.get("/api/ppic/data/gk/unit").then((response) => {
-        this.data_unit = response.data;
+        this.data_unit = response.data.data;
       });
 
       $("#table-unit").DataTable();
