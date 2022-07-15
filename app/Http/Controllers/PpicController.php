@@ -30,6 +30,7 @@ use App\Models\JadwalPerakitanRencana;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DetailLogistikPart;
 use App\Models\DetailPesananPart;
+use App\Models\GudangKarantina;
 
 class PpicController extends Controller
 {
@@ -219,11 +220,12 @@ class PpicController extends Controller
      */
     public function get_data_barang_jadi(Request $request)
     {
-        $data = GudangBarangJadi::with('produk.KelompokProduk', 'produk.product', 'satuan');
-        if (isset($request->id)) {
-            $data->where('id', $request->id);
-        }
-        $data = $data->get();
+        $data = GudangBarangJadi::leftJoin('produk as p', 'p.id', '=', 'gdg_barang_jadi.produk_id')
+        ->leftJoin('m_satuan as s', 's.id', '=', 'gdg_barang_jadi.satuan_id')
+        ->leftJoin('kelompok_produk as kp', 'kp.id', '=', 'p.kelompok_produk_id')
+        ->select(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama) as produkk'), 'p.merk', 'kp.nama as kel_produk', 'gdg_barang_jadi.id', 's.nama as satuan', 'gdg_barang_jadi.stok', 'gdg_barang_jadi.stok_siap')
+        ->orderBy(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama)'))
+        ->get();
         return $data;
     }
 
@@ -607,14 +609,7 @@ class PpicController extends Controller
      */
     public function get_data_sparepart_gk()
     {
-        $data = GudangKarantinaDetail::select('*', DB::raw('sum(qty_spr) as jml'))
-            ->whereNotNull('t_gk_detail.sparepart_id')
-            ->where('is_draft', 0)
-            ->where('is_keluar', 0)
-            ->groupBy('t_gk_detail.sparepart_id')
-            ->join('m_gs', 'm_gs.id', 't_gk_detail.sparepart_id')
-            ->join('m_sparepart', 'm_sparepart.id', 'm_gs.sparepart_id')
-            ->get();
+        $data = GudangKarantina::with(['part'])->whereNotNull('sparepart_id')->get();
         return $data;
     }
 
@@ -625,24 +620,17 @@ class PpicController extends Controller
      */
     public function get_data_unit_gk(Request $request)
     {
-        $data = GudangKarantinaDetail::select('*', DB::raw('sum(qty_unit) as jml'))
-            ->whereNotNull('t_gk_detail.gbj_id')
-            ->where('is_draft', 0)
-            ->where('is_keluar', 0)
-            ->groupBy('t_gk_detail.gbj_id')
-            ->join('gdg_barang_jadi', 'gdg_barang_jadi.id', 't_gk_detail.gbj_id')
-            ->join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
-            ->get();
+        $data = GudangKarantina::whereNotNull('gbj_id');
         return datatables()->of($data)
             ->addIndexColumn()
-            ->addColumn('nama_produk', function ($data) {
-                return $data->units->produk->nama . ' ' . $data->units->nama;
+            ->addColumn('produk', function($d) {
+                return $d->unit->produk->merk.'-'.$d->unit->produk->nama.' '.$d->unit->nama;
             })
-            ->addColumn('kode_produk', function ($data) {
-                return $data->units->produk->product->kode . '' . $data->units->produk->kode;
+            ->addColumn('kode_produk', function($d){
+                return '-';
             })
-            ->addColumn('jumlah', function ($data) {
-                return $data->jml . ' ' . $data->units->satuan->nama;
+            ->addColumn('jumlah', function ($d) {
+                return $d->stok.' pcs';
             })
             ->make(true);
     }

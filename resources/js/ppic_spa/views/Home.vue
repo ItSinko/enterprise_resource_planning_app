@@ -89,10 +89,10 @@
             <tbody>
               <tr v-for="(d, index) in data_gbj" :key="'table_gbj'+d.id">
                 <td>{{ index + 1 }}</td>
-                <td>{{ d.produk.product.kode }}</td>
-                <td>{{ d.produk.nama + " " + d.nama }}</td>
+                <td>-</td>
+                <td>{{ d.produkk }}</td>
                 <td>{{ d.stok }}</td>
-                <td>{{ d.produk.kelompok_produk.nama }}</td>
+                <td>{{ d.kel_produk }}</td>
               </tr>
             </tbody>
           </table>
@@ -130,16 +130,16 @@
                 <tr>
                   <th>Kode Sparepart</th>
                   <th>Nama</th>
-                  <th>Unit</th>
+                  <!-- <th>Unit</th> -->
                   <th>Jumlah</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="item in data_sparepart" :key="'table_sparepart'+item.id">
-                  <td>{{ item.kode }}</td>
-                  <td>{{ item.nama }}</td>
-                  <td>{{ item.unit }}</td>
-                  <td>{{ item.jml }}</td>
+                  <td>{{ item.part.kode }}</td>
+                  <td>{{ item.part.nama }}</td>
+                  <!-- <td>{{ item.unit }}</td> -->
+                  <td>{{ item.stok }}</td>
                 </tr>
               </tbody>
             </table>
@@ -157,9 +157,12 @@
               </thead>
               <tbody>
                 <tr v-for="(item, index) in data_unit" :key="index">
-                  <td><span v-if="item.kode_produk == null">-</span> <span v-else>{{item.kode_produk}}</span></td>
+                  <!-- <td><span v-if="item.kode_produk == null">-</span> <span v-else>{{item.kode_produk}}</span></td>
                   <td v-html="item.nama_produk"></td>
-                  <td><span v-if="item.jml == null">0</span> <span v-else>{{item.jml}}</span></td>
+                  <td><span v-if="item.jml == null">0</span> <span v-else>{{item.jml}}</span></td> -->
+                    <td>{{ item.kode_produk }}</td>
+                    <td>{{ item.produk }}</td>
+                    <td>{{ item.jumlah }}</td>
                 </tr>
               </tbody>
             </table>

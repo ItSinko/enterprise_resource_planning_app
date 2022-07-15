@@ -33,16 +33,16 @@
               <tr>
                 <th>Kode Sparepart</th>
                 <th>Nama</th>
-                <th>Unit</th>
+                <!-- <th>Unit</th> -->
                 <th>Jumlah</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in data_sparepart" :key="item.id">
-                <td>{{ item.kode }}</td>
-                <td>{{ item.nama }}</td>
-                <td>{{ item.unit }}</td>
-                <td>{{ item.jml }}</td>
+                  <td>{{ item.part.kode }}</td>
+                  <td>{{ item.part.nama }}</td>
+                  <!-- <td>{{ item.unit }}</td> -->
+                  <td>{{ item.stok }}</td>
               </tr>
             </tbody>
           </table>
@@ -60,9 +60,9 @@
             </thead>
             <tbody>
               <tr v-for="item in data_unit" :key="item.id">
-                <td>{{ item.kode }}</td>
-                <td>{{ item.nama }}</td>
-                <td>{{ item.jml }}</td>
+                <td>{{ item.kode_produk }}</td>
+                    <td>{{ item.produk }}</td>
+                    <td>{{ item.jumlah }}</td>
               </tr>
             </tbody>
           </table>

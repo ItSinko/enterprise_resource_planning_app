@@ -201,7 +201,7 @@ export default {
       showModal: false,
       showModalSO: false,
       tabs: false
-    };  
+    };
   },
 
   methods: {
@@ -220,7 +220,7 @@ export default {
         })));
 
       this.$store.commit("setIsLoading", false);
-      
+
     },
 
 
@@ -272,7 +272,7 @@ export default {
       });
       this.$store.commit("setIsLoading", false);
       this.showModalSO = true;
-      
+
     },
   },
 
