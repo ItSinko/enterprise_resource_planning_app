@@ -88,10 +88,10 @@
                         <th>No Seri Lama</th>
                         <th>No Seri Baru</th>
                         <th>Diajukan Oleh</th>
+                        <th>Detail</th>
                     </tr>
                 </thead>
                 <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -244,6 +244,7 @@
                 {data: 'lama'},
                 {data: 'baru'},
                 {data: 'requested'},
+                {data: 'action'},
             ],
             language: {
                 search: "Cari:"

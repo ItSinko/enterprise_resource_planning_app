@@ -891,6 +891,7 @@
         $('.simpanSeri').prop('disabled', false);
         $('.hapusSeri').prop('disabled', true);
         $('.simpanSeri').removeAttr('id');
+        $('#btnShowModalComment').show();
         $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
     });
 
@@ -901,6 +902,7 @@
         $('.simpanSeri').prop('disabled', false);
         $('.hapusSeri').prop('disabled', false);
         $('.simpanSeri').removeAttr('id');
+        $('#btnShowModalComment').show();
         $('.simpanSeri').attr('id', 'simpanSeriBelumDigunakan');
     });
 

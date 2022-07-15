@@ -841,8 +841,12 @@ class GudangController extends Controller
                 })
                 ->addColumn('requested', function($d) {
                     return $d->actionn->nama;
+                })->addColumn('action', function($d) {
+                    return '<button class="btn btn-outline-success btn-sm" type="button" data-id="'.$d->noseri_id.'">
+                            <i class="far fa-eye"></i> Detail
+                            </button>';
                 })
-                ->rawColumns(['checkbox', 'produk'])
+                ->rawColumns(['checkbox', 'produk', 'action'])
                 ->make(true);
         } catch (\Exception $e) {
             return response()->json([
@@ -854,41 +858,40 @@ class GudangController extends Controller
 
     function edit_noseri(Request $request) {
         try {
-            dd($request->all());
-            // $dataseri = [];
-            // $data = NoseriBarangJadi::whereIn('id',$request->data);
-            // $check = NoseriBarangJadi::whereIn('noseri', $request->new)->get();
-            // if (count($check) > 0) {
-            //     foreach($check as $d) {
-            //         array_push($dataseri, $d->noseri);
-            //     }
-            //     return response()->json(['error' => true, 'msg' => 'Noseri '.implode(', ', $dataseri).' Sudah Terdaftar']);
-            // } else {
-            //     // $log = new SystemLog();
-            //     // $log->produk = $request->gbjid;
-            //     // $log->noseri = $data->get()->pluck('noseri')->toArray();
-            //     // $log->noseri_baru = $request->new;
-            //     // $log->waktu_permintaan = Carbon::now()->toDateTimeString();
-            //     // $log->dibuat_oleh = User::find($request->actionby)->nama;
-            //     // $log->jenis = 'permintaan perubahan noseri gudang barang jadi';
-            //     // $log->save();
+            $dataseri = [];
+            $data = NoseriBarangJadi::whereIn('id',$request->data);
+            $check = NoseriBarangJadi::whereIn('noseri', $request->new)->get();
+            if (count($check) > 0) {
+                foreach($check as $d) {
+                    array_push($dataseri, $d->noseri);
+                }
+                return response()->json(['error' => true, 'msg' => 'Noseri '.implode(', ', $dataseri).' Sudah Terdaftar']);
+            } else {
+                // $log = new SystemLog();
+                // $log->produk = $request->gbjid;
+                // $log->noseri = $data->get()->pluck('noseri')->toArray();
+                // $log->noseri_baru = $request->new;
+                // $log->waktu_permintaan = Carbon::now()->toDateTimeString();
+                // $log->dibuat_oleh = User::find($request->actionby)->nama;
+                // $log->jenis = 'permintaan perubahan noseri gudang barang jadi';
+                // $log->save();
 
-            //     foreach($data->get() as $k => $c) {
-            //         NoseriPerubahan::create([
-            //             'gdg_brg_jadi_id' => $request->gbjid,
-            //             'noseri_id' => $c->id,
-            //             'data_lama' => $c->noseri,
-            //             'data_baru' => $request->new[$k],
-            //             'action' => 'update',
-            //             'action_by' => $request->actionby,
-            //             'status' => 'waiting',
-            //             'remark' => $request->remark
-            //         ]);
-            //         NoseriBarangJadi::find($c->id)->update(['noseri' => $request->new[$k], 'is_change' => 1]);
-            //     }
+                foreach($data->get() as $k => $c) {
+                    NoseriPerubahan::create([
+                        'gdg_brg_jadi_id' => $request->gbjid,
+                        'noseri_id' => $c->id,
+                        'data_lama' => $c->noseri,
+                        'data_baru' => $request->new[$k],
+                        'action' => 'update',
+                        'action_by' => $request->actionby,
+                        'status' => 'waiting',
+                        'remark' => $request->remark
+                    ]);
+                    NoseriBarangJadi::find($c->id)->update(['noseri' => $request->new[$k], 'is_change' => 1]);
+                }
 
-            //     return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manager']);
-            // }
+                return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manager']);
+            }
 
         } catch (\Exception $e) {
             return response()->json([
