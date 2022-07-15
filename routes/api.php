@@ -325,7 +325,7 @@ Route::prefix('/prd')->group(function () {
     Route::get('/riwayat_seri_rakit/{id}/{value}', [ProduksiController::class, 'get_detail_noseri_rakit']);
     Route::get('/detailSeri1/{id}/{value}', [ProduksiController::class, 'detailSeri1']);
     Route::post('/send', [ProduksiController::class, 'kirimseri']);
-    Route::post('/terimaseri', [ProduksiController::class, 'terimaseri']);
+    Route::post('/terimaseri', [GudangController::class, 'terimaseri']);
     Route::post('/delete', [ProduksiController::class, 'deleteNoseri']);
     Route::post('/deleteAll', [ProduksiController::class, 'deleteAllSeri']);
     Route::post('/updateRakitseri', [ProduksiController::class, 'updateNoseri']);
@@ -349,7 +349,8 @@ Route::prefix('/spr')->group(function () {
 });
 Route::prefix('/gk')->group(function () {
     Route::get('/his-spr/{id}', [SparepartController::class, 'history_spr']);
-    Route::get('/unit', [SparepartController::class, 'get_unit']);
+    Route::get('/unit', [GudangController::class, 'get_data_unit']);
+    Route::get('/part', [GudangController::class, 'get_data_part']);
     Route::get('/his-unit/{id}', [SparepartController::class, 'history_unit']);
 
     Route::post('/draft-tf', [SparepartController::class, 'get_draft_tf']);
@@ -422,13 +423,13 @@ Route::prefix('/gk')->group(function () {
         Route::post('/layout', [SparepartController::class, 'byLayout']);
 
         // stok
-        Route::post('/stok/34', [SparepartController::class, 'stok34']);
-        Route::post('/stok/510', [SparepartController::class, 'stok510']);
-        Route::post('/stok/10', [SparepartController::class, 'stok10plus']);
+        Route::post('/stok/34', [GudangController::class, 'dash_stok3_4']);
+        Route::post('/stok/510', [GudangController::class, 'dash_stok5_10']);
+        Route::post('/stok/10', [GudangController::class, 'dash_stok10plus']);
 
-        Route::post('/stok/34/h', [SparepartController::class, 'h_stok34']);
-        Route::post('/stok/510/h', [SparepartController::class, 'h_stok510']);
-        Route::post('/stok/10/h', [SparepartController::class, 'h_stok10plus']);
+        Route::post('/stok/34/h', [GudangController::class, 'dash_stok3_4_h']);
+        Route::post('/stok/510/h', [GudangController::class, 'dash_stok5_10_h']);
+        Route::post('/stok/10/h', [GudangController::class, 'dash_stok10plus_h']);
 
         // in
         Route::post('/in/36', [SparepartController::class, 'in36']);
