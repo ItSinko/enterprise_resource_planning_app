@@ -1260,7 +1260,9 @@
             "aoColumnDefs": [
                 { "bSearchable": true, "bVisible": false, "aTargets": [ 2 ] },
                 // { "bVisible": false, "aTargets": [ 3 ] }
-            ]
+                // { "width": "30%", "targets": 1 },
+                // { "width": "15%", "targets": 2 }
+            ],
         });
 
         $('.scan-produk2').DataTable({
