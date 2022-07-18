@@ -2,7 +2,7 @@
 
 @section('title', 'ERP')
 
-@section('content')
+@section('content') 
 <style>
     .nomor-so{
         background-color: #717FE1;

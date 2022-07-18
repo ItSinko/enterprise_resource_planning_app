@@ -1,38 +1,65 @@
 <template>
     <div>
         <div v-if="loading">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
         <div class="card" v-else>
             <div class="card-body">
-                <table class="table tableSo">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Nomor AKN</th>
-                            <th>Detail</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, idx) in dataSO" :key="idx">
-                            <td><input type="checkbox" ref="cbcheck" :value="item.epurno"></td>
-                            <td>{{item.epurno}}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" @click="detail(item.epurno)"><i
-                                        class="fas fa-eye"></i> Detail</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer">
-                
+                <ul class="nav nav-pills mb-5" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-ekatalog-tab" data-toggle="pill" href="#pills-ekatalog" @click="tab = 'ekatalog'"
+                            role="tab" aria-controls="pills-ekatalog" aria-selected="true">E-Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-spa-tab" data-toggle="pill" href="#pills-spa" role="tab" @click="tab = 'spa'"
+                            aria-controls="pills-spa" aria-selected="false">Sudah Proses</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-ekatalog" role="tabpanel"
+                        aria-labelledby="pills-ekatalog-tab" v-show="tab == 'ekatalog'">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table tableSo">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nomor AKN</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, idx) in dataSO" :key="idx">
+                                            <td><input type="checkbox" ref="cbcheck" :value="item.epurno" @change="chkEkat($event)" /></td>
+                                            <td>{{item.epurno}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary"
+                                                    @click="detail(item.epurno)"><i class="fas fa-eye"></i>
+                                                    Detail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer">
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-primary"><i
+                                            class="fas fa-check"></i> Proses</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade show" id="pills-spa" role="tabpanel" aria-labelledby="pills-spa-tab" v-show="tab == 'spa'" >
+                    <p></p>
+                </div>
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade modalSO" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" v-if="modal">
+        <div class="modal fade modalSO" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true" v-if="modal">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -45,6 +72,7 @@
                             <div class="col-12">
                                 <div class="card card-detail removeshadow">
                                     <div class="card-body border-0">
+                                        <h5 class="card-title pl-2 py-2"><b>{{ detailModalSO.namapaket }}</b></h5>
                                         <ul class="fa-ul card-text">
                                             <li class="py-2"><span class="fa-li"><i
                                                         class="fas fa-address-card fa-fw"></i></span>
@@ -84,13 +112,6 @@
                                                     <div class="p-2">
                                                         <div class="margin">
                                                             <div><small class="text-muted">No AKN</small></div>
-                                                            <div><b>
-                                                                    {{ detailModalSO.epurno }}
-                                                                </b>
-                                                            </div>
-                                                        </div>
-                                                        <div class="margin">
-                                                            <div><small class="text-muted"></small></div>
                                                             <div><b>
                                                                     {{ detailModalSO.epurno }}
                                                                 </b>
@@ -142,11 +163,14 @@
                                                                         <td rowspan="1" class="nowraptxt">
                                                                             {{ i+1 }}
                                                                         </td>
-                                                                        <td><b class="wb">{{ item.produk.productnm }}</b>
+                                                                        <td><b
+                                                                                class="wb">{{ item.produk.productnm }}</b>
                                                                         </td>
-                                                                        <!-- <td colspan="2" class="nowraptxt tabnum">
-                                                                            {{ item.qty }}</td>
-                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp.
+                                                                        <td colspan="2" class="nowraptxt tabnum">
+                                                                            <!-- {{ item.qty }} -->
+                                                                            {{ item.datauom.uom }}
+                                                                            </td>
+                                                                        <!-- <td rowspan="1" class="nowraptxt tabnum">Rp.
                                                                             {{ item.price }}</td> -->
                                                                     </tr>
 
@@ -186,6 +210,9 @@
                 detailModalSO: [],
                 modal: false,
                 checkAllStatus: false,
+                tab: 'ekatalog',
+                checkEkat: [],
+                checkSpa: [],
             }
         },
         methods: {
@@ -205,20 +232,44 @@
             },
             detail(id) {
                 this.detailModalSO = this.dataSO.find(item => item.epurno == id);
-                console.log(this.detailModalSO);
                 this.modal = true;
-                if(this.modal){
+                setTimeout(() => {
                     $('.modalSO').modal('show');
-                }
+                }, 100);
             },
             tgl_modal(tgl) {
                 return moment(tgl).format('DD MMMM YYYY');
+            },
+            chkEkat(id) {
+                if (event.target.checked) {
+                                                    dataSO.forEach(item => {
+                                                        if (item.epurno == event.target.value) {
+                                                            if(checkEkat.length > 0){
+                                                                checkEkat.forEach(item => {
+                                                                    if(item.epurno == event.target.value){
+                                                                        checkEkat.splice(checkEkat.indexOf(item), 1);
+                                                                    }else{
+                                                                        checkEkat.push(item);
+                                                                    }
+                                                                });
+                                                            }else{
+                                                                checkEkat.push(item);
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    checkEkat.forEach(item => {
+                                                        if (item.epurno == event.target.value) {
+                                                            checkEkat.splice(checkEkat.indexOf(item), 1);
+                                                        }
+                                                    });
+                                                }
             },
         },
         created() {
             this.loadData();
         },
-        updated(){
+        updated() {
             $('.tableSo').DataTable()
         },
         async beforeCreate() {
@@ -230,4 +281,5 @@
             });
         }
     }
+
 </script>
