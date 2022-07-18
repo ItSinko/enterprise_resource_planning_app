@@ -237,37 +237,7 @@
                        </div>
                     </div>
                 </div>
-                {{-- <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">
-                            <i class="fas fa-cogs mr-1"></i>
-                            Produk Perakitan
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Produk</th>
-                                    <th>Jumlah</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td scope="row">1</td>
-                                    <td>Ambulatory</td>
-                                    <td>100 unit <br><span class="badge badge-dark">Dirakit 80 unit</span></td>
-                                    <td>
-                                        <button class="btn btn-primary" data-toggle="modal" data-target=".modal-perakitan-produk">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> --}}
+                
             </div>
         </div>
     </div>
