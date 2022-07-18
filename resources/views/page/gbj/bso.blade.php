@@ -70,7 +70,7 @@
                                     <th>Customer</th>
                                     <th>Batas Transfer</th>
                                     <th>Progress</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -450,10 +450,10 @@
                 {
                     data: 'progress'
                 },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
+                // {
+                //     data: 'status',
+                //     name: 'status'
+                // },
                 {
                     data: 'button',
                     name: 'button'

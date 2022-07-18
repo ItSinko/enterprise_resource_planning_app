@@ -366,7 +366,7 @@
                                             <th style="min-width: 250px">No. Seri Baru</th>
                                             <th style="min-width: 250px">Status</th>
                                             <th style="min-width: 250px">Aksi</th>
-                                        </tr>   
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -1815,7 +1815,8 @@
             },
             dataType: 'json',
             success: function (res) {
-               $('#komentar_noseri').text(res.data)
+               $('#komentar_noseri_mgr').text(res.data_mgr)
+               $('#komentar_noseri_staff').text(res.data_stf)
             }
         })
 

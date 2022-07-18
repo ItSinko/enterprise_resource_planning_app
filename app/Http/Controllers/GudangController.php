@@ -885,7 +885,7 @@ class GudangController extends Controller
                         'action' => 'update',
                         'action_by' => $request->actionby,
                         'status' => 'waiting',
-                        'remark' => $request->remark
+                        'remark' => $request->alasan
                     ]);
                     NoseriBarangJadi::find($c->id)->update(['noseri' => $request->new[$k], 'is_change' => 1]);
                 }
@@ -4329,13 +4329,15 @@ class GudangController extends Controller
                 return response()->json([
                     'error' => false,
                     'msg' => 'Komentar Kosong Belum Di ACC',
-                    'data' => '-'
+                    'data_mgr' => '-',
+                    'data_stf' => $data->remark
                 ]);
             } else {
                 return response()->json([
                     'error' => false,
                     'msg' => 'Komentar ada sudah Di ACC',
-                    'data' => $data->komentar
+                    'data_mgr' => $data->komentar,
+                    'data_stf' => $data->remark
                 ]);
             }
 

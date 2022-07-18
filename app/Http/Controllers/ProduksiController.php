@@ -414,7 +414,7 @@ class ProduksiController extends Controller
                 })
                 ->addColumn('batas_out', function ($d) {
                     if ($d->batas) {
-                        return $d->batas;
+                        return Carbon::createFromFormat('Y-m-d', $d->batas)->isoFormat('D MMMM YYYY');
                     } else {
                         return '-';
                     }
@@ -466,17 +466,14 @@ class ProduksiController extends Controller
                             if ($x[1] == 'EKAT') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="ekatalog"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="ekatalog" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             } elseif ($x[1] == 'SPA') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spa"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spa" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             } elseif ($x[1] == 'SPB') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spb"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spb" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             }
                         }
@@ -486,17 +483,14 @@ class ProduksiController extends Controller
                                 if ($x[1] == 'EKAT') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="ekatalog"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="ekatalog" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 } elseif ($x[1] == 'SPA') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spa"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spa" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 } elseif ($x[1] == 'SPB') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spb"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spb" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 }
                             }
@@ -573,7 +567,7 @@ class ProduksiController extends Controller
                 })
                 ->addColumn('batas_out', function ($d) {
                     if ($d->batas) {
-                        return $d->batas;
+                        return Carbon::createFromFormat('Y-m-d', $d->batas)->isoFormat('D MMMM YYYY');
                     } else {
                         return '-';
                     }

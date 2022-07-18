@@ -487,6 +487,7 @@
             destroy: true,
             processing: true,
             serverSide: false,
+            ordering: false,
             ajax: {
                 url: '/api/tfp/belum-dicek',
             },
@@ -511,7 +512,9 @@
                     "visible": document.getElementById('auth').value == '2' ? false : true,
                     "width": "20%",
                 },
-                { "width": "10%", "targets": 5 }
+                { "width": "8%", "targets": 5 },
+                { "width": "15%", "targets": 4 },
+                { "width": "15%", "targets": 1 }
             ]
         });
     }
@@ -520,6 +523,7 @@
         $('#sudah-dicek').DataTable({
             destroy: true,
             processing: true,
+            ordering: false,
             serverSide: false,
             ajax: {
                 url: '/api/tfp/sudah-dicek',
@@ -545,7 +549,9 @@
                     "visible": document.getElementById('auth').value == '2' ? false : true,
                     "width": "20%",
                 },
-                { "width": "10%", "targets": 5 }
+                { "width": "10%", "targets": 5 },
+                { "width": "15%", "targets": 1 },
+                { "width": "12%", "targets": 4 }
             ]
         });
     }
@@ -555,6 +561,7 @@
             destroy: true,
             processing: true,
             serverSide: false,
+            ordering: false,
             ajax: {
                 url: '/api/v2/gbj/so_batal',
                 type: 'post',

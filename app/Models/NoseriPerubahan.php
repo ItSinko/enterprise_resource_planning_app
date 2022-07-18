@@ -11,7 +11,7 @@ class NoseriPerubahan extends Model
 
     protected $table = 'tbl_noseri_perubahan';
 
-    protected $fillable = ['gdg_brg_jadi_id','noseri_id', 'data_lama', 'data_baru', 'action', 'action_by', 'acc_by', 'status', 'komentar'];
+    protected $fillable = ['gdg_brg_jadi_id','noseri_id', 'data_lama', 'data_baru', 'action', 'action_by', 'acc_by', 'status', 'komentar', 'remark'];
 
     function noseri()
     {
