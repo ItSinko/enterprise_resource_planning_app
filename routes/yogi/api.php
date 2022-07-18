@@ -30,6 +30,7 @@ Route::prefix('/v2')->group(function() {
         Route::post('detaildone-noseri-history-produk', [GudangController::class, 'detailHistoriNoseriDone']);
         Route::post('riwayat_perubahan_noseri', [GudangController::class, 'getNoseriHistoryPerubahan']);
         Route::post('detail_riwayat_perubahan_noseri', [GudangController::class, 'detailNoseriHistoryPerubahan']);
+        Route::post('alasan_edit_noseri_staff', [GudangController::class, 'get_alasan_from_staff_edit']);
 
         Route::get('template_so/{id}', [GudangController::class, 'download_template_so']);
         Route::post('preview-so', [GudangController::class, 'preview_so']);

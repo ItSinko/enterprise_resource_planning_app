@@ -159,7 +159,7 @@
       </div>
     </div>
 
-    {{-- Modal Detail --}} 
+    {{-- Modal Detail --}}
     <div class="modal modelDetail" aria-labelledby="testing" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -633,16 +633,16 @@
 
     $(document).on('click', '.btnAlasan', function () {
         let id = $(this).data('id');
-        // $.ajax({
-        //     url: '/api/v2/gbj/get-alasan',
-        //     type: 'post',
-        //     data: {
-        //         id: id,
-        //     },
-        //     success: function(res) {
-        //         $('.alasan_staff').val(res.data.komentar);
-        //     }
-        // })
+        $.ajax({
+            url: '/api/v2/gbj/alasan_edit_noseri_staff',
+            type: 'post',
+            data: {
+                id: id,
+            },
+            success: function(res) {
+                $('.alasan_staff').val(res.data);
+            }
+        })
         $('.modelDetail').modal('show');
     })
 

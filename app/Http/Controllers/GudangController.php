@@ -842,7 +842,7 @@ class GudangController extends Controller
                 ->addColumn('requested', function($d) {
                     return $d->actionn->nama;
                 })->addColumn('action', function($d) {
-                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->noseri_id.'">
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->id.'">
                             <i class="far fa-eye"></i> Detail
                             </button>';
                 })
@@ -893,6 +893,24 @@ class GudangController extends Controller
                 return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manager']);
             }
 
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'msg' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    function get_alasan_from_staff_edit(Request $request)
+    {
+        try {
+            $data = NoseriPerubahan::find($request->id);
+
+            return response()->json([
+                'error' => false,
+                'msg' => 'Data Berhasil Ditemukan',
+                'data'=> $data->remark
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
