@@ -795,8 +795,12 @@ class GudangController extends Controller
                 })
                 ->addColumn('tgl_aju', function($d){
                     return Carbon::createFromFormat('Y-m-d H:i:s', $d->created_at)->isoFormat('D MMMM YYYY');
+                })->addColumn('action', function($d) {
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->noseri_id.'">
+                            <i class="far fa-eye"></i> Detail
+                            </button>';
                 })
-                ->rawColumns(['checkbox', 'produk'])
+                ->rawColumns(['checkbox', 'produk', 'action'])
                 ->make(true);
         } catch (\Exception $e) {
             return response()->json([
