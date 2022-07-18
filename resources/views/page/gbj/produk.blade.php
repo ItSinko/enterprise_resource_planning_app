@@ -912,7 +912,6 @@
         $('.simpanSeri').hide()
         $('.ubahLayout').hide()
         $('#btnShowModalComment').hide()
-
         $('.hapusSeri').prop('disabled', true);
         $('.simpanSeri').prop('disabled', true);
     });
@@ -1617,14 +1616,18 @@
 
     $(document).on('click', '#btnShowModalComment', function (e) {
         e.preventDefault();
+        $('.alasan').val('');
         $('.modalComment').modal('show');
+        $('.simpanSeri').removeAttr('id');
+        $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
     });
 
     $(document).on('click', '#hapusNS', function (e) {
         e.preventDefault();
+        $('.alasan').val('');
+        $('.modalComment').modal('show');
         $('.simpanSeri').removeAttr('id');
         $('.simpanSeri').attr('id', 'hapusNomorSeri');
-        $('.modalComment').modal('show');
     });
 
     $(document).on('click', '#simpanSeriSudahDigunakan', function () {
@@ -1760,7 +1763,7 @@
 
     });
 
-    $('#hapusNomorSeri').click(function(e){
+    $(document).on('click', '#hapusNomorSeri', function () {
         const cekid = [];
         const layout = [];
         let alasan = $('.alasan').val();
@@ -1782,7 +1785,14 @@
             confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
+                if(cekid.length == 0){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Tidak ada data yang dipilih!',
+                    })
+                }else{
+                    $.ajax({
                     url: '/api/v2/gbj/delete-noseri',
                     type: 'post',
                     data: {
@@ -1811,10 +1821,11 @@
                             })
                         }
                     }
-                });
+                    });
                 }
+            }
             })
-    })
+    });
 
     $(document).on('click', '.openModalHistory', function (e) {
         e.preventDefault();
