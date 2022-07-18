@@ -842,7 +842,7 @@ class GudangController extends Controller
                 ->addColumn('requested', function($d) {
                     return $d->actionn->nama;
                 })->addColumn('action', function($d) {
-                    return '<button class="btn btn-outline-success btn-sm" type="button" data-id="'.$d->noseri_id.'">
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->noseri_id.'">
                             <i class="far fa-eye"></i> Detail
                             </button>';
                 })
