@@ -671,7 +671,7 @@ class ProduksiController extends Controller
     function getOutSO()
     {
         try {
-            $data = Pesanan::with(['Ekatalog.Customer', 'Spa.Customer', 'Spb.Customer', 'log'])
+            $data = Pesanan::with(['Ekatalog.Customer', 'Spa.Customer', 'Spb.Customer'])
                 ->whereIn('id', function($q){
                 $q->select('pesanan.id')
                 ->from('pesanan')
@@ -706,7 +706,7 @@ class ProduksiController extends Controller
                     ->limit(1);
             }])
             ->whereNotIn('pesanan.log_id', [7,10,20])
-            ->whereNotNull('pesanan.so')
+            // ->whereNotNull('pesanan.so')
             ->get();
 
             return datatables()->of($data)

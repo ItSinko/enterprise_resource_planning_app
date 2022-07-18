@@ -648,7 +648,7 @@ class GudangController extends Controller
                             'action' => 'delete',
                             'action_by' => $request->actionby,
                             'status' => 'waiting',
-                            'remark' => $request->remark
+                            'remark' => $request->alasan
                         ]);
                     NoseriBarangJadi::find($cc->id)->update(['is_change' => 0, 'is_delete' => 1]);
                 }
@@ -675,7 +675,7 @@ class GudangController extends Controller
                                     'action' => 'delete',
                                     'action_by' => $request->actionby,
                                     'status' => 'waiting',
-                                    'remark' => $request->remark
+                                    'remark' => $request->alasan
                                 ]);
                             NoseriBarangJadi::find($d->noseri_id)->update(['is_change' => 0, 'is_delete' => 1]);
                         }
@@ -796,7 +796,7 @@ class GudangController extends Controller
                 ->addColumn('tgl_aju', function($d){
                     return Carbon::createFromFormat('Y-m-d H:i:s', $d->created_at)->isoFormat('D MMMM YYYY');
                 })->addColumn('action', function($d) {
-                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->noseri_id.'">
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->id.'">
                             <i class="far fa-eye"></i> Detail
                             </button>';
                 })
@@ -905,7 +905,7 @@ class GudangController extends Controller
         }
     }
 
-    function get_alasan_from_staff_edit(Request $request)
+    function get_alasan_from_staff(Request $request)
     {
         try {
             $data = NoseriPerubahan::find($request->id);
