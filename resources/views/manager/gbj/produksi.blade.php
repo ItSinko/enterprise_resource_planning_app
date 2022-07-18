@@ -103,8 +103,6 @@
     </div>
   </div>
 </div>
-
-
     <!-- Modal Hapus -->
     <div class="modal" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -161,7 +159,26 @@
       </div>
     </div>
 
+    {{-- Modal Detail --}} 
+    <div class="modal modelDetail" aria-labelledby="testing" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title judulKomentar" id="staticBackdropLabel"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <label for="">Alasan Pengajuan</label>
+                <textarea class="form-control alasan_staff " disabled name="" id="" cols="30" rows="10"></textarea>
+              </div>
+          </div>
+        </div>
+      </div>
 @stop
+
+
 
 @section('adminlte_js')
 <script>
@@ -612,6 +629,21 @@
                 }
             })
         }
+    })
+
+    $(document).on('click', '.btnAlasan', function () {
+        let id = $(this).data('id');
+        // $.ajax({
+        //     url: '/api/v2/gbj/get-alasan',
+        //     type: 'post',
+        //     data: {
+        //         id: id,
+        //     },
+        //     success: function(res) {
+        //         $('.alasan_staff').val(res.data.komentar);
+        //     }
+        // })
+        $('.modelDetail').modal('show');
     })
 
 </script>
