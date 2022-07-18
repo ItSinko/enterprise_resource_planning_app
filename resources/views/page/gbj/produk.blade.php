@@ -377,7 +377,7 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" id="btnShowModalComment">Simpan</button>
+                <button class="btn btn-primary btnSimpan" id="btnShowModalComment">Simpan</button>
                 <button type="button" class="btn btn-success ubahLayout" data-toggle="modal" data-target=".edit-stok">Ubah
                     Layout</button>
                 <button type="button" class="btn btn-danger hapusSeri" id="hapusNS">Hapus</button>
@@ -889,10 +889,12 @@
         $('.hapusSeri').hide()
         $('.simpanSeri').show()
         $('.ubahLayout').hide()
+        $('.btnSimpan').show();
         $('.simpanSeri').prop('disabled', false);
         $('.hapusSeri').prop('disabled', true);
         $('.simpanSeri').removeAttr('id');
-        $('#btnShowModalComment').show();
+        $('.btnSimpan').removeAttr('id');
+        $('.btnSimpan').attr('id', 'btnCommentSudah');
         $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
     });
 
@@ -903,7 +905,9 @@
         $('.simpanSeri').prop('disabled', false);
         $('.hapusSeri').prop('disabled', false);
         $('.simpanSeri').removeAttr('id');
-        $('#btnShowModalComment').show();
+        $('.btnSimpan').show();
+        $('.btnSimpan').removeAttr('id');
+        $('.btnSimpan').attr('id', 'btnShowModalComment');
         $('.simpanSeri').attr('id', 'simpanSeriBelumDigunakan');
     });
 
@@ -1160,8 +1164,6 @@
             }
         })
     })
-
-
 
     var title = $(this).parent().prev().prev().prev().prev().html();
     // modal noseri
@@ -1617,17 +1619,54 @@
     $(document).on('click', '#btnShowModalComment', function (e) {
         e.preventDefault();
         $('.alasan').val('');
-        $('.modalComment').modal('show');
-        $('.simpanSeri').removeAttr('id');
-        $('.simpanSeri').attr('id', 'simpanSeriSudahDigunakan');
+        let a = $('.scan-produk').DataTable().column(0).nodes()
+            .to$().find('input[type=checkbox]:checked');
+        if (a.length == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Tidak Ada data yang dipilih',
+            });
+        } else {
+            $('.modalComment').modal('show');
+            $('.simpanSeri').removeAttr('id');
+            $('.simpanSeri').attr('id', 'simpanSeriBelumDigunakan');
+        }
+    });
+
+    $(document).on('click', '#btnCommentSudah', function (e) {
+        e.preventDefault();
+        $('.alasan').val('');
+        let a = $('.scan-produk1').DataTable().column(0).nodes()
+            .to$().find('input[type=checkbox]:checked');
+        if (a.length == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Tidak Ada data yang dipilih',
+            });
+        } else {
+            $('.modalComment').modal('show');
+        }
     });
 
     $(document).on('click', '#hapusNS', function (e) {
         e.preventDefault();
         $('.alasan').val('');
-        $('.modalComment').modal('show');
-        $('.simpanSeri').removeAttr('id');
-        $('.simpanSeri').attr('id', 'hapusNomorSeri');
+        let a = $('.scan-produk').DataTable().column(0).nodes()
+            .to$().find('input[type=checkbox]:checked');
+        if (a.length == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Tidak Ada data yang dipilih',
+            });
+        } else {
+            $('.modalComment').modal('show');
+            $('.simpanSeri').removeAttr('id');
+            $('.simpanSeri').attr('id', 'hapusNomorSeri');
+        }
+
     });
 
     $(document).on('click', '#simpanSeriSudahDigunakan', function () {
