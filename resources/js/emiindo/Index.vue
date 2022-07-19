@@ -5,58 +5,55 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <div class="card" v-else>
-            <div class="card-body">
-                <ul class="nav nav-pills mb-5" id="pills-tab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="pills-ekatalog-tab" data-toggle="pill" href="#pills-ekatalog" @click="tab = 'ekatalog'"
-                            role="tab" aria-controls="pills-ekatalog" aria-selected="true">E-Katalog</a>
+        <div class="container-fluid" v-else>
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="ekatalog-tab" data-toggle="tab" href="#ekatalog" role="tab"
+                            aria-controls="ekatalog" aria-selected="false">Sales Order</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-spa-tab" data-toggle="pill" href="#pills-spa" role="tab" @click="tab = 'spa'"
-                            aria-controls="pills-spa" aria-selected="false">Sudah Proses</a>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="spa-tab" data-toggle="tab" href="#spa" role="tab" aria-controls="spa"
+                            aria-selected="false">Purchase Order</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="spb-tab" data-toggle="tab" href="#spb" role="tab" aria-controls="spb"
+                            aria-selected="false">Delivery Order</a>
                     </li>
                 </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-ekatalog" role="tabpanel"
-                        aria-labelledby="pills-ekatalog-tab" v-show="tab == 'ekatalog'">
-                        <div class="card">
-                            <div class="card-body">
-                                <table class="table tableSo">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Nomor AKN</th>
-                                            <th>Detail</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(item, idx) in dataSO" :key="idx">
-                                            <td><input type="checkbox" ref="cbcheck" :value="item.epurno" @change="chkEkat($event)" /></td>
-                                            <td>{{item.epurno}}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary"
-                                                    @click="detail(item.epurno)"><i class="fas fa-eye"></i>
-                                                    Detail</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="card-footer">
-                                <div class="d-flex justify-content-end">
-                                    <button class="btn btn-sm btn-outline-primary"><i
-                                            class="fas fa-check"></i> Proses</button>
-                                </div>
-                            </div>
+                <div class="tab-content card" id="myTabContent">
+                    <div class="tab-pane fade show active card-body" id="ekatalog" role="tabpanel"
+                        aria-labelledby="ekatalog-tab">
+                        <table class="table tableSo">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Nomor AKN</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, idx) in dataSO" :key="idx">
+                                    <td><input type="checkbox" ref="cbcheck" :value="item.epurno" @click="checked"></td>
+                                    <td>{{item.epurno}}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" @click="detail(item.epurno)"><i
+                                                class="fas fa-eye"></i>
+                                            Detail</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-check"></i> Proses</button>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade show" id="pills-spa" role="tabpanel" aria-labelledby="pills-spa-tab" v-show="tab == 'spa'" >
-                    <p></p>
-                </div>
             </div>
         </div>
+
         <!-- Modal -->
         <div class="modal fade modalSO" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true" v-if="modal">
@@ -72,11 +69,14 @@
                             <div class="col-12">
                                 <div class="card card-detail removeshadow">
                                     <div class="card-body border-0">
-                                        <h5 class="card-title pl-2 py-2"><b>{{ detailModalSO.namapaket }}</b></h5>
+                                        <h5 class="card-title pl-2 py-2"><b>{{ detailModalSO.instansi.instansinm }}</b></h5>
                                         <ul class="fa-ul card-text">
                                             <li class="py-2"><span class="fa-li"><i
-                                                        class="fas fa-address-card fa-fw"></i></span>
+                                                        class="fas fa-user-alt fa-fw"></i></span>
                                                 {{ detailModalSO.satuankerja.customername }}
+                                            </li>
+                                            <li class="py-2"><span class="fa-li"><i class="fas fa-address-card fa-fw"></i></span>
+                                                    {{ detailModalSO.satuankerja.address }}
                                             </li>
                                             <li class="py-2"><span class="fa-li"><i
                                                         class="fas fa-map-marker-alt fa-fw"></i></span>
@@ -117,10 +117,18 @@
                                                                 </b>
                                                             </div>
                                                         </div>
+                                                        <div class="margin">
+                                                            <div><small class="text-muted">Deskripsi</small></div>
+                                                            <div><b>
+                                                                    {{ detailModalSO.namapaket }}
+                                                                </b>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="p-2">
                                                         <div class="margin">
-                                                            <div><small class="text-muted">Tanggal Buat</small></div>
+                                                            <div><small class="text-muted">Tanggal Buat</small>
+                                                            </div>
                                                             <div><b>
                                                                     {{ tgl_modal(detailModalSO.createdate) }}
                                                                 </b>
@@ -154,7 +162,8 @@
                                                                         <th rowspan="2">Harga</th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th><i class="fas fa-shopping-cart"></i></th>
+                                                                        <th><i class="fas fa-shopping-cart"></i>
+                                                                        </th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -167,11 +176,9 @@
                                                                                 class="wb">{{ item.produk.productnm }}</b>
                                                                         </td>
                                                                         <td colspan="2" class="nowraptxt tabnum">
-                                                                            <!-- {{ item.qty }} -->
-                                                                            {{ item.datauom.uom }}
-                                                                            </td>
-                                                                        <!-- <td rowspan="1" class="nowraptxt tabnum">Rp.
-                                                                            {{ item.price }}</td> -->
+                                                                            {{ item.qty }} {{ item.datauom.uom }}
+                                                                        </td>
+                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp. {{ formatRupiah(parseInt(item.price)) }}</td>
                                                                     </tr>
 
                                                                 </tbody>
@@ -179,8 +186,7 @@
                                                                     <tr>
                                                                         <td colspan="4">Total Harga
                                                                         </td>
-                                                                        <td class="tabnum nowraptxt">Rp.
-                                                                            <!-- {{ detailModalSO.total }} -->
+                                                                        <td class="tabnum nowraptxt">Rp. {{ formatRupiah(total) }}
                                                                         </td>
                                                                     </tr>
                                                                 </tfoot>
@@ -201,7 +207,7 @@
     </div>
 </template>
 <script>
-    import axios from 'axios'
+import axios from 'axios'
     export default {
         data() {
             return {
@@ -240,46 +246,46 @@
             tgl_modal(tgl) {
                 return moment(tgl).format('DD MMMM YYYY');
             },
-            chkEkat(id) {
-                if (event.target.checked) {
-                                                    dataSO.forEach(item => {
-                                                        if (item.epurno == event.target.value) {
-                                                            if(checkEkat.length > 0){
-                                                                checkEkat.forEach(item => {
-                                                                    if(item.epurno == event.target.value){
-                                                                        checkEkat.splice(checkEkat.indexOf(item), 1);
-                                                                    }else{
-                                                                        checkEkat.push(item);
-                                                                    }
-                                                                });
-                                                            }else{
-                                                                checkEkat.push(item);
-                                                            }
-                                                        }
-                                                    });
-                                                } else {
-                                                    checkEkat.forEach(item => {
-                                                        if (item.epurno == event.target.value) {
-                                                            checkEkat.splice(checkEkat.indexOf(item), 1);
-                                                        }
-                                                    });
-                                                }
+            checkbox(id) {
+                if (this.checkEkat.includes(id)) {
+                    this.checkEkat.splice(this.checkEkat.indexOf(id), 1);
+                } else {
+                    this.checkEkat.push(id);
+                }
             },
+            checked(e) {
+                if (e.target.checked) {
+                    this.dataSO.filter(item => {
+                        if (item.epurno == e.target.value) {
+                            this.checkEkat.push(item);
+                        }
+                    })
+                } else {
+                    this.checkEkat.filter(item => {
+                        if (item.epurno == e.target.value) {
+                            this.checkEkat.splice(this.checkEkat.indexOf(item), 1);
+                        }
+                    });
+                }
+            },
+            formatRupiah(e){
+                const format = e.toString().split('').reverse().join('');
+                const convert = format.match(/\d{1,3}/g);
+                return convert.join('.').split('').reverse().join('');
+            }
+
         },
-        created() {
+        mounted() {
             this.loadData();
+        },
+        computed: {
+            total() {
+                return this.detailModalSO.sodetail.reduce((a, b) => a + parseInt(b.price), 0);
+            }
         },
         updated() {
             $('.tableSo').DataTable()
         },
-        async beforeCreate() {
-            await axios.post('https://sinko.api.hyperdatasystem.com/api/login', {
-                username: 'superuser.api',
-                password: 'password'
-            }).then(res => {
-                sessionStorage.setItem('token', res.data.token);
-            });
-        }
     }
 
 </script>
