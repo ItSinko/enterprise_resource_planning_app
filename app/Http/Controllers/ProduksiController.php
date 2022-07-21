@@ -704,7 +704,8 @@ class ProduksiController extends Controller
                     ->leftJoin('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=' ,'penjualan_produk.id')
                     ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
                     ->limit(1);
-            }])
+            }
+            ])
             ->whereNotIn('pesanan.log_id', [7,10,20])
             // ->whereNotNull('pesanan.so')
             ->get();
@@ -2025,8 +2026,17 @@ class ProduksiController extends Controller
     function plan_rakit()
     {
         try {
-            $data = JadwalPerakitan::whereMonth('tanggal_mulai', Carbon::now()->addMonth())->get();
-        $res = datatables()->of($data)
+            // $data = JadwalPerakitan::whereMonth('tanggal_mulai', Carbon::now()->addMonth())->get();
+
+            $data = DB::table('jadwal_perakitan')->
+            select('jadwal_perakitan.id', 'jadwal_perakitan.produk_id', 'jadwal_perakitan.created_at','jadwal_perakitan.tanggal_mulai','jadwal_perakitan.tanggal_selesai',DB::raw('datediff(now(), jadwal_perakitan.tanggal_selesai) as selisih'),DB::raw('jadwal_perakitan.no_bppb'),DB::raw("concat(p.nama,' ',gbj.nama) as produkk"),DB::raw('jadwal_perakitan.jumlah'))
+            ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jadwal_perakitan.produk_id')
+            ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+            ->whereMonth('jadwal_perakitan.tanggal_mulai', Carbon::now()->addMonth())
+            ->groupBy('jadwal_perakitan.id')
+            ->get();
+
+            $res = datatables()->of($data)
             ->addColumn('start', function ($d) {
                 if (isset($d->tanggal_mulai)) {
                     return Carbon::parse($d->tanggal_mulai)->isoFormat('D MMM YYYY');
@@ -2042,12 +2052,10 @@ class ProduksiController extends Controller
                 }
             })
             ->addColumn('produk', function ($d) {
-                if (isset($d->produk_id)) {
-                    return $d->produk->produk->nama . ' ' . $d->produk->nama;
-                }
+                return $d->produkk;
             })
             ->addColumn('jml', function ($d) {
-                return $d->jumlah . ' ' . $d->produk->satuan->nama;
+                return $d->jumlah . ' Unit';
             })
             ->make(true);
         return $res;
@@ -2062,28 +2070,43 @@ class ProduksiController extends Controller
 
     function calender_plan()
     {
-        $data = JadwalPerakitan::with('Produk.Produk')->whereMonth('tanggal_mulai', Carbon::now()->addMonth())->get();
+        $data = DB::table('jadwal_perakitan')->
+        select('jadwal_perakitan.warna', 'jadwal_perakitan.produk_id', 'jadwal_perakitan.created_at','jadwal_perakitan.tanggal_mulai','jadwal_perakitan.tanggal_selesai',DB::raw('datediff(now(), jadwal_perakitan.tanggal_selesai) as selisih'),DB::raw('jadwal_perakitan.no_bppb'),DB::raw("concat(p.nama,' ',gbj.nama) as produkk"),DB::raw('jadwal_perakitan.jumlah'))
+        ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jadwal_perakitan.produk_id')
+        ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+        ->whereMonth('jadwal_perakitan.tanggal_mulai', Carbon::now()->addMonth())
+        ->groupBy('jadwal_perakitan.id')
+        ->get();
         return response()->json($data);
     }
 
     function calender_current()
     {
-        $data = JadwalPerakitan::with('Produk.Produk')->whereNotIn('status', [6])->get();
+        // $data = JadwalPerakitan::with('Produk.Produk')->whereNotIn('status', [6])->get();
+        $data = DB::table('jadwal_perakitan')->
+        select('jadwal_perakitan.warna', 'jadwal_perakitan.produk_id', 'jadwal_perakitan.created_at','jadwal_perakitan.tanggal_mulai','jadwal_perakitan.tanggal_selesai',DB::raw('datediff(now(), jadwal_perakitan.tanggal_selesai) as selisih'),DB::raw('jadwal_perakitan.no_bppb'),DB::raw("concat(p.nama,' ',gbj.nama) as produkk"),DB::raw('jadwal_perakitan.jumlah'))
+        ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jadwal_perakitan.produk_id')
+        ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+        ->whereNotIn('jadwal_perakitan.status',[6])
+        ->groupBy('jadwal_perakitan.id')
+        ->get();
         return response()->json($data);
     }
     function on_rakit()
     {
         try {
-            $data = JadwalPerakitan::whereNotIn('status', [6])->whereNotIn('status_tf', [14])->get();
-        $x = [];
-        foreach ($data as $k) {
-            if ($k->jumlah != $k->cekTotalRakit()) {
-                $x[] = $k->id;
-            }
-        }
-        $datax = JadwalPerakitan::whereIn('id', $x)->get();
-        // return $datax;
-        $res = datatables()->of($datax)
+            $data = DB::table('jadwal_perakitan')->
+                    select('jadwal_perakitan.id', 'jadwal_perakitan.produk_id', 'jadwal_perakitan.created_at','jadwal_perakitan.tanggal_mulai','jadwal_perakitan.tanggal_selesai',DB::raw('datediff(now(), jadwal_perakitan.tanggal_selesai) as selisih'),DB::raw('jadwal_perakitan.no_bppb'),DB::raw("concat(p.nama,' ',gbj.nama) as produkk"),DB::raw('jadwal_perakitan.jumlah'),DB::raw('count(tn.jadwal_id) as jml_rakit'))
+                    ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jadwal_perakitan.produk_id')
+                    ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+                    ->leftJoin(DB::raw('tbl_noseri as tn'),'tn.jadwal_id','=','jadwal_perakitan.id')
+                    ->whereNotIn('jadwal_perakitan.status',[6])
+                    ->whereNotIn('jadwal_perakitan.status_tf',[14])
+                    ->groupBy('jadwal_perakitan.id')
+                    ->havingRaw('jadwal_perakitan.jumlah <> ?',['count(tn.jadwal_id)'])
+                    ->get();
+
+        $res = datatables()->of($data)
             ->addColumn('start', function ($d) {
                 if (isset($d->tanggal_mulai)) {
                     return Carbon::parse($d->tanggal_mulai)->isoFormat('D MMM YYYY');
@@ -2092,10 +2115,11 @@ class ProduksiController extends Controller
                 }
             })
             ->addColumn('end', function ($d) {
-                $m = strtotime($d->tanggal_selesai);
-                $a = strtotime(Carbon::now());
-                $s = $a - $m;
-                $x = floor($s / (60 * 60 * 24));
+                // $m = strtotime($d->tanggal_selesai);
+                // $a = strtotime(Carbon::now());
+                // $s = $a - $m;
+                // $x = floor($s / (60 * 60 * 24));
+                $x = $d->selisih;
 
                 if (isset($d->tanggal_selesai)) {
                     if ($x >= -10 && $x < -5) {
@@ -2117,29 +2141,15 @@ class ProduksiController extends Controller
                 }
             })
             ->addColumn('produk', function ($d) {
-                if (isset($d->produk_id)) {
-                    return $d->produk->produk->nama . ' ' . $d->produk->nama;
-                }
+                return $d->produkk;
             })
             ->addColumn('jml', function ($d) {
-                $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                    $q->where('jadwal_id', $d->id);
-                })->get();
-                $c = count($seri);
-                if ($c != $d->jumlah) {
-                    return $d->jumlah . ' ' . $d->produk->satuan->nama . '<br><span class="badge badge-dark">Kurang ' . intval($d->jumlah - $c) . ' Unit</span>';
-                } else {
-                    return $d->jumlah . ' ' . $d->produk->satuan->nama;
-                }
+                return $d->jumlah . ' Unit'. '<br><span class="badge badge-dark">Kurang ' . intval($d->jumlah - $d->jml_rakit) . ' Unit</span>';
             })
             ->addColumn('action', function ($d) {
-                $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                    $q->where('jadwal_id', $d->id);
-                })->get();
-                $c = count($seri);
-                return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $c) . '" data-produk="'.$d->produk_id.'">
+                return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-produk="'.$d->produk_id.'">
                                 <button class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Rakit Produk</button>
-                            </a>&nbsp;<a data-toggle="modal" data-target="#detailtransfer" class="detailtransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $c) . '" data-prd="' . $d->produk->produk->nama . ' ' . $d->produk->nama . '" data-produk="'.$d->produk_id.'">
+                            </a>&nbsp;<a data-toggle="modal" data-target="#detailtransfer" class="detailtransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-prd="' . $d->produkk.'" data-produk="'.$d->produk_id.'">
                             <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
                         </a>';
             })
@@ -3041,7 +3051,24 @@ class ProduksiController extends Controller
     function ajax_sisa_transfer()
     {
         try {
-            $data = JadwalPerakitan::whereNotNull('keterangan_transfer')->orWhereNotNull('keterangan')->get();
+            $data = DB::table('jadwal_perakitan as jp')
+                    ->selectRaw("jp.id,
+                    jp.tanggal_mulai,
+                    jp.tanggal_selesai,
+                    jp.produk_id,
+                    jp.no_bppb,
+                    concat(p.nama, ' ', gbj.nama) as produkk,
+                    jp.jumlah,
+                    sum(case when tnr.status = 11 then 1 else 0 end) as sisa_kirim,
+                    sum(case when tn.jadwal_id is null then 0 else 1 end) as sisa_rakit,
+                    jp.keterangan, jp.keterangan_transfer")
+                    ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jp.produk_id')
+                    ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+                    ->leftJoin(DB::raw('tbl_noseri as tn'),'tn.jadwal_id','=','jp.id')
+                    ->leftJoin(DB::raw('tbl_noseri_rakit as tnr'),'tnr.noseri_id','=','tn.id')
+                    ->whereNotNull('jp.keterangan')
+                    ->orWhereNotNull('jp.keterangan_transfer')
+                    ->groupBy('jp.id')->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -3070,34 +3097,15 @@ class ProduksiController extends Controller
                     }
                 })
                 ->addColumn('produk', function ($d) {
-                    if (isset($d->produk->nama)) {
-                        return $d->produk->produk->nama . ' ' . $d->produk->nama;
-                    } else {
-                        return $d->produk->produk->nama;
-                    }
+                    return $d->produkk;
                 })
                 ->addColumn('jml_rakit', function ($d) {
-                    return  $d->jumlah . ' ' . $d->produk->satuan->nama;
+                    return  $d->jumlah . ' Unit';
                 })
                 ->addColumn('jml_sisa', function ($d) {
-                    $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        $q->where('status', 14);
-                    })->get();
-                    $c = count($seri);
-                    $seri_all = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        // $q->where('status', 14);
-                    })->get();
-                    $c_all = count($seri_all);
-                    $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        $q->where('status', 11);
-                    })->get()->count();
-
                     return '
-                    <span class="badge badge-success">Sisa Kirim : ' . intval($seri_belum) . ' Unit</span>
-                    <br><span class="badge badge-warning">Sisa Rakit : ' . intval($d->jumlah - $c_all) . ' Unit</span>
+                    <span class="badge badge-success">Sisa Kirim : ' . intval($d->sisa_kirim) . ' Unit</span>
+                    <br><span class="badge badge-warning">Sisa Rakit : ' . intval($d->jumlah - $d->sisa_rakit) . ' Unit</span>
                     ';
                 })
                 ->addColumn('remark', function ($d) {
@@ -3108,19 +3116,15 @@ class ProduksiController extends Controller
                     }
                 })
                 ->addColumn('aksi', function ($d) {
-                    $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        $q->where('status', 11);
-                    })->get()->count();
                     if (isset($d->keterangan)) {
                         return '
-                        <a data-toggle="modal" data-target="#rakitmodal" class="transferlain" data-attr=""  data-id="' . $d->id . '" data-jml="' . $seri_belum . '" data-prd="' . $d->produk_id . '" data-ket="' . $d->keterangan . '">
+                        <a data-toggle="modal" data-target="#rakitmodal" class="transferlain" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->sisa_kirim . '" data-prd="' . $d->produk_id . '" data-ket="' . $d->keterangan . '">
                             <button class="btn btn-outline-secondary"><i class="far fa-eye"></i> Detail</button>
                         </a>
                         ';
                     } else {
                         return '
-                        <a data-toggle="modal" data-target="#rakitmodal" class="transferlain" data-attr=""  data-id="' . $d->id . '" data-jml="' . $seri_belum . '" data-prd="' . $d->produk_id . '" data-ket="' . $d->keterangan_transfer . '">
+                        <a data-toggle="modal" data-target="#rakitmodal" class="transferlain" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->sisa_kirim . '" data-prd="' . $d->produk_id . '" data-ket="' . $d->keterangan_transfer . '">
                             <button class="btn btn-outline-secondary"><i class="far fa-eye"></i> Detail</button>
                         </a>
                         ';
