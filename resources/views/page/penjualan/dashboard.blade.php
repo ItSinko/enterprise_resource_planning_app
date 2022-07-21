@@ -583,6 +583,17 @@
 <script>
     $(document).ready(function() {
         $.ajax({
+            type: "POST",
+            url: "https://sinko.api.hyperdatasystem.com/api/login",
+            data: {
+                username: "superuser.api",
+                password: "password"
+            },
+            success: function (response) {
+                sessionStorage.setItem('token', response.token);
+            }
+        });
+        $.ajax({
             url: "/api/penjualan/chart",
             method: "GET",
             success: function(data) {

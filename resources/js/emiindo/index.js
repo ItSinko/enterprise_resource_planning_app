@@ -10,12 +10,4 @@ const app = new Vue({
     components: {
         "index": Index
     },
-    async beforeCreate() {
-        await axios.post('https://sinko.api.hyperdatasystem.com/api/login', {
-            username: 'superuser.api',
-            password: 'password'
-        }).then(res => {
-            sessionStorage.setItem('token', res.data.token);
-        });
-    }
 });

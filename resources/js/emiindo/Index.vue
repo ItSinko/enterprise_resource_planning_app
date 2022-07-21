@@ -9,26 +9,30 @@
             <div class="col-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="ekatalog-tab" data-toggle="tab" href="#ekatalog" role="tab"
-                            aria-controls="ekatalog" aria-selected="false">Sales Order</a>
+                        <a class="nav-link active" id="salesorder-tab" data-toggle="tab" href="#salesorder" role="tab"
+                            aria-controls="salesorder" aria-selected="false" @click="tab = 'salesorder'">Sales Order</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="spa-tab" data-toggle="tab" href="#spa" role="tab" aria-controls="spa"
-                            aria-selected="false">Purchase Order</a>
+                        <a class="nav-link" id="purchaseorder-tab" data-toggle="tab" href="#purchaseorder" role="tab"
+                            aria-controls="purchaseorder" @click="tab = 'purchaseorder'" aria-selected="false">Purchase
+                            Order</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="spb-tab" data-toggle="tab" href="#spb" role="tab" aria-controls="spb"
-                            aria-selected="false">Delivery Order</a>
+                        <a class="nav-link" id="deliveryorder-tab" data-toggle="tab" href="#deliveryorder" role="tab"
+                            aria-controls="deliveryorder" @click="tab = 'deliveryorder'" aria-selected="false">Delivery
+                            Order</a>
                     </li>
                 </ul>
                 <div class="tab-content card" id="myTabContent">
-                    <div class="tab-pane fade show active card-body" id="ekatalog" role="tabpanel"
-                        aria-labelledby="ekatalog-tab">
+                    <div class="tab-pane fade show active card-body" id="salesorder" role="tabpanel"
+                        aria-labelledby="salesorder-tab" v-show="tab = 'salesorder'">
                         <table class="table tableSo">
                             <thead>
                                 <tr>
                                     <th></th>
                                     <th>Nomor AKN</th>
+                                    <!-- <th>Nama Instansi</th> -->
+                                    <th>Nama Customer</th>
                                     <th>Detail</th>
                                 </tr>
                             </thead>
@@ -36,6 +40,11 @@
                                 <tr v-for="(item, idx) in dataSO" :key="idx">
                                     <td><input type="checkbox" ref="cbcheck" :value="item.epurno" @click="checked"></td>
                                     <td>{{item.epurno}}</td>
+                                    <!-- <td>
+                                            <span v-if="item.instansi == null">BELUM DIKETAHUI</span>
+                                            <span v-else>{{ item.instansi.instansinm }}</span>
+                                    </td> -->
+                                    <td>{{ item.satuankerja.customername }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary" @click="detail(item.epurno)"><i
                                                 class="fas fa-eye"></i>
@@ -45,16 +54,113 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="tab-pane fade card-body" id="purchaseorder" role="tabpanel"
+                        aria-labelledby="purchaseorder-tab" v-show="tab = 'purchaseorder'">
+                        <ul class="nav nav-pills mb-5" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-ekatalog-tab" data-toggle="pill"
+                                    href="#pills-ekatalog" role="tab" aria-controls="pills-ekatalog" @click="tabPO = 'ekat'"
+                                    aria-selected="true">E-Katalog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-spa-tab" data-toggle="pill" href="#pills-spa" role="tab" @click="poNonEkat"
+                                    aria-controls="pills-selesai_kirim" aria-selected="false">SPA</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-ekatalog" role="tabpanel" v-show="tabPO == 'ekat'"
+                                aria-labelledby="pills-ekatalog-tab">
+                                <table class="table tablePoEKat">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nomor AKN</th>
+                                            <th>Nomor PO</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, idx) in dataPOEkat" :key="idx">
+                                            <td><input type="checkbox" ref="cbcheck" :value="item.poid" @click="checked"></td>
+                                            <td>
+                                                <span v-if="!item.salesorderno">-</span>
+                                                <span v-else>{{item.salesorderno}}</span>
+                                            </td>
+                                            <td>{{item.pono}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" @click="detail(item.poid)"><i
+                                                        class="fas fa-eye"></i>
+                                                    Detail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="pills-spa" role="tabpanel" v-show="tabPO == 'nonekat'"
+                                aria-labelledby="pills-spa-tab">
+                                <table class="table" id="tablePoNonEKat">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nomor AKN</th>
+                                            <th>Nomor PO</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, idx) in dataPONonEkat" :key="idx">
+                                            <td><input type="checkbox" ref="cbcheck" :value="item.poid" @click="checked"></td>
+                                            <td>
+                                                <span v-if="!item.salesorderno">-</span>
+                                                <span v-else>{{item.salesorderno}}</span>
+                                            </td>
+                                            <td>{{item.pono}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" @click="detail(item.poid)"><i
+                                                        class="fas fa-eye"></i>
+                                                    Detail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade card-body" id="deliveryorder" role="tabpanel"
+                        aria-labelledby="deliveryorder-tab" v-show="tab = 'deliveryorder'">
+                        <table class="table tableDO">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nomor DO</th>
+                                            <th>Nomor PO</th>
+                                            <th>Detail</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, idx) in dataDO" :key="idx">
+                                            <td><input type="checkbox" ref="cbcheck" :value="item.epurno" @click="checked"></td>
+                                            <td>{{item.dono}}</td>
+                                            <td>{{item.purchaseorder.pono}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" @click="detail(item.epurno)"><i
+                                                        class="fas fa-eye"></i>
+                                                    Detail</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                    </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-sm btn-outline-primary"><i class="fas fa-check"></i> Proses</button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-times"></i> Tolak</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal SO -->
         <div class="modal fade modalSO" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true" v-if="modal">
             <div class="modal-dialog modal-xl">
@@ -70,16 +176,18 @@
                                 <div class="card card-detail removeshadow">
                                     <div class="card-body border-0">
                                         <h5 class="card-title pl-2 py-2">
-                                            <b v-if="detailModalSO.instansi == null">-</b>
-                                            <b v-else>{{ detailModalSO.instansi.instansinm }}</b>
-                                            </h5>
+                                            <b>
+                                                {{ detailModalSO.epurno }}
+                                            </b>
+                                        </h5>
                                         <ul class="fa-ul card-text">
                                             <li class="py-2"><span class="fa-li"><i
                                                         class="fas fa-user-alt fa-fw"></i></span>
                                                 {{ detailModalSO.satuankerja.customername }}
                                             </li>
-                                            <li class="py-2"><span class="fa-li"><i class="fas fa-address-card fa-fw"></i></span>
-                                                    {{ detailModalSO.satuankerja.address }}
+                                            <li class="py-2"><span class="fa-li"><i
+                                                        class="fas fa-address-card fa-fw"></i></span>
+                                                {{ detailModalSO.satuankerja.address }}
                                             </li>
                                             <li class="py-2"><span class="fa-li"><i
                                                         class="fas fa-map-marker-alt fa-fw"></i></span>
@@ -114,10 +222,10 @@
 
                                                     <div class="p-2">
                                                         <div class="margin">
-                                                            <div><small class="text-muted">No AKN</small></div>
-                                                            <div><b>
-                                                                    {{ detailModalSO.epurno }}
-                                                                </b>
+                                                            <div><small class="text-muted">Nama Instansi</small></div>
+                                                            <div>
+                                                                <b v-if="detailModalSO.instansi == null">-</b>
+                                                                <b v-else>{{ detailModalSO.instansi.instansinm }}</b>
                                                             </div>
                                                         </div>
                                                         <div class="margin">
@@ -183,9 +291,15 @@
                                                                         <td colspan="2" class="nowraptxt tabnum">
                                                                             {{ item.qty }} {{ item.datauom.uom }}
                                                                         </td>
-                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp. {{ formatRupiah(parseInt(item.price)) }}</td>
-                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp. {{ formatRupiah(parseInt(item.shippingcharge)) }}</td>
-                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp. {{ formatRupiah(subtotal(item.qty,item.price,item.shippingcharge)) }}</td>
+                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp.
+                                                                            {{ formatRupiah(parseInt(item.price)) }}
+                                                                        </td>
+                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp.
+                                                                            {{ formatRupiah(parseInt(item.shippingcharge)) }}
+                                                                        </td>
+                                                                        <td rowspan="1" class="nowraptxt tabnum">Rp.
+                                                                            {{ formatRupiah(subtotal(item.qty,item.price,item.shippingcharge)) }}
+                                                                        </td>
                                                                     </tr>
 
                                                                 </tbody>
@@ -193,7 +307,8 @@
                                                                     <tr>
                                                                         <td colspan="6">Total Harga
                                                                         </td>
-                                                                        <td class="tabnum nowraptxt">Rp. {{ formatRupiah(total) }}
+                                                                        <td class="tabnum nowraptxt">Rp.
+                                                                            {{ formatRupiah(total) }}
                                                                         </td>
                                                                     </tr>
                                                                 </tfoot>
@@ -209,7 +324,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="checklist(detailModalSO.epurno)">Checklist</button>
+                        <button type="button" class="btn btn-primary" @click="checklist(detailModalSO.epurno)">Daftarkan</button>
+                        <button type="button" class="btn btn-success" @click="tambah(detailModalSO.epurno)">Terima</button>
+                        <button type="button" class="btn btn-danger" @click="batal(detailModalSO.epurno)">Tolak</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
                     </div>
                 </div>
@@ -218,18 +335,31 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
+    import axios from 'axios'
     export default {
         data() {
             return {
                 loading: true,
+                tab: 'salesorder',
+                // SO
                 dataSO: [],
                 detailModalSO: [],
                 modal: false,
-                checkAllStatus: false,
-                tab: 'salesorder',
                 checkEkat: [],
-                checkSpa: [],
+                // PO
+                dataPOEkat: [],
+                dataPONonEkat: [],
+                detailModalPO: [],
+                modalPOEkat: false,
+                modalPONonEkat: false,
+                checkEkatPO: [],
+                checkNonEkatPO: [],
+                tabPO: 'ekat',
+                // DO
+                dataDO: [],
+                detailModalDO: [],
+                modalDO: false,
+                checkDO: [],
             }
         },
         methods: {
@@ -241,8 +371,32 @@ import axios from 'axios'
                         }
                     }).then(response => {
                         this.dataSO = response.data
-                        this.loading = false
                     })
+
+                    await axios.get('https://sinko.api.hyperdatasystem.com/api/purchaseorder?type=ECAT', {
+                        headers: {
+                            Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                        }
+                    }).then(response => {
+                        this.dataPOEkat = response.data
+                    })
+
+                    await axios.get('https://sinko.api.hyperdatasystem.com/api/purchaseorder?type=NONECAT', {
+                        headers: {
+                            Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                        }
+                    }).then(response => {
+                        this.dataPONonEkat = response.data
+                    })
+
+                    await axios.get('https://sinko.api.hyperdatasystem.com/api/deliveryorder',{
+                        headers: {
+                            Authorization: 'Bearer ' + sessionStorage.getItem('token')
+                        }
+                    }).then(response => {
+                        this.dataDO = response.data
+                    })
+                    this.loading = false
                 } catch (error) {
                     console.log(error);
                 }
@@ -279,7 +433,7 @@ import axios from 'axios'
                     });
                 }
             },
-            formatRupiah(e){
+            formatRupiah(e) {
                 const format = e.toString().split('').reverse().join('');
                 const convert = format.match(/\d{1,3}/g);
                 return convert.join('.').split('').reverse().join('');
@@ -300,6 +454,10 @@ import axios from 'axios'
                     }
                 });
             },
+            poNonEkat(){
+                this.tabPO = 'nonekat'
+                console.log($('#tablePoNonEKat').DataTable());
+            }
         },
         mounted() {
             this.loadData();
@@ -314,50 +472,53 @@ import axios from 'axios'
             }
         },
         updated() {
-            $('.tableSo').DataTable()
+            $('.tableSo').DataTable();
+            $('.tablePoEKat').DataTable();
+            $('.tableDO').DataTable();
         },
     }
 
 </script>
-    <style scoped>
+<style scoped>
+    ul#status {
+        padding: 0;
+    }
 
-ul#status {
-    padding: 0;
-}
-        ul#status li {
-            /* float: left; */
-            display:inline;
-            padding: 0;
-            list-style-type: none;
-            margin: 0; /* To remove default bottom margin */
-            /* margin: 10px; */
-        }
+    ul#status li {
+        /* float: left; */
+        display: inline;
+        padding: 0;
+        list-style-type: none;
+        margin: 0;
+        /* To remove default bottom margin */
+        /* margin: 10px; */
+    }
 
-        .alert-danger {
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-        }
+    .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
 
-        .separator {
-            border-top: 1px solid #bbb;
-            width: 90%;
-        }
+    .separator {
+        border-top: 1px solid #bbb;
+        width: 90%;
+    }
 
-        .wb {
-            word-break: break-all;
-            white-space: normal;
-        }
+    .wb {
+        word-break: break-all;
+        white-space: normal;
+    }
 
-        .nowraptxt {
-            white-space: nowrap;
-        }
+    .nowraptxt {
+        white-space: nowrap;
+    }
 
-        .filter {
-            margin: 5px;
-        }
+    .filter {
+        margin: 5px;
+    }
 
-        /* thead {
+    /* thead {
             text-align: center;
         }
 
@@ -366,163 +527,163 @@ ul#status {
             white-space: nowrap;
         } */
 
-        #urgent {
-            color: #dc3545;
-            font-weight: 600;
+    #urgent {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
+    #warning {
+        color: #FFC700;
+        font-weight: 600;
+    }
+
+    #info {
+        color: #3a7bb0;
+        font-weight: 600;
+    }
+
+    .minimizechar {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 13ch;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .dropdown-toggle:hover {
+        color: #4682B4;
+    }
+
+    .dropdown-toggle:active {
+        color: #C0C0C0;
+    }
+
+    td.details-control {
+        content: "\f055";
+        font-family: FontAwesome;
+        left: -5px;
+        position: absolute;
+        top: 0;
+    }
+
+    #detailekat {
+        background-color: #E9DDE5;
+
+    }
+
+    #detailspa {
+        background-color: #FFE6C9;
+    }
+
+    #detailspb {
+        background-color: #E1EBF2;
+        /* color: #7D6378; */
+
+    }
+
+    .tabnum {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .removeshadow {
+        box-shadow: none;
+    }
+
+    .align-center {
+        text-align: center;
+    }
+
+    .bordertopnone {
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+        vertical-align: top;
+    }
+
+    .margin {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .card-detail {
+        align-items: center;
+        flex-direction: row;
+        shadow: none;
+        border: none;
+    }
+
+    .card-detail img {
+        width: 25%;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: calc(0.25rem - 1px);
+    }
+
+    @media screen and (min-width: 1440px) {
+
+        body {
+            font-size: 14px;
         }
 
-        #warning {
-            color: #FFC700;
-            font-weight: 600;
+        #detailmodal {
+            font-size: 14px;
         }
 
-        #info {
-            color: #3a7bb0;
-            font-weight: 600;
+        .btn {
+            font-size: 14px;
         }
 
-        .minimizechar {
-            display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 13ch;
-        }
-
-        .hide {
-            display: none;
-        }
-
-        .dropdown-toggle:hover {
-            color: #4682B4;
-        }
-
-        .dropdown-toggle:active {
-            color: #C0C0C0;
-        }
-
-        td.details-control {
-            content: "\f055";
-            font-family: FontAwesome;
-            left: -5px;
-            position: absolute;
-            top: 0;
-        }
-
-        #detailekat {
-            background-color: #E9DDE5;
-
-        }
-
-        #detailspa {
-            background-color: #FFE6C9;
-        }
-
-        #detailspb {
-            background-color: #E1EBF2;
-            /* color: #7D6378; */
-
-        }
-
-        .tabnum {
-            font-variant-numeric: tabular-nums;
-        }
-
-        .removeshadow {
+        .overflowy {
+            max-height: 550px;
+            width: auto;
+            overflow-y: scroll;
             box-shadow: none;
         }
 
-        .align-center {
-            text-align: center;
+        .labelket {
+            text-align: right;
+        }
+    }
+
+    @media screen and (max-width: 1439px) {
+        body {
+            font-size: 12px;
         }
 
-        .bordertopnone {
-            border-top: 0;
-            border-left: 0;
-            border-right: 0;
-            border-bottom: 0;
-            vertical-align: top;
+        h4 {
+            font-size: 20px;
         }
 
-        .margin {
-            margin-left: 10px;
-            margin-right: 10px;
-            margin-top: 15px;
-            margin-bottom: 15px;
+        #detailmodal {
+            font-size: 12px;
         }
 
-        .card-detail {
-            align-items: center;
-            flex-direction: row;
-            shadow: none;
-            border: none;
+        .btn {
+            font-size: 12px;
         }
 
-        .card-detail img {
-            width: 25%;
-            border-top-right-radius: 0;
-            border-bottom-left-radius: calc(0.25rem - 1px);
+        .overflowy {
+            max-height: 450px;
+            width: auto;
+            overflow-y: scroll;
+            box-shadow: none;
         }
 
-        @media screen and (min-width: 1440px) {
-
-            body {
-                font-size: 14px;
-            }
-
-            #detailmodal {
-                font-size: 14px;
-            }
-
-            .btn {
-                font-size: 14px;
-            }
-
-            .overflowy {
-                max-height: 550px;
-                width: auto;
-                overflow-y: scroll;
-                box-shadow: none;
-            }
-
-            .labelket {
-                text-align: right;
-            }
+        .labelket {
+            text-align: right;
         }
+    }
 
-        @media screen and (max-width: 1439px) {
-            body {
-                font-size: 12px;
-            }
-
-            h4 {
-                font-size: 20px;
-            }
-
-            #detailmodal {
-                font-size: 12px;
-            }
-
-            .btn {
-                font-size: 12px;
-            }
-
-            .overflowy {
-                max-height: 450px;
-                width: auto;
-                overflow-y: scroll;
-                box-shadow: none;
-            }
-
-            .labelket {
-                text-align: right;
-            }
+    @media screen and (max-width: 991px) {
+        .labelket {
+            text-align: left;
         }
+    }
 
-        @media screen and (max-width: 991px) {
-            .labelket {
-                text-align: left;
-            }
-        }
-
-    </style>
+</style>
