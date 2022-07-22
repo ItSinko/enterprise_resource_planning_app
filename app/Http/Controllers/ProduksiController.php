@@ -2149,8 +2149,11 @@ class ProduksiController extends Controller
             ->addColumn('action', function ($d) {
                 return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-produk="'.$d->produk_id.'">
                                 <button class="btn btn-outline-info btn-sm"><i class="far fa-edit"></i> Rakit Produk</button>
-                            </a>&nbsp;<a data-toggle="modal" data-target="#detailtransfer" class="detailtransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-prd="' . $d->produkk.'" data-produk="'.$d->produk_id.'">
+                        </a>&nbsp;<a data-toggle="modal" data-target="#detailtransfer" class="detailtransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-prd="' . $d->produkk.'" data-produk="'.$d->produk_id.'">
                             <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
+                        </a>
+                        </a>&nbsp;<a data-toggle="modal" data-target="#evaluasirakit" class="evaluasirakit" data-attr=""  data-id="' . $d->id . '" data-jml="' . intval($d->jumlah - $d->jml_rakit) . '" data-prd="' . $d->produkk.'" data-produk="'.$d->produk_id.'">
+                            <button class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i> Evaluasi Perakitan</button>
                         </a>';
             })
             ->addColumn('created_at', function ($d) {
@@ -2181,16 +2184,31 @@ class ProduksiController extends Controller
     function getSelesaiRakit()
     {
         try {
-            $data = JadwalPerakitan::whereNotIn('status', [6])->whereNotIn('status_tf', [14, 11])->orderBy('id')->get();
-            $x = [];
-            foreach ($data as $k) {
-                if ($k->jumlah != $k->cekTotalKirim()) {
-                    $x[] = $k->id;
-                }
-            }
-            $datax = JadwalPerakitan::whereIn('id', $x)->get();
+            $data = DB::table('jadwal_perakitan')->
+            select('jadwal_perakitan.id', 'jadwal_perakitan.no_bppb',
+            'jadwal_perakitan.produk_id', 'jadwal_perakitan.created_at',
+            'jadwal_perakitan.tanggal_mulai','jadwal_perakitan.tanggal_selesai',
+            DB::raw('cast(sum(case when tnr.status = 14 then 1 else 0 end) as SIGNED) as jml_kirim'),
+            DB::raw('cast(sum(case when tnr.status = 11 then 1 else 0 end) as SIGNED) as jml_rakit'),
+            DB::raw("concat(p.nama,' ',gbj.nama) as produkk"),DB::raw('jadwal_perakitan.jumlah'),
+            DB::raw('cast(sum(case when tnr.status in(11,14) then 1 else 0 end) as SIGNED) as jml_all'),
+            DB::raw('round((cast(sum(case when tnr.status = 14 then 1 else 0 end) as SIGNED) /
+            cast(sum(case when tnr.status in(11,14) then 1 else 0 end) as SIGNED) * 100),2) as perc_kirim'),
+            DB::raw('round((cast(sum(case when tnr.status in(11,14) then 1 else 0 end) as SIGNED) / jadwal_perakitan.jumlah) * 100,2)  as perc_isi'),
+            DB::raw('round((cast(sum(case when tnr.status = 11 then 1 else 0 end) as SIGNED) /
+            cast(sum(case when tnr.status in(11,14) then 1 else 0 end) as SIGNED) * 100),2) as perc_rakit'),
+            DB::raw('round((cast(sum(case when tnr.status in(11,14) then 1 else 0 end) as SIGNED) / jadwal_perakitan.jumlah) * 100,2)  as perc_isi'))
+            ->leftJoin(DB::raw('gdg_barang_jadi as gbj'),'gbj.id','=','jadwal_perakitan.produk_id')
+            ->leftJoin(DB::raw('produk as p'),'p.id','=','gbj.produk_id')
+            ->leftJoin(DB::raw('tbl_noseri as tn'),'tn.jadwal_id','=','jadwal_perakitan.id')
+            ->leftJoin(DB::raw('tbl_noseri_rakit as tnr'),'tnr.noseri_id','=','tn.id')
+            ->whereNotIn('jadwal_perakitan.status',[6])
+            ->whereNotIn('jadwal_perakitan.status_tf',[14, 11])
+            ->groupBy('jadwal_perakitan.id')
+            ->havingRaw('jadwal_perakitan.jumlah <> ?',['sum(case when tnr.status = 14 then 1 else 0 end)'])
+            ->get();
 
-            return datatables()->of($datax)
+            return datatables()->of($data)
                 ->addColumn('periode', function ($d) {
                     if (isset($d->tanggal_mulai)) {
                         return Carbon::parse($d->tanggal_mulai)->isoFormat('MMMM');
@@ -2213,98 +2231,26 @@ class ProduksiController extends Controller
                     }
                 })
                 ->addColumn('produk', function ($d) {
-                    if (isset($d->produk_id)) {
-                        return $d->produk->produk->nama . ' ' . $d->produk->nama;
-                    }
+                    return $d->produkk;
                 })
                 ->addColumn('jml', function ($d) {
-                    return  $d->jumlah . ' ' . $d->produk->satuan->nama;
+                    return  $d->jumlah . ' Unit<br><span class="badge badge-dark">Terisi: ' . $d->jml_all . ' Unit</span>';
                 })
                 ->addColumn('action', function ($d) {
-                    if ($d->status_tf == 12) {
-                        $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->where('status', 14)->get();
-                        $c = count($seri);
-                        $seri_all = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->get();
-                        $c_all = count($seri_all);
-                        $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->where('status', 11)->get()->count();
-                        if ($c == $c_all) {
-                        } else {
-                            return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jumlah . '" data-prd="' . $d->produk_id . '">
-                                <button class="btn btn-outline-success btn-sm"><i class="far fa-edit"></i> Transfer</button>
-                            </a>&nbsp;<a data-toggle="modal" data-target="#detailmodalTransfer" class="detailmodalTransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . $seri_belum . '" data-prd="' . $d->produk_id . '">
-                            <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
-                        </a>';
-                        }
-                    } elseif ($d->status_tf == 13) {
-                        $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->where('status', 14)->get();
-                        $c = count($seri);
-                        $seri_all = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->get();
-                        $c_all = count($seri_all);
-                        $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->where('status', 11)->get()->count();
-                        if ($c == $c_all) {
-                        } else {
-                            return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jumlah . '" data-prd="' . $d->produk_id . '">
-                                <button class="btn btn-outline-success btn-sm"><i class="far fa-edit"></i> Transfer</button>
-                            </a>&nbsp;<a data-toggle="modal" data-target="#detailmodalTransfer" class="detailmodalTransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . $seri_belum . '" data-prd="' . $d->produk_id . '">
-                            <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
-                        </a>';
-                        }
-                    } else {
-                        $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                            $q->where('jadwal_id', $d->id);
-                        })->where('status', 11)->get()->count();
+                    if ($d->jml_rakit != 0) {
                         return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jumlah . '" data-prd="' . $d->produk_id . '">
-                            <button class="btn btn-outline-success btn-sm"><i class="far fa-edit"></i> Transfer</button>
-                        </a>&nbsp;<a data-toggle="modal" data-target="#detailmodalTransfer" class="detailmodalTransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . $seri_belum . '" data-prd="' . $d->produk_id . '">
-                        <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
-                    </a>';
-                    }
-                })
-                ->addColumn('status', function ($d) {
-                    $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                    })->get();
-                    $c = count($seri);
-                    $jj = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
-                        $q->where('gdg_brg_jadi_id', $d->produk_id);
-                    })->get();
-                    $a = count($jj);
-                    if ($d->status_tf == 12) {
-                        return '<span class="belum_diterima">Sudah Terisi Sebagian</span>';
-                    } elseif ($d->status_tf == 13) {
-                        return '<span class="sebagian_diterima">Sudah Terkirim Sebagian</span>';
-                    } else {
-                        return '<span class="sudah_diterima">Sudah Terisi Semua</span>';
+                                        <button class="btn btn-outline-success btn-sm"><i class="far fa-edit"></i> Transfer</button>
+                                    </a>&nbsp;
+                                    <a data-toggle="modal" data-target="#detailmodalTransfer" class="detailmodalTransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jml_rakit . '" data-prd="' . $d->produk_id . '">
+                                        <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
+                                    </a>';
                     }
                 })
                 ->addColumn('progress', function($d){
-                    $seri = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        $q->where('status', 14);
-                    })->get();
-                    $c = count($seri);
-                    $seri_all = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                    })->get();
-                    $c_all = count($seri_all);
-                    $seri_belum = NoseriRakit::whereHas('serii', function($q) use($d) {
-                        $q->where('jadwal_id', $d->id);
-                        $q->where('status', 11);
-                    })->get()->count();
-                    return '<span class="badge badge-success">Terkirim: '.$c.' Unit</span>
-                            <br><span class="badge badge-dark">Terisi: ' . $c_all . ' Unit</span>';
+                    $a = $d->perc_kirim == null ? '0.00' : $d->perc_kirim;
+                    $b = $d->perc_rakit == null ? '0.00' : $d->perc_rakit;
+                    return '<span class="badge badge-success">Terkirim: '.$d->jml_kirim.' Unit ('.$a.'%)</span>
+                            <br><span class="badge badge-dark">Rakit: ' . $d->jml_rakit . ' Unit ('.$b.'%)</span>';
                 })
                 ->addColumn('no_bppb', function ($d) {
                     return $d->no_bppb == null ? '-' : $d->no_bppb;
