@@ -22,7 +22,7 @@
                                         </v-menu>
                                         </v-col>
                                         <v-col md="4">
-                                             <v-select v-model="selectedProduct" :items="productUnique" label="Nama Produk" multiple>
+                                             <!-- <v-select v-model="selectedProduct" :items="productUnique" label="Nama Produk" multiple>
                                                     <template v-slot:prepend-item>
                                                         <v-list-item ripple @mousedown.prevent @click="toggle">
                                                             <v-list-item-action>
@@ -38,7 +38,8 @@
                                                         </v-list-item>
                                                         <v-divider class="mt-2"></v-divider>
                                                     </template>
-                                                </v-select>
+                                                </v-select> -->
+                                                <v-autocomplete v-model="selectedProduct" :items="productUnique" outlined dense chips small-chips label="Nama Produk" multiple></v-autocomplete>
                                         </v-col>
                                     </v-row>
                                     <v-dialog v-model="dialog" max-width="1000px">
