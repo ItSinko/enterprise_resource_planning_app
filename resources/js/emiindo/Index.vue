@@ -215,19 +215,19 @@
                                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="tabs-detail2-tab" data-toggle="pill"
-                                                    href="#tabs-detail2" role="tab" aria-controls="tabs-detail2"
+                                                    href="#tabs-detail2" role="tab" aria-controls="tabs-detail2" @click="tabModal = 'informasi'"
                                                     aria-selected="true">Informasi</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="tabs-produk2-tab" data-toggle="pill"
-                                                    href="#tabs-produk2" role="tab" aria-controls="tabs-produk2"
+                                                    href="#tabs-produk2" role="tab" aria-controls="tabs-produk2" @click="tabModal = 'produk'"
                                                     aria-selected="false">Produk</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="card-body">
                                         <div class="tab-content" id="custom-tabs-three-tabContent">
-                                            <div class="tab-pane fade active show" id="tabs-detail2" role="tabpanel"
+                                            <div class="tab-pane fade active show" id="tabs-detail2" role="tabpanel" v-show="tabModal = 'informasi'"
                                                 aria-labelledby="tabs-detail2-tab">
 
                                                 <div class="row d-flex justify-content-between">
@@ -268,7 +268,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="tabs-produk2" role="tabpanel"
+                                            <div class="tab-pane fade" id="tabs-produk2" role="tabpanel" v-show="tabModal = 'produk'"
                                                 aria-labelledby="tabs-produk2-tab">
                                                 <div class="table-responsive">
                                                     <div class="card removeshadow overflowy">
@@ -390,19 +390,19 @@
                                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="tabs-detail2-tab" data-toggle="pill"
-                                                    href="#tabs-detail2" role="tab" aria-controls="tabs-detail2"
+                                                    href="#tabs-detail2" role="tab" aria-controls="tabs-detail2" @click="tabModal = 'informasi'"
                                                     aria-selected="true">Informasi</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="tabs-produk2-tab" data-toggle="pill"
-                                                    href="#tabs-produk2" role="tab" aria-controls="tabs-produk2"
+                                                    href="#tabs-produk2" role="tab" aria-controls="tabs-produk2" @click="tabModal = 'produk'"
                                                     aria-selected="false">Produk</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="card-body">
                                         <div class="tab-content" id="custom-tabs-three-tabContent">
-                                            <div class="tab-pane fade active show" id="tabs-detail2" role="tabpanel"
+                                            <div class="tab-pane fade active show" id="tabs-detail2" role="tabpanel" v-show="tabModal == 'informasi'"
                                                 aria-labelledby="tabs-detail2-tab">
 
                                                 <div class="row d-flex justify-content-between">
@@ -441,7 +441,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="tabs-produk2" role="tabpanel"
+                                            <div class="tab-pane fade" id="tabs-produk2" role="tabpanel" v-show="tabModal == 'produk'"
                                                 aria-labelledby="tabs-produk2-tab">
                                                 <div class="table-responsive">
                                                     <div class="card removeshadow overflowy">
@@ -537,19 +537,19 @@
                                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="tabs-detail3-tab" data-toggle="pill"
-                                                    href="#tabs-detail3" role="tab" aria-controls="tabs-detail3"
+                                                    href="#tabs-detail3" role="tab" aria-controls="tabs-detail3" @click="tabModal = 'informasi'"
                                                     aria-selected="true">Informasi</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="tabs-produk3-tab" data-toggle="pill"
-                                                    href="#tabs-produk3" role="tab" aria-controls="tabs-produk3"
+                                                    href="#tabs-produk3" role="tab" aria-controls="tabs-produk3" @click="tabModal = 'produk'"
                                                     aria-selected="false">Produk</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="card-body">
                                         <div class="tab-content" id="custom-tabs-three-tabContent">
-                                            <div class="tab-pane fade active show" id="tabs-detail3" role="tabpanel"
+                                            <div class="tab-pane fade active show" id="tabs-detail3" role="tabpanel" v-show="tabModal == 'informasi'"
                                                 aria-labelledby="tabs-detail3-tab">
 
                                                 <div class="row d-flex justify-content-between">
@@ -590,7 +590,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="tabs-produk3" role="tabpanel"
+                                            <div class="tab-pane fade" id="tabs-produk3" role="tabpanel" v-show="tabModal == 'produk'"
                                                 aria-labelledby="tabs-produk3-tab">
                                                 <div class="table-responsive">
                                                     <div class="card removeshadow overflowy">
@@ -760,6 +760,7 @@
             return {
                 loading: true,
                 tab: 'salesorder',
+                tabModal: 'informasi',
                 // SO
                 dataSO: [],
                 detailModalSO: [],
