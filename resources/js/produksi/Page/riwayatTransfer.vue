@@ -184,11 +184,11 @@
             },
             productUnique(){
                 let unique = [];
-                this.dateFilter.forEach(function(item){
-                    if(unique.indexOf(item.produk) === -1){
+                this.dataRiwayat.forEach(item => {
+                    if(!unique.includes(item.produk)) {
                         unique.push(item.produk);
                     }
-                });
+                })
                 return unique;
             },
             likesAllProduct(){
