@@ -2740,7 +2740,7 @@ class GudangController extends Controller
             $h = Pesanan::find($request->pesanan_id);
             $dt = DetailPesanan::where('pesanan_id', $h->id)->get()->pluck('id')->toArray();
             foreach ($request->data as $key => $value) {
-                DetailPesananProduk::where('id', $key)
+                DetailPesananProduk::whereIn('id', [$key])
                     ->update(['status_cek' => 4, 'checked_by' => $request->userid, 'gudang_barang_jadi_id' => $value]);
             }
 
