@@ -75,6 +75,7 @@ Route::middleware('auth')->prefix('/gbj')->group(function () {
     });
     Route::get('/data', [GudangController::class, 'get_data_barang_jadi']);
     Route::get('/export_spb/{id}', [GudangController::class, 'exportSpb'])->name('gbj.spb');
+    Route::get('/export_noseri', [GudangController::class, 'export_noseri_gudang'])->name('gbj.noseri');
 
     // Route::view('/manager/produk', 'manager.gbj.produksi');
 });
@@ -85,6 +86,7 @@ Route::middleware('auth')->prefix('/produksi')->group(function () {
     Route::view('/jadwal_perakitan', 'page.produksi.jadwal_perakitan');
     Route::view('/perencanaan_perakitan', 'page.produksi.perencanaan_perakitan');
     Route::get('/riwayat_perakitan', [ProduksiController::class, 'his_rakit']);
+    Route::get('/export_noseri', [ProduksiController::class, 'export_noseri_produksi'])->name('export.rakitseri');
     Route::view('/pengiriman', 'page.produksi.pengiriman');
     Route::view('/riwayat_transfer', 'page.produksi.riwayat_transfer');
 });

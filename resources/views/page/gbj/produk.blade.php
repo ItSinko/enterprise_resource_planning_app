@@ -40,6 +40,12 @@
                                             <i class="fas fa-file-import"></i>&nbsp;Import
                                         </button>
                                     </span>
+
+                                    <span class="float-left mr-1">
+                                        <a href="{{ route('gbj.noseri') }}" class="btn btn-outline-secondary" id="btnExportNoseri">
+                                            <i class="fas fa-download"></i>&nbsp;Noseri
+                                        </a>
+                                    </span>
                                 @endif
                                 </div>
                             </div>

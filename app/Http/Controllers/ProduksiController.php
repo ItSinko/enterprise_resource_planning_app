@@ -2,36 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailEkatalog;
+use App\Exports\NoseriRakitExport;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananProduk;
-use App\Models\Ekatalog;
 use App\Models\GudangBarangJadi;
 use App\Models\GudangBarangJadiHis;
 use App\Models\JadwalPerakitan;
-use App\Models\JadwalPerakitanLog;
-use App\Models\Layout;
-use App\Models\NoseriRakit;
+use App\Models\JadwalRakitNoseri;
 use App\Models\NoseriBarangJadi;
-use App\Models\NoseriDetailLogistik;
-use App\Models\NoseriLog;
 use App\Models\NoseriTGbj;
-use App\Models\PenjualanProduk;
 use App\Models\Pesanan;
-use App\Models\Produk;
-use App\Models\Spa;
-use App\Models\Spb;
-// use App\Models\SystemLog;
 use App\Models\TFProduksi;
 use App\Models\TFProduksiDetail;
-use App\Models\TFProduksiHis;
-use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use MLayout;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProduksiController extends Controller
 {
@@ -1084,10 +1071,23 @@ class ProduksiController extends Controller
                     return $data->detailpesanan->penjualanproduk->nama.'<br> '.'<span class="badge badge-light">QC: '.$y.' ('.round(($y / $x)*100,2).'%)</span>'.' <span class="badge badge-warning">Gudang: '.round($x - $y).' ('.round((round($x - $y) / $x)*100,2).'%)</span>';
                 })
                 ->addColumn('produk', function ($data) {
-                    if (empty($data->gudangbarangjadi->nama)) {
-                        return $data->gudangbarangjadi->produk->nama . '<input type="hidden" name="gdg_brg_jadi_id[]" id="gdg_brg_jadi_id" value="' . $data->gudang_barang_jadi_id . '"><input type="hidden" name="detail_pesanan_produk_id[]" id="detail_pesanan_produk_id" value="' . $data->id . '">';
+                    if ($data->status_cek == 4) {
+                        if (empty($data->gudangbarangjadi->nama)) {
+                            return $data->gudangbarangjadi->produk->nama . '<input type="hidden" name="gdg_brg_jadi_id[]" id="gdg_brg_jadi_id" value="' . $data->gudang_barang_jadi_id . '"><input type="hidden" name="detail_pesanan_produk_id[]" id="detail_pesanan_produk_id" value="' . $data->id . '">';
+                        } else {
+                            return $data->gudangbarangjadi->produk->nama . ' <b>' . $data->gudangbarangjadi->nama . '</b><input type="hidden" name="gdg_brg_jadi_id[]" id="gdg_brg_jadi_id" value="' . $data->gudang_barang_jadi_id . '"><input type="hidden" name="detail_pesanan_produk_id[]" id="detail_pesanan_produk_id" value="' . $data->id . '">';
+                        }
                     } else {
-                        return $data->gudangbarangjadi->produk->nama . ' <b>' . $data->gudangbarangjadi->nama . '</b><input type="hidden" name="gdg_brg_jadi_id[]" id="gdg_brg_jadi_id" value="' . $data->gudang_barang_jadi_id . '"><input type="hidden" name="detail_pesanan_produk_id[]" id="detail_pesanan_produk_id" value="' . $data->id . '">';
+                        $dt = GudangBarangJadi::whereIn('produk_id', [$data->gudangbarangjadi->produk->id])->get();
+                        $opt = '';
+                        foreach($dt as $dt) {
+                            $opt .= '<option value="' . $dt->id . '">' . $dt->produk->nama . ' <b>'. $dt->nama.'</b></option>';
+                        }
+                        $a = '<select name="cars" id="cars" class="form-control">
+                                ' . $opt . '
+                                </select>';
+
+                        return $a;
                     }
                 })
                 ->addColumn('qty', function ($data) {
@@ -1169,9 +1169,9 @@ class ProduksiController extends Controller
                 })
                 ->addColumn('ids', function ($d) {
                     if ($d->status_cek == 4) {
-                        return '<input type="checkbox" class="cb-child-so" value="' . $d->gudang_barang_jadi_id . '" disabled>';
+                        return '<input type="checkbox" class="cb-child-so" value="' . $d->id . '" disabled>';
                     } else {
-                        return '<input type="checkbox" class="cb-child-so" value="' . $d->gudang_barang_jadi_id . '"><input type="hidden" name="detail_pesanan_produk_id[]" id="detail_pesanan_produk_id" value="' . $d->id . '">';
+                        return '<input type="checkbox" class="cb-child-so" value="' . $d->id . '">';
                     }
                 })
                 ->addColumn('action', function ($data) {
@@ -3304,5 +3304,10 @@ class ProduksiController extends Controller
             ]);
         }
 
+    }
+
+    function export_noseri_produksi(Request $request)
+    {
+        return Excel::download(new NoseriRakitExport(), 'asdsa.xlsx');
     }
 }
