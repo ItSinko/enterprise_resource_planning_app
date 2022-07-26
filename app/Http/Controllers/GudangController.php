@@ -2736,20 +2736,20 @@ class GudangController extends Controller
     function storeCekSO(Request $request)
     {
         try {
-            dd($request->data);
-            // $h = Pesanan::find($request->pesanan_id);
-            // $dt = DetailPesanan::where('pesanan_id', $h->id)->get()->pluck('id')->toArray();
-            // foreach ($request->data as $key => $value) {
-            //     DetailPesananProduk::whereIn('id', [$key])
-            //         ->update(['status_cek' => 4, 'checked_by' => $request->userid, 'gudang_barang_jadi_id' => json_decode(json_encode($value))]);
-            // }
+            // dd($request->data);
+            $h = Pesanan::find($request->pesanan_id);
+            $dt = DetailPesanan::where('pesanan_id', $h->id)->get()->pluck('id')->toArray();
+            foreach ($request->data as $key => $value) {
+                DetailPesananProduk::where('id', $key)
+                    ->update(['status_cek' => 4, 'checked_by' => $request->userid, 'gudang_barang_jadi_id' => $value]);
+            }
 
-            // $h->status_cek = 4;
-            // $h->checked_by = $request->userid;
-            // $h->log_id = 6;
-            // $h->save();
+            $h->status_cek = 4;
+            $h->checked_by = $request->userid;
+            $h->log_id = 6;
+            $h->save();
 
-            // return response()->json(['msg' => 'Successfully']);
+            return response()->json(['msg' => 'Successfully']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,

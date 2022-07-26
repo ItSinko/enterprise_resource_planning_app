@@ -660,11 +660,12 @@
                     // so_dpp.gbj = ids;
                     // ids = $(this).parent().next().children().val();
                     if (ids[$(this).val()] === undefined){
-                        ids[$(this).val()] = [];
-                        ids[$(this).val()].push($(this).parent().next().children().val())
+                        ids[$(this).val()] = $(this).parent().next().children().val();
+                        // ids[$(this).val()].push($(this).parent().next().children().val())
                     }
                     else {
-                        ids[$(this).val()].push($(this).parent().next().children().val())
+                        ids[$(this).val()] = $(this).parent().next().children().val();
+                        // ids[$(this).val()].push($(this).parent().next().children().val())
                     }
                 }
             })
