@@ -55,6 +55,10 @@
         box-shadow: 12px 4px 8px 0 rgba(0, 0, 0, 0.2), 12px 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
+    .otg{
+        height: auto;
+    }
+
     .otg:hover {
         box-shadow: 12px 4px 8px 0 rgba(0, 0, 0, 0.2), 12px 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
@@ -68,6 +72,9 @@
     }
     .font-weight-transfer{
         font-size: 15px;
+    }
+    .tab-content{
+        position: fixed;
     }
 </style>
 <div class="content-header">
@@ -97,452 +104,427 @@
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
 </div>
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-6 col-xxl-4">
-                            <div class="row">
-                                <div class="col-6 col-md-4">
-                                    <div id="transferoneday" class="card active otg" style="background-color: #E6EFFA">
-                                        <div class="card-body text-center">
-                                            <h4 id="he1">0</h4>
-                                            <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 1 Hari</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div id="transfertwoday" class="card otg" style="background-color: #FEF7EA">
-                                        <div class="card-body text-center">
-                                            <h4 id="he2">0</h4>
-                                            <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 2 Hari</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div id="transferthreeday" class="card otg" style="background-color: #FCEDE9">
-                                        <div class="card-body text-center">
-                                            <h4 id="he3">0</h4>
-                                            <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 3 Hari</p>
-                                        </div>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <div id="transferoneday" class="card active otg" style="background-color: #E6EFFA">
+                                    <div class="card-body text-center">
+                                        <h4 id="he1">0</h4>
+                                        <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 1 Hari</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-calendar-alt mr-1"></i>
-                                        Batas Transfer Produk
-                                    </h3>
+                            <div class="col">
+                                <div id="transfertwoday" class="card otg" style="background-color: #FEF7EA">
+                                    <div class="card-body text-center">
+                                        <h4 id="he2">0</h4>
+                                        <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 2 Hari</p>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="transferonedaytable">
-                                        <table class="table table-produk-batas-transfer-one-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nomor SO</th>
-                                                    <th>Nomor PO</th>
-                                                    <th>Customer</th>
-                                                    <th>Batas Transfer</th>
-                                                    <th>Status Penjualan</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="transfertwodaytable hidden">
-                                        <table class="table table-produk-batas-transfer-two-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nomor SO</th>
-                                                    <th>Nomor PO</th>
-                                                    <th>Customer</th>
-                                                    <th>Batas Transfer</th>
-                                                    <th>Status Penjualan</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="transferthreedaytable hidden">
-                                        <table class="table table-produk-batas-transfer-three-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nomor SO</th>
-                                                    <th>Nomor PO</th>
-                                                    <th>Customer</th>
-                                                    <th>Batas Transfer</th>
-                                                    <th>Status Penjualan</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                            </div>
+                            <div class="col">
+                                <div id="transferthreeday" class="card otg" style="background-color: #FCEDE9">
+                                    <div class="card-body text-center">
+                                        <h4 id="he3">0</h4>
+                                        <p class="card-text">Produk Melewati Batas Transfer Lebih Dari 3 Hari</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-xxl-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-chart-pie mr-1"></i>
-                                        Produk yang tidak tersedia sesuai SO
-                                    </h5>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Batas Transfer Produk
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="transferonedaytable">
+                                    <table class="table table-produk-batas-transfer-one-day">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nomor SO</th>
+                                                <th>Nomor PO</th>
+                                                <th>Customer</th>
+                                                <th>Batas Transfer</th>
+                                                <th>Status Penjualan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
-                                <div class="card-body">
-                                    <table class="table table-striped table-jml-stok">
+
+                                <div class="transfertwodaytable hidden">
+                                    <table class="table table-produk-batas-transfer-two-day">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nomor SO</th>
+                                                <th>Nomor PO</th>
+                                                <th>Customer</th>
+                                                <th>Batas Transfer</th>
+                                                <th>Status Penjualan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+
+                                <div class="transferthreedaytable hidden">
+                                    <table class="table table-produk-batas-transfer-three-day">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nomor SO</th>
+                                                <th>Nomor PO</th>
+                                                <th>Customer</th>
+                                                <th>Batas Transfer</th>
+                                                <th>Status Penjualan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-chart-pie mr-1"></i>
+                                    Produk yang tidak tersedia sesuai SO
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped table-jml-stok">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Produk</th>
+                                            <th>Permintaan</th>
+                                            <th>Stok Saat Ini</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div id="jml-produk-20" class="card active otg" style="background-color: #FEF7EA">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd1">0</h4>
+                                                <p class="card-text">Produk dengan jumlah stok 10 sampai 20</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="jml-produk-5" class="card otg" style="background-color: #FFBD67">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd2">0</h4>
+                                                <p class="card-text">Produk dengan jumlah stok 5 sampai 9</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="jml-produk-4" class="card otg" style="background-color: #FF6464">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd3">0</h4>
+                                                <p class="card-text">Produk dengan jumlah stok 1 sampai 4</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="jml-produk-20-table">
+                                    <table class="table jml-produk-20-tab">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Produk</th>
+                                                <th>Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="jml-produk-5-table hidden">
+                                    <table class="table jml-produk-5-tab">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Produk</th>
+                                                <th>Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row">1</td>
+                                                <td>Produk 3</td>
+                                                <td>10 Unit</td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="row">2</td>
+                                                <td>Produk 3</td>
+                                                <td>20 Unit</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="jml-produk-4-table hidden">
+                                    <table class="table jml-produk-4-tab">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Produk</th>
+                                                <th>Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row">1</td>
+                                                <td>Produk 4</td>
+                                                <td>10 Unit</td>
+                                            </tr>
+                                            <tr>
+                                                <td scope="row">2</td>
+                                                <td>Produk 5</td>
+                                                <td>20 Unit</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row row-cols-4">
+                                    <div class="col">
+                                        <div id="produk-masuk-3-bulan" class="card otg active" style="background-color: #FEF7EA">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd4">0</h4>
+                                                <p class="card-text font-weight">Produk masuk 3 bulan sampai 6 bulan</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="produk-masuk-6-bulan" class="card otg" style="background-color: #FFBD67">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd5">0</h4>
+                                                <p class="card-text font-weight">Produk masuk 6 bulan sampai 1 tahun</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="produk-masuk-1-tahun" class="card otg" style="background-color: #FA8282">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd6">0</h4>
+                                                <p class="card-text font-weight">Produk masuk 1 tahun sampai 3 tahun</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div id="produk-masuk-3-tahun" class="card otg" style="background-color: #FF6464">
+                                            <div class="card-body text-center">
+                                                <h4 id="prd7">0</h4>
+                                                <p class="card-text font-weight pt-3">Produk masuk lebih dari 3 tahun</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- Produk Masuk 3 Bulan --}}
+                                <div class="produk-masuk-3-bulan-table">
+                                    <table class="table waktu-produk1" id="tab3bulan">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Tanggal Masuk</th>
+                                                <th>Nama Produk</th>
+                                                <th>Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                {{-- Produk Masuk 6 Bulan --}}
+                                <div class="produk-masuk-6-bulan-table hidden">
+                                <table class="table waktu-produk2" id="tab6bulan">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                </div>
+                                {{-- Produk Masuk 1 Tahun --}}
+                                <div class="produk-masuk-1-tahun-table hidden">
+                                <table class="table waktu-produk3" id="tab1tahun">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                </div>
+                                {{-- Produk Masuk 3 Tahun --}}
+                                <div class="produk-masuk-3-tahun-table hidden">
+                                <table class="table waktu-produk4" id="tab3tahun">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-dolly-flatbed"></i> Daftar Stok Layout
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-sm text-right">Layout :</div>
+                                    <div class="col-sm">
+                                        <select class="select2 form-control layout" id="layout" multiple="multiple">
+                                      </select>
+                                    </div>
+                                </div>
+                                <table class="table tableStokLayout">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Produk</th>
+                                            <th>Jumlah</th>
+                                            <th>Layout</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-6 col-md-4">
+                                <div id="receiptoneday" class="card active otg" style="background-color: #FEF7EA">
+                                    <div class="card-body text-center">
+                                        <h4 id="r1">0</h4>
+                                        <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 1 Hari</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div id="receipttwoday" class="card otg" style="background-color: #FFBD67">
+                                    <div class="card-body text-center">
+                                        <h4 id="r2">0</h4>
+                                        <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 2 Hari</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div id="receiptthreeday" class="card otg" style="background-color: #FF6464">
+                                    <div class="card-body text-center">
+                                        <h4 id="r3">0</h4>
+                                        <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 3 Hari</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-calendar-alt mr-1"></i>
+                                        Batas Penerimaan Produk
+                                    </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="receiptonedaytable">
+                                    <table class="table table-produk-batas-receipt-one-day">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Produk</th>
-                                                <th>Permintaan</th>
-                                                <th>Stok Saat Ini</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div id="jml-produk-20" class="card active otg" style="background-color: #FEF7EA">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd1">0</h4>
-                                                    <p class="card-text">Produk dengan jumlah stok 10 sampai 20</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div id="jml-produk-5" class="card otg" style="background-color: #FFBD67">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd2">0</h4>
-                                                    <p class="card-text">Produk dengan jumlah stok 5 sampai 9</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div id="jml-produk-4" class="card otg" style="background-color: #FF6464">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd3">0</h4>
-                                                    <p class="card-text">Produk dengan jumlah stok 1 sampai 4</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="jml-produk-20-table">
-                                        <table class="table jml-produk-20-tab">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Produk</th>
-                                                    <th>Jumlah</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                    <div class="jml-produk-5-table hidden">
-                                        <table class="table jml-produk-5-tab">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Produk</th>
-                                                    <th>Jumlah</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">1</td>
-                                                    <td>Produk 3</td>
-                                                    <td>10 Unit</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <td>Produk 3</td>
-                                                    <td>20 Unit</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="jml-produk-4-table hidden">
-                                        <table class="table jml-produk-4-tab">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Produk</th>
-                                                    <th>Jumlah</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">1</td>
-                                                    <td>Produk 4</td>
-                                                    <td>10 Unit</td>
-                                                </tr>
-                                                <tr>
-                                                    <td scope="row">2</td>
-                                                    <td>Produk 5</td>
-                                                    <td>20 Unit</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row row-cols-4">
-                                        <div class="col">
-                                            <div id="produk-masuk-3-bulan" class="card otg active" style="background-color: #FEF7EA">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd4">0</h4>
-                                                    <p class="card-text font-weight">Produk masuk 3 bulan sampai 6 bulan</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div id="produk-masuk-6-bulan" class="card otg" style="background-color: #FFBD67">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd5">0</h4>
-                                                    <p class="card-text font-weight">Produk masuk 6 bulan sampai 1 tahun</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div id="produk-masuk-1-tahun" class="card otg" style="background-color: #FA8282">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd6">0</h4>
-                                                    <p class="card-text font-weight">Produk masuk 1 tahun sampai 3 tahun</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div id="produk-masuk-3-tahun" class="card otg" style="background-color: #FF6464">
-                                                <div class="card-body text-center">
-                                                    <h4 id="prd7">0</h4>
-                                                    <p class="card-text font-weight">Produk masuk lebih dari 3 tahun</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- Produk Masuk 3 Bulan --}}
-                                    <div class="produk-masuk-3-bulan-table">
-                                        <table class="table waktu-produk1" id="tab3bulan">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Tanggal Masuk</th>
-                                                    <th>Nama Produk</th>
-                                                    <th>Jumlah</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                    {{-- Produk Masuk 6 Bulan --}}
-                                    <div class="produk-masuk-6-bulan-table hidden">
-                                    <table class="table waktu-produk2" id="tab6bulan">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Tanggal Masuk</th>
-                                                <th>Nama Produk</th>
                                                 <th>Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    </div>
-                                    {{-- Produk Masuk 1 Tahun --}}
-                                    <div class="produk-masuk-1-tahun-table hidden">
-                                    <table class="table waktu-produk3" id="tab1tahun">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>No</th>
                                                 <th>Tanggal Masuk</th>
-                                                <th>Nama Produk</th>
-                                                <th>Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    </div>
-                                    {{-- Produk Masuk 3 Tahun --}}
-                                    <div class="produk-masuk-3-tahun-table hidden">
-                                    <table class="table waktu-produk4" id="tab3tahun">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Tanggal Masuk</th>
-                                                <th>Nama Produk</th>
-                                                <th>Jumlah</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-dolly-flatbed"></i> Daftar Stok Layout
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <div class="col-sm text-right">Layout :</div>
-                                        <div class="col-sm">
-                                            <select class="select2 form-control layout" id="layout" multiple="multiple">
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <table class="table tableStokLayout">
+
+                                <div class="receipttwodaytable hidden">
+                                    <table class="table table-produk-batas-receipt-two-day">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Nama Produk</th>
+                                                <th>Produk</th>
                                                 <th>Jumlah</th>
-                                                <th>Layout</th>
+                                                <th>Tanggal Masuk</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-6"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-6 col-xxl-4">
-                            <div class="row">
-                                <div class="col-6 col-md-4">
-                                    <div id="receiptoneday" class="card active otg" style="background-color: #FEF7EA">
-                                        <div class="card-body text-center">
-                                            <h4 id="r1">0</h4>
-                                            <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 1 Hari</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div id="receipttwoday" class="card otg" style="background-color: #FFBD67">
-                                        <div class="card-body text-center">
-                                            <h4 id="r2">0</h4>
-                                            <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 2 Hari</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div id="receiptthreeday" class="card otg" style="background-color: #FF6464">
-                                        <div class="card-body text-center">
-                                            <h4 id="r3">0</h4>
-                                            <p class="card-text font-weight-transfer">Produk Melewati Batas Penerimaan Lebih Dari 3 Hari</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header">
-                                        <h3 class="card-title">
-                                            <i class="fas fa-calendar-alt mr-1"></i>
-                                            Batas Penerimaan Produk
-                                        </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="receiptonedaytable">
-                                        <table class="table table-produk-batas-receipt-one-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Produk</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Tanggal Masuk</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
 
-                                    <div class="receipttwodaytable hidden">
-                                        <table class="table table-produk-batas-receipt-two-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Produk</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Tanggal Masuk</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="receiptthreedaytable hidden">
-                                        <table class="table table-produk-batas-receipt-three-day">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Produk</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Tanggal Masuk</th>
-                                                    <th>Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-xxl-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="card-title">
-                                        <i class="fas fa-chart-pie mr-1"></i>
-                                        Daftar Penerimaan Transfer Produk
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-produk-batas-receipt-all">
+                                <div class="receiptthreedaytable hidden">
+                                    <table class="table table-produk-batas-receipt-three-day">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -558,97 +540,23 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</div>
-{{-- Modal Penerimaan --}}
-<div class="modal fade detail-layout" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><b>Detail Produk <span id="prd">AMBULATORY BLOOD PRESSURE MONITOR</span></b></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-seri">
-                    <thead>
-                        <tr>
-                            <th>No Seri</th>
-                            <th>Layout</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Modal SO --}}
-<div class="modal fade" id="viewProdukModal" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col">
                         <div class="card">
                             <div class="card-header">
-                                <div class="row row-cols-2">
-                                    {{-- col --}}
-                                    <div class="col"> <label for="">Nomor SO</label>
-                                        <div class="card nomor-so">
-                                            <div class="card-body">
-                                                <span id="so">89798797856456</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- col --}}
-                                    <div class="col"> <label for="">Nomor AKN</label>
-                                        <div class="card nomor-akn">
-                                            <div class="card-body">
-                                                <span id="akn">89798797856456</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- col --}}
-                                    <div class="col"> <label for="">Nomor PO</label>
-                                        <div class="card nomor-po">
-                                            <div class="card-body">
-                                                <span id="po">89798797856456</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- col --}}
-                                    <div class="col"> <label for="">Instansi</label>
-                                        <div class="card instansi">
-                                            <div class="card-body">
-                                                <span id="instansi">RS. Dr. Soetomo</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h5 class="card-title">
+                                    <i class="fas fa-chart-pie mr-1"></i>
+                                    Daftar Penerimaan Transfer Produk
+                                </h5>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped" id="view-produk">
+                                <table class="table table-produk-batas-receipt-all">
                                     <thead>
                                         <tr>
-                                            <th>Paket</th>
-                                            <th>Paket</th>
-                                            <th>Nama Produk</th>
+                                            <th>No</th>
+                                            <th>Produk</th>
                                             <th>Jumlah</th>
-                                            <th>Merk</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -658,7 +566,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </div>
 @stop
