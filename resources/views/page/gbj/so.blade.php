@@ -516,6 +516,7 @@
         });
     }
 
+    function sudah(){
         $('#sudah-dicek').DataTable({
             destroy: true,
             processing: true,
