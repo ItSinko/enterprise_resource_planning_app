@@ -229,7 +229,7 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="">
+                    <div class="columnProduk">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -319,7 +319,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="columnProduk">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
@@ -589,6 +589,7 @@
             penjualandestroy();
             terimadestroy();
             produk();
+            columnProduk();
 
             // Produk Stok
             $(document).on('click', '#jml-produk-20', function () {
@@ -931,6 +932,17 @@
             $('.table-produk-batas-transfer-two-day').DataTable().clear().destroy();
             $('.table-produk-batas-transfer-three-day').DataTable().clear().destroy();
             $('.table-jml-stok').DataTable().clear().destroy();
+        }
+
+        function columnProduk() {
+            let width = screen.width;
+            if (width < 1904) {
+                $('.columnProduk').removeClass('col-6');
+                $('.columnProduk').addClass('col-12');
+            }else{
+                $('.columnProduk').removeClass('col-12');
+                $('.columnProduk').addClass('col-6');
+            }
         }
 
         function produk() {
