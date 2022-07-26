@@ -299,7 +299,7 @@ class PpicController extends Controller
             ->addIndexColumn()
             ->addColumn('paket', function ($d) {
                 if (empty($d->GudangBarangJadi)) {
-                    return '-';
+                    return 'Sparepart / Jasa';
                 } else {
                     return $d->detailpesanan->penjualanproduk->nama;
                 }
@@ -350,7 +350,7 @@ class PpicController extends Controller
                     $jumlah = NoseriDetailLogistik::whereHas('DetailLogistik.DetailPesananProduk.DetailPesanan', function ($q) use ($d) {
                         $q->where('pesanan_id', $d->detailpesanan->pesanan->id);
                     })->count();
-                    return $jumlah;
+                    return $jumlah.' '.$d->gudangbarangjadi->satuan->nama;
                 }
             })
             ->make(true);
@@ -1067,6 +1067,9 @@ class PpicController extends Controller
                     return '<div style="color:red;">' . $data->count_barang . '</div>';
                 }
             })
+            ->addColumn('stok', function ($data) {
+                return $data->count_barang;
+            })
             ->addColumn('penjualan', function ($data) {
                 $jumlah_gbj = intval($data->count_barang);
                 // $jumlahdiminta = $data->getJumlahPermintaanPesanan("ekatalog", "sepakat") + $data->getJumlahPermintaanPesanan("ekatalog", "negosiasi") + $data->getJumlahPermintaanPesanan("ekatalog_po", "") + $data->getJumlahPermintaanPesanan("spa", "") + $data->getJumlahPermintaanPesanan("spb", "");
@@ -1260,6 +1263,9 @@ class PpicController extends Controller
                     return '-';
                 }
             })
+            ->addColumn('status', function($d){
+                return $d->log->nama;
+            })
             ->addColumn('customer', function($data){
                 if(isset($data->Ekatalog)){
                     if(isset($data->Ekatalog->Customer)){
@@ -1404,6 +1410,9 @@ class PpicController extends Controller
                     return $data->Produk->nama;
                 }
             })
+            ->addColumn('stok', function($d){
+                return $d->stok;
+            })
             ->addColumn('jumlah', function ($data) {
                 // $jumlah = $data->getJumlahCekPesanan() + $data->getJumlahKirimPesanan();
                 // $id = $data->id;
@@ -1546,6 +1555,30 @@ class PpicController extends Controller
             ->addIndexColumn()
             ->addColumn('so', function ($data) {
                 return $data->so;
+            })
+            ->addColumn('po', function ($data) {
+                return $data->no_po;
+            })
+            ->addColumn('akn', function ($data) {
+                return $data->Ekatalog->no_paket;
+            })
+            ->addColumn('pelanggan', function ($data) {
+                return $data->Ekatalog->instansi;
+            })
+            ->addColumn('jenis', function($data){
+                $name = explode('/', $data->so);
+                    for ($i = 1; $i < count($name); $i++) {
+                        if ($name[1] == 'EKAT') {
+                            return 'Ekatalog';
+                        } elseif ($name[1] == 'SPA') {
+                            return 'SPA';
+                        } elseif ($name[1] == 'SPB') {
+                            return 'SPB';
+                        }
+                    }
+            })
+            ->addColumn('status', function($d){
+                return $d->log->nama;
             })
             ->addColumn('customer', function ($data) {
                 if(isset($data->Ekatalog)){

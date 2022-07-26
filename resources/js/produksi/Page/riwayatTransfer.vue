@@ -39,7 +39,7 @@
                                                         <v-divider class="mt-2"></v-divider>
                                                     </template>
                                                 </v-select> -->
-                                                <v-autocomplete v-model="selectedProduct" :items="productUnique" outlined dense chips small-chips label="Nama Produk" multiple></v-autocomplete>
+                                                 <v-autocomplete v-model="selectedProduct" :items="productUnique" outlined dense chips small-chips label="Nama Produk" multiple></v-autocomplete>
                                         </v-col>
                                     </v-row>
                                     <v-dialog v-model="dialog" max-width="1000px">

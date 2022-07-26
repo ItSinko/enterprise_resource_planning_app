@@ -358,7 +358,7 @@ class ProduksiController extends Controller
     function getSOCek()
     {
         try {
-            $datax = DB::table(DB::raw('dev_spa.detail_pesanan_produk dpp'))
+            $datax = DB::table(DB::raw('detail_pesanan_produk dpp'))
             ->select('p.id','p.so', 'p.no_po', 'p.log_id',
             DB::raw('count(dpp.gudang_barang_jadi_id)'),
             DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
@@ -450,33 +450,18 @@ class ProduksiController extends Controller
                             }
                         }
                     } elseif ($data->total_cek != $data->total_uncek) {
-                        if($data->log_id == 20) {
-                            for ($i = 1; $i < count($x); $i++) {
-                                if ($x[1] == 'EKAT') {
-                                    return '';
-                                } elseif ($x[1] == 'SPA') {
-                                    return '';
-                                } elseif ($x[1] == 'SPB') {
-                                    return '';
-                                }
-                            }
-                        }
-
                         for ($i = 1; $i < count($x); $i++) {
                             if ($x[1] == 'EKAT') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="ekatalog"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="ekatalog" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             } elseif ($x[1] == 'SPA') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spa"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spa" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             } elseif ($x[1] == 'SPB') {
                                 return '
                                         <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spb"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                        <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spb" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                         ';
                             }
                         }
@@ -486,17 +471,14 @@ class ProduksiController extends Controller
                                 if ($x[1] == 'EKAT') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="ekatalog"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="ekatalog" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 } elseif ($x[1] == 'SPA') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spa"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spa" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 } elseif ($x[1] == 'SPB') {
                                     return '
                                             <button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-value="spb"  data-id="' . $data->id . '" class="btn btn-outline-success btn-sm detailmodal"><i class="far fa-eye"></i> Detail</button>
-                                            <button type="button" data-toggle="modal" data-target="#editmodal" data-attr="" data-value="spb" data-id="' . $data->id . '" class="btn btn-outline-primary btn-sm editmodal"><i class="fas fa-plus"></i> Siapkan Produk</button>
                                             ';
                                 }
                             }
@@ -517,7 +499,7 @@ class ProduksiController extends Controller
     function getSOCekBelum()
     {
         try {
-            $datax = DB::table(DB::raw('dev_spa.detail_pesanan_produk dpp'))
+            $datax = DB::table(DB::raw('detail_pesanan_produk dpp'))
             ->select('p.id','p.so', 'p.no_po', 'p.log_id',
             DB::raw('count(dpp.gudang_barang_jadi_id)'),
             DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),

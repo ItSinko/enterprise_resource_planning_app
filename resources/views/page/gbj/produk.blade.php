@@ -3,6 +3,11 @@
 @section('title', 'ERP')
 
 @section('content')
+<style>
+    .positionFixed{
+        position: fixed;
+    }
+</style>
 <div class="content-header">
     <input type="hidden" name="" id="authid" value="{{ Auth::user()->divisi_id }}">
 
@@ -14,7 +19,7 @@
         </div><!-- /.row -->
     </div><!-- /.container-fluid -->
 </div>
-<div class="row">
+<div class="row positionFixed">
     <div class="col-12">
         <div class="row">
             <div class="col-lg-12">

@@ -66,9 +66,15 @@
                 <td>{{ item.DT_RowIndex }}</td>
                 <td v-html="item.nama_produk"></td>
                 <td>{{ item.stok }}</td>
+                <td>{{ item.jumlah }}</td>
+                <td>{{ item.jumlah_pengiriman }}</td>
+                <td>{{ item.stok - item.jumlah }}</td>
+                <!-- <td>{{ item.DT_RowIndex }}</td>
+                <td v-html="item.nama_produk"></td>
+                <td>{{ item.stok }}</td>
                 <td>{{ item.total }}</td>
                 <td v-text="item.jumlah_kirim"></td>
-                <td><span :class="{ 'has-text-danger' : item.penjualan < 0 }">{{ item.penjualan }}</span></td>
+                <td><span :class="{ 'has-text-danger' : item.penjualan < 0 }">{{ item.penjualan }}</span></td> -->
               </tr>
             </tbody>
           </table>
@@ -221,7 +227,7 @@ export default {
         pagingType: "simple_numbers_no_ellipses",
       });
 
-      await axios.get("/api/ppic/data/so2").then((response) => {
+      await axios.post("/api/ppic/master_pengiriman/data").then((response) => {
         this.data_so = response.data.data;
       });
       $("#table_so").DataTable({

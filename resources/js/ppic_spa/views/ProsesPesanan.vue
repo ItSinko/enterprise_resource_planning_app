@@ -126,7 +126,7 @@ export default {
         async getDetail(id, nama) {
             this.$store.commit("setIsLoading", true);
             await axios
-                .get("/api/ppic/data/master_pengiriman_for_ppic/detail/" + id)
+                .post("/api/ppic/master_pengiriman/detail/" + id)
                 .then((response) => {
                     this.detail = response.data.data;
                 });

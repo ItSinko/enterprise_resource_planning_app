@@ -71,6 +71,7 @@
                 <th>Tanggal order</th>
                 <th>Tanggal pengiriman</th>
                 <th>Jumlah</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -79,6 +80,7 @@
                 <td v-html="item.tgl_order"></td>
                 <td v-html="item.tgl_delivery"></td>
                 <td v-html="item.jumlah"></td>
+                <td v-html="item.status"></td>
               </tr>
             </tbody>
           </table>
@@ -119,7 +121,7 @@ export default {
   methods: {
     async loadData() {
       this.$store.commit("setIsLoading", true);
-      await axios.get("/api/ppic/data/so").then((response) => {
+      await axios.post("/api/ppic/master_stok/data").then((response) => {
         this.data = response.data.data;
       });
       $("#table_so").DataTable();
@@ -129,7 +131,7 @@ export default {
 
     async getDetail(id, nama) {
       this.$store.commit("setIsLoading", true);
-      await axios.get("/api/ppic/data/so/detail/" + id).then((response) => {
+      await axios.post("/api/ppic/master_stok/detail/" + id).then((response) => {
         this.detail = response.data.data;
       });
       $("#detailtable").DataTable();

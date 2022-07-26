@@ -74,7 +74,8 @@
         font-size: 15px;
     }
     .tab-content{
-        position: fixed;
+        position: sticky;
+        overflow: scroll;
     }
 </style>
 <div class="content-header">
@@ -111,7 +112,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="row">
-                            <div class="col">
+                            <div class="col d-flex align-items-stretch">
                                 <div id="transferoneday" class="card active otg" style="background-color: #E6EFFA">
                                     <div class="card-body text-center">
                                         <h4 id="he1">0</h4>
@@ -119,7 +120,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col d-flex align-items-stretch">
                                 <div id="transfertwoday" class="card otg" style="background-color: #FEF7EA">
                                     <div class="card-body text-center">
                                         <h4 id="he2">0</h4>
@@ -127,7 +128,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col d-flex align-items-stretch">
                                 <div id="transferthreeday" class="card otg" style="background-color: #FCEDE9">
                                     <div class="card-body text-center">
                                         <h4 id="he3">0</h4>
@@ -228,11 +229,11 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col">
+                    <div class="">
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="jml-produk-20" class="card active otg" style="background-color: #FEF7EA">
                                             <div class="card-body text-center">
                                                 <h4 id="prd1">0</h4>
@@ -240,7 +241,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="jml-produk-5" class="card otg" style="background-color: #FFBD67">
                                             <div class="card-body text-center">
                                                 <h4 id="prd2">0</h4>
@@ -248,7 +249,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="jml-produk-4" class="card otg" style="background-color: #FF6464">
                                             <div class="card-body text-center">
                                                 <h4 id="prd3">0</h4>
@@ -318,11 +319,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <div class="row row-cols-4">
-                                    <div class="col">
+                                <div class="row">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="produk-masuk-3-bulan" class="card otg active" style="background-color: #FEF7EA">
                                             <div class="card-body text-center">
                                                 <h4 id="prd4">0</h4>
@@ -330,7 +331,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="produk-masuk-6-bulan" class="card otg" style="background-color: #FFBD67">
                                             <div class="card-body text-center">
                                                 <h4 id="prd5">0</h4>
@@ -338,7 +339,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="produk-masuk-1-tahun" class="card otg" style="background-color: #FA8282">
                                             <div class="card-body text-center">
                                                 <h4 id="prd6">0</h4>
@@ -346,11 +347,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-flex align-items-stretch">
                                         <div id="produk-masuk-3-tahun" class="card otg" style="background-color: #FF6464">
                                             <div class="card-body text-center">
                                                 <h4 id="prd7">0</h4>
-                                                <p class="card-text font-weight pt-3">Produk masuk lebih dari 3 tahun</p>
+                                                <p class="card-text font-weight">Produk masuk lebih dari 3 tahun</p>
                                             </div>
                                         </div>
                                     </div>
