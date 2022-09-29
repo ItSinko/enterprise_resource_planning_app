@@ -101,83 +101,238 @@
     @endif
 
     <div class="card">
-      <div class="card-body">
-        <div class='table-responsive'>
-          <div class="form-group row">
-            <label for="no_pemeriksaan" class="col-sm-4 col-form-label" style="text-align:right;">Data</label>
-            <div class="col-sm-8">
-              <select type="text" class="form-control @error('form') is-invalid @enderror select2" name="form" style="width:45%;" id="form">
-                <option value="0">Pilih Data</option>
-                <option value="tensi">Pengukuran Tensi</option>
-                <option value="rapid">Pengecekan Covid</option>
-              </select>
-            </div>
-          </div>
-          <div class="row " id="detail_gagal">
-            <div class="col-lg-4 col-md-4">
-            </div>
-            <div class="col-lg-4 col-md-4">
-              <p>Data yang dicari tidak ada</p>
-            </div>
-            <div class="col-lg-4 col-md-4">
-            </div>
-          </div>
-          <table id="tensi_tabel" class="table table-hover styled-table table-striped" style="display:none">
-            <thead style="text-align: center;">
-              <tr>
-                <th colspan="12">
-                  <a href="/kesehatan/mingguan/tensi/tambah" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
-                </th>
-              </tr>
-              <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th colspan="2">Pengukuran Tensi</th>
-                <th></th>
-                <th></th>
-              </tr>
-              <tr>
-                <th>No</th>
-                <th>Hasil</th>
-                <th>Tgl Pengecekan</th>
-                <th>Divisi</th>
-                <th>Nama</th>
-                <th>Sistolik</th>
-                <th>Diastolik</th>
-                <th>Catatan</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody style="text-align: center;">
-            </tbody>
-          </table>
-          <table id="rapid_tabel" class="table table-hover styled-table table-striped" style="display:none">
-            <thead style="text-align: center;">
-              <tr>
-                <th colspan="12">
-                  <a href="/kesehatan/mingguan/rapid/tambah" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
-                </th>
-              </tr>
-              <tr>
-                <th>No</th>
-                <th>Tgl Cek</th>
-                <th>Pengecekan</th>
-                <th>Divisi</th>
-                <th>Nama</th>
-                <th>Jenis</th>
-                <th>Hasil</th>
-                <th>Catatan</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody style="text-align: center;">
-            </tbody>
-          </table>
+        <div class="card-body">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="pills-data-tab" data-toggle="pill" href="#pills-data" role="tab" aria-controls="pills-data" aria-selected="true">Data</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-detail-tab" data-toggle="pill" href="#pills-detail" role="tab" aria-controls="pills-detail" aria-selected="false">Detail</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-data" role="tabpanel" aria-labelledby="pills-data-tab">
+                        <div class="form-group row">
+                            <label for="no_pemeriksaan" class="col-sm-4 col-form-label" style="text-align:right;">Data</label>
+                            <div class="col-sm-8">
+                                <select type="text" class="form-control @error('form') is-invalid @enderror select2" name="form" style="width:45%;" id="form">
+                                    <option value=""></option>
+                                    <option value="tensi">Pengukuran Tensi</option>
+                                    <option value="rapid">Pengecekan Covid</option>
+                                </select>
+                                <div id="detail_gagal" class="form-text">Data yang dicari tidak ada</div>
+                            </div>
+                        </div>
+                        <div class='table-responsive'>
+                            <table id="tensi_tabel_data" class="table table-hover styled-table table-striped" style="display:none">
+                                <thead style="text-align: center;">
+                                <tr>
+                                    <th colspan="12">
+                                    <a href="/kesehatan/mingguan/tensi/tambah" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2">Pengukuran Tensi</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Hasil</th>
+                                    <th>Tgl Pengecekan</th>
+                                    <th>Divisi</th>
+                                    <th>Nama</th>
+                                    <th>Sistolik</th>
+                                    <th>Diastolik</th>
+                                    <th>Catatan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                </tbody>
+                            </table>
+                            <table id="rapid_tabel_data" class="table table-hover styled-table table-striped" style="display:none">
+                                <thead style="text-align: center;">
+                                <tr>
+                                    <th colspan="12">
+                                    <a href="/kesehatan/mingguan/rapid/tambah" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Tgl Cek</th>
+                                    <th>Pengecekan</th>
+                                    <th>Divisi</th>
+                                    <th>Nama</th>
+                                    <th>Jenis</th>
+                                    <th>Hasil</th>
+                                    <th>Catatan</th>
+                                    <th>Aksi</th>
+                                </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="pills-detail-tab">
+                        <div class="row mt-3">
+                            <div class="col-lg-12">
+                                <div class="col-lg-12">
+                                    {{ csrf_field() }}
+                                    <div class="card">
+                                        <div class="card-header bg-success">
+                                            <div class="card-title">Chart</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class='table-responsive'>
+                                                <div class="col-lg-12">
+                                                    <div class="form-group row">
+                                                        <label for="no_pemeriksaan" class="col-sm-4 col-form-label" style="text-align:right;">Nama Karyawan</label>
+                                                        <div class="col-sm-8">
+                                                            <select type="text" class="form-control @error('divisi') is-invalid @enderror select2" name="divisi" style="width:45%;" id="karyawan_id">
+                                                                <option value="0">Pilih Data</option>
+                                                                @foreach ($karyawan as $k)
+                                                                <option value="{{$k->id}}">{{$k->nama}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @if($errors->has('divisi'))
+                                                            <div class="text-danger">
+                                                                {{ $errors->first('divisi')}}
+                                                            </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <!-- LINE CHART -->
+                                                            <div class="card card-info">
+                                                                <div class="card-header">
+                                                                    <h3 class="card-title">Pengukuran Tensi</h3>
+                                                                    <div class="card-tools">
+                                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="card-body">
+                                                                        <canvas id="tensi_sistolik_chart"></canvas>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <!-- LINE CHART -->
+                                                            <div class="card card-info">
+                                                                <div class="card-header">
+                                                                    <h3 class="card-title">Pengukuran Tensi</h3>
+                                                                    <div class="card-tools">
+                                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="card-body">
+                                                                        <canvas id="tensi_diastolik_chart"></canvas>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <!-- LINE CHART -->
+                                                            <div class="card card-info">
+                                                                <div class="card-header">
+                                                                    <h3 class="card-title">Rapid Test</h3>
+                                                                    <div class="card-tools">
+                                                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="card-body">
+                                                                        <canvas id="rapid_chart"></canvas>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <form action="/kesehatan_harian/aksi_tambah" method="post">
+                                    {{ csrf_field() }}
+                                    <div class="card">
+                                        <div class="card-header bg-success">
+                                            <div class="card-title">Tensi</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class='table-responsive'>
+                                                <table id="tensi_tabel" class="table table-hover styled-table table-striped" style="width:100%;">
+                                                    <thead style="text-align: center;">
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Tgl Pengecekan</th>
+                                                            <th>Sistolik</th>
+                                                            <th>Diastolik</th>
+                                                            <th>Catatan</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align: center;">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <form action="/kesehatan_harian/aksi_tambah" method="post">
+                                    {{ csrf_field() }}
+                                    <div class="card">
+                                        <div class="card-header bg-success">
+                                            <div class="card-title">Rapid</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class='table-responsive'>
+                                                <table id="rapid_tabel" class="table table-hover styled-table table-striped" style="width:100%;">
+                                                    <thead style="text-align: center;">
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Tgl Pengecekan</th>
+                                                            <th>Pemeriksa</th>
+                                                            <th>Hasil Rapid</th>
+                                                            <th>Catatan</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align: center;">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
@@ -340,7 +495,7 @@
 @section('adminlte_js')
 <script>
     $(function(){
-        $('#rapid_tabel > tbody').on('click', '#delete', function() {
+        $('#rapid_tabel_data > tbody').on('click', '#delete', function() {
             Swal.fire({
                 title: 'Hapus Data',
                 text: 'Yakin ingin menghapus data ini?',
@@ -368,7 +523,7 @@
                 }
             });
         });
-        $('#tensi_tabel > tbody').on('click', '#delete', function() {
+        $('#tensi_tabel_data > tbody').on('click', '#delete', function() {
             Swal.fire({
                 title: 'Hapus Data',
                 text: 'Yakin ingin menghapus data ini?',
@@ -402,13 +557,13 @@
     var form = $(this).val();
     if (form == 'tensi') {
       $('#detail_mod_rapid form')[0].reset();
-      var rapid = $('#rapid_tabel').DataTable();
+      var rapid = $('#rapid_tabel_data').DataTable();
       rapid.destroy();
-      $("#rapid_tabel").hide();
+      $("#rapid_tabel_data").hide();
       $("#detail_gagal").hide();
-      $("#tensi_tabel").show();
+      $("#tensi_tabel_data").show();
       $(function() {
-        var tensi_tabel = $('#tensi_tabel').DataTable({
+        var tensi_tabel = $('#tensi_tabel_data').DataTable({
           processing: true,
           serverSide: false,
           language: {
@@ -455,7 +610,7 @@
             },
           ]
         });
-        $('#tensi_tabel tbody').on('click', '#edit_tensi', function() {
+        $('#tensi_tabel_data > tbody').on('click', '#edit_tensi', function() {
           var rows = tensi_tabel.rows($(this).parents('tr')).data();
           $('.data_detail_head_tensi').html(rows[0].karyawan['nama']);
           $('input[id="id"]').val(rows[0]['id']);
@@ -468,14 +623,14 @@
       });
     } else if (form == 'rapid') {
       $('#detail_mod_tensi form')[0].reset();
-      var tensi = $('#tensi_tabel').DataTable();
+      var tensi = $('#tensi_tabel_data').DataTable();
       tensi.destroy();
       $("#detail_gagal").hide();
-      $("#tensi_tabel").hide();
-      $("#rapid_tabel").show();
+      $("#tensi_tabel_data").hide();
+      $("#rapid_tabel_data").show();
 
       $(function() {
-        var rapid_tabel = $('#rapid_tabel').DataTable({
+        var rapid_tabel = $('#rapid_tabel_data').DataTable({
           processing: true,
           serverSide: false,
           language: {
@@ -523,7 +678,7 @@
           ]
         });
 
-        $('#rapid_tabel tbody').on('click', '#edit_rapid', function() {
+        $('#rapid_tabel_data > tbody').on('click', '#edit_rapid', function() {
           var rows = rapid_tabel.rows($(this).parents('tr')).data();
           console.log(rows);
           if (rows[0]['jenis'] == 'Rapid') {
@@ -545,11 +700,11 @@
         });
       });
     } else {
-      $("#tensi_tabel").hide();
-      $("#rapid_tabel").hide();
-      var tensi = $('#tensi_tabel').DataTable();
+      $("#tensi_tabel_data").hide();
+      $("#rapid_tabel_data").hide();
+      var tensi = $('#tensi_tabel_data').DataTable();
       tensi.destroy();
-      var rapid = $('#rapid_tabel').DataTable();
+      var rapid = $('#rapid_tabel_data').DataTable();
       rapid.destroy();
       $("#detail_gagal").show();
     }
@@ -569,5 +724,247 @@
 
 
   });
+</script>
+
+{{-- DETAIL --}}
+<script>
+    $(function() {
+        var karyawan_id = 0;
+        var tensi_tabel = $('#tensi_tabel').DataTable({
+            processing: true,
+            serverSide: false,
+            ajax: '/kesehatan/mingguan/tensi/detail/' + karyawan_id,
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'tgl_cek',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
+                },
+                {
+                    data: 'sis'
+                },
+                {
+                    data: 'dias'
+                },
+                {
+                    data: 'keterangan'
+                },
+                {
+                    data: 'aksi'
+                }
+            ]
+        });
+
+    });
+</script>
+<script>
+    $(function() {
+        var karyawan_id = 0;
+        var tensi_tabel = $('#rapid_tabel').DataTable({
+            processing: true,
+            serverSide: false,
+            ajax: '/kesehatan/mingguan/rapid/detail/' + karyawan_id,
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
+            columns: [{
+                    data: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'tgl_cek',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
+                },
+                {
+                    data: 'z'
+                },
+                {
+                    data: 'hasil'
+                },
+                {
+                    data: 'keterangan'
+                },
+                {
+                    data: 'aksi'
+                }
+            ]
+        });
+
+    });
+</script>
+<script>
+    $('#tensi_tabel > tbody').on('click', '#delete', function() {
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Yakin ingin menghapus data ini?',
+            icon: 'warning',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            showCancelButton: true,
+            showCloseButton: true
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Berhasil menghapus data',
+                    icon: 'success',
+                    showCloseButton: true
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Gagal menghapus data',
+                    icon: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    $('#rapid_tabel > tbody').on('click', '#delete', function() {
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Yakin ingin menghapus data ini?',
+            icon: 'warning',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            showCancelButton: true,
+            showCloseButton: true
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Berhasil menghapus data',
+                    icon: 'success',
+                    showCloseButton: true
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Gagal menghapus data',
+                    icon: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+
+    //Tensi Sistolik
+    var ctx = document.getElementById("tensi_sistolik_chart");
+    var tensi_sistolik_chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Sistolik',
+                data: [],
+                borderWidth: 2,
+                backgroundColor: 'transparent',
+                borderColor: 'red',
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    //Tenesi Diastolik
+    var ctx = document.getElementById("tensi_diastolik_chart");
+    var tensi_diastolik_chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Diastolik',
+                data: [],
+                borderWidth: 2,
+                backgroundColor: 'transparent',
+                borderColor: 'blue',
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    //Rapid
+    var ctx = document.getElementById("rapid_chart");
+    var rapid_chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{
+                label: ['Non Reaktif', 'IgG', 'IgM', 'IgG-IgM'],
+                data: [],
+                borderWidth: 3,
+                backgroundColor: ['rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(102, 204, 0)',
+                    'rgb(255, 102, 78)',
+                ],
+                hoverOffset: 4,
+                borderColor: 'white',
+            }]
+        }
+    });
+    $('#karyawan_id').change(function() {
+        var karyawan_id = $(this).val();
+        $('#tensi_tabel').DataTable().ajax.url('/kesehatan/mingguan/tensi/detail/' + karyawan_id).load();
+        $('#rapid_tabel').DataTable().ajax.url('/kesehatan/mingguan/rapid/detail/' + karyawan_id).load();
+        var updateChart = function() {
+            $.ajax({
+                url: "/kesehatan/mingguan/tensi/detail/data/" + karyawan_id,
+                type: 'GET',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    console.log(data);
+                    tensi_sistolik_chart.data.labels = data.tgl;
+                    tensi_sistolik_chart.data.datasets[0].data = data.labels2;
+                    tensi_sistolik_chart.update();
+
+                    tensi_diastolik_chart.data.labels = data.tgl;
+                    tensi_diastolik_chart.data.datasets[0].data = data.labels3;
+                    tensi_diastolik_chart.update();
+
+                    rapid_chart.data.labels = ['Non Reaktif', 'IgG', 'IgM', 'IgG-IgM'];
+                    rapid_chart.data.datasets[0].data = [data.data2, data.data3, data.data4, data.data5];
+                    rapid_chart.update();
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+        updateChart();
+    });
+    $('.select2').select2();
 </script>
 @endsection

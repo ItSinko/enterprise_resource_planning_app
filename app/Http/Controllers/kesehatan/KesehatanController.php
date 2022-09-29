@@ -419,7 +419,10 @@ class KesehatanController extends Controller
     }
     public function kesehatan_mingguan()
     {
-        return view('page.kesehatan.kesehatan_mingguan');
+        $karyawan = Karyawan::orderBy('nama', 'ASC')
+            ->has('Kesehatan_awal')
+            ->get();
+        return view('page.kesehatan.kesehatan_mingguan', ['karyawan' => $karyawan]);
     }
     public function kesehatan_mingguan_tensi_data()
     {
@@ -671,7 +674,7 @@ class KesehatanController extends Controller
                 } else {
                     $x =  $data->stok.' Pcs';
                 }
-                $btn = $x.'<i class="fas fa-sync m-1" id="stok" aria-hidden="true"></i>';
+                $btn = $x.'<i class="fas fa-sync m-1 stok" aria-hidden="true"></i>';
                 // $btn = $x . '<br><div class="inline-flex"><button type="button" id="stok"  class="btn btn-block btn-primary karyawan-img-small" style="border-radius:50%;" ><i class="fas fa-sync" aria-hidden="true"></i></button></div>';
 
                 return $btn;
@@ -1151,7 +1154,10 @@ class KesehatanController extends Controller
     }
     public function kesehatan_bulanan()
     {
-        return view('page.kesehatan.kesehatan_bulanan');
+        $karyawan = Karyawan::orderBy('nama', 'ASC')
+            ->has('Kesehatan_awal')
+            ->get();
+        return view('page.kesehatan.kesehatan_bulanan', ['karyawan' => $karyawan]);
     }
     public function kesehatan_bulanan_gcu_data()
     {
@@ -1400,6 +1406,7 @@ class KesehatanController extends Controller
             return redirect()->back()->with('error', 'Gagal menambahkan data');
         }
     }
+
     public function kesehatan_bulanan_gcu_detail()
     {
         $karyawan = Karyawan::orderBy('nama', 'ASC')

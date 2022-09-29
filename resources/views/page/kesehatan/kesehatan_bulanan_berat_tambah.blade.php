@@ -118,7 +118,7 @@
                             <div class="form-group row">
                                 <label for="tgl_cek_form" class="col-lg-5 col-form-label align-right">Tanggal</label>
                                 <div class="col-lg-2">
-                                    <input type="date" class="form-control tgl_cek_form col-form-label" name="tgl_cek_form" id="tgl_cek_form">
+                                    <input type="date" class="form-control tgl_cek_form col-form-label" name="tgl_cek_form" id="tgl_cek_form" max="{{date('Y-m-d')}}">
                                 </div>
                             </div>
                             <div class="form-group row">

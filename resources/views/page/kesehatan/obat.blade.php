@@ -42,13 +42,13 @@
     .align-center{
         text-align: center;
     }
-    #stok{
+    .stok{
         color: #0d6efd;
         opacity: 0.6;
 
     }
 
-    #stok:hover{
+    .stok:hover{
         transition: color 0.5s;
         opacity: 1;
     }
@@ -275,12 +275,70 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <div class="data_detail">
+        <div class="row">
+            <div class="col-lg-7 col-md-12">
+                <form method="post" action="/obat/stok/aksi_tambah">
+                {{ csrf_field() }}
+                <div class="card card-outline card-warning">
+                    <div class="card-header">
+                        <h6 class="card-title">Update Stok Obat</h6>
+                    </div>
+                    <div class="card-body">
+                        <input type="text" name="id" class="d-none form-control" id="id" readonly>
+                        <div class="form-group">
+                            <label for="tgl_pembelian">Tgl Pembelian</label>
+                            <input type="date" class="form-control" id="tgl_pembelian" name="tgl_pembelian" placeholder="Masukkan Tanggal" style="width:50%;" max="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="stok">Stok</label>
+                            <div class="input-group" style="width:50%;">
+                                <input type="number" class="form-control" id="stok" name="stok">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Pcs</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan">Keterangan</label>
+                            <textarea type="text" class="form-control" name="keterangan" id="keterangan"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-danger" data-dismiss="modal" >Batal</button>
+                        <button class="btn btn-warning float-right" id="button_tambah">Simpan</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="col-lg-5 col-md-12">
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h6 class="card-title">Riwayat Pembelian</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-center" id="tabel_riwayat">
+                                <thead>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th>Tgl Pembelian</th>
+                                    <th width="5%">Jumlah</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="data_detail">
           <div class="row">
             <div class="col-lg-12">
               <div class="col-lg-12">
-                <form method="post" action="/obat/stok/aksi_tambah">
-                  {{ csrf_field() }}
+
                   <div class="card">
                     <div class="card-header bg-success">
                       Penambahan Stok
@@ -338,19 +396,8 @@
                       <div class="row">
                         <div class="col-lg-12">
                           <div class="form-horizontal">
-                            <input type="text" name="id" class="d-none form-control" id="id" readonly>
-                            <table class="table table-bordered table-striped" id="tabel_riwayat">
-                              <thead>
-                                <tr>
-                                  <th>No</th>
-                                  <th>Tgl Pembelian</th>
-                                  <th>Keterangan</th>
-                                  <th width="5%">Jumlah</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                              </tbody>
-                            </table>
+
+
                           </div>
                         </div>
                       </div>
@@ -360,11 +407,11 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+        {{-- <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div> --}}
     </div>
   </div>
 </div>
@@ -581,7 +628,7 @@
       $('.modal-title > .data_detail_head').text('Ubah '+rows[0]['nama']);
     })
 
-    $('#tabel > tbody').on('click', '#stok', function() {
+    $('#tabel > tbody').on('click', '.stok', function() {
       var rows = tabel.rows($(this).parents('tr')).data();
       $('.data_detail_head').html(
         'Stok ' + rows[0]['nama']
@@ -607,14 +654,18 @@
             searchable: false
           },
           {
-            data: 'tgl_pembelian'
-          },
-          {
-            data: 'keterangan'
+            data: 'tgl_pembelian',
+            render: function (data, type, row) {
+                return moment(new Date(data).toString()).format('DD-MM-YYYY');
+            }
           },
           {
             data: 'a'
           },
+          {
+            data: 'keterangan'
+          },
+
         ],
       });
 

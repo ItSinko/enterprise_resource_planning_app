@@ -235,6 +235,7 @@
             </form>
 
         </div>
+    </div>
 </section>
 @endsection
 @section('adminlte_js')

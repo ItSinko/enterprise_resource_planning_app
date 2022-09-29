@@ -625,7 +625,7 @@ return [
             ],
         ],
         // kesehatan (28)
-           //Kesehatan
+        // Kesehatan
         [
             'text' => 'Beranda',
             'url'  => '/kesehatan/dashboard',
@@ -697,12 +697,13 @@ return [
                             'auth' => [28],
                             'url'  => '/kesehatan/mingguan',
                         ],
+                        // [
+                        //     'icon' => 'far fa-circle',
+                        //     'text' => 'Detail',
+                        //     'auth' => [28],
+                        //     'url'  => '/kesehatan/mingguan/detail',
+                        // ],
                         [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Detail',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/mingguan/detail',
-                        ],  [
                             'icon' => 'far fa-circle',
                             'text' => 'Laporan',
                             'auth' => [28],
@@ -721,12 +722,12 @@ return [
                             'auth' => [28],
                             'url'  => '/kesehatan/bulanan',
                         ],
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Detail',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/bulanan/detail',
-                        ],
+                        // [
+                        //     'icon' => 'far fa-circle',
+                        //     'text' => 'Detail',
+                        //     'auth' => [28],
+                        //     'url'  => '/kesehatan/bulanan/detail',
+                        // ],
                         [
                             'icon' => 'far fa-circle',
                             'text' => 'Laporan',

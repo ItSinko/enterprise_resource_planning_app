@@ -441,7 +441,7 @@
 
         $("#karyawan_sakit_table > tbody").on('click', '#karyawan_sakit_modal', function(){
             $.ajax({
-                url: "/kesehatan/klinik/obat_detail",
+                url: "/kesehatan/klinik/sakit_detail",
                 beforeSend: function() {
                     $('#loader').show();
                 },
