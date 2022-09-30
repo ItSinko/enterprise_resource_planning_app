@@ -671,20 +671,7 @@ return [
                     'icon' => 'fas fa-user-md fa-fw',
                     'text' => 'Awal',
                     'auth' => [28],
-                    'submenu' => [
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Data',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/',
-                        ],
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Detail',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/detail',
-                        ]
-                    ],
+                    'url'  => '/kesehatan/',
                 ],
                 [
                     'icon' => 'fas fa-vial fa-fw',

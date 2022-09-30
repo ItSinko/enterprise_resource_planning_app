@@ -509,6 +509,7 @@
                 $('#tindak_lanjut_istirahat').css('display', 'none');
             }
         })
+
         $('input[type=radio][name=hasil_1]').on('change', function() {
             if (this.value == 'Terapi') {
                 $('#obat').val(null).trigger('change');
@@ -537,6 +538,57 @@
                 select_data();
             }
         });
+
+            $("#diagnosa").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        dataType: 'json',
+                        url: "/api/ekatalog/all_satuan",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+
+                            var transformed = $.map(data, function(el) {
+                                return {
+                                    label: el.satuan,
+                                    id: el.id
+                                };
+                            });
+                            response(transformed);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                }
+            });
+
+
+            $("#diagnosa").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        dataType: 'json',
+                        url: "/api/ekatalog/all_satuan",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+
+                            var transformed = $.map(data, function(el) {
+                                return {
+                                    label: el.satuan,
+                                    id: el.id
+                                };
+                            });
+                            response(transformed);
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                }
+            });
     });
 
 </script>
