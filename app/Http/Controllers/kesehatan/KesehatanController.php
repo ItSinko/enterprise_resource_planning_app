@@ -26,7 +26,10 @@ class KesehatanController extends Controller
 {
     public function kesehatan()
     {
-        return view('page.kesehatan.kesehatan');
+        $karyawan = Karyawan::orderBy('nama', 'ASC')
+            ->has('Kesehatan_awal')
+            ->get();
+        return view('page.kesehatan.kesehatan', ['karyawan' => $karyawan]);
     }
 
     public function klinik_diagnosa_detail()

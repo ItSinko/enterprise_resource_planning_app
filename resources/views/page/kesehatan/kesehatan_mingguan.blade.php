@@ -552,7 +552,10 @@
             });
         });
     })
-     $('.select2').select2();
+    $('.select2').select2({
+        allowClear: true,
+        placeholder: 'Pilih Data'
+    });
   $('#form').change(function() {
     var form = $(this).val();
     if (form == 'tensi') {
@@ -965,6 +968,6 @@
         }
         updateChart();
     });
-    $('.select2').select2();
+    // $('.select2').select2();
 </script>
 @endsection
