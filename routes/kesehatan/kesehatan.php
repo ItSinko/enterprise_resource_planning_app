@@ -30,7 +30,7 @@ Route::group(['prefix' => '/kesehatan'], function (){
 
         Route::group(['prefix' => '/riwayat_penyakit'], function (){
             Route::post('/aksi_tambah', [App\Http\Controllers\kesehatan\KesehatanController::class,'kesehatan_riwayat_penyakit_aksi_tambah']);
-         //   Route::get('/data', [App\Http\Controllers\kesehatan\KesehatanController::class,'riwayat_penyakit_data']);
+            Route::get('/data', [App\Http\Controllers\kesehatan\KesehatanController::class,'riwayat_penyakit_data']);
 
         });
 
@@ -96,12 +96,12 @@ Route::group(['prefix' => '/karyawan'], function (){
   //  });
 
   Route::group(['prefix' => '/sakit'], function (){
-           Route::get('/',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit']);
-         Route::get('/cetak/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_cetak']);
-          Route::post('/data',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_data']);
-         Route::get('/tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_tambah']);
+        Route::get('/',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit']);
+        Route::get('/cetak/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_cetak']);
+        Route::post('/data',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_data']);
+        Route::get('/tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_tambah']);
         Route::get('/obat/data/',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data']);
-         Route::get('/obat/detail/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_detail']);
+        Route::get('/obat/detail/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_detail']);
         Route::post('/aksi_tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'karyawan_sakit_aksi_tambah']);
   });
   Route::group(['prefix' => '/masuk'], function (){

@@ -569,7 +569,7 @@
                 source: function(request, response) {
                     $.ajax({
                         dataType: 'json',
-                        url: "/api/ekatalog/all_satuan",
+                        url: "/kesehatan/riwayat_penyakit/data",
                         data: {
                             term: request.term
                         },
@@ -577,7 +577,7 @@
 
                             var transformed = $.map(data, function(el) {
                                 return {
-                                    label: el.satuan,
+                                    label: el.nama,
                                     id: el.id
                                 };
                             });
