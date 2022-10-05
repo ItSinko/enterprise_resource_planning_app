@@ -22,7 +22,10 @@
     .align-center{
         text-align: center;
     }
-    table { border-collapse: collapse; empty-cells: show; }
+
+    table {
+        border-collapse: collapse;
+        empty-cells: show; }
 
     td { position: relative; }
 
@@ -432,12 +435,12 @@
                                 </div>
                                 <div class="card-footer">
                                     <button type="button" class="btn btn-outline-warning btn-sm" id="btnreset_vaksin">Reset Form</button>
-                                    <button type ="button" class="btn btn-outline-secondary btn-sm float-right" id="tambahitem_vaksin">Tambahkan ke Draf</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm float-right" id="tambahitem_vaksin">Tambahkan ke Draf</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-8 col-md-12">
-                        <form method="post" action="/kesehatan/vaksin/aksi_tambah/2">
+                        <form action="/kesehatan/vaksin/aksi_tambah" id="vaksin_form">
                         @csrf
                             <div class="card">
                                 <div class="card-header">
@@ -466,7 +469,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <button class="btn btn-sm btn-danger" id="btnbatal" data-dismiss="modal">Batal</button>
-                                    <button class="btn btn-primary float-right" id="button_tambah" type="submit">Simpan Data</button></span>
+                                    <button class="btn btn-primary float-right" id="button_tambah" type="submit" disabled="true">Simpan Data</button>
                                 </div>
                             </div>
                         </form>
@@ -573,11 +576,11 @@
                 </div>
                 <div class="col-md-12 col-lg-8">
                     <div class="card card-outline card-info">
-                        <form method="post" action="/kesehatan/riwayat_penyakit/aksi_tambah">
+                        <form  method="post" action="/kesehatan/riwayat_penyakit/aksi_tambah" id="penyakit_form">
                         @csrf
                         <div class="card-header"><b class="card-title">Draft Daftar Penyakit</b></div>
                         <div class="card-body">
-                            <input type="text" name="fk_karyawan_id" class="d-none form-control" id="fk_karyawan_id" readonly>
+                            <input type="text" name="fk_karyawan_id" class="d-none form-control" id="fk_karyawan_id">
                             <div class="table-responsive">
                             <table class="table table-bordered table-striped align-center" id="tabel_penyakit">
                                 <thead>
@@ -600,7 +603,7 @@
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-sm btn-danger" id="btnbatal" data-dismiss="modal">Batal</button>
-                            <button class="btn btn-primary float-right" id="button_tambah" type="submit">Simpan Data</button></span>
+                            <button class="btn btn-primary float-right" id="button_tambah_penyakit" type="submit" disabled="true">Simpan Data</button></span>
                         </div>
                         </form>
                     </div>
@@ -618,62 +621,113 @@
 <script>
   $(function() {
     $('#tabel_detail_penyakit > tbody').on('click', '#delete', function() {
-        Swal.fire({
-            title: 'Hapus Data',
-            text: 'Yakin ingin menghapus data ini?',
-            icon: 'warning',
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak',
-            showCancelButton: true,
-            showCloseButton: true
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
+                var data_id = $(this).attr('data-id');
                 Swal.fire({
-                    title: 'Berhasil',
-                    text: 'Berhasil menghapus data',
-                    icon: 'success',
-                    showCloseButton: true
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Gagal',
-                    text: 'Gagal menghapus data',
-                    icon: 'error',
-                    showCloseButton: true
-                });
-            }
-        });
-    });
+                        title: 'Hapus Data',
+                        text: 'Yakin ingin menghapus data ini?',
+                        icon: 'warning',
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Tidak',
+                        showCancelButton: true,
+                        showCloseButton: true
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '/kesehatan/riwayat_penyakit/delete/' + data_id,
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Hapus Data',
+                                            'success'
+                                        );
+                                        $('#tabel_detail_penyakit').DataTable().ajax
+                                            .reload();
+                                        $("#hapusmodal").modal('hide');
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'error'
+                                        );
+                                    } else {
+                                        swal.fire(
+                                            'Error',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'warning'
+                                        );
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    swal.fire(
+                                        'Error',
+                                        'Data telah digunakan dalam Transaksi Lain',
+                                        'warning'
+                                    );
+                                }
+                            });
+                        }
+                    });
+            });
 
-    $('#tabel_detail > tbody').on('click', '#delete', function() {
-        Swal.fire({
-            title: 'Hapus Data',
-            text: 'Yakin ingin menghapus data ini?',
-            icon: 'warning',
-            confirmButtonText: 'Ya',
-            cancelButtonText: 'Tidak',
-            showCancelButton: true,
-            showCloseButton: true
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
+            $('#tabel_detail > tbody').on('click', '#delete', function() {
+                var data_id = $(this).attr('data-id');
                 Swal.fire({
-                    title: 'Berhasil',
-                    text: 'Berhasil menghapus data',
-                    icon: 'success',
-                    showCloseButton: true
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Gagal',
-                    text: 'Gagal menghapus data',
-                    icon: 'error',
-                    showCloseButton: true
-                });
-            }
-        });
-    });
+                        title: 'Hapus Data',
+                        text: 'Yakin ingin menghapus data ini?',
+                        icon: 'warning',
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Tidak',
+                        showCancelButton: true,
+                        showCloseButton: true
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '/kesehatan/vaksin/delete/' + data_id,
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Hapus Data',
+                                            'success'
+                                        );
+                                        $('#tabel_detail').DataTable().ajax.reload();
+                                        $("#hapusmodal").modal('hide');
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'error'
+                                        );
+                                    } else {
+                                        swal.fire(
+                                            'Error',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'warning'
+                                        );
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    swal.fire(
+                                        'Error',
+                                        'Data telah digunakan dalam Transaksi Lain',
+                                        'warning'
+                                    );
+                                }
+                            });
+                        }
+                    });
+            });
 
 
     var tabel = $('#tabel').DataTable({
@@ -828,7 +882,7 @@
       $('.data_detail_head').html(
         rows[0]['karyawan']['nama']
       );
-      $('input[id="id"]').val(rows[0]['karyawan_id']);
+      $('#fk_karyawan_id').val(rows[0]['karyawan']['id']);
       $('#tabel_detail_penyakit').DataTable({
         processing: true,
         destroy: true,
@@ -897,35 +951,46 @@
         var dosis_form = $('#dosis_form').val();
         var ket_form = $('#ket_form').val();
 
-        const day = new Date(date_form).getDate();
-        const month = (new Date(date_form).getMonth() + 1).toString().padStart(2,"0");
-        const year = new Date(date_form).getFullYear();
-
-        const date_format = day+"-"+month+"-"+year;
-        $('#date_form').val('');
-        $('#dosis_form').val('');
-        $('#ket_form').val('');
-        var data = `  <tr>
-            <td>1</td>
-            <td>`+date_format+`<input type="date" class="form-control date d-none" name="date[]" value="`+date_form+`"></td>
-            <td>`+dosis_form+`<input type="text" class="form-control dosis_table d-none" name="dosis[]" value="`+dosis_form+`"></td>
-            <td>`+ket_form+`<input type="text" class="form-control ket_table d-none" name="ket[]" value="`+ket_form+`"></td>
-            <td><i class="fas fa-minus text-danger" id="closetable_vaksin"></i></td>
-        </tr>`;
-
-        if($('#tabel_vaksin > tbody > tr > td > .date').length <= 0){
-            $('#tabel_vaksin > tbody > tr').remove();
-            $('#tabel_vaksin tbody').append(data);
+        var validasi_form = validasiform([date_form, dosis_form, ket_form]);
+        if(validasi_form == false){
+            swal.fire(
+                'Gagal',
+                'Periksa kembali dan lengkapi form anda',
+                'warning'
+            );
         }else{
-            $('#tabel_vaksin tbody tr:last').after(data);
+            const day = new Date(date_form).getDate();
+            const month = (new Date(date_form).getMonth() + 1).toString().padStart(2,"0");
+            const year = new Date(date_form).getFullYear();
+
+            const date_format = day+"-"+month+"-"+year;
+            $('#date_form').val('');
+            $('#dosis_form').val('');
+            $('#ket_form').val('');
+            var data = `  <tr>
+                <td>1</td>
+                <td>`+date_format+`<input type="date" class="form-control date d-none" name="date[]" value="`+date_form+`"></td>
+                <td>`+dosis_form+`<input type="text" class="form-control dosis_table d-none" name="dosis[]" value="`+dosis_form+`"></td>
+                <td>`+ket_form+`<input type="text" class="form-control ket_table d-none" name="ket[]" value="`+ket_form+`"></td>
+                <td><i class="fas fa-minus text-danger" id="closetable_vaksin"></i></td>
+            </tr>`;
+
+            if($('#tabel_vaksin > tbody > tr > td > .date').length <= 0){
+                $('#tabel_vaksin > tbody > tr').remove();
+                $('#tabel_vaksin tbody').append(data);
+            }else{
+                $('#tabel_vaksin tbody tr:last').after(data);
+            }
+            $('#button_tambah').attr('disabled', false);
+            numberRow_vaksin($("#tabel_vaksin"));
         }
-        numberRow_vaksin($("#tabel_vaksin"));
     });
 
     $('#tabel_vaksin').on('click', '#closetable_vaksin', function(e) {
         $(this).closest('tr').remove();
         numberRow_vaksin($("#tabel_vaksin"));
         if($('#tabel_vaksin > tbody > tr').length <= 0){
+            $('#button_tambah').attr('disabled', true);
             $('#tabel_vaksin tbody').append('<tr><td colspan="5">Belum Ada Data Ditambahkan</td></tr>');
         }
     });
@@ -969,8 +1034,8 @@
       var kriteria_exp = (kriteria_form == '0' ? 'Tidak Menular' : 'Menular');
 
 
-      var tes = validasiform([nama_form, jenis_form, kriteria_form]);
-      if(tes == false){
+      var validasi_form = validasiform([nama_form, jenis_form, kriteria_form]);
+      if(validasi_form == false){
         swal.fire(
             'Gagal',
             'Lengkapi form',
@@ -997,43 +1062,136 @@
         }else{
             $('#tabel_penyakit tbody tr:last').after(data);
         }
-        $('#button_tambah').attr('disabled', false);
+        $('#button_tambah_penyakit').attr('disabled', false);
         numberRow_penyakit($("#tabel_penyakit"));
 
       }
-
-    //   if(nama_form != '' && kriteria_exp != ""){
-    //     $('#nama_form').val('');
-    //     //$('#jenis_form').val('');
-    //     $('input[type="radio"][name="kriteria_form"]').prop('checked', false);
-    //     $('#keterangan_form').val('');
-    //     if($('#tabel_penyakit > tbody > tr > td > .nama').length <= 0){
-    //         $('#tabel_penyakit > tbody > tr').remove();
-    //         $('#tabel_penyakit tbody').append(data);
-    //     }else{
-    //         $('#tabel_penyakit tbody tr:last').after(data);
-    //     }
-    //     numberRow_penyakit($("#tabel_penyakit"));
-    //   }else{
-    //                          swal.fire(
-    //                             'Gagal',
-    //                             'Lengkapi form',
-    //                             'warning'
-    //                         );
-    //     }
-
-
     });
-    $('#tabel_penyakit').on('click', '#closetable_penyakit', function(e) {
 
+    $('#tabel_penyakit').on('click', '#closetable_penyakit', function(e) {
       $(this).closest('tr').remove();
       numberRow_vaksin($("#tabel_penyakit"));
       if($('#tabel_penyakit > tbody > tr').length <= 0){
-        $('#button_tambah').attr('disabled', true);
+        $('#button_tambah_penyakit').attr('disabled', true);
         $('#tabel_penyakit tbody').append('<tr><td colspan="6">Data tidak tersedia</td></tr>');
       }
 
     });
+
+    $(document).on('submit', '#penyakit_form', function(e) {
+        e.preventDefault();
+        // Swal.fire({
+        //     title: 'Simpan',
+        //     text: 'Yakin menyimpan data ini?',
+        //     icon: 'warning',
+        //     confirmButtonText: 'Ya',
+        //     cancelButtonText: 'Tidak',
+        //     showCancelButton: true,
+        //     showCloseButton: true
+        // })
+        // .then((result) => {
+        //     if (result.isConfirmed) {
+                $('#button_tambah_penyakit').attr('disabled', true);
+
+                var $form = $(this);
+                var $inputs = $form.find("input, select, button, textarea");
+                var serializedData = $form.serialize();
+
+                var action = $(this).attr('action');
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "POST",
+                    url: action,
+                    data: serializedData,
+                    dataType: 'JSON',
+                    success: function(response) {
+                        if (response['data'] == "success") {
+                            $("#tabel_penyakit > tbody").empty();
+                            numberRow_penyakit($("#tabel_penyakit"));
+                            $('#tabel_penyakit tbody').append('<tr><td colspan="6">Data tidak tersedia</td></tr>');
+                            swal.fire(
+                                'Berhasil',
+                                'Data Berhasil disimpan',
+                                'success'
+                            );
+                        }
+                        else {
+                            swal.fire(
+                                'Gagal',
+                                'Mohon Maaf, Data tidak dapat disimpan',
+                                'warning'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        swal.fire(
+                            'Gagal',
+                            'Form Belum Lengkap',
+                            'warning'
+                        );
+                    }
+                });
+                return false;
+        //     } else if (result.dismiss === Swal.DismissReason.cancel) {
+        //             Swal.fire({
+        //                 title: 'Batal',
+        //                 text: 'Batal menyimpan data',
+        //                 icon: 'error',
+        //                 showCloseButton: true
+        //             });
+        //     }
+        // });
+    });
+
+    $(document).on('submit', '#vaksin_form', function(e) {
+                //$('#button_tambah').attr('disabled', true);
+                e.preventDefault();
+
+                var $form = $(this);
+                var $inputs = $form.find("input, select, button, textarea");
+                var serializedData = $form.serialize();
+                console.log(serializedData);
+                var action = $(this).attr('action');
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    type: "POST",
+                    url: action,
+                    data: serializedData,
+                    dataType: 'JSON',
+                    success: function(response) {
+                        if (response['data'] == "success") {
+                            $("#tabel_vaksin > tbody").empty();
+                            numberRow_penyakit($("#tabel_vaksin"));
+                            $('#tabel_vaksin tbody').append(
+                                '<tr><td colspan="5">Data tidak tersedia</td></tr>');
+
+                            swal.fire(
+                                'Berhasil',
+                                'Data berhasil diupdate',
+                                'success'
+                            );
+
+
+
+                        } else {
+                            swal.fire(
+                                'Error',
+                                'Data gagal di update',
+                                'warning'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr)
+                    }
+                });
+                return false;
+            });
+
     $('.select2').select2({allowClear:true, placeholder:'Pilih Data'});
   });
 </script>

@@ -120,15 +120,15 @@ Route::group(['prefix' => '/obat'], function (){
    // Route::group(['middleware' => ['divisi:kes']], function () {
    Route::get('/',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat']);
    Route::post('/data',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data']);
- Route::get('/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_id']);
- Route::get('/data/select/{where}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_select']);
- Route::post('/data/detail/{id}',  [App\Http\Controllers\kesehatan\KesehatanController::class,'obat_detail_data_karyawan']);
- Route::get('/cekdata/{nama}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_cekdata']);
- Route::get('/detail/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_detail_data']);
- Route::get('/tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_tambah']);
- Route::post('/aksi_tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_aksi_tambah']);
- Route::post('/stok/aksi_tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_stok_aksi_tambah']);
- Route::get('/stok/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_stok_data']);
- Route::put('/aksi_ubah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_aksi_ubah']);
+    Route::get('/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_id']);
+    Route::get('/data/select/{where}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_data_select']);
+    Route::post('/data/detail/{id}',  [App\Http\Controllers\kesehatan\KesehatanController::class,'obat_detail_data_karyawan']);
+    Route::get('/cekdata/{nama}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_cekdata']);
+    Route::get('/detail/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_detail_data']);
+    Route::get('/tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_tambah']);
+    Route::post('/aksi_tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_aksi_tambah']);
+    Route::post('/stok/aksi_tambah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_stok_aksi_tambah']);
+    Route::get('/stok/data/{id}',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_stok_data']);
+    Route::put('/aksi_ubah',[App\Http\Controllers\kesehatan\KesehatanController::class,'obat_aksi_ubah']);
   //  });
 });

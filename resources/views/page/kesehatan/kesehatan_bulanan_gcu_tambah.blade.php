@@ -138,43 +138,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-horizontal">
-                            <div class="form-group row">
-                                <label for="glukosa_form" class="col-lg-4 col-md-12 col-form-label align-right">Hasil Cek GCU</label>
-                                <div class="col-lg-6 col-md-12">
-                                    <div class="row">
-                                        <div class="input-group col-lg-4">
-                                            <input type="text" class="form-control glukosa_form" name="glukosa_form" id="glukosa_form" placeholder="Glucose">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">mg/dl</span>
-                                            </div>
-                                        </div>
-                                        <div class="input-group col-lg-4">
-                                            <input type="text" class="form-control kolestrol_form" name="kolestrol_form" id="kolestrol_form" placeholder="Cholestrol">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">mg/dl</span>
-                                            </div>
-                                        </div>
-                                        <div class="input-group col-lg-4">
-                                            <input type="text" class="form-control asam_urat_form" name="asam_urat_form" id="asam_urat_form" placeholder="Uric ACID">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">mg/dl</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="keterangan_form" class="col-lg-4 col-form-label align-right">Catatan</label>
-                                <div class="col-lg-4">
-                                    <textarea type="text" class="form-control keterangan_form" name="keterangan_form" id="keterangan_form"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    
             </div>
             <div class="card-footer">
                 <button type="button" class="btn btn-warning btn-sm" id="btnreset">Reset Form</button>

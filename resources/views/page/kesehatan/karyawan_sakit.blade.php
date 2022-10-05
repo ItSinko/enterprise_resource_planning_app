@@ -18,6 +18,10 @@
 @stop
 @section('adminlte_css')
 <style>
+    .minimizechar {
+    overflow: hidden;
+    max-width: 25ch;
+    }
     table { border-collapse: collapse; empty-cells: show; }
 
     td { position: relative; }
@@ -104,7 +108,7 @@
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-berobat" role="tabpanel" aria-labelledby="pills-berobat-tab">
                     <div class='table-responsive'>
-                        <table id="tabel" class="table table-hover styled-table table-striped">
+                        <table id="tabel_obat" class="table table-hover styled-table table-striped">
                             <thead style="text-align: center;">
                                 <tr>
                                 <th style="width:1%">No</th>
@@ -191,7 +195,7 @@
 @section('adminlte_js')
 <script>
   $(function() {
-    $('#tabel > tbody').on('click', '#delete', function() {
+    $('#tabel_obat > tbody').on('click', '#delete', function() {
         Swal.fire({
             title: 'Hapus Data',
             text: 'Yakin ingin menghapus data ini?',
@@ -369,10 +373,12 @@
           data: 'z'
         },
         {
-          data: 'analisa'
+          data: 'analisa',
+          className: 'minimizechar'
         },
         {
-          data: 'diagnosa'
+          data: 'diagnosa',
+          className: 'minimizechar'
         },
         {
           data: 'detail_button'
