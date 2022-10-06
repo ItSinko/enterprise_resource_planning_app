@@ -95,6 +95,7 @@ function setUser(state, user) {
     state.user = user;
 }
 
+
 /**
  * This function used to set user variable
  * @memberof Store
@@ -140,8 +141,9 @@ const store = new Vuex.Store({
         setJadwal,
         setStatus,
         setUser,
-        setNotif
-    }
+        setNotif,
+    },
+
 })
 
 export default store

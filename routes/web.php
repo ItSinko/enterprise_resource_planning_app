@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 Route::group(['middleware' => 'guest'], function () {
     Route::get('/', function () {
@@ -67,7 +68,7 @@ Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
     Route::view('/{any?}', 'spa.manager_teknik.spa')->middleware('divisi:dirtek');
 });
 
-Route::group(['prefix' => '/gbj', 'middleware' => ['auth','divisi:gbj,mgrgdg,dirut']], function () {
+Route::group(['prefix' => '/gbj', 'middleware' => ['auth', 'divisi:gbj,mgrgdg,dirut']], function () {
     Route::view('/stok/{any?}', 'page.gbj.stok');
     Route::view('/penjualan/{any?}', 'page.gbj.penjualan');
     Route::view('/produk/{any?}', 'page.gbj.produk');
@@ -90,7 +91,7 @@ Route::group(['prefix' => '/gbj', 'middleware' => ['auth','divisi:gbj,mgrgdg,dir
     // Route::view('/manager/produk', 'manager.gbj.produksi');
 });
 
-Route::group(['prefix' => '/produksi', 'middleware' => ['auth','divisi:prd,dirut']], function () {
+Route::group(['prefix' => '/produksi', 'middleware' => ['auth', 'divisi:prd,dirut']], function () {
     Route::view('/dashboard', 'page.produksi.dashboard');
     Route::view('/so', 'page.produksi.so');
     Route::view('/jadwal_perakitan', 'page.produksi.jadwal_perakitan');
@@ -346,9 +347,9 @@ Route::group(['prefix' => 'dc', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => '/coo'], function () {
         Route::group(['middleware' => ['divisi:dc,dirut']], function () {
             Route::view('/show', 'page.dc.coo.show')->name('dc.coo.show');
-            Route::get('/pdf/so/{id}/{value}/{jenis}', [App\Http\Controllers\DcController::class, 'pdf_semua_so_coo'])->name('dc.coo.semua.so.pdf');
-            Route::get('/pdf/semua/{id}/{value}/{jenis}', [App\Http\Controllers\DcController::class, 'pdf_semua_coo'])->name('dc.coo.semua.pdf');
-            Route::get('/pdf/{id}/{value}/{jenis}', [App\Http\Controllers\DcController::class, 'pdf_seri_coo'])->name('dc.seri.coo.pdf');
+            Route::get('/pdf/so/{id}/{value}/{jenis}/{stamp}', [App\Http\Controllers\DcController::class, 'pdf_semua_so_coo'])->name('dc.coo.semua.so.pdf');
+            Route::get('/pdf/semua/{id}/{value}/{jenis}/{stamp}', [App\Http\Controllers\DcController::class, 'pdf_semua_coo'])->name('dc.coo.semua.pdf');
+            Route::get('/pdf/{id}/{value}/{jenis}/{stamp}', [App\Http\Controllers\DcController::class, 'pdf_seri_coo'])->name('dc.seri.coo.pdf');
         });
         Route::group(['middleware' => ['divisi:dc']], function () {
             Route::view('/detail/{id}', 'page.dc.coo.detail')->name('dc.coo.detail');
@@ -363,7 +364,7 @@ Route::group(['prefix' => 'dc', 'middleware' => 'auth'], function () {
     });
 });
 
-Route::group(['prefix' => 'as', 'middleware' => ['auth','divisi:asp']], function () {
+Route::group(['prefix' => 'as', 'middleware' => ['auth', 'divisi:asp']], function () {
 
 
     Route::view('/dashboard', 'page.as.dashboard')->name('as.dashboard');
@@ -400,7 +401,7 @@ Route::group(['prefix' => 'as', 'middleware' => ['auth','divisi:asp']], function
     // });
 });
 
-Route::group(['prefix' => '/gk', 'middleware' => ['auth','divisi:gk,dirut']], function () {
+Route::group(['prefix' => '/gk', 'middleware' => ['auth', 'divisi:gk,dirut']], function () {
     Route::view('/dashboard', 'page.gk.dashboard');
     Route::view('/gudang', 'page.gk.gudang.index');
     Route::get('/gudang/sparepart/{id}', [SparepartController::class, 'detail_spr']);

@@ -74,7 +74,7 @@ class GudangController extends Controller
     {
         try {
             $data = GudangBarangJadi::
-            select(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama) as produkk'))
+            select(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama) as produkk'), 'gdg_barang_jadi.id')
             ->leftJoin('produk as p', 'p.id', '=', 'gdg_barang_jadi.produk_id')
             ->addSelect([
                 'count_transfer' => function($query){
@@ -95,7 +95,43 @@ class GudangController extends Controller
                     ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
                     ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
                     ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereRaw('pesanan.log_id not in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
+                    ->whereNotNull('pesanan.so')
+                    ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
+                    ->limit(1);
+                },
+                'count_ekat_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                    ->from('detail_pesanan')
+                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                    ->whereNotNull('pesanan.so')
+                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                    ->whereRaw('pesanan.log_id not in ("7", "10","20") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
+                    ->limit(1);
+                },
+                'count_ekat_nego' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                    ->from('detail_pesanan')
+                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                    ->whereNotNull('pesanan.so')
+                    ->whereRaw('pesanan.log_id in ("7") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
+                    ->limit(1);
+                },'count_ekat_draft' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                    ->from('detail_pesanan')
+                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                    ->whereNotNull('pesanan.so')
+                    ->whereRaw('pesanan.log_id in ("7")  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
                     ->limit(1);
                 },
                 'count_spa_po' => function ($query) {
@@ -106,7 +142,8 @@ class GudangController extends Controller
                     ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
                     ->join('spa', 'spa.pesanan_id', '=', 'pesanan.id')
                     ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                    ->whereNotNull('pesanan.so')
+                    ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
                     ->limit(1);
                 },'count_spb_po' => function ($query) {
                     $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
@@ -116,13 +153,143 @@ class GudangController extends Controller
                     ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
                     ->join('spb', 'spb.pesanan_id', '=', 'pesanan.id')
                     ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                    ->whereNotNull('pesanan.so')
+                    ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
                     ->limit(1);
                 }
             ])
-            ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_nego, 0) + coalesce(count_ekat_draft, 0) + coalesce(count_ekat_po, 0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) > count_transfer')
+            ->has('DetailPesananProduk')
+            // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
+            // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) > count_transfer')
+            ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_nego, 0) + coalesce(count_ekat_draft, 0) + coalesce(count_ekat_po, 0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
+            ->orderBy(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama)'))
             ->get();
-            return $data;
+
+            $dt = datatables()->of($data)
+                ->addIndexColumn()
+                ->editColumn('permintaan', function($d){
+                    $minta = intval($d->count_ekat_sepakat) + intval($d->count_ekat_po) + intval($d->count_ekat_nego) + intval($d->count_ekat_draft) + intval($d->count_spa_po) + intval($d->count_spb_po);
+                    return $minta;
+                })
+                ->editColumn('sisa', function($d){
+                    $minta = intval($d->count_ekat_sepakat) + intval($d->count_ekat_po) + intval($d->count_ekat_nego) + intval($d->count_ekat_draft) + intval($d->count_spa_po) + intval($d->count_spb_po);
+                    $tf = intval($d->count_transfer);
+                    return $minta - $tf;
+                })
+                ->editColumn('transfer', function($d){
+                    return intval($d->count_transfer);
+                })
+                ->editColumn('aksi', function($d){
+                    $a = '<button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-id="' . $d->id . '" class="btn btn-outline-info btn-sm detailBrg"><i class="far fa-eye"></i> Detail</button>';
+                        return $a;
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
+
+            return $dt;
+        } catch (\Exception $e) {
+            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    function get_detail_rekap_so_produk($id)
+    {
+        try {
+            $data = Pesanan::whereHas('DetailPesanan.DetailPesananProduk.GudangBarangJadi', function ($q) use ($id) {
+                $q->where('id', $id);
+            })->addSelect(['count_pesanan' => function($q) use($id){
+                    $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                    ->from('detail_pesanan')
+                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                    ->join('gdg_barang_jadi', 'gdg_barang_jadi.produk_id', '=', 'detail_penjualan_produk.produk_id')
+                    ->whereRaw('gdg_barang_jadi.id = '.$id.' AND detail_pesanan_produk.gudang_barang_jadi_id = '. $id)
+                    // ->whereNotNull('pesanan.no_po')
+                    ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
+                    ->limit(1);
+                }, 'count_transfer' => function($q) use($id){
+                    $q->selectRaw('count(t_gbj_noseri.id)')
+                    ->from('t_gbj_noseri')
+                    ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
+                    ->leftjoin('t_gbj', 't_gbj.id', 't_gbj_detail.t_gbj_id')
+                    // ->where('t_gbj_noseri.jenis', '"keluar"')
+                    ->where('t_gbj_detail.gdg_brg_jadi_id', $id)
+                    ->whereColumn('t_gbj.pesanan_id', 'pesanan.id')
+                    ->limit(1);
+                }, 'tgl_kontrak_custom' => function($q){
+                    $q->selectRaw('IF(provinsi.status = "2", SUBDATE(ekatalog.tgl_kontrak, INTERVAL 14 DAY), SUBDATE(ekatalog.tgl_kontrak, INTERVAL 21 DAY))')
+                    ->from('ekatalog')
+                    ->join('provinsi', 'provinsi.id', '=', 'ekatalog.provinsi_id')
+                    ->whereColumn('ekatalog.pesanan_id', 'pesanan.id')
+                    ->limit(1);
+                }
+            ])
+            ->with(['Ekatalog.Customer.Provinsi', 'Spa.Customer.Provinsi', 'Spb.Customer.Provinsi'])
+            ->whereNotIn('log_id', ['10', '20'])
+            ->whereNotNull('pesanan.so')
+            // ->havingRaw('count_pesanan > count_transfer')
+            ->get();
+
+            $dt = datatables()->of($data)
+                    ->addIndexColumn()
+                    ->addColumn('jumlah', function ($data) {
+                        $jumlah = $data->count_pesanan;
+                        return $jumlah;
+                    })
+                    ->addColumn('status', function($data){
+                        $hitung = $data->count_transfer;
+                        return $hitung;
+                    })
+                    ->addColumn('so', function ($data) {
+                        if (!empty($data->so)) {
+                            return $data->so;
+                        } else {
+                            return '-';
+                        }
+                    })
+                    ->addColumn('po', function ($data) {
+                        if (!empty($data->no_po)) {
+                            return $data->no_po;
+                        } else {
+                            return '-';
+                        }
+                    })
+                    ->addColumn('customer', function($data){
+                        if($data->Ekatalog){
+                            if(isset($data->Ekatalog->Customer)){
+                                return $data->Ekatalog->Customer->nama;
+                            }
+                        }else if($data->Spa){
+                            if(isset($data->Spa->Customer)){
+                                return $data->Spa->Customer->nama;
+                            }
+                        }else{
+                            if(isset($data->Spb->Customer)){
+                                return $data->Spb->Customer->nama;
+                            }
+                        }
+                    })
+                    ->addColumn('aksi', function ($data) {
+                        if (isset($data->Ekatalog)) {
+                            if ($data->status != 'draft') {
+                                return  '<a data-toggle="modal" data-target="ekatalog" class="penjualanmodal" data-value="ekatalog"  data-id="' . $data->id . '">
+                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
+                            </a>';
+                            }
+                        } else if (isset($data->Spa)) {
+                            return  '<a data-toggle="modal" data-target="spa" class="penjualanmodal" data-value="spa"  data-id="' . $data->id . '">
+                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
+                            </a>';
+                        } else {
+                            return  '<a data-toggle="modal" data-target="spb" class="penjualanmodal" data-value="spb"  data-id="' . $data->id . '">
+                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
+                            </a>';
+                        }
+                    })
+                    ->rawColumns(['aksi'])
+                    ->make(true);
+
+            return $dt;
         } catch (\Exception $e) {
             return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
         }
@@ -2306,6 +2473,20 @@ class GudangController extends Controller
                                 'tujuan' => $request->deskripsi,
                             ]);
                         }
+
+                        $obj = [
+                            'data' => $arr,
+                            'pesanan_so' => Pesanan::find($request->soid)->so,
+                            'pesanan_po' => Pesanan::find($request->soid)->no_po,
+                            'tgl_keluar' => Carbon::now()
+                        ];
+
+                        SystemLog::create([
+                            'tipe' => 'GBJ',
+                            'subjek' => 'Sales Order Noseri By Upload',
+                            'response' => json_encode($obj),
+                            'user_id' => $request->userid
+                        ]);
                     } else {
                         $detail = TFProduksiDetail::create([
                             't_gbj_id' => $a->id,
@@ -2351,6 +2532,20 @@ class GudangController extends Controller
                                 'tujuan' => $request->deskripsi,
                             ]);
                         }
+
+                        $obj = [
+                            'data' => $arr,
+                            'pesanan_so' => Pesanan::find($request->soid)->so,
+                            'pesanan_po' => Pesanan::find($request->soid)->no_po,
+                            'tgl_keluar' => Carbon::now()
+                        ];
+
+                        SystemLog::create([
+                            'tipe' => 'GBJ',
+                            'subjek' => 'Sales Order Noseri By Upload',
+                            'response' => json_encode($obj),
+                            'user_id' => $request->userid
+                        ]);
                     }
                 }
             } else {
@@ -2412,6 +2607,20 @@ class GudangController extends Controller
                         ]);
                     }
                 }
+
+                $obj = [
+                    'data' => $arr,
+                    'pesanan_so' => Pesanan::find($request->soid)->so,
+                    'pesanan_po' => Pesanan::find($request->soid)->no_po,
+                    'tgl_keluar' => Carbon::now()
+                ];
+
+                SystemLog::create([
+                    'tipe' => 'GBJ',
+                    'subjek' => 'Sales Order Noseri By Upload',
+                    'response' => json_encode($obj),
+                    'user_id' => $request->userid
+                ]);
             }
 
             $po = Pesanan::find($request->soid);
@@ -2466,11 +2675,13 @@ class GudangController extends Controller
             $spreadsheet->setActiveSheetIndex(0);
             $spreadsheet->getActiveSheet()->setTitle('Template');
             $spreadsheet->getActiveSheet()->setCellValue('A1', 'Tujuan');
-            $spreadsheet->getActiveSheet()->setCellValue('B1', 'Produk');
-            $spreadsheet->getActiveSheet()->setCellValue('C1', 'Noseri');
+            $spreadsheet->getActiveSheet()->setCellValue('B1', 'Deskripsi');
+            $spreadsheet->getActiveSheet()->setCellValue('C1', 'Produk');
+            $spreadsheet->getActiveSheet()->setCellValue('D1', 'Noseri');
             $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(30);
             $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(45);
-            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(45);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(20);
 
             $tujuan_val = $spreadsheet->getActiveSheet()->getCell('A2')
                 ->getDataValidation();
@@ -2488,7 +2699,7 @@ class GudangController extends Controller
             $tujuan_val->setFormula1('\'Master Tujuan\'!$B$2:$B$688');
             $tujuan_val->setSqref('A2:A10000');
 
-            $produk_val = $spreadsheet->getActiveSheet()->getCell('B2')
+            $produk_val = $spreadsheet->getActiveSheet()->getCell('C2')
                 ->getDataValidation();
             $produk_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
             $produk_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
@@ -2502,7 +2713,7 @@ class GudangController extends Controller
             $produk_val->setPrompt('Tolong pilih produk yang tersedia.');
 
             $produk_val->setFormula1('\'Master Produk\'!$B$2:$B$888');
-            $produk_val->setSqref('B2:B10000');
+            $produk_val->setSqref('C2:C10000');
 
             $duplicate = new Conditional();
             $duplicate->setConditionType(Conditional::CONDITION_DUPLICATES);
@@ -2510,10 +2721,10 @@ class GudangController extends Controller
             $duplicate->getStyle()->getFill()->setFillType(Fill::FILL_SOLID);
             $duplicate->getStyle()->getFill()->getEndColor()->setARGB(Color::COLOR_YELLOW);
 
-            $conditionalStyles = $spreadsheet->getActiveSheet()->getStyle('C2:C10000')->getConditionalStyles();
+            $conditionalStyles = $spreadsheet->getActiveSheet()->getStyle('D2:D10000')->getConditionalStyles();
             $conditionalStyles[] = $duplicate;
 
-            $spreadsheet->getActiveSheet()->getStyle('C2:C10000')->setConditionalStyles($conditionalStyles);
+            $spreadsheet->getActiveSheet()->getStyle('D2:D10000')->setConditionalStyles($conditionalStyles);
 
             $spreadsheet->setActiveSheetIndex(1);
             $spreadsheet->getActiveSheet()->setTitle('Master Tujuan');
@@ -2597,10 +2808,217 @@ class GudangController extends Controller
         }
     }
 
-    function preview_tanpa_so()
+    function preview_tanpa_so(Request $request)
     {
         try {
+            // dd($request->all());
+            $file = $request->file('file_csv');
+            $filename = $file->getClientOriginalName();
 
+            $file->move(public_path('upload/nonso/'), $filename);
+
+            $reader = new ReaderXlsx();
+            $spreadsheet = $reader->load(public_path('upload/nonso/'. $filename));
+
+            $spreadsheet->setActiveSheetIndex(0);
+
+            $sheet        = $spreadsheet->getActiveSheet();
+            $row_limit    = $sheet->getHighestDataRow();
+            $column_limit = $sheet->getHighestDataColumn();
+            $row_range    = range( 2, $row_limit );
+            $column_range = range( 'E', $column_limit );
+            $startcount = 2;
+            $data = array();
+
+            foreach ( $row_range as $row ) {
+                $data[] = [
+                    'tujuan' =>$sheet->getCell( 'A' . $row )->getValue(),
+                    'desk' => $sheet->getCell( 'B' . $row )->getValue(),
+                    'produk' => $sheet->getCell( 'C' . $row )->getValue(),
+                    'noseri' => $sheet->getCell( 'D' . $row )->getValue(),
+                ];
+                $startcount++;
+            }
+
+            foreach($data as $d) {
+                $tujuan[] = $d['tujuan'];
+                $desk[] = $d['desk'];
+                $produk[] = $d['produk'];
+                $noseri[] = $d['noseri'];
+            }
+
+            $cek = NoseriBarangJadi::whereIn('noseri', $noseri)->get()->pluck('noseri');
+            $no_seri = [];
+            $sheet1 = $sheet->toArray(null, true, true, true);
+            $numrow = 1;
+            $html = "<input type='hidden' name='namafile' value='" . $filename . "'>";
+            $html .= "<table class='table table-bordered table-striped table-hover tableImport'>
+                    <thead>
+                    <tr>
+                    <th>Tujuan</th>
+                    <th>Deskripsi</th>
+                    <th>Produk</th>
+                    <th>Noseri</th>
+                    </tr>
+                    </thead>
+                    <tbody>";
+            foreach($sheet1 as $key => $row) {
+                $a = $row['A'];
+                $b = $row['B'];
+                $c = $row['C'];
+                $d = $row['D'];
+                if($numrow > 1) {
+                    $nis_td = (!empty($c)) ? "" : " style='background: #E07171;'";
+                    $html .= "<tr>";
+                    $html .= "<td" . $nis_td . ">" . $a . "</td>";
+                    $html .= "<td" . $nis_td . ">" . $b . "</td>";
+                    $html .= "<td" . $nis_td . ">" . $c . "</td>";
+                    $html .= "<td" . $nis_td . ">" . $d . "</td>";
+                    $html .= "</tr>";
+                }
+                $numrow++;
+            }
+            $html .= "</tbody></table>";
+
+            if(count($cek) != count($noseri)) {
+                $seri_final = [];
+                foreach ($cek as $item) {
+                    array_push($no_seri, $item);
+                }
+
+                foreach($noseri as $ns) {
+                    if (!in_array($ns, $no_seri)) {
+                        array_push($seri_final, $ns);
+                    }
+                }
+                return response()->json(['msg' => 'Nomor seri '.implode(', ', $seri_final).' belum terdaftar', 'error' => true, 'data' => $html, 'noseri' => implode(', ', $seri_final)]);
+            } else {
+                return response()->json(['msg' => 'File Sudah Bisa Diunggah', 'error' => false, 'data' => $html]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'msg' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    function store_nonso_to_db(Request $request)
+    {
+        try {
+            $reader = new ReaderXlsx();
+            $spreadsheet = $reader->load(public_path('upload/nonso/'. $request->namafile));
+            $spreadsheet->setActiveSheetIndex(0);
+
+            $sheet        = $spreadsheet->getActiveSheet();
+            $row_limit    = $sheet->getHighestDataRow();
+            $column_limit = $sheet->getHighestDataColumn();
+            $row_range    = range( 2, $row_limit );
+            $column_range = range( 'E', $column_limit );
+            $startcount = 2;
+            $data = array();
+            $dat_arr = array();
+            $new_arr = array();
+            $detail_arr = array();
+            $noseri_arr = array();
+            $dat_log = [];
+            foreach ( $row_range as $row ) {
+                $data[] = [
+                    'tujuan' =>$sheet->getCell( 'A' . $row )->getValue(),
+                    'desk' => $sheet->getCell( 'B' . $row )->getValue(),
+                    'produk' => $sheet->getCell( 'C' . $row )->getValue(),
+                    'noseri' => $sheet->getCell( 'D' . $row )->getValue(),
+                ];
+                $startcount++;
+            }
+
+            foreach($data as $kh => $d) {
+                $tujuan[] = $d['tujuan'];
+                $desk[] = $d['desk'];
+                $produk[] = $d['produk'];
+                $noseri[] = $d['noseri'];
+            }
+
+            foreach($produk as $key => $prd) {
+                $dat_arr[] = [
+                    'tujuan' => Divisi::where('nama', $tujuan[$key])->first()->id,
+                    'produk' => GudangBarangJadi::
+                                join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
+                                ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
+                                ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
+                                ->first()->id,
+                    'serii' => $noseri[$key],
+                    'desk' => $desk[$key],
+                    'noseri' => NoseriBarangJadi::where('noseri', $noseri[$key])->first()->id,
+                ];
+            }
+            // return $dat_arr;
+            $arr = [];
+            foreach($dat_arr as $da) {
+                $arr[$da['produk']]['tujuan'] = $da['tujuan'];
+                $arr[$da['produk']]['desk'] = $da['desk'];
+                $arr[$da['produk']]['noseri'][] = $da['noseri'];
+            }
+
+            // return $arr;
+            foreach($arr as $key => $value) {
+                $header = TFProduksi::create([
+                    'tgl_keluar' => Carbon::now(),
+                    'ke' => $value['tujuan'],
+                    'deskripsi' => $value['desk'],
+                    'jenis' => 'keluar',
+                    'created_at' => Carbon::now(),
+                    'created_by' => $request->userid
+                ]);
+
+                $detail = TFProduksiDetail::create([
+                    't_gbj_id' => $header->id,
+                    'gdg_brg_jadi_id' => $key,
+                    'qty' => count($value['noseri']),
+                    'jenis' => 'keluar',
+                    'created_at' => Carbon::now(),
+                    'created_by' => $request->userid
+                ]);
+
+                foreach($value['noseri'] as $k => $v) {
+                    NoseriTGbj::create([
+                        't_gbj_detail_id' => $detail->id,
+                        'noseri_id' => $v,
+                        'layout_id' => 1,
+                        'status_id' => 2,
+                        'jenis' => 'keluar',
+                        'created_at' => Carbon::now(),
+                        'created_by' => $request->userid
+                    ]);
+
+                    NoseriBarangJadi::find($v)->update(['is_ready' => 1, 'used_by' => $value['tujuan']]);
+                    // NoseriLog::create([
+                    //     'gbj_id' => $value['prd'],
+                    //     'noseri_id' => $v,
+                    //     'nonso' => $header->id,
+                    //     'log_id' => $key,
+                    //     'created_by' => $request->userid
+                    // ]);
+                }
+            }
+
+            $obj = [
+                'data' => $arr,
+                'tgl_keluar' => Carbon::now()
+            ];
+
+            SystemLog::create([
+                'tipe' => 'GBJ',
+                'subjek' => 'Pengeluaran Tanpa SO By Upload',
+                'response' => json_encode($obj),
+                'user_id' => $request->userid
+            ]);
+
+            $del = new Filesystem;
+            $del->cleanDirectory(public_path('upload/nonso/'));
+            File::delete(public_path('upload/nonso/'.$request->namafile));
+
+            return response()->json(['msg' => 'Data Terkirim']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,

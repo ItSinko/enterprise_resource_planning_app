@@ -8,12 +8,12 @@
     <div class="container-fluid">
         <h1>Transfer Produk Gudang Barang Jadi Tanpa SO</h1>
     </div><!-- /.container-fluid -->
-        {{-- <button type="button" class="btn btn-success" id="downloadTemplate">
+        <button type="button" class="btn btn-success" id="downloadTemplate">
             <i class="fas fa-download"></i>&nbsp;Template
         </button>
         <button type="button" class="btn btn-info" id="importTemplate">
             <i class="fas fa-file"></i>&nbsp;Unggah
-        </button> --}}
+        </button>
 </section>
 
 <section class="content">
@@ -152,7 +152,7 @@
                 <input type="hidden" name="soid1" id="soid1" value="">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="">Sales Order File</label>
+                        <label for="">File</label>
                         <input type="file" name="file_csv" id="template_noseri" class="form-control" accept=".xlsx">
                     </div>
 
@@ -651,7 +651,115 @@
     $('#importTemplate').click(function () {
         // console.log('test');
         // window.location = window.location.origin + '/api/v2/gbj/template_nonso'
+        $('#template_noseri').val('');
         $('.importSeri').modal('show')
+        $('#footer-btn').hide()
+        $('#csv_data_file').empty()
+    })
+
+    $('#formImport').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/api/v2/gbj/preview-nonso",
+            method: "post",
+            data: new FormData(this),
+            dataType: "json",
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                console.log(data);
+                $('#csv_data_file').html(data.data);
+                if (data.error == true) {
+                    if (data.success == false) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.msg,
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#footer-btn').hide()
+                                $('#bodyNoseri').hide()
+                                $('.btnImport').removeClass('btn-default')
+                                $('.btnImport').addClass('btn-danger')
+                                $('.btnImport').prop('disabled', true);
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.msg,
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#bodyNoseri').show()
+                                $('#existNoseri').html(data.noseri)
+                                $('.btnImport').removeClass('btn-default')
+                                $('.btnImport').addClass('btn-danger')
+                                $('.btnImport').prop('disabled', true);
+                            }
+                        });
+                        $('#footer-btn').show()
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: data.msg,
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#bodyNoseri').hide()
+                            if ($('.btnImport').hasClass('btn-default')) {
+                                $('.btnImport').removeClass('btn-default')
+                            } else {
+                                $('.btnImport').removeClass('btn-danger')
+                            }
+                            $('.btnImport').addClass('btn-success')
+                            $('.btnImport').prop('disabled', false);
+                        }
+                    });
+                    $('#footer-btn').show()
+                }
+            }
+        })
+    })
+
+    $('#formStoreImport').on('submit', function(e){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Kamu Yakin?',
+            text: "Transfer Data ini!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, transfer it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).prop('disabled', true);
+                $.ajax({
+                    url: "/api/v2/gbj/store-nonsodb",
+                    method: "post",
+                    data: new FormData(this),
+                    dataType: "json",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success: function(data) {
+                        // console.log(data);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: data.msg,
+                        }).then((res) => {
+                            // console.log(res);
+                            location.reload()
+                        })
+                    }
+                })
+            }
+        })
+
     })
 </script>
 @stop

@@ -52,6 +52,7 @@ function convertJadwal (jadwal) {
         }));
 }
 
+
 export default {
     change_status,
     change_state, 

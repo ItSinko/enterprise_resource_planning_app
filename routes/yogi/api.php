@@ -32,6 +32,7 @@ Route::prefix('/v2')->group(function() {
         Route::post('detail_riwayat_perubahan_noseri', [GudangController::class, 'detailNoseriHistoryPerubahan'])->middleware('jwt.verify');
         Route::get('header_count_noseri_status/{a}', [GudangController::class, 'headerCountNoseri'])->middleware('jwt.verify');
         Route::get('get_rekap_so_produk', [GudangController::class, 'get_rekap_so_produk']);
+        Route::get('get_detail_rekap_so_produk/{id}', [GudangController::class, 'get_detail_rekap_so_produk']);
 
         Route::post('delete_paket_so', [GudangController::class, 'deleteCekSO']);
         Route::get('template_so/{id}', [GudangController::class, 'download_template_so']);
@@ -39,6 +40,8 @@ Route::prefix('/v2')->group(function() {
         Route::post('store-sodb', [GudangController::class, 'store_so_to_db']);
 
         Route::get('template_nonso', [GudangController::class, 'template_tanpa_so']);
+        Route::post('preview-nonso', [GudangController::class, 'preview_tanpa_so']);
+        Route::post('store-nonsodb', [GudangController::class, 'store_nonso_to_db']);
 
         Route::post('so_batal', [GudangController::class, 'get_so_batal']);
         Route::post('proses_so_batal', [GudangController::class, 'proses_so_batal']);

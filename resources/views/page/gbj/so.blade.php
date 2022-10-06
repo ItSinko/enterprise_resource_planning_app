@@ -62,6 +62,9 @@
                             {{-- <li class="nav-item">
                                 <a class="nav-link" id="pills-batal_po-tab" data-toggle="pill" href="#pills-batal_po" role="tab" aria-controls="pills-batal_po" aria-selected="false">Batal Proses</a>
                             </li> --}}
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-rekap_produk-tab" data-toggle="pill" href="#pills-rekap_produk" role="tab" aria-controls="pills-rekap_produk" aria-selected="false">Permintaan Barang</a>
+                            </li>
                             @endif
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
@@ -128,6 +131,29 @@
                                                 <tbody>
 
                                                 </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show" id="pills-rekap_produk" role="tabpanel" aria-labelledby="pills-rekap_produk-tab">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" style="width: 100%" id="rekap-produk">
+                                                <thead>
+                                                    <tr align="center">
+                                                        <th rowspan="2">No</th>
+                                                        <th rowspan="2">Nama Produk</th>
+                                                        <th colspan="2">Permintaan</th>
+                                                        <th rowspan="2">Jumlah Transfer</th>
+                                                        <th rowspan="2">Aksi</th>
+                                                    </tr>
+                                                    <tr align="center">
+                                                        <th>Total</th>
+                                                        <th>Sisa</th>
+                                                    </tr>
+                                                </thead>
                                             </table>
                                         </div>
                                     </div>
@@ -336,6 +362,149 @@
     </div>
 </div>
 
+<div class="modal fade" id="viewDetailBrg" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
+<div class="modal-dialog modal-xl">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 id="titlebrg"></h5>
+        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button> --}}
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-header">
+                <div class="row row-cols-3">
+                    {{-- col --}}
+                    <div class="col"> <label for="">Total Permintaan</label>
+                        <div class="card nomor-so">
+                            <div class="card-body">
+                                <span id="total_tf"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- col --}}
+                    <div class="col"> <label for="">Belum Terpenuhi</label>
+                        <div class="card nomor-akn">
+                            <div class="card-body">
+                                <span id="belum_tf"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- col --}}
+                    <div class="col"> <label for="">Sudah Terpenuhi</label>
+                        <div class="card nomor-po">
+                            <div class="card-body">
+                                <span id="sudah_tf"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table class="table table-striped" id="reakpdetail-produk">
+                    <thead>
+                        <tr align="center">
+                            <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
+                            <th colspan="2">Nomor</th>
+                            <th rowspan="2" style="vertical-align : middle;text-align:center;">Customer</th>
+                            <th colspan="2">Jumlah</th>
+                            <th rowspan="2" style="vertical-align : middle;text-align:center;">Aksi</th>
+                        </tr>
+                        <tr align="center">
+                            <th>Sales Order</th>
+                            <th>Purchase Order</th>
+                            <th>Pesanan</th>
+                            <th>Terkirim</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary close1">Close</button>
+      </div>
+</div>
+</div>
+
+<div class="modal fade" id="viewDetailBrgSO" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+        <div class="modal-header">
+            {{-- <h5 id="titleSO"></h5> --}}
+            {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button> --}}
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row row-cols-2">
+                                {{-- col --}}
+                                <div class="col"> <label for="">Nomor SO</label>
+                                    <div class="card nomor-so">
+                                        <div class="card-body">
+                                            <span id="nosoo"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- col --}}
+                                <div class="col"> <label for="">Nomor AKN</label>
+                                    <div class="card nomor-akn">
+                                        <div class="card-body">
+                                            <span id="noakn"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- col --}}
+                                <div class="col"> <label for="">Nomor PO</label>
+                                    <div class="card nomor-po">
+                                        <div class="card-body">
+                                            <span id="nopoo"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- col --}}
+                                <div class="col"> <label for="">Instansi</label>
+                                    <div class="card instansi">
+                                        <div class="card-body">
+                                            <span id="nminstansi"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped" id="view-produk1">
+                                <thead>
+                                    <tr>
+                                        <th>Paket</th>
+                                        <th>Paket</th>
+                                        <th>Produk</th>
+                                        <th>Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close2">Close</button>
+          </div>
+    </div>
+</div>
+
 {{-- Modal Batal --}}
 <div class="modal fade" id="pesananBatal" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -486,94 +655,105 @@
             $('.cb-child-so').prop('checked', isChecked)
         });
 
-        if (access_token == null) {
-            Swal.fire({
-                title: 'Session Expired',
-                text: 'Silahkan login kembali',
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    event.preventDefault();
-                    document.getElementById('logout-form').submit();
-                }
-            })
-        }
-
         if (auth !== 31) {
             $('#belum-dicek').DataTable({
-            destroy: true,
-            processing: true,
-            serverSide: false,
-            ajax: {
-                url: '/api/tfp/belum-dicek',
-                beforeSend : function(xhr){
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-                }
-            },
-            columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                { data: 'so', name: 'so'},
-                {data: 'po'},
-                { data: 'nama_customer', name: 'nama_customer'},
-                { data: 'batas_out', name: 'batas_out'},
-                {data: 'logs'},
-                { data: 'action', name: 'action'},
-            ],
-            "language": {
-                // url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json",
-                processing: "<span class='fa-stack fa-md'>\n\
-                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                </span>&emsp;Mohon Tunggu ...",
-            },
-            "columnDefs": [
-                {
-                    "targets": [6],
-                    "visible": document.getElementById('auth').value == '2' ? false : true,
-                    "width": "20%",
+                destroy: true,
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '/api/tfp/belum-dicek',
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    }
                 },
-                { "width": "10%", "targets": 5 }
-            ]
-        });
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    { data: 'so', name: 'so'},
+                    {data: 'po'},
+                    { data: 'nama_customer', name: 'nama_customer'},
+                    { data: 'batas_out', name: 'batas_out'},
+                    {data: 'logs'},
+                    { data: 'action', name: 'action'},
+                ],
+                "language": {
+                    // url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json",
+                    processing: "<span class='fa-stack fa-md'>\n\
+                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                    </span>&emsp;Mohon Tunggu ...",
+                },
+                "columnDefs": [
+                    {
+                        "targets": [6],
+                        "visible": document.getElementById('auth').value == '2' ? false : true,
+                        "width": "20%",
+                    },
+                    { "width": "10%", "targets": 5 }
+                ]
+            });
 
-        $('#sudah-dicek').DataTable({
+            $('#sudah-dicek').DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '/api/tfp/sudah-dicek',
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    }
+                },
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    { data: 'so', name: 'so'},
+                    {data: 'po'},
+                    { data: 'nama_customer', name: 'nama_customer'},
+                    { data: 'batas_out', name: 'batas_out'},
+                    {data: 'logs'},
+                    { data: 'action', name: 'action'},
+                ],
+                "language": {
+                    // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+                    processing: "<span class='fa-stack fa-md'>\n\
+                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                    </span>&emsp;Mohon Tunggu ...",
+                },
+                "columnDefs": [
+                    {
+                        "targets": [6],
+                        "visible": document.getElementById('auth').value == '2' ? false : true,
+                        "width": "20%",
+                    },
+                    { "width": "10%", "targets": 5 }
+                ]
+            });
+        }
+
+        $('#rekap-produk').DataTable({
             destroy: true,
             processing: true,
             serverSide: false,
+            ordering: false,
             ajax: {
-                url: '/api/tfp/sudah-dicek',
-                beforeSend : function(xhr){
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-                }
+                url: '/api/v2/gbj/get_rekap_so_produk',
+                type: "get",
+                // beforeSend : function(xhr){
+                //     xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                // }
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                { data: 'so', name: 'so'},
-                {data: 'po'},
-                { data: 'nama_customer', name: 'nama_customer'},
-                { data: 'batas_out', name: 'batas_out'},
-                {data: 'logs'},
-                { data: 'action', name: 'action'},
+                { data: 'DT_RowIndex',},
+                { data: 'produkk'},
+                {data: 'permintaan'},
+                {data: 'sisa'},
+                {data: 'transfer'},
+                { data: 'aksi'},
             ],
             "language": {
                 // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                 processing: "<span class='fa-stack fa-md'>\n\
                                         <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
                                 </span>&emsp;Mohon Tunggu ...",
-            },
-            "columnDefs": [
-                {
-                    "targets": [6],
-                    "visible": document.getElementById('auth').value == '2' ? false : true,
-                    "width": "20%",
-                },
-                { "width": "10%", "targets": 5 }
-            ]
+            }
         });
-        }
 
         $('#batal-po').DataTable({
             destroy: true,
@@ -953,5 +1133,116 @@
 
     })
 
+    $(document).on('click', '.detailBrg', function(e) {
+        idd = $(this).data('id')
+        prd = $(this).parent().prev().prev().prev().prev().text()
+        all = $(this).parent().prev().prev().prev().text()
+        done = $(this).parent().prev().text()
+        undone = $(this).parent().prev().prev().text()
+        $('#titlebrg').html(prd)
+        $('#total_tf').html(all + ' Unit')
+        $('#belum_tf').html(undone + ' Unit')
+        $('#sudah_tf').html(done + ' Unit')
+        // console.log(prd);
+        $('#reakpdetail-produk').DataTable({
+            destroy: true,
+            processing: true,
+            serverSide: false,
+            ordering: false,
+            autoWidth: false,
+            ajax: {
+                url: '/api/v2/gbj/get_detail_rekap_so_produk/'+idd,
+                type: "get",
+                beforeSend : function(xhr){
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                }
+            },
+            columns: [
+                { data: 'DT_RowIndex',},
+                { data: 'so'},
+                { data: 'po'},
+                {data: 'customer'},
+                {data: 'jumlah'},
+                {data: 'status'},
+                { data: 'aksi'},
+            ],
+            "language": {
+                // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+                processing: "<span class='fa-stack fa-md'>\n\
+                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                </span>&emsp;Mohon Tunggu ...",
+            },
+            "order": [[ 5, 'asc' ]]
+        })
+        $('#viewDetailBrg').modal('show')
+    })
+
+    $(document).on('click', '.penjualanmodal', function(e) {
+        // $('#viewDetailBrg').modal('hide')
+        var x = $(this).data('value');
+        console.log(x);
+        var id = $(this).data('id');
+
+        $.ajax({
+            url: "/api/tfp/header-so/" +id+"/"+x,
+            success: function(res) {
+                console.log(res);
+                $('span#nosoo').text(res.so);
+                $('span#nopoo').text(res.po);
+                $('span#noakn').text(res.akn);
+                $('span#nminstansi').text(res.customer);
+            }
+        });
+        $('#view-produk1').DataTable({
+            destroy: true,
+            processing: true,
+            autoWidth: false,
+            bPaginate: false,
+            scrollY: 300,
+            ajax: {
+                url: "/api/tfp/detail-so/" +id+"/"+x,
+                // url: "/api/testingJson",
+            },
+            columns: [
+                {data: 'detail_pesanan_id'},
+                { data: 'paket' },
+                { data: 'produk' },
+                { data: 'qty' },
+            ],
+            "drawCallback": function ( settings ) {
+                var api = this.api();
+                var rows = api.rows( {page:'current'} ).nodes();
+                var last=null;
+
+                api.column(0, {page:'current'} ).data().each( function ( group, i ) {
+                    if (last !== group) {
+                        var rowData = api.row(i).data();
+
+                        $(rows).eq(i).before(
+                        '<tr class="table-dark text-bold"><td style="display:none;">'+group+'</td><td colspan="3">' + rowData.paket + '</td></tr>'
+                    );
+                        last = group;
+                    }
+                });
+            },
+            "columnDefs":[
+                    {"targets": [0], "visible": false},
+                    {"targets": [1], "visible": false},
+                ],
+                "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+            }
+        })
+        $('#viewDetailBrgSO').modal('show')
+    })
+
+    $(document).on('click', '.close2', function(e) {
+        $('#viewDetailBrgSO').modal('hide')
+        $('#viewDetailBrg').modal('show')
+    })
+    $(document).on('click', '.close1', function(e) {
+        // $('#viewDetailBrgSO').modal('hide')
+        $('#viewDetailBrg').modal('hide')
+    })
 </script>
 @stop

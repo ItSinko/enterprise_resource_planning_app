@@ -34,7 +34,7 @@ class ProduksiController extends Controller
                 $header = TFProduksi::create([
                     'tgl_keluar' => Carbon::now(),
                     'ke' => $value['tujuan'],
-                    'deskripsi' => $value['desk'],
+                    'deskripsi' => str_replace(array("\n", "\r"), ' ', $value['desk']),
                     'jenis' => 'keluar',
                     'created_at' => Carbon::now(),
                     'created_by' => $request->userid

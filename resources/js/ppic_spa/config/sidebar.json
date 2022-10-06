@@ -58,6 +58,16 @@
         ]
     },
     {
+        "header": "Transaksi",
+        "menu": [
+            {
+                "text": "Penjualan",
+                "icon": "fas fa-shopping-cart",
+                "url": "/ppic/penjualan"
+            }
+        ]
+    },
+    {
         "header": "Fitur",
         "menu": [
             {
