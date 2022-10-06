@@ -30,5 +30,6 @@ mix.js('resources/js/manager_spa/index.js', 'public/native/js/manager_spa.js').v
 mix.js('resources/js/direksi/index.js', 'public/native/js/direksi.js').vue();
 mix.js('resources/js/produksi/app.js', 'public/native/js/produksi.js').vue();
 mix.js('resources/js/emiindo/index.js', 'public/native/js/emiindo.js').vue();
+mix.js('resources/js/penjualan/index.js', 'public/native/js/penjualan.js').vue();
 
 // mix.browserSync("http://localhost:8000")

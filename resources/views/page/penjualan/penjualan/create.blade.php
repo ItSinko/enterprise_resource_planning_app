@@ -692,14 +692,15 @@
                                                                     </th>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th width="5%">No</th>
+                                                                    <th width="2%">No</th>
                                                                     <th width="35%">Nama Paket</th>
                                                                     <th width="10%">Jumlah</th>
+                                                                    <th width="6%">Stok Distributor</th>
                                                                     <th width="15%">Harga</th>
                                                                     <th width="15%">Ongkir</th>
                                                                     <th width="15%">Subtotal</th>
                                                                     <th hidden>ID_Rencana</th>
-                                                                    <th width="5%">Aksi</th>
+                                                                    <th width="2%">Aksi</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -721,7 +722,11 @@
                                                                             <small id="produk_ketersediaan"></small>
                                                                         </div>
                                                                     </td>
-
+                                                                    <td>
+                                                                        <div class="form-check col-form-label">
+                                                                            <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                        </div>
+                                                                    </td>
                                                                     <td>
                                                                         <div class="form-group d-flex justify-content-center">
                                                                             <input type="text" class="form-control produk_harga" name="produk_harga[]" id="produk_harga0" placeholder="Masukkan Harga" style="width:100%;" />
@@ -1918,7 +1923,7 @@
                         term: params.term
                     }
                 },
-               
+
                 processResults: function(data) {
                     return {
                         results: $.map(data, function(obj) {
@@ -2581,6 +2586,11 @@
                         </div>
                         <small id="produk_ketersediaan"></small>
                     </div>
+                </td>
+                <td>
+                <div class="form-check col-form-label">
+                    <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                </div>
                 </td>
                 <td>
                     <div class="form-group d-flex justify-content-center">
