@@ -4,6 +4,7 @@ export default {
         POEkat: [],
         PONonEkat: [],
         DO: [],
+        provinsi: [],
     },
     mutations: {
         setDataSO(state, data) {
@@ -17,6 +18,9 @@ export default {
         },
         setDataDO(state, data) {
             state.DO = data;
-        }
+        },
+        setProvinsi(state, data) {
+            state.provinsi = data;
+        },
     }
 }

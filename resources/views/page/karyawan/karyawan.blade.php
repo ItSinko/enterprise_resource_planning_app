@@ -105,11 +105,13 @@
         <div class='table-responsive'>
           <table id="tabel" class="table table-hover">
             <thead style="text-align: center;">
+              @if(Auth::user()->divisi_id == "28")
               <tr>
                 <th colspan="14">
                   <a href="/karyawan/create" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
                 </th>
               </tr>
+              @endif
               <tr>
                 <th>No</th>
                 <th>Divisi</th>
@@ -268,6 +270,7 @@
 @section('adminlte_js')
 <script>
   $(function() {
+    var divisi = "{{Auth::user()->divisi_id}}";
     var tabel = $('#tabel').DataTable({
       processing: true,
       serverSide: true,
@@ -312,15 +315,13 @@
         },
         {
           data: 'button',
+          visible: divisi == '28' ? true : false
         },
-        {
-          data: 'jabatan',
-          visible:false
-        }
       ]
     });
 
     $('#tabel > tbody').on('click', '#delete', function() {
+        var data_id = $(this).attr('data-id');
         Swal.fire({
             title: 'Hapus Data',
             text: 'Yakin ingin menghapus data ini?',
@@ -332,19 +333,43 @@
         })
         .then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Berhasil',
-                    text: 'Berhasil menghapus data',
-                    icon: 'success',
-                    showCloseButton: true
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Gagal',
-                    text: 'Gagal menghapus data',
-                    icon: 'error',
-                    showCloseButton: true
-                });
+                $.ajax({
+                        url: '/karyawan/delete/'+data_id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response['data'] == "success") {
+                                swal.fire(
+                                    'Berhasil',
+                                    'Berhasil melakukan Hapus Data',
+                                    'success'
+                                );
+                                $('#tabel').DataTable().ajax.reload();
+                                $("#hapusmodal").modal('hide');
+                            } else if (response['data'] == "error") {
+                                swal.fire(
+                                    'Gagal',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'error'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal.fire(
+                                'Error',
+                                'Data telah digunakan dalam Transaksi Lain',
+                                'warning'
+                            );
+                        }
+                    });
             }
         });
     });

@@ -14,14 +14,14 @@
         <div class="col-lg-12">
 
             <div class="col-lg-12"> --}}
-                <form action="/obat/aksi_tambah" method="post">
+                <form action="/obat/aksi_tambah" method="post" id="form_tambah_obat">
                     {{ csrf_field() }}
                     {{-- <div class="card">
                         <div class="card-header bg-success">
                             <div class="card-title"><i class="fas fa-plus-circle"></i>&nbsp;Tambah</div>
                         </div>
                         <div class="card-body"> --}}
-                            <div class="row">
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -29,8 +29,8 @@
                                             <div class="form-group row">
                                                 <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Nama Obat</label>
                                                 <div class="col-sm-7">
-                                                    <input type="text" class="form-control" name="nama" style="width:45%;" placeholder="Masukkan Nama Obat" value="{{ old('nama') }}" id="nama_obat">
-                                                    <div class="text-danger form-text" id="nama_obat_message">
+                                                    <input type="text" class="form-control" name="nama" style="width:45%;" placeholder="Masukkan Nama Obat" value="{{ old('nama') }}" id="nama_obat_tambah">
+                                                    <div class="text-danger form-text" id="nama_obat_tambah_message">
 
                                                     </div>
                                                 </div>
@@ -61,10 +61,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6"><button class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button></div>
-                                    <div class="col-6"><button class="btn btn-primary float-right" id="button_tambah"><i class="fas fa-plus"></i>&nbsp;Simpan</button></div>
+                                    <div class="col-6"><button class="btn btn-primary float-right" id="button_tambah" disabled="true"><i class="fas fa-plus"></i>&nbsp;Simpan</button></div>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                         {{-- </div>
 
                     </div> --}}

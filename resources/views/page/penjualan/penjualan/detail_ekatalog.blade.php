@@ -4,29 +4,56 @@
             {{-- <img src="https://picsum.photos/200/200" class="card-img-top" alt="..."> --}}
             {{-- <div id="profileImage" class="center card-img-top"></div> --}}
             <div class="card-body border-0">
-                <h5 class="card-title pl-2 py-2"><b>{{ $data->Customer->nama }}</b></h5>
+                <h5 class="pl-2 py-2"><b>{{ $data->Customer->nama }}</b></h5>
                 <ul class="fa-ul card-text">
-                    <li class="py-2"><span class="fa-li"><i class="fas fa-user-alt fa-fw"></i></span>
-                        @if ($data->satuan != '')
-                            {{ $data->satuan }}
-                        @else
-                            <em class="text-muted">Belum Tersedia</em>
-                        @endif
+                    <li class="py-2"><span class="fa-li"><i class="far fa-building fa-fw"></i></span>
+                        <div class="row">
+                            <div class="col-lg-1 col-md-2">Instansi</div>
+                            <div class="col-lg-11 col-md-10">
+                                @if ($data->instansi != '')
+                                    {{ $data->instansi }}
+                                @else
+                                    <em class="text-muted">Belum Tersedia</em>
+                                @endif
+                            </div>
+                        </div>
                     </li>
-                    <li class="py-2"><span class="fa-li"><i
-                                class="fas fa-address-card fa-fw"></i></span>
-                        @if ($data->alamat != '')
-                            {{ $data->alamat }}
-                        @else
-                            <em class="text-muted">Belum Tersedia</em>
-                        @endif
+                    <li class="py-2"><span class="fa-li"><i class="fas fa-user-alt fa-fw"></i></span>
+                        <div class="row">
+                            <div class="col-lg-1 col-md-2">Satuan</div>
+                            <div class="col-lg-11 col-md-10">
+                                @if ($data->satuan != '')
+                                    {{ $data->satuan }}
+                                @else
+                                    <em class="text-muted">Belum Tersedia</em>
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+                    <li class="py-2"><span class="fa-li"><i class="fas fa-address-card fa-fw"></i></span>
+                        <div class="row">
+                            <div class="col-lg-1 col-md-2">Alamat</div>
+                            <div class="col-lg-11 col-md-10">
+                                @if ($data->alamat != '')
+                                    {{ $data->alamat }}
+                                @else
+                                    <em class="text-muted">Belum Tersedia</em>
+                                @endif
+                            </div>
+                        </div>
+
                     </li>
                     <li class="py-2"><span class="fa-li"><i class="fas fa-map-marker-alt fa-fw"></i></span>
-                        @if (!empty($data->provinsi))
-                            {{ $data->Provinsi->nama }}
-                        @else
-                            <em class="text-muted">Belum Tersedia</em>
-                        @endif
+                        <div class="row">
+                            <div class="col-lg-1 col-md-2">Provinsi</div>
+                            <div class="col-lg-11 col-md-10">
+                                @if ($data->provinsi != '')
+                                    {{ $data->Provinsi->nama }}
+                                @else
+                                    <em class="text-muted">Belum Tersedia</em>
+                                @endif
+                            </div>
+                        </div>
                     </li>
 
                 </ul>

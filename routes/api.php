@@ -106,6 +106,7 @@ Route::prefix('/penjualan_produk')->group(function () {
 });
 
 Route::prefix('/penjualan')->group(function () {
+    Route::get('/edit', [App\Http\Controllers\PenjualanController::class, 'get_data_edit_penjualan']);
     // Route::post('create', [App\Http\Controllers\PenjualanController::class, 'create_penjualan']);
     Route::post('/penjualan/data/{jenis}/{status}', [App\Http\Controllers\PenjualanController::class, 'penjualan_data']);
     Route::get('/ekatalog_data/{akn}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog_emindo']);

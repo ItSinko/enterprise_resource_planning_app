@@ -287,7 +287,6 @@
             <div class="col-5 hide" id="noseridetail">
                 <div class="card">
                     <div class="card-body">
-
                         <div class="row">
                             <div class="col-12">
                                 <span class="float-right filter">

@@ -8,7 +8,7 @@ class Obat extends Model
 {
     protected $connection = 'kesehatan';
     protected $table = 'obats';
-    protected $fillable = ['nama', 'stok', 'keterangan'];
+    protected $fillable = ['nama', 'stok', 'keterangan', 'aturan'];
 
     public function karyawan_sakit()
     {

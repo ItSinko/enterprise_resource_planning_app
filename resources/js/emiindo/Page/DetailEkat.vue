@@ -151,36 +151,9 @@
                                                             'ekatso'
                                                         "
                                                     >
-                                                        <span
-                                                            v-if="
-                                                                forminfoakn
+                                                        <div v-html="status(forminfoakn
                                                                     .deskripsi
-                                                                    .status ==
-                                                                'sepakat'
-                                                            "
-                                                            class="badge green-text"
-                                                            >Sepakat</span
-                                                        >
-                                                        <span
-                                                            v-else-if="
-                                                                forminfoakn
-                                                                    .deskripsi
-                                                                    .status ==
-                                                                'negosiasi'
-                                                            "
-                                                            class="badge warning-text"
-                                                            >Negosiasi</span
-                                                        >
-                                                        <span
-                                                            v-else-if="
-                                                                forminfoakn
-                                                                    .deskripsi
-                                                                    .status ==
-                                                                'batal'
-                                                            "
-                                                            class="badge danger-text"
-                                                            >Batal</span
-                                                        >
+                                                                    .status)"></div>
                                                     </div>
                                                     <div
                                                         class="badge green-text"
@@ -3519,10 +3492,6 @@ export default {
         },
     },
     computed: {
-        datemax() {
-            let date = new Date();
-            return moment(date).format("YYYY-MM-DD");
-        },
         produkselect() {
             let data = this.produk.map((item) => {
                 return {

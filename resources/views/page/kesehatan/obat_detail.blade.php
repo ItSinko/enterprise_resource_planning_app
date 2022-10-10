@@ -6,25 +6,25 @@
                     <span class="info-box-icon"><i class="fas fa-calendar"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Bulan</span>
-                        <span class="info-box-number">September 2022</span>
+                        <span class="info-box-number" id="bulan"></span>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-            <div class="info-box bg-gradient-success">
-                <span class="info-box-icon"><i class="fas fa-tablets"></i></span>
-                <div class="info-box-content">
-                    <span class="info-box-text">Nama Obat</span>
-                    <span class="info-box-number">Vitalong-C</span>
+                <div class="info-box bg-gradient-success">
+                    <span class="info-box-icon"><i class="fas fa-tablets"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Nama Obat</span>
+                        <span class="info-box-number" id="obat"></span>
+                    </div>
                 </div>
-            </div>
             </div>
             <div class="col-4">
                 <div class="info-box bg-gradient-warning">
                     <span class="info-box-icon"><i class="fas fa-clipboard-list"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Jumlah</span>
-                        <span class="info-box-number">52</span>
+                        <span class="info-box-number" id="jumlah"></span>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            {{-- <tr>
                                 <td>1</td>
                                 <td>09-02-2022</td>
                                 <td>Sulastri</td>
@@ -55,7 +55,7 @@
                                 <td>09-02-2022</td>
                                 <td>Sumaiyah</td>
                                 <td>Batuk</td>
-                            </tr>
+                            </tr> --}}
                         </tbody>
                     </table>
                 </div>

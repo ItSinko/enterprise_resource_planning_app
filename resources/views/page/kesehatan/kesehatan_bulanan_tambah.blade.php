@@ -27,7 +27,7 @@
                 Data gagal ditambahkan
             </div>
             @endif
-            
+
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header bg-success">
@@ -197,7 +197,7 @@
                         </div>
                         <div class="card-footer">
                             <span class="float-left"><a class="btn btn-danger rounded-pill" href="/kesehatan/bulanan"><i class="fas fa-times"></i>&nbsp;Batal</a></span>
-                            <span class="float-right"><button class="btn btn-success rounded-pill" id="button_tambah"><i class="fas fa-plus"></i>&nbsp;Tambah Data</button></span>
+                            <span class="float-right"><button class="btn btn-success rounded-pill" id="button_tambah" type="submit" disabled="true"><i class="fas fa-plus"></i>&nbsp;Tambah Data</button></span>
                         </div>
                     </div>
                 </form>

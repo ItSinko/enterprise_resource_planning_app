@@ -85,8 +85,8 @@ class PpicController extends Controller
             $data = JadwalPerakitan::with('Produk.produk')->where('status', $status)->orderBy('tanggal_mulai', 'asc')->orderBy('tanggal_selesai', 'asc')->get();
         } else if ($status == $this->change_status("pelaksanaan")) {
             $data = JadwalPerakitan::with('Produk.produk')->where('status', $status)->orwhereNotIn('status', [6])
-            // ->havingRaw('MONTH(tanggal_mulai) = ?',[$bulan])
-            ->orderBy('tanggal_mulai', 'asc')->orderBy('tanggal_selesai', 'asc')->get();
+                // ->havingRaw('MONTH(tanggal_mulai) = ?',[$bulan])
+                ->orderBy('tanggal_mulai', 'asc')->orderBy('tanggal_selesai', 'asc')->get();
         } else {
             $data = JadwalPerakitan::with('Produk.produk')->orderBy('tanggal_mulai', 'asc')->orderBy('tanggal_selesai', 'asc')->get();
         }
@@ -725,7 +725,7 @@ class PpicController extends Controller
 
         $obj = [
             'no_bppb' => $request->no_bppb,
-            'produk_id' => Produk::find(GudangBarangJadi::find($request->produk_id)->produk_id)->nama.' '.GudangBarangJadi::find($request->produk_id)->nama,
+            'produk_id' => Produk::find(GudangBarangJadi::find($request->produk_id)->produk_id)->nama . ' ' . GudangBarangJadi::find($request->produk_id)->nama,
             'jumlah' => $request->jumlah,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
@@ -744,7 +744,7 @@ class PpicController extends Controller
                 'response' => json_encode($obj),
                 // 'user_id' => Auth::user()->id
             ]);
-        } else if($status == 7) {
+        } else if ($status == 7) {
             SystemLog::create([
                 'tipe' => 'PPIC',
                 'subjek' => 'Tambah Pelaksanaan Perakitan',
@@ -944,7 +944,7 @@ class PpicController extends Controller
                         'response' => json_encode($obj),
                         'user_id' => $request->user_id
                     ]);
-                } elseif($request->jenis == 'ok') {
+                } elseif ($request->jenis == 'ok') {
                     SystemLog::create([
                         'tipe' => 'PPIC',
                         'subjek' => 'Setujui Permintaan Persetujuan Perakitan',
@@ -953,7 +953,6 @@ class PpicController extends Controller
                     ]);
                 }
             }
-
         }
 
         return $this->get_data_perakitan($status, $bulan);
@@ -1590,8 +1589,9 @@ class PpicController extends Controller
         // ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
         // ->whereNotIn('pesanan.log_id', ['10', '20'])
 
-        $data = GudangBarangJadi::addSelect(['count_pesanan' => function ($q){
-                    $q->selectRaw('count(noseri_detail_pesanan.id)')
+        $data = GudangBarangJadi::addSelect([
+            'count_pesanan' => function ($q) {
+                $q->selectRaw('count(noseri_detail_pesanan.id)')
                     ->from('detail_pesanan_produk')
                     ->join('noseri_detail_pesanan', 'noseri_detail_pesanan.detail_pesanan_produk_id', '=', 'detail_pesanan_produk.id')
                     ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
@@ -1601,20 +1601,20 @@ class PpicController extends Controller
                     inner join logistik on logistik.id = detail_logistik.logistik_id
                     inner join detail_pesanan_produk on detail_pesanan_produk.id = detail_logistik.detail_pesanan_produk_id
                     where detail_pesanan_produk.gudang_barang_jadi_id = gdg_barang_jadi.id)');
-                },
-                'count_pengiriman' => function($q){
-                    $q->selectRaw('count(noseri_logistik.id)')
-                      ->from('detail_pesanan_produk')
-                      ->join('detail_logistik', 'detail_logistik.detail_pesanan_produk_id', '=', 'detail_pesanan_produk.id')
-                      ->join('noseri_logistik', 'noseri_logistik.detail_logistik_id', '=', 'detail_logistik.id')
-                      ->join('logistik', 'logistik.id', '=', 'detail_logistik.logistik_id')
-                      ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                      ->havingRaw('count(noseri_logistik.id) < (select count(noseri_detail_pesanan.id)
+            },
+            'count_pengiriman' => function ($q) {
+                $q->selectRaw('count(noseri_logistik.id)')
+                    ->from('detail_pesanan_produk')
+                    ->join('detail_logistik', 'detail_logistik.detail_pesanan_produk_id', '=', 'detail_pesanan_produk.id')
+                    ->join('noseri_logistik', 'noseri_logistik.detail_logistik_id', '=', 'detail_logistik.id')
+                    ->join('logistik', 'logistik.id', '=', 'detail_logistik.logistik_id')
+                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                    ->havingRaw('count(noseri_logistik.id) < (select count(noseri_detail_pesanan.id)
                         from noseri_detail_pesanan
                         inner join detail_pesanan_produk on detail_pesanan_produk.id = noseri_detail_pesanan.detail_pesanan_produk_id
                         where detail_pesanan_produk.gudang_barang_jadi_id = gdg_barang_jadi.id)');
-                }
-            ])
+            }
+        ])
             ->havingRaw('count_pesanan > count_pengiriman')
             ->with('Produk')
             ->get();
@@ -1809,6 +1809,15 @@ class PpicController extends Controller
                 }
             })
             ->addColumn('jumlah_pesanan', function ($data) use ($id) {
+                // $res = DetailPesanan::where('pesanan_id', $ids)->get();
+                // $jumlah = 0;
+                // foreach ($res as $a) {
+                //     foreach ($a->PenjualanProduk->Produk as $b) {
+                //         if ($b->id == $prd->id) {
+                //             $jumlah = $jumlah + ($a->jumlah * $b->pivot->jumlah);
+                //         }
+                //     }
+                // }
                 return $data->count_pesanan;
             })
             ->addColumn('jumlah_selesai_kirim', function ($data) use ($id) {
@@ -2019,10 +2028,10 @@ class PpicController extends Controller
     public function get_count_selesai_pengiriman_produk($id)
     {
         $res = NoseriDetailLogistik::whereHas('DetailLogistik.DetailPesananProduk', function ($q) use ($id) {
-                  $q->where('gudang_barang_jadi_id', $id);
-               })->whereHas('DetailLogistik.DetailPesananProduk.DetailPesanan.Pesanan', function ($q) {
-                  $q->whereNotIn('log_id', ['7', '9', '10']);
-            })->count();
+            $q->where('gudang_barang_jadi_id', $id);
+        })->whereHas('DetailLogistik.DetailPesananProduk.DetailPesanan.Pesanan', function ($q) {
+            $q->whereNotIn('log_id', ['7', '9', '10']);
+        })->count();
         // $jumlah = 0;
         // foreach ($res as $a) {
         //     $a->jumlah;
@@ -2123,8 +2132,9 @@ class PpicController extends Controller
         } else {
             return $data->keterangan_transfer;
         }
-    }  //QC Outgoing
+    }
 
+    //QC Outgoing
     public function qc_outgoing_belum_uji()
     {
         $prd = Pesanan::whereIn('id', function ($q) {

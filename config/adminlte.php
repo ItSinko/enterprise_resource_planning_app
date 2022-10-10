@@ -625,7 +625,7 @@ return [
             ],
         ],
         // kesehatan (28)
-        // Kesehatan
+        //Kesehatan
         [
             'text' => 'Beranda',
             'url'  => '/kesehatan/dashboard',
@@ -641,7 +641,7 @@ return [
             'text' => 'Karyawan',
             'icon' => 'fas fa-users fa-fw',
             'auth' => [28],
-            'url'  => '/karyawan/',
+            'url'  => '/karyawan',
             // 'submenu' => [
             //     [
             //         'icon' => 'far fa-circle',
@@ -655,7 +655,7 @@ return [
             'icon' => 'fas fa-tablets fa-fw',
             'text' => 'Obat',
             'auth' => [28],
-            'url'  => '/obat/',
+            'url'  => '/obat',
         ],
 
         [
@@ -668,61 +668,61 @@ return [
             // 'auth' => [28],
             // 'submenu' => [
             //     [
-                    'icon' => 'fas fa-user-md fa-fw',
-                    'text' => 'Awal',
-                    'auth' => [28],
-                    'url'  => '/kesehatan/',
-                ],
+            'icon' => 'fas fa-user-md fa-fw',
+            'text' => 'Awal',
+            'auth' => [28],
+            'url'  => '/kesehatan',
+        ],
+        // [
+        //     'icon' => 'fas fa-vial fa-fw',
+        //     'text' => 'Mingguan',
+        //     'auth' => [28],
+        //     'submenu' => [
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Data',
+        //             'auth' => [28],
+        //             'url'  => '/kesehatan/mingguan',
+        //         ],
+        //         // [
+        //         //     'icon' => 'far fa-circle',
+        //         //     'text' => 'Detail',
+        //         //     'auth' => [28],
+        //         //     'url'  => '/kesehatan/mingguan/detail',
+        //         // ],
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Laporan',
+        //             'auth' => [28],
+        //             'url'  => '/kesehatan/laporan/mingguan',
+        //         ]
+        //     ],
+        // ],
+        [
+            'icon' => 'fas fa-weight fa-fw',
+            'text' => 'Bulanan',
+            'auth' => [28],
+            'submenu' => [
                 [
-                    'icon' => 'fas fa-vial fa-fw',
-                    'text' => 'Mingguan',
+                    'icon' => 'far fa-circle',
+                    'text' => 'Data',
                     'auth' => [28],
-                    'submenu' => [
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Data',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/mingguan',
-                        ],
-                        // [
-                        //     'icon' => 'far fa-circle',
-                        //     'text' => 'Detail',
-                        //     'auth' => [28],
-                        //     'url'  => '/kesehatan/mingguan/detail',
-                        // ],
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Laporan',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/laporan/mingguan',
-                        ]
-                    ],
+                    'url'  => '/kesehatan/bulanan',
                 ],
+                // [
+                //     'icon' => 'far fa-circle',
+                //     'text' => 'Detail',
+                //     'auth' => [28],
+                //     'url'  => '/kesehatan/bulanan/detail',
+                // ],
                 [
-                    'icon' => 'fas fa-weight fa-fw',
-                    'text' => 'Bulanan',
+                    'icon' => 'far fa-circle',
+                    'text' => 'Laporan',
                     'auth' => [28],
-                    'submenu' => [
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Data',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/bulanan',
-                        ],
-                        // [
-                        //     'icon' => 'far fa-circle',
-                        //     'text' => 'Detail',
-                        //     'auth' => [28],
-                        //     'url'  => '/kesehatan/bulanan/detail',
-                        // ],
-                        [
-                            'icon' => 'far fa-circle',
-                            'text' => 'Laporan',
-                            'auth' => [28],
-                            'url'  => '/kesehatan/laporan/bulanan',
-                        ]
-                    ],
-                ],
+                    'url'  => '/kesehatan/laporan/bulanan',
+                ]
+            ],
+        ],
         //     ],
         // ],
         [

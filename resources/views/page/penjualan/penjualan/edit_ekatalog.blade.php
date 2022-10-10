@@ -11,4 +11,3 @@
     <script src="{{ asset('native/js/emiindo.js') }}"></script>
 @endsection
 @endsection
-

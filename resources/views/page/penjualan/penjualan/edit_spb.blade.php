@@ -448,12 +448,13 @@
                                                                         </th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th width="5%">No</th>
+                                                                        <th width="2%">No</th>
                                                                         <th width="35%">Nama Paket</th>
                                                                         <th width="15%">Jumlah</th>
+                                                                        <th width="6%">Stok Distributor</th>
                                                                         <th width="20%">Harga</th>
                                                                         <th width="20%">Subtotal</th>
-                                                                        <th width="5%">Aksi</th>
+                                                                        <th width="2%">Aksi</th>
                                                                     </tr>
                                                                 </thead>
 
@@ -509,6 +510,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
+                                                                            <div class="form-check col-form-label">
+                                                                                <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
                                                                             <div class="form-group d-flex justify-content-center">
                                                                                 <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="prdhrg">Rp</span>
@@ -555,6 +561,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
+                                                                            <div class="form-check col-form-label">
+                                                                                <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
                                                                             <div class="form-group d-flex justify-content-center">
                                                                                 <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="prdhrg">Rp</span>
@@ -579,8 +590,8 @@
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
-                                                                        <th colspan="4" style="text-align:right;">Total Harga</th>
-                                                                        <th id="totalhargaprd" class="align-right">Rp.
+                                                                        <th colspan="5" style="text-align:right;">Total Harga</th>
+                                                                        <th colspan="2" id="totalhargaprd" class="align-right">Rp.
                                                                             @if(isset($e->pesanan->detailpesanan))
                                                                             <?php $x = 0;
                                                                             foreach ($e->pesanan->detailpesanan as $f) {
@@ -1372,6 +1383,11 @@
                             </div>
                         </div>
                         <small id="produk_ketersediaan"></small>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-check col-form-label">
+                        <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
                     </div>
                 </td>
                 <td>

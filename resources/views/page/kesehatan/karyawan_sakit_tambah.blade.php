@@ -88,7 +88,7 @@
             </div>
             @endif
             <div class="col-lg-12">
-                <form action="/karyawan/sakit/aksi_tambah" method="post" enctype="multipart/form-data">
+                <form action="/karyawan/sakit/aksi_tambah" method="post" enctype="multipart/form-data" id="formkaryawansakit">
                  @csrf
                  <div class="card card-primary card-outline">
                     <div class="card-header">
@@ -106,7 +106,7 @@
                             <div class="form-group row">
                                 <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Karyawan Sakit</label>
                                 <div class="col-sm-3">
-                                    <select type="text" class="form-control @error('karyawan_id') is-invalid @enderror select2 karyawan_id" name="karyawan_id">
+                                    <select type="text" class="form-control @error('karyawan_id') is-invalid @enderror select2 karyawan_id" name="karyawan_id" id="karyawan_id">
 
                                         @foreach($karyawan as $k)
                                         <option value="{{$k->id}}">{{$k->nama}}</option>
@@ -122,7 +122,7 @@
                             <div class="form-group row">
                                 <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Pemeriksa</label>
                                 <div class="col-sm-3">
-                                    <select type="text" class="form-control @error('pemeriksa_id') is-invalid @enderror select2 pemeriksa_id" name="pemeriksa_id">
+                                    <select type="text" class="form-control @error('pemeriksa_id') is-invalid @enderror select2 pemeriksa_id" name="pemeriksa_id" id="pemeriksa_id">
 
                                         @foreach($pengecek as $p)
                                         <option value="{{$p->id}}">{{$p->nama}}</option>
@@ -312,7 +312,7 @@
                  </div>
                  <div class="row mb-3">
                     <div class="col-6"><a class="btn btn-danger float-left" href="/karyawan/sakit">Batal</a></div>
-                    <div class="col-6"><button class="btn btn-primary float-right" type="submit" id="button_tambah">Simpan</button></div>
+                    <div class="col-6"><button class="btn btn-primary float-right" type="submit" id="button_tambah" disabled="true">Simpan</button></div>
                  </div>
                 </form>
             </div>
@@ -324,6 +324,18 @@
 <script>
     var where = [''];
     $(document).ready(function() {
+        $('#formkaryawansakit').on('keyup change', function(){
+            if($('input[name="tgl"]').val() != "" && $('#karyawan_id').val() != "" && $('#pemeriksa_id').val() != "" && $('#analisa').val() != "" && $('#diagnosa').val() != "" && $('input[name="hasil_1"][type="radio"]:checked').val() != "" && $('input[name="hasil_2"][type="radio"]:checked').val() != ""){
+                if(($('input[type="radio"][name="hasil_1"]:checked').val() == "Terapi" && $('#terapi').val() != "") || $('input[name="hasil_1"]:checked').val() == "Pengobatan"){
+                    $('#button_tambah').attr('disabled', false);
+                }
+                else{
+                    $('#button_tambah').attr('disabled', true);
+                }
+            }else{
+                $('#button_tambah').attr('disabled', true);
+            }
+        });
         $('.select2').select2();
         select_data();
 
@@ -369,7 +381,7 @@
             });
         })
         $('#tambahitem').click(function(e) {
-            var data = `     <tr>
+            var data = `<tr>
                                                                 <td>1</td>
                                                                 <td>
                                                                     <select class="form-control  obat_data " id="0" name="obat[]">
@@ -435,7 +447,7 @@
                                                                 <td style="text-align: right;">
                                                                 <button type="button" class="btn btn-danger karyawan-img-small" style="border-radius:50%;" id="closetable"><i class="fas fa-times-circle"></i></button>
                                                                 </td>
-                            </tr>`;
+                        </tr>`;
             $('#obat tr:last').after(data);
             numberRows($("#obat"));
         });
@@ -483,11 +495,12 @@
                 templateResult: function(data) {
                         var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.stok + `">` + data.stok + `</span></div>`);
                         return $span;
-                    },
-                    templateSelection: function(data) {
-                        var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.stok + `">` + data.stok + `</span></div>`);
-                        return $span;
                     }
+                    // ,
+                    // templateSelection: function(data) {
+                    //     var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.stok + `">` + data.stok + `</span></div>`);
+                    //     return $span;
+                    // }
             });
         }
 
@@ -538,33 +551,6 @@
                 select_data();
             }
         });
-
-            $("#diagnosa").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        dataType: 'json',
-                        url: "/api/ekatalog/all_satuan",
-                        data: {
-                            term: request.term
-                        },
-                        success: function(data) {
-
-                            var transformed = $.map(data, function(el) {
-                                return {
-                                    label: el.satuan,
-                                    id: el.id
-                                };
-                            });
-                            response(transformed);
-                        },
-                        error: function() {
-                            response([]);
-                        }
-                    });
-                }
-            });
-
-
             $("#diagnosa").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -581,7 +567,33 @@
                                     id: el.id
                                 };
                             });
-                            response(transformed);
+                            response(transformed.slice(0, 10));
+                        },
+                        error: function() {
+                            response([]);
+                        }
+                    });
+                }
+            });
+
+
+            $("#analisa").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        dataType: 'json',
+                        url: "/kesehatan/riwayat_analisa/data",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+
+                            var transformed = $.map(data, function(el) {
+                                return {
+                                    label: el.analisa,
+                                    id: el.id
+                                };
+                            });
+                            response(transformed.slice(0, 10));
                         },
                         error: function() {
                             response([]);

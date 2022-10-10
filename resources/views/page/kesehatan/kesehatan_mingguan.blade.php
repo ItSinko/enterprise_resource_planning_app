@@ -507,18 +507,42 @@
             })
             .then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Berhasil',
-                        text: 'Berhasil menghapus data',
-                        icon: 'success',
-                        showCloseButton: true
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Gagal menghapus data',
-                        icon: 'error',
-                        showCloseButton: true
+                    $.ajax({
+                        url: '/kesehatan/mingguan/rapid/delete/'+data_id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response['data'] == "success") {
+                                swal.fire(
+                                    'Berhasil',
+                                    'Berhasil melakukan Hapus Data',
+                                    'success'
+                                );
+                                $('#rapid_tabel').DataTable().ajax.reload();
+                                $("#hapusmodal").modal('hide');
+                            } else if (response['data'] == "error") {
+                                swal.fire(
+                                    'Gagal',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'error'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal.fire(
+                                'Error',
+                                'Data telah digunakan dalam Transaksi Lain',
+                                'warning'
+                            );
+                        }
                     });
                 }
             });
@@ -535,18 +559,42 @@
             })
             .then((result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Berhasil',
-                        text: 'Berhasil menghapus data',
-                        icon: 'success',
-                        showCloseButton: true
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire({
-                        title: 'Gagal',
-                        text: 'Gagal menghapus data',
-                        icon: 'error',
-                        showCloseButton: true
+                    $.ajax({
+                        url: '/kesehatan/mingguan/tensi/delete/'+data_id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response['data'] == "success") {
+                                swal.fire(
+                                    'Berhasil',
+                                    'Berhasil melakukan Hapus Data',
+                                    'success'
+                                );
+                                $('#tensi_tabel').DataTable().ajax.reload();
+                                $("#hapusmodal").modal('hide');
+                            } else if (response['data'] == "error") {
+                                swal.fire(
+                                    'Gagal',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'error'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal.fire(
+                                'Error',
+                                'Data telah digunakan dalam Transaksi Lain',
+                                'warning'
+                            );
+                        }
                     });
                 }
             });

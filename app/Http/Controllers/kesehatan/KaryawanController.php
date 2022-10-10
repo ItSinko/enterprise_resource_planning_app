@@ -29,6 +29,7 @@ class KaryawanController extends Controller
         $divisi = Divisi::all();
         return view('page.karyawan.karyawan_tambah', ['divisi' => $divisi]);
     }
+
     public function karyawan_data()
     {
         $data = Karyawan::with(['Divisi'])->orderBy('nama', 'ASC');
@@ -59,12 +60,13 @@ class KaryawanController extends Controller
             })
             ->addColumn('button', function ($data) {
                 $btn = '<button type="button" id="edit" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Ubah</button>
-                <button type="button" id="delete" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Hapus</button>';
+                <button type="button" id="delete" class="btn btn-sm btn-danger" data-id="'.$data->id.'"><i class="fas fa-trash"></i> Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['button'])
             ->make(true);
     }
+
     public function karyawan_cekdata($nama)
     {
         $data = Karyawan::where('nama', $nama)->get();
@@ -122,5 +124,17 @@ class KaryawanController extends Controller
             return redirect()->back()->with('error', 'Gagal menambahkan data');
         }
     }
+
+    public function karyawan_aksi_hapus(Request $request)
+    {
+        $b = Karyawan::find($request->id);
+        $delete = $b->delete();
+        if ($delete) {
+            return response()->json(['data' => 'success', 'msg' => 'Data berhasil di hapus']);
+        } else {
+            return response()->json(['data' => 'error', 'msg' => 'Hapus Gagal, periksa kembali']);
+        }
+    }
+
 
 }

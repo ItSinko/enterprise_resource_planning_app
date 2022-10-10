@@ -13,6 +13,10 @@ class Karyawan_masuk extends Model
     {
         return $this->belongsTo(Karyawan::class, 'karyawan_id');
     }
+    public function karyawan_sakit()
+    {
+        return $this->belongsTo(Karyawan_sakit::class, 'karyawan_sakit_id');
+    }
     public function pemeriksa()
     {
         return $this->belongsTo(Karyawan::class, 'pemeriksa_id');
