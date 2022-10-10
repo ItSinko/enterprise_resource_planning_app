@@ -80,7 +80,7 @@
                                                 <div class="form-group row">
                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket"></label>
                                                     <div class="col-lg-5 col-md-12">
-                                                        <v-select v-model="formgeneral.customer.id" :options="customerselect" @input="customeronchange(customer_id)" :clearable="false" :disabled="(this.formgeneral.customer.status != 'sudah') ? true : false">
+                                                        <v-select v-model="formgeneral.customer.id" :options="master_customer" @input="customeronchange(customer_id)" :clearable="false" :disabled="(this.formgeneral.customer.status != 'sudah') ? true : false">
                                                         </v-select>
                                                     </div>
                                                 </div>
@@ -221,7 +221,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Instansi</label>
                                                                     <div class="col-lg-7 col-md-12 autocomplete">
-                                                                        <v-select taggable :options="instansiselect" v-model="forminfoakn.instansi.nama" :clearable="false"/>
+                                                                        <v-select taggable :options="master_instansi" v-model="forminfoakn.instansi.nama" :clearable="false"/>
                                                                         <!-- <input type="text" class="form-control col-form-label" name="instansi" id="instansi" autocomplete="off" /> -->
                                                                         <div class="invalid-feedback" id="msginstansi">
                                                                         </div>
@@ -230,7 +230,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Satuan Kerja</label>
                                                                     <div class="col-lg-6 col-md-12">
-                                                                        <v-select taggable :options="satuanselect" v-model="forminfoakn.instansi.satuankerja" :clearable="false"/>
+                                                                        <v-select taggable :options="master_satuan" v-model="forminfoakn.instansi.satuankerja" :clearable="false"/>
                                                                         <!-- <input type="text" class="form-control col-form-label" name="satuan_kerja" id="satuan_kerja" /> -->
                                                                         <div class="invalid-feedback" id="msgsatuan_kerja">
                                                                         </div>
@@ -239,7 +239,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Alamat Instansi</label>
                                                                     <div class="col-lg-7 col-md-12">
-                                                                        <v-select taggable :options="alamatselect" v-model="forminfoakn.instansi.alamat" :clearable="false" class="alamat_v_select"/>
+                                                                        <v-select taggable :options="master_alamat" v-model="forminfoakn.instansi.alamat" :clearable="false" class="alamat_v_select"/>
                                                                         <div class="invalid-feedback" id="msgalamatinstansi">
                                                                         </div>
                                                                     </div>
@@ -247,7 +247,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Provinsi</label>
                                                                     <div class="col-lg-7 col-md-12">
-                                                                        <v-select :options="provinsiselect" :clearable="false" v-model="forminfoakn.instansi.provinsi" :disabled="this.status_ekat != 'sepakat' ? true : false">
+                                                                        <v-select :options="master_provinsi" :clearable="false" v-model="forminfoakn.instansi.provinsi" :disabled="this.status_ekat != 'sepakat' ? true : false">
                                                                         </v-select>
                                                                         <div class="invalid-feedback" id="msgprovinsi">
                                                                         </div>
@@ -256,7 +256,7 @@
                                                                 <div class="form-group row">
                                                                     <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Deskripsi</label>
                                                                     <div class="col-lg-5 col-md-12">
-                                                                        <v-select taggable :options="deskripsiselect" v-model="forminfoakn.instansi.deskripsi" :clearable="false" class="deskripsi_v_select"/>
+                                                                        <v-select taggable :options="master_deskripsi" v-model="forminfoakn.instansi.deskripsi" :clearable="false" class="deskripsi_v_select"/>
                                                                         <div class="invalid-feedback" id="msgdeskripsi">
                                                                         </div>
                                                                     </div>
@@ -378,8 +378,8 @@
                                                             <tbody v-else>
                                                                 <tr v-for="(prd,idx) in formproduk" :key="idx+'1'">
                                                                     <td v-text="(idx+1)"></td>
-                                                                    <td><v-select v-model="prd.produk" :options="produkselect" @input="inputProduk(idx, prd.produk)" :clearable="false" @keyup="produktableonchange()"></v-select>
-                                                                        <div v-if="prd.detailproduk.length > 0">
+                                                                    <td><v-select v-model="prd.produk" :options="master_produk" @input="inputProduk(idx, prd.produk)" :clearable="false" @keyup="produktableonchange()"></v-select>
+                                                                        <div v-if="prd.detail_pesanan.length > 0">
                                                                             <p class="text-bold">Detail Produk</p>
                                                                             <div class="card">
                                                                                 <div class="card-body">
@@ -592,8 +592,8 @@
 </template>
 <script>
 import axios from "axios";
-import moment from "moment";
-import mix from "../mixins/mix";
+// import moment from "moment";
+// import mix from "../mixins/mix";
 import vSelect from "vue-select";
 import inputPrice from "../../components/inputprice";
 import inputQty from "../../components/inputqty";
