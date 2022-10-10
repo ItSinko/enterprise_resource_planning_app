@@ -308,8 +308,7 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="table-responsive">
-                                                                            <table id="tableproduk" class="table"
-                                                                                style="text-align: center;">
+                                                                            <table id="tableproduk" class="table">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th colspan="7"><button
@@ -345,9 +344,24 @@
                                                                                         </th>
                                                                                     </tr>
                                                                                 </thead>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <td>1</td>
+                                                                                <tbody
+                                                                                    v-if="
+                                                                                        loadingproduk
+                                                                                    "
+                                                                                >
+                                                                                    <div
+                                                                                        class="spinner-border"
+                                                                                        role="status"
+                                                                                    >
+                                                                                        <span
+                                                                                            class="sr-only"
+                                                                                            >Loading...</span
+                                                                                        >
+                                                                                    </div>
+                                                                                </tbody>
+                                                                                <tbody v-else>
+                                                                                    <tr v-for="(prd, idx) in ekatalog.data.produk" :key="idx+'produk'">
+                                                                                        <td v-text="idx+1"></td>
                                                                                         <td>
                                                                                             <div dir="auto"
                                                                                                 class="v-select vs--single vs--searchable">
@@ -586,6 +600,7 @@
                 deskripsi: null,
                 alamat: null,
                 provinsi: null,
+                loadingproduk: false,
             }
         },
         props: {
