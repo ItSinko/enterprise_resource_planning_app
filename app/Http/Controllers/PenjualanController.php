@@ -2574,7 +2574,7 @@ class PenjualanController extends Controller
                 if ($divisi_id == "26") {
                     if (!empty($data->Pesanan->log_id)) {
                         if ($data->Pesanan->State->nama == "Penjualan") {
-                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
+                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
                                 <button class="dropdown-item" type="button" >
                                 <i class="fas fa-pencil-alt"></i>
                                 Edit
@@ -2626,7 +2626,7 @@ class PenjualanController extends Controller
                             }
                         }
                     } else if (empty($data->Pesanan->log_id)) {
-                        $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
+                        $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
                             <button class="dropdown-item" type="button" >
                             <i class="fas fa-pencil-alt"></i>
                             Edit
@@ -2877,7 +2877,7 @@ class PenjualanController extends Controller
                                 </a>';
                             }
                         } else {
-                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'spa']) . '" data-id="' . $data->id . '">
+                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'spa']) . '" data-id="' . $data->id . '">
                                 <button class="dropdown-item" type="button" >
                                 <i class="fas fa-pencil-alt"></i>
                                 Edit
