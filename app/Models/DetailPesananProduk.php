@@ -33,6 +33,39 @@ class DetailPesananProduk extends Model
         return $this->hasMany(TFProduksiDetail::class, 'detail_pesanan_produk_id');
     }
 
+    public function getJumlahProgress(){
+        $id = $this->id;
+        $data = DetailPesananProduk::where('id', $id)->addSelect(['count_gudang' => function($q){
+            $q->selectRaw('count(t_gbj_noseri.id)')
+                ->from('t_gbj_noseri')
+                ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
+                ->whereColumn('t_gbj_detail.detail_pesanan_produk_id', 'detail_pesanan_produk.id')
+                ->limit(1);
+        }, 'count_qc' => function($q){
+            $q->selectRaw('count(noseri_detail_pesanan.id)')
+                ->from('noseri_detail_pesanan')
+                ->whereColumn('noseri_detail_pesanan.detail_pesanan_produk_id', 'detail_pesanan_produk.id')
+                ->where('status', 'ok')
+                ->limit(1);
+        }, 'count_log' => function($q){
+            $q->selectRaw('count(noseri_logistik.id)')
+                ->from('noseri_logistik')
+                ->leftjoin('noseri_detail_pesanan', 'noseri_detail_pesanan.id', '=', 'noseri_logistik.noseri_detail_pesanan_id')
+                ->whereColumn('noseri_detail_pesanan.detail_pesanan_produk_id', 'detail_pesanan_produk.id')
+                ->limit(1);
+        }, 'count_jumlah' => function($q){
+            $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+            ->from('detail_pesanan')
+            ->join('detail_penjualan_produk', 'detail_pesanan.penjualan_produk_id', '=', 'detail_penjualan_produk.penjualan_produk_id')
+            ->join('gdg_barang_jadi', 'gdg_barang_jadi.produk_id', '=', 'detail_penjualan_produk.produk_id')
+            ->whereColumn('detail_pesanan.id', 'detail_pesanan_produk.detail_pesanan_id')
+            ->whereColumn('gdg_barang_jadi.id', 'detail_pesanan_produk.gudang_barang_jadi_id')
+            ->limit(1);
+        }])->with('GudangBarangJadi.Produk')->first();
+
+        return $data;
+    }
+
     public function getJumlahPesanans()
     {
         $id = 1;

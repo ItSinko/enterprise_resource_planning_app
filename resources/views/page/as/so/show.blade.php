@@ -27,6 +27,28 @@
 
 @section('adminlte_css')
 <style>
+    .modal-body{
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
     .urgent {
         color: #dc3545;
         font-weight: 600;
@@ -321,7 +343,6 @@
                                                         <th>Tanggal Kirim</th>
                                                         <th>Nama Customer</th>
                                                         <th>Provinsi</th>
-                                                        <th>Status</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
@@ -361,55 +382,56 @@
 @section('adminlte_js')
 <script>
     $(function() {
-
-        $('#riwayattable').DataTable({
-            destroy: true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                'url': '/api/logistik/pengiriman/riwayat/data/semua/semua/semua',
-                'type': 'POST',
-                'datatype': 'JSON',
-                'headers': {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
-                }
-            },
-            language: {
-                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-            },
-            columns: [{
-                    data: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
+        $('#pills-per_sj-tab').on('click', function(){
+            riwayat();
+        })
+        function riwayat(){
+            $('#riwayattable').DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    'url': '/api/logistik/pengiriman/riwayat/data/semua/semua/semua',
+                    'type': 'POST',
+                    'datatype': 'JSON',
+                    'headers': {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    }
                 },
-                {
-                    data: 'so'
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                 },
-                {
-                    data: 'sj',
-                },
-                {
-                    data: 'ekspedisi',
-                },
-                {
-                    data: 'no_resi',
-                }, {
-                    data: 'tgl_kirim',
-                }, {
-                    data: 'nama_customer',
+                columns: [{
+                        data: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'so'
+                    },
+                    {
+                        data: 'sj',
+                    },
+                    {
+                        data: 'ekspedisi',
+                    },
+                    {
+                        data: 'no_resi',
+                    }, {
+                        data: 'tgl_kirim',
+                    }, {
+                        data: 'nama_customer',
 
-                }, {
-                    data: 'provinsi',
+                    }, {
+                        data: 'provinsi',
 
-                }, {
-                    data: 'status',
+                    }, {
+                        data: 'button',
 
-                }, {
-                    data: 'button',
-
-                }
-            ]
-        });
+                    }
+                ]
+            });
+        }
 
         $('#filter_riwayat').submit(function() {
             var values_pengiriman = [];
@@ -507,7 +529,6 @@
                 success: function(result) {
                     $('#detailmodal').modal("show");
                     $('#detail').html(result).show();
-                    console.log(id);
                     // $("#editform").attr("action", href);
                 },
                 complete: function() {
@@ -521,7 +542,6 @@
                 timeout: 8000
             })
         });
-
 
     })
 </script>

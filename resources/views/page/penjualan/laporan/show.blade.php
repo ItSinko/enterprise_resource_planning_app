@@ -1,3 +1,4 @@
+
 @extends('adminlte.page')
 
 @section('title', 'ERP')
@@ -666,8 +667,10 @@
             } else {
                 var y = ['kosong'];
             }
+            // $('#loader').show();
+            // window.location.href = '/penjualan/penjualan/export/' + x + '/' + customer_id + '/' + tanggal_mulai + '/' + tanggal_akhir + '/' + y + '/' + jenis_laporan;
+            // $("#laporanmodal").modal('hide');
 
-            window.location.href = '/penjualan/penjualan/export/' + x + '/' + customer_id + '/' + tanggal_mulai + '/' + tanggal_akhir + '/' + y + '/' + jenis_laporan;
             setTimeout(function() {
                 $("#laporanmodal").modal('hide');
                 $('#loader').fadeOut();
@@ -680,12 +683,11 @@
                     $('#loader').show();
                 },
                 // success: function(result) {
-                //     $('#laporanmodal').modal("hide");
-                //     // $('#edit').html(result).show();
+                //     $('#loader').hide();
                 // },
-                complete: function() {
+                completed: function() {
                     $('#laporanmodal').modal("hide");
-                    $('#loader').fadeOut();
+                    $('#loader').hide();
                 },
                 error: function(jqXHR, testStatus, error) {
                     console.log(error);
@@ -696,11 +698,13 @@
                 timeout: 8000
             })
             .then((response) => {
+                $('#loader').hide();
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.setAttribute('download', 'file.pdf');
                 document.body.appendChild(link);
                 link.click();
+
             });
             // window.location.href = '/penjualan/penjualan/export/' + x + '/' + customer_id + '/' + tanggal_mulai + '/' + tanggal_akhir + '/' + y + '/' + tampilan_export;
             // setTimeout(function() {

@@ -105,11 +105,13 @@
         <div class='table-responsive'>
           <table id="tabel" class="table table-hover">
             <thead style="text-align: center;">
+              @if(Auth::user()->divisi_id == "28")
               <tr>
                 <th colspan="14">
                   <a href="/karyawan/create" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
                 </th>
               </tr>
+              @endif
               <tr>
                 <th>No</th>
                 <th>Divisi</th>
@@ -132,117 +134,143 @@
 </div>
 <!-- Modal Detail -->
 <div class="modal fade  bd-example-modal-xl" id="edit_mod" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">
-          <div class="data_detail_head"></div>
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="modal-body">
-        <div class="data_detail">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="col-lg-12">
-                <form method="post" action="/karyawan/update">
-                  {{ csrf_field() }}
-                  {{method_field('PUT')}}
-                  <div class="card">
-                    <div class="card-header bg-success">
-                      <div class="card-title"><i class="fas fa-plus-circle"></i>&nbsp;Ubah Data</div>
-                    </div>
-                    <div class="card-body">
-                      <div class="col-lg-12">
-                        <div class="row">
-                          <div class="col-lg-12">
-                            <div class="form-horizontal">
-                              <input type="text" name="id" class="d-none form-control" id="id" readonly>
-                              <table class="table table-bordered table-striped" id="tabel_vaksin">
-                                <thead>
-                                  <tr>
-                                    <th>Tgl Lahir</th>
-                                    <th width="25%">Divisi</th>
-                                    <th>Jabatan</th>
-                                    <th>Kelamin</th>
-                                    <th>Pemerika Rapid</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      <input type="date" class="form-control" name="tgllahir" id="tgllahir">
-                                    </td>
-                                    <td>
-                                      <select class="form-control select2" id="divisi" name="divisi">
-
-                                        @foreach($karyawan as $k)
-                                        <option value="{{$k->id}}">{{$k->nama}}</option>
-                                        @endforeach
-                                      </select>
-                                    </td>
-                                    <td>
-                                      <select class="form-control select2 " id="jabatan" name="jabatan">
-
-                                        <option value="direktur">Direktur</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="assisten manager">Ass Manager</option>
-                                        <option value="supervisor">Supervisor</option>
-                                        <option value="staff">Staff</option>
-                                        <option value="operator">Operator</option>
-                                        <option value="harian">Harian</option>
-                                        <option value="lainnya">Lainnya</option>
-                                      </select>
-                                    </td>
-                                    <td>
-                                      <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="jenis" id="jenis" value="P">
-                                        <label class="form-check-label">Perempuan</label>
-                                      </div>
-                                      <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="jenis" id="jenis" value="L">
-                                        <label class="form-check-label">Laki laki</label>
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="pemeriksa_rapid" id="pemeriksa_rapid" value="1">
-                                        <label class="form-check-label">Ya</label>
-                                      </div>
-                                      <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="pemeriksa_rapid" id="pemeriksa_rapid" value="0">
-                                        <label class="form-check-label">Tidak</label>
-                                      </div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-footer">
-                      <span class="float-right"><button class="btn btn-success rounded-pill" id="button_tambah"><i class="fas fa-plus"></i>&nbsp;Ubah Data</button></span>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">
+            <div class="data_detail_head"></div>
+            </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+        <form method="post" action="/karyawan/update">
+            {{ csrf_field() }}
+            {{method_field('PUT')}}
+            <div class="modal-body">
+                <div class="data_detail">
+                <div class="row">
+                    <div class="col-lg-12">
+                    <div class="col-lg-12">
+                        <input type="text" name="id" class="d-none form-control" id="id" readonly>
+                            <div class="card card-outline card-warning">
+                                <div class="card-header">
+                                    <h5 class="card-title">Biodata Karyawan</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-horizontal">
+                                        <div class="form-group row">
+                                            <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Tanggal Lahir</label>
+                                            <div class="col-sm-7">
+                                                <input type="date" class="form-control @error('nama') is-invalid @enderror" name="tgllahir"  id="tgllahir" style="width:30%;" placeholder="Masukkan Nama Karyawan" value="{{ old('tgllahir') }}">
+                                                @if($errors->has('tgllahir'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('tgllahir')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Jenis Kelamin</label>
+                                            <div class="col-sm-7" style="margin-top:7px;">
+                                                <div class="icheck-success d-inline col-sm-5">
+                                                    <input type="radio" name="jenis" value="L" checked="0">
+                                                    <label for="no">
+                                                        Laki laki
+                                                    </label>
+                                                </div>
+                                                <div class="icheck-warning d-inline col-sm-5">
+                                                    <input type="radio" name="jenis" value="P">
+                                                    <label for="sample">
+                                                        Perempuan
+                                                    </label>
+                                                </div>
+                                                <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-outline card-warning">
+                                <div class="card-header">
+                                    <h5 class="card-title">Informasi Pekerjaan</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-horizontal">
+                                        <div class="form-group row">
+                                            <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Divisi</label>
+                                            <div class="col-sm-7">
+                                                <select type="text" class="form-control @error('divisi') is-invalid @enderror select2" name="divisi" id="divisi" style="width:45%;" placeholder="Masukkan Nama Karyawan" value="{{ old('divisi') }}">
+                                                    <option value="">Pilih Divisi</option>
+                                                    @foreach($karyawan as $k)
+                                                        <option value="{{$k->id}}">{{$k->nama}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if($errors->has('divisi'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('divisi')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Jabatan</label>
+                                            <div class="col-sm-7">
+                                                <select type="text" class="form-control @error('jabatan') is-invalid @enderror select2" name="jabatan" id="jabatan" style="width:45%;" placeholder="Masukkan Nama Karyawan" value="{{ old('jabatan') }}">
+                                                    <option value="direktur">Direktur</option>
+                                                    <option value="manager">Manager</option>
+                                                    <option value="assisten manager">Ass Manager</option>
+                                                    <option value="supervisor">Supervisor</option>
+                                                    <option value="staff">Staff</option>
+                                                    <option value="operator">Operator</option>
+                                                    <option value="harian">Harian</option>
+                                                    <option value="lainnya">Lainnya</option>
+                                                </select>
+                                                @if($errors->has('jabatan'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('jabatan')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Pemeriksa Rapid</label>
+                                            <div class="col-sm-7" style="margin-top:7px;">
+                                                <div class="icheck-success d-inline col-sm-6">
+                                                    <input type="radio" name="pemeriksa_rapid" id="pemeriksa_rapid" value="1">
+                                                    <label for="no">
+                                                        Ya
+                                                    </label>
+                                                </div>
+                                                <div class="icheck-warning d-inline col-sm-6">
+                                                    <input type="radio" name="pemeriksa_rapid" id="pemeriksa_rapid" value="0">
+                                                    <label for="sample">
+                                                        Tidak
+                                                    </label>
+                                                </div>
+                                                <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger float-left" data-dismiss="modal">Batal</button>
+                <button class="btn btn-warning float-right" id="button_tambah">Simpan</button>
+            </div>
+        </form>
+        </div>
     </div>
-  </div>
 </div>
 <!-- End Modal Detail -->
 @stop
 @section('adminlte_js')
 <script>
   $(function() {
+    var divisi = "{{Auth::user()->divisi_id}}";
     var tabel = $('#tabel').DataTable({
       processing: true,
       serverSide: true,
@@ -287,14 +315,64 @@
         },
         {
           data: 'button',
+          visible: divisi == '28' ? true : false
         },
-        {
-          data: 'jabatan',
-          visible:false
-        }
       ]
     });
 
+    $('#tabel > tbody').on('click', '#delete', function() {
+        var data_id = $(this).attr('data-id');
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Yakin ingin menghapus data ini?',
+            icon: 'warning',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            showCancelButton: true,
+            showCloseButton: true
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                        url: '/karyawan/delete/'+data_id,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response['data'] == "success") {
+                                swal.fire(
+                                    'Berhasil',
+                                    'Berhasil melakukan Hapus Data',
+                                    'success'
+                                );
+                                $('#tabel').DataTable().ajax.reload();
+                                $("#hapusmodal").modal('hide');
+                            } else if (response['data'] == "error") {
+                                swal.fire(
+                                    'Gagal',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'error'
+                                );
+                            } else {
+                                swal.fire(
+                                    'Error',
+                                    'Data telah digunakan dalam Transaksi Lain',
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal.fire(
+                                'Error',
+                                'Data telah digunakan dalam Transaksi Lain',
+                                'warning'
+                            );
+                        }
+                    });
+            }
+        });
+    });
 
     $('#tabel > tbody').on('click', '#edit', function() {
       var rows = tabel.rows($(this).parents('tr')).data();

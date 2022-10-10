@@ -28,6 +28,28 @@
 @section('adminlte_css')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
+        .modal-body{
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
         .foo {
             border-radius: 50%;
             float: left;

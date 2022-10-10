@@ -177,6 +177,7 @@
                                         <th>Cholesterol</th>
                                         <th>Uric Acid</th>
                                         <th>Catatan</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
@@ -209,6 +210,7 @@
                                         <th>Bone</th>
                                         <th>Kalori</th>
                                         <th>Catatan</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody style="text-align: center;">
@@ -220,11 +222,68 @@
             </form>
 
         </div>
+    </div>
 </section>
 @endsection
 @section('adminlte_js')
 <script>
     $(function() {
+        $('#tensi_tabel > tbody').on('click', '#delete', function() {
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Yakin ingin menghapus data ini?',
+            icon: 'warning',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            showCancelButton: true,
+            showCloseButton: true
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Berhasil menghapus data',
+                    icon: 'success',
+                    showCloseButton: true
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Gagal menghapus data',
+                    icon: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
+        $('#berat_tabel > tbody').on('click', '#delete', function() {
+        Swal.fire({
+            title: 'Hapus Data',
+            text: 'Yakin ingin menghapus data ini?',
+            icon: 'warning',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+            showCancelButton: true,
+            showCloseButton: true
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: 'Berhasil menghapus data',
+                    icon: 'success',
+                    showCloseButton: true
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    title: 'Gagal',
+                    text: 'Gagal menghapus data',
+                    icon: 'error',
+                    showCloseButton: true
+                });
+            }
+        });
+    });
         var karyawan_id = 0;
         var tensi_tabel = $('#tensi_tabel').DataTable({
             processing: true,
@@ -245,7 +304,10 @@
                     searchable: false
                 },
                 {
-                    data: 'tgl_cek'
+                    data: 'tgl_cek',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
                 },
                 {
                     data: 'glu',
@@ -301,6 +363,9 @@
                 {
                     data: 'keterangan'
                 },
+                {
+                    data: 'aksi'
+                },
             ]
         });
 
@@ -325,7 +390,10 @@
                     searchable: false
                 },
                 {
-                    data: 'tgl_cek'
+                    data: 'tgl_cek',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
                 },
                 {
                     data: 'z'
@@ -347,6 +415,9 @@
                 },
                 {
                     data: 'keterangan'
+                },
+                {
+                    data: 'aksi'
                 },
             ]
         });

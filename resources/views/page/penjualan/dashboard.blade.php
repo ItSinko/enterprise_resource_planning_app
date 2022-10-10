@@ -7,6 +7,7 @@
 @stop
 
 @section('adminlte_css')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <style lang="scss">
     .modal-body{
         max-height: 80vh;
@@ -20,6 +21,24 @@
             height: 10px;
             align-items: center !important;
         }
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
         .alert-danger {
             color: #a94442;
             background-color: #f2dede;
@@ -264,8 +283,12 @@
                             <div class="row">
                                 <div class="col-12">
                                     <h4></h4>
-                                    <div class="chart">
-                                        <canvas id="chart_penjualan" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    <select name="" id="" class="form-control" placeholder="Pilih Tahun">
+                                        <option value=""></option>
+                                    </select>
+                                    <div class="chart" style="min-height: 300px; max-height: 300px; ">
+
+                                        <canvas id="chart_penjualan" style="max-width: 100%; min-height:100%; max-height:100%;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -517,6 +540,7 @@
     })
 </script>
 <script>
+
     $(function() {
         function update_chart(produk,gudang ,qc, log, ki){
                 const ctx = $('#myChart');

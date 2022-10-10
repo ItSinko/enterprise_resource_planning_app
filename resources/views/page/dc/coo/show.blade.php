@@ -16,7 +16,7 @@
                 @elseif(Auth::user()->divisi_id == "2")
                 <li class="breadcrumb-item"><a href="{{route('direksi.dashboard')}}">Beranda</a></li>
                 @endif
-                <li class="breadcrumb-item active">COO</li>
+                <li class="breadcrumb-item active">Daftar COO</li>
 
             </ol>
         </div><!-- /.col -->

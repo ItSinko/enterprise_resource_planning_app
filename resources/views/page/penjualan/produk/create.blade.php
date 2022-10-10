@@ -191,7 +191,7 @@
                                                                                 class="select-info form-control produk_id"
                                                                                 name="produk_id[]" id="0">
                                                                             </select>
-                                                                        </div>
+                                                                    </div>
                                                                 </td>
                                                                 <td><span class="badge" name="kelompok_produk[]"
                                                                         id="kelompok_produk0"></span></td>
@@ -271,7 +271,7 @@
                 //     return false;
                 // }
 
-                if(($('#nama_paket').val() != "" && !$('#nama_paket').hasClass('is-invalid')) && $('#nama_alias').val() != "" && inputproduk == true && inputjumlah == true && $("#createtable tbody").length > 0 && $("#harga").val() != "" && $('input[name="is_aktif"]:checked').val() != ""){
+                if(($('#nama_paket').val() != "" && !$('#nama_paket').hasClass('is-invalid')) && $('#nama_alias').val() != "" && inputproduk == true && inputjumlah == true && $("#createtable tbody").length > 0 && $("#harga").val() != "" && $('input[name="is_aktif"]:checked').val() != "" && $('input[name="jenis_paket"]:checked').val() != ""){
                     $("#btntambah").attr('disabled', false);
                 } else {
                     $("#btntambah").attr('disabled', true);
@@ -311,7 +311,7 @@
                 <td>
                     <a id="removerow"><i class="fas fa-minus" style="color: red"></i></a>
                 </td>
-            </tr>`);
+                </tr>`);
                 validasi();
                 numberRows($("#createtable"));
             });
@@ -373,6 +373,10 @@
             });
 
             $(document).on('change', 'input[name="is_aktif"]', function(){
+                validasi();
+            });
+
+            $(document).on('change', 'input[name="jenis_paket"]', function(){
                 validasi();
             });
 

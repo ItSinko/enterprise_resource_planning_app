@@ -331,7 +331,7 @@
 
         function harga_action(){
             $('.update_harga').editable({
-                url : '{{route('penjualan.rencana.update')}}',
+                url : '{{route("penjualan.rencana.update")}}',
                 inputclass: 'form-control harga',
                 type:'text',
                 success : function (){
@@ -362,11 +362,11 @@
 
 
         $.fn.editableform.template =
-            `<form class="form-inline editableform justify-content-center">
+            `<form class="form-inline editableform justify-content-center" width="100%">
                 <div class="control-group">
                     <div class="form-group">
-                    <div class="editable-input"></div>
-                    <div class="editable-buttons"></div>
+                        <div class="editable-input mr-1"></div>
+                        <div class="editable-buttons"></div>
                     </div>
                     <div class="editable-error-block"></div>
                 </div>

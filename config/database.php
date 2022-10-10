@@ -106,7 +106,7 @@ return [
         'erp_kalibrasi' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST_4', '127.0.0.1'),
+            'host' => env('DB_HOST_4', '192.168.13.2'),
             'port' => env('DB_PORT_4', '3306'),
             'database' => env('DB_DATABASE_4', 'erp_kalibrasi'),
             'username' => env('DB_USERNAME_4', 'root'),

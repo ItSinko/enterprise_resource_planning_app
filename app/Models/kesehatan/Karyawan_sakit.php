@@ -32,4 +32,9 @@ class Karyawan_sakit extends Model
     {
         return $this->hasMany(Detail_obat::class);
     }
+
+    public function karyawan_masuk()
+    {
+        return $this->hasOne(Karyawan_masuk::class, 'karyawan_sakit_id');
+    }
 }

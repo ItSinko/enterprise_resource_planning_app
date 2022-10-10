@@ -143,16 +143,24 @@
                                                     <div class="form-group row">
                                                         <label for="provinsi" class="col-lg-4 col-md-12 col-form-label labelket">Provinsi</label>
                                                         <div class="col-lg-5 col-md-12">
-                                                            <select class="select-info form-control col-form-label custom-select provinsi @error('alamat') is-invalid @enderror" name="provinsi" id="provinsi" width="100%">
-                                                            </select>
-                                                            <div class="invalid-feedback" id="msgprovinsi">
-                                                                @if($errors->has('provinsi'))
-                                                                {{ $errors->first('provinsi')}}
+                                                            <input type="text" class="form-control col-form-label @error('pemilik') is-invalid @enderror" placeholder="Nama Pemilik" id="pemilik" name="pemilik" />
+                                                            <div class="invalid-feedback" id="msgpemilik">
+                                                                @if($errors->has('pemilik'))
+                                                                {{ $errors->first('pemilik')}}
                                                                 @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
 
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="card card-outline card-info">
+                                                <div class="card-header">
+                                                    <h6 class="card-title">Detail Customer</h6>
+                                                </div>
+                                                <div class="card-body">
                                                     <div class="form-group row">
                                                         <label for="telepon" class="col-lg-4 col-md-12 col-form-label labelket">No Telp</label>
                                                         <div class="col-lg-5 col-md-12">
@@ -175,6 +183,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -220,6 +230,27 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group row">
+                                                        <label for="batas" class="col-form-label col-lg-4 col-md-12 labelket">Batas Pembayaran</label>
+                                                        <div class="col-lg-4 col-md-6 input-group">
+                                                            <input type="text" class="form-control col-form-label @error('batas') is-invalid @enderror" name="batas" id="batas" aria-label="batas" placeholder="Batas hari pembayaran" />
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="ket_no_paket">Hari</span>
+                                                            </div>
+                                                            <div class="invalid-feedback" id="msgno_batas">
+                                                                @if($errors->has('batas'))
+                                                                {{ $errors->first('batas')}}
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="keterangan" class="col-lg-4 col-md-12 col-form-label labelket">Keterangan</label>
+                                                        <div class="col-lg-5 col-md-11">
+                                                            <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan"></textarea>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="form-group row">
                                                         <label for="batas" class="col-form-label col-lg-4 col-md-12 labelket">Batas Pembayaran</label>
                                                         <div class="col-lg-4 col-md-6 input-group">
@@ -315,26 +346,28 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
 
 
                                     </div>
                                     <div class="form-group row">
                                         <span class="float-left col-6">
-                                <a type="button" class="btn btn-danger" href="{{route('penjualan.customer.show')}}">
-                                    Batal
-                                </a>
-                            </span>
+                                            <a type="button" class="btn btn-danger" href="{{route('penjualan.customer.show')}}">
+                                                Batal
+                                            </a>
+                                        </span>
 
-                            <span class="col-6">
-                                <button type="submit" class="btn btn-info float-right" id="btntambah" disabled>
-                                    Tambah
-                                </button>
-                            </span>
-                        </div>
-                    </div>
+                                        <span class="col-6">
+                                            <button type="submit" class="btn btn-info float-right" id="btntambah" disabled>
+                                                Tambah
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                 </div>
                 </div>
             </div>

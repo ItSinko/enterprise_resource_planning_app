@@ -336,6 +336,13 @@
                                 </div>
                                 @else
                                 <div class="form-group row">
+                                    <label class="col-form-label col-5 align-right" for="nama_penerima">Nama Penerima</label>
+                                    <div class="col-6">
+                                        <input type="text" class="form-control col-form-label" name="nama_penerima" id="nama_penerima">
+                                        <div class="invalid-feedback" id="msgnama_penerima"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-form-label col-5 align-right" for="no_resi">No Resi</label>
                                     <div class="col-6">
                                         <input type="text" class="form-control col-form-label" name="no_resi" id="no_resi">

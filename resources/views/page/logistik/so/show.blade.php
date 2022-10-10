@@ -25,6 +25,9 @@
 
 @section('adminlte_css')
 <style>
+    .hide {
+        display: none !important;
+    }
     .urgent {
         color: #dc3545;
         font-weight: 600;
@@ -188,6 +191,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="batalmodal" tabindex="-1" role="dialog" aria-labelledby="batalmodal" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content" style="margin: 10px">
@@ -203,6 +207,37 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="noserimodal" tabindex="-1" role="dialog" aria-labelledby="noserimodal" aria-hidden="true">
+            <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content" style="margin: 10px">
+                    <div id="modal-overlay" class="overlay"></div>
+                    <div class="modal-header bg-light">
+                        <h4 id="modal-title">Noseri</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="noseri">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table" style="text-align:center;width:100%;" id="noseritable">
+                                        <thead>
+                                            <th>No</th>
+                                            <th>No Seri</th>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
 @stop
@@ -249,7 +284,7 @@
                 },
                 {
                     data: 'ket',
-                    className: 'align-center nowrap-text',
+                    className: 'align-center nowrap-text minimizechar',
                     orderable: false,
                     searchable: false
                 }, {
@@ -264,6 +299,10 @@
                     searchable: false
                 }
             ]
+        });
+
+        $(document).on('hidden.bs.modal', '#noserimodal', function(event){
+            $('#batalmodal').find('#modal-overlay').addClass('hide');
         });
 
         $("#showtable").on('click', '.batalmodal', function(event) {
@@ -306,19 +345,31 @@
                     }
                 },
                 columns: [
-                    // {
-                    //     data: 'DT_RowIndex',
-                    //     orderable: false,
-                    //     searchable: false
-                    // },
-                    // {
-                    //     data: 'nama_produk',
-                    // },
-                    // {
-                    //     data: 'jumlah',
-                    //     orderable: false,
-                    //     searchable: false
-                    // },
+                    {
+                        data: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false,
+                        className: 'align-center nowrap-text'
+                    },
+                    {
+                        data: 'nama_produk',
+                    },
+                    {
+                        data: 'jumlah',
+                        orderable: false,
+                        searchable: false,
+                        className: 'align-center nowrap-text'
+                    },
+                    {
+                        data: 'array_check',
+                        className: 'hide'
+                    },
+                    {
+                        data: 'aksi',
+                        orderable: false,
+                        searchable: false,
+                        className: 'align-center nowrap-text'
+                    }
                 ],
             });
         }
@@ -357,10 +408,6 @@
                         data: 'no_po',
                         className: 'align-center nowrap-text'
                     },
-                    // {
-                    //     data: 'batas',
-                    //     className: 'align-center nowrap-text',
-                    // },
                     {
                         data: 'tgl_awal',
                         className: 'align-center nowrap-text',
@@ -373,10 +420,6 @@
                         data: 'nama_customer',
                         className: 'align-center minimizechar'
                     },
-                    // {
-                    //     data: 'alamat',
-                    //     className: 'align-center minimizechar'
-                    // },
                     {
                         data: 'ket',
                         className: 'align-center minimizechar',
@@ -389,6 +432,48 @@
                         searchable: false
                     }
                 ]
+            });
+        }
+
+        $(document).on('click', '#produktable .noseri', function(event) {
+            event.preventDefault();
+            var array = $(this).closest('tr').find('div[name="array_check[]"]').text();
+            var id = $(this).attr('data-id');
+            $('#batalmodal').find('#modal-overlay').removeClass('hide');
+            $('#noserimodal').modal("show");
+            noseritable(id, array);
+        });
+
+        function noseritable(id, array){
+            $('#noseritable').DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: false,
+                autowidth: true,
+                ajax: {
+                    'url': '/api/logistik/so/noseri/detail/belum_kirim/' + id+ '/'+ array,
+                    'dataType': 'json',
+                    'type': 'POST',
+                    'headers': {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                },
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+                },
+                columns: [
+                {
+                    data: 'DT_RowIndex',
+                    className: 'nowrap-text align-center',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'no_seri',
+                    className: 'nowrap-text align-center',
+                    orderable: true,
+                    searchable: true
+                }]
             });
         }
 

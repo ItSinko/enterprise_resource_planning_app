@@ -14,7 +14,7 @@ Route::group(['prefix' => '/gbjmanager', 'middleware' => ['auth','divisi:mgrgdg'
 Route::group(['prefix' => 'manager', 'middleware' => 'auth'], function (){
     Route::group(['prefix' => 'penjualan'], function () {
         Route::get('/show', [App\Http\Controllers\PenjualanController::class, 'manager_penjualan_show'])->name('manager.penjualan.show');
-        Route::post('/show_data', [App\Http\Controllers\PenjualanController::class, 'manager_penjualan_show_data'])->name('manager.penjualan.show.data');
+        Route::post('/show_data/{jenis}/{status}', [App\Http\Controllers\PenjualanController::class, 'manager_penjualan_show_data'])->name('manager.penjualan.show.data');
         Route::get('/detail', [App\Http\Controllers\PenjualanController::class, 'manager_penjualan_detail'])->name('manager.penjualan.detail');
         Route::post('/detail_data', [App\Http\Controllers\PenjualanController::class, 'manager_penjualan_detail_data'])->name('manager.penjualan.detail.data');
     });
@@ -29,8 +29,6 @@ Route::group(['prefix' => 'manager', 'middleware' => 'auth'], function (){
     Route::group(['prefix' => 'logistik'], function () {
         Route::get('/show', [App\Http\Controllers\LogistikController::class, 'manager_logistik_show'])->name('manager.logistik.show');
         Route::post('/show_data', [App\Http\Controllers\LogistikController::class, 'manager_logistik_show_data'])->name('manager.logistik.show.data');
-        Route::get('/detail', [App\Http\Controllers\LogistikController::class, 'manager_logistik_detail'])->name('manager.logistik.detail');
-        Route::post('/detail_data', [App\Http\Controllers\LogistikController::class, 'manager_logistik_detail_data'])->name('manager.logistik.detail.data');
     });
 });
 ?>

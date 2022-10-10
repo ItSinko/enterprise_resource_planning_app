@@ -51,7 +51,6 @@
                             <div><small class="text-muted">Variasi</small></div>
                             <div>
                                 <b> {{$res->DetailPesananProduk->first()->GudangBarangJadi->nama}} </b>
-
                             </div>
                         </div>
                         @endif
@@ -87,18 +86,23 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-horizontal">
-                        <div class="form-group row">
-                            <label for="" class="col-5 align-right col-form-label">Detail Produk</label>
-                            <div class="col-7">
+                        <div class="form-group row d-flex justify-content-center">
+                            <label class="p-2 col-form-label">Detail Produk</label>
+                            <div class="p-2">
                                 @if($jenis == "produk")
-                                @if(count($res->DetailPesananProduk) <= 1) <label for="" class="col-form-label">{{$res->PenjualanProduk->nama}}
-                                    @if($res->DetailPesananProduk->first()->GudangBarangJadi->nama != "") - {{$res->DetailPesananProduk->first()->GudangBarangJadi->nama}} @endif</label>
-                                    @else <select class="select form-control detail_produk" name="detail_produk" id="detail_produk">
-                                    </select>
-                                    @endif
+                                    @if(count($res->DetailPesananProduk) <= 1)
+                                        <label for="" class="">{{$res->PenjualanProduk->nama}}
+                                            @if($res->DetailPesananProduk->first()->GudangBarangJadi->nama != "")
+                                            - {{$res->DetailPesananProduk->first()->GudangBarangJadi->nama}}
+                                            @endif
+                                        </label>
                                     @else
-                                    <label for="" class="col-form-label">{{$res->Sparepart->nama}}</label>
+                                        <select class="form-control detail_produk custom-select col-form-label" name="detail_produk" id="detail_produk">
+                                        </select>
                                     @endif
+                                @else
+                                    <label for="" class="col-form-label">{{$res->Sparepart->nama}}</label>
+                                @endif
                             </div>
                         </div>
                     </div>

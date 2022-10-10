@@ -177,6 +177,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => '/penjualan'], function () {
+
         Route::group(['middleware' => ['divisi:dc,jual,asp,dirut,qc,log,ppic']], function () {
             Route::get('/detail/ekatalog/{id}', [App\Http\Controllers\PenjualanController::class, 'get_data_detail_ekatalog'])->name('penjualan.penjualan.detail.ekatalog');
             Route::get('/detail/ekatalog_ppic/{id}', [App\Http\Controllers\PenjualanController::class, 'get_data_detail_ekatalog_ppic']);
@@ -216,7 +217,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
         Route::view('/show', 'page.penjualan.so.show')->name('penjualan.so.show');
         Route::get('/create/{id}', [App\Http\Controllers\PenjualanController::class, 'view_so_ekatalog'])->name('penjualan.so.create');
         Route::put('/store/{id}', [App\Http\Controllers\PenjualanController::class, 'create_so_ekatalog'])->name('penjualan.so.ekatalog.create');
-        Route::view('/edit', 'page.penjualan.so.edit')->name('penjualan.so.edit');
+        Route::view('/edit/{id}/{jenis}', 'page.penjualan.edit_so')->name('penjualan.so.edit');
     });
 
     Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,qc,log,dc,asp,dirut']], function () {
@@ -257,6 +258,7 @@ Route::group(['prefix' => 'qc'], function () {
         });
     });
 });
+
 
 Route::group(['prefix' => 'logistik', 'middleware' => 'auth'], function () {
     Route::group(['middleware' => ['divisi:log']], function () {

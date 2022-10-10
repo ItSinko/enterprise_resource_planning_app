@@ -64,24 +64,28 @@
             </div>
         </div>
         <div class="card">
-            <form method="POST" action="{{}}">
+            <form method="POST">
                 <div class="card-body">
                     <div class="form-horizontal">
                         <div class="form-group row" for="keterangan">
                             <label for="tanggal" class="col-form-label col-12">Tanggal Batal</label>
                             <div class="col-lg-4 col-md-6 col-sm-6">
-                                <input type="date" class="form-control col-form-label" name="tanggal" id="tanggal">
+                                <input type="date" class="form-control col-form-label" name="tanggal" id="tanggal" @if(Auth::user()->divisi->id != "26") readonly @endif>
                             </div>
                         </div>
                         <div class="form-group" for="keterangan">
                             <label for="" class="col-form-label">Alasan Batal</label>
-                            <textarea class="form-control col-form-label" name="alasan" id="alasan"></textarea>
+                            <textarea class="form-control col-form-label" name="alasan" id="alasan" @if(Auth::user()->divisi->id != "26") readonly @endif></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-danger" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Kembali</button>
-                    <button class="btn btn-dark float-right" id="btnkirimbatal" type="submit"><i class="fas fa-times"></i> Batalkan</button>
+                    <button class="btn btn-outline-danger" data-dismiss="modal">Tutup</button>
+                    @if(Auth::user()->divisi->id == "26")
+                    <button class="btn btn-danger float-right" id="btnkirimbatal" type="button" disabled="true"><i class="fas fa-times"></i> Ajukan Pembatalan</button>
+                    @elseif(Auth::user()->divisi->id == "32")
+                    <button class="btn btn-danger float-right" id="btnaccbatal" type="button"><i class="fas fa-check"></i> Terima Pembatalan</button>
+                    @endif
                 </div>
             </form>
         </div>

@@ -86,6 +86,12 @@
         border-color: #bee5eb;
     }
 
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
     .separator {
         border-top: 1px solid #bbb;
         width: 90%;
@@ -324,6 +330,7 @@
     <div class="modal fade" id="detailmodal" role="dialog" aria-labelledby="detailmodal" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content" style="margin: 10px">
+                <div id="modal-overlay" class="overlay m-fadeOut"></div>
                 <div class="modal-header">
                     <h4 class="modal-title">Info</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -749,7 +756,7 @@
                 })
             }
 
-            $(document).on('hidden.bs.modal', '#penjualanmodal', function(event){
+        $(document).on('hidden.bs.modal', '#penjualanmodal', function(event){
             $('#detailmodal').find('#modal-overlay').addClass('m-fadeOut');
             $('#detailmodal').find('#modal-overlay').removeClass('m-fadeIn');
         });

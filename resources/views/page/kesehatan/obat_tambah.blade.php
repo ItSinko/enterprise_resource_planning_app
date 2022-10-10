@@ -1,4 +1,4 @@
-@extends('adminlte.page')
+{{-- @extends('adminlte.page')
 @section('title', 'Beta Version')
 @section('content_header')
 <h1 class="m-0 text-dark">Dashboard</h1>
@@ -12,48 +12,46 @@
 <section class="content">
     <div class="row">
         <div class="col-lg-12">
-            @if(session()->has('success'))
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{session()->get('success')}}
-            </div>
-            @elseif(session()->has('error') || count($errors) > 0)
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                Data gagal ditambahkan
-            </div>
-            @endif
-            <div class="col-lg-12">
-                <form action="/obat/aksi_tambah" method="post">
+
+            <div class="col-lg-12"> --}}
+                <form action="/obat/aksi_tambah" method="post" id="form_tambah_obat">
                     {{ csrf_field() }}
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-header bg-success">
                             <div class="card-title"><i class="fas fa-plus-circle"></i>&nbsp;Tambah</div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body"> --}}
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="form-horizontal">
                                             <div class="form-group row">
-                                                <label for="no_pemeriksaan" class="col-sm-4 col-form-label" style="text-align:right;">Nama Obat</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" style="width:45%;" placeholder="Masukkan Nama Obat" value="{{ old('nama') }}" id="nama">
-                                                    @if($errors->has('nama'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('nama')}}
+                                                <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Nama Obat</label>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control" name="nama" style="width:45%;" placeholder="Masukkan Nama Obat" value="{{ old('nama') }}" id="nama_obat_tambah">
+                                                    <div class="text-danger form-text" id="nama_obat_tambah_message">
+
                                                     </div>
-                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="" class="col-sm-5 col-form-label" style="text-align: right;">Aturan</label>
+                                                <div class="col-sm-7 col-form-label">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input aturan_obat" type="radio" name="aturan_obat" value="Sebelum Makan">
+                                                        <label class="form-check-label">Sebelum Makan</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input aturan_obat" type="radio" name="aturan_obat" value="Sesudah Makan">
+                                                        <label class="form-check-label">Sesudah Makan</label>
+                                                    </div>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row">
-                                                <label for="tanggal" class="col-sm-4 col-form-label" style="text-align:right;">Keterangan</label>
-                                                <div class="col-sm-8">
+                                                <label for="tanggal" class="col-sm-5 col-form-label" style="text-align:right;">Keterangan</label>
+                                                <div class="col-sm-7">
                                                     <textarea type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan" value="{{old('keterangan')}}" placeholder="Catatan tambahan" style="width:45%;"></textarea>
                                                 </div>
                                                 <span role="alert" id="no_seri-msg"></span>
@@ -61,38 +59,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-6"><button class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batal</button></div>
+                                    <div class="col-6"><button class="btn btn-primary float-right" id="button_tambah" disabled="true"><i class="fas fa-plus"></i>&nbsp;Simpan</button></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="float-left"><a class="btn btn-danger rounded-pill" href="/obat"><i class="fas fa-times"></i>&nbsp;Batal</a></span>
-                            <span class="float-right"><button class="btn btn-success rounded-pill" id="button_tambah"><i class="fas fa-plus"></i>&nbsp;Tambah Data</button></span>
-                        </div>
-                    </div>
+                        {{-- </div>
+
+                    </div> --}}
                 </form>
-            </div>
+            {{-- </div>
         </div>
     </div>
-</section>
-@endsection
+</section> --}}
+{{-- @endsection
 @section('adminlte_js')
 <script>
     $(document).ready(function() {
-        $('#nama').keyup(function() {
-            var nama = $(this).val();
-            $.ajax({
-                url: '/obat/cekdata/' + nama,
-                method: "GET",
-                dataType: "json",
-                success: function(data) {
-                    if (data != 0) {
-                        $('#nama').html('<span class="text-danger">Nama Obat pernah di input</span>');
-                        $('#button_tambah').attr("disabled", true);
-                    } else {
-                        $('#button_tambah').attr("disabled", false);
-                    }
-                }
-            })
-        });
+
     });
 </script>
-@stop
+@stop --}}

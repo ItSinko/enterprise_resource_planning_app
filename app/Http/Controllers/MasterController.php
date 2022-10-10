@@ -240,14 +240,15 @@ class MasterController extends Controller
                         <i class="fas fa-pencil-alt"></i>
                         Edit
                     </button>
+                </a>
+                <a data-toggle="modal" class="hapusmodal" data-id="' . $data->id . '" data-target="#hapusmodal">
+                    <button class="dropdown-item" type="button">
+                    <i class="far fa-trash-alt"></i>
+                        Hapus
+                    </button>
                 </a>';
                 }
-                $return .= ' <a data-toggle="modal" class="hapusmodal" data-id="' . $data->id . '" data-target="#hapusmodal">
-                <button class="dropdown-item" type="button">
-                <i class="far fa-trash-alt"></i>
-                    Hapus
-                </button>
-            </a></div>';
+                $return .= ' </div>';
                 return $return;
             })
             ->rawColumns(['button', 'jurusan', 'via'])
@@ -359,14 +360,6 @@ class MasterController extends Controller
                 // })->first();
                 return $data->nama_alias;
             })
-            ->addColumn('jenis_paket', function ($data) {
-                if($data->status == "ekat"){
-                    return '<span class="badge purple-text">Ekatalog</span>';
-                }
-                else{
-                    return '<span class="badge blue-text">Non Ekatalog</span>';
-                }
-            })
             ->addColumn('no_akd', function ($data) {
                 $id = $data->id;
                 $s = Produk::where('coo', '1')->whereHas('PenjualanProduk', function ($q) use ($id) {
@@ -392,6 +385,14 @@ class MasterController extends Controller
                    return '<span class="badge blue-text">Non Ekatalog</span>';
                 }
 
+            })
+            ->addColumn('is_aktif', function ($data) {
+                if($data->is_aktif == "1"){
+                    return '<span class="badge green-text">Aktif</span>';
+                }
+                else{
+                    return '<span class="badge red-text">Tidak Aktif</span>';
+                }
             })
             ->addColumn('is_aktif', function ($data) {
                 if($data->is_aktif == "1"){
@@ -963,7 +964,7 @@ class MasterController extends Controller
             ]);
 
             for ($i = 0; $i < count($request->produk_id); $i++) {
-                $PenjualanProduk->produk()->attach($request->produk_id[$i], ['jumlah' => $request->jumlah[$i]]);
+                array_push($sync_data, ['produk_id' => $request->produk_id[$i], 'jumlah' => $request->jumlah[$i]]);
             }
 
             $bool = true;
@@ -1149,11 +1150,7 @@ class MasterController extends Controller
     {
         $harga_convert =  str_replace(['.', ','], "", $request->harga);
         $status = "";
-        if($request->jenis_paket == "ekatalog"){
-            $status = "ekat";
-        }else{
-            $status = NULL;
-        }
+
         $PenjualanProduk = PenjualanProduk::find($id);
         $PenjualanProduk->nama_alias = $request->nama_alias;
         $PenjualanProduk->nama = $request->nama_paket;
@@ -1165,7 +1162,7 @@ class MasterController extends Controller
 
         $produk_array = [];
         for ($i = 0; $i < count($request->produk_id); $i++) {
-            $produk_array[$request->produk_id[$i]] = ['jumlah' => $request->jumlah[$i]];
+            array_push($produk_array, ['produk_id' => $request->produk_id[$i], 'jumlah' => $request->jumlah[$i]]);
         }
         $p = $PenjualanProduk->produk()->sync($produk_array);
         if ($p) {
@@ -1261,9 +1258,7 @@ class MasterController extends Controller
         return view("page.logistik.ekspedisi.edit", ['ekspedisi' => $ekspedisi]);
     }
 
-
     //Show Detail
-
     public function detail_customer($id)
     {
         $customer = Customer::find($id);
@@ -1390,18 +1385,18 @@ class MasterController extends Controller
     public function select_penjualan_produk_param(Request $request, $value)
     {
         if($value == 'ekatalog')
-    {
-        $data = PenjualanProduk::where('nama_alias', 'LIKE', '%' . $request->input('term', '') . '%')
-        ->where('is_aktif', '1')
-        ->where('status', 'ekat')
-        ->orderby('nama', 'ASC')
-        ->get();
-    } else {
-        $data = PenjualanProduk::where('nama', 'LIKE', '%' . $request->input('term', '') . '%')
-        ->where('is_aktif', '1')
-        ->orderby('nama', 'ASC')
-        ->get();
-    }
+        {
+            $data = PenjualanProduk::where('nama_alias', 'LIKE', '%' . $request->input('term', '') . '%')
+            ->where('is_aktif', '1')
+            ->where('status', 'ekat')
+            ->orderby('nama', 'ASC')
+            ->get();
+        } else {
+            $data = PenjualanProduk::where('nama', 'LIKE', '%' . $request->input('term', '') . '%')
+            ->where('is_aktif', '1')
+            ->orderby('nama', 'ASC')
+            ->get();
+        }
         echo json_encode($data);
     }
     public function check_no_akd($id, $val)
@@ -1602,9 +1597,9 @@ class MasterController extends Controller
                     ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
                     ->whereColumn('t_gbj_detail.detail_pesanan_produk_id', 'detail_pesanan_produk.id')
                     ->limit(1);
-                    },
-                    'count_jumlah' => function($q){
-                        $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                },
+                'count_jumlah' => function($q){
+                    $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                      ->from('detail_pesanan')
                      ->join('detail_penjualan_produk', 'detail_pesanan.penjualan_produk_id', '=', 'detail_penjualan_produk.penjualan_produk_id')
                      ->join('gdg_barang_jadi', 'gdg_barang_jadi.produk_id', '=', 'detail_penjualan_produk.produk_id')
@@ -1641,7 +1636,7 @@ class MasterController extends Controller
                     ->whereColumn('detail_logistik.detail_pesanan_produk_id', 'detail_pesanan_produk.id')
                     ->where('logistik.status_id','11')
                     ->limit(1);
-        },
+                },
                 'count_kirim' => function($q){
                     $q->selectRaw('count(noseri_logistik.id)')
                     ->from('noseri_logistik')

@@ -447,12 +447,13 @@
                                                                         </th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th width="5%">No</th>
+                                                                        <th width="2%">No</th>
                                                                         <th width="35%">Nama Paket</th>
                                                                         <th width="15%">Jumlah</th>
+                                                                        <th width="6%">Stok Distributor</th>
                                                                         <th width="20%">Harga</th>
                                                                         <th width="20%">Subtotal</th>
-                                                                        <th width="5%">Aksi</th>
+                                                                        <th width="2%">Aksi</th>
                                                                     </tr>
                                                                 </thead>
 
@@ -508,6 +509,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
+                                                                            <div class="form-check col-form-label">
+                                                                                <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
                                                                             <div class="form-group d-flex justify-content-center">
                                                                                 <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="prdhrg">Rp</span>
@@ -554,6 +560,11 @@
                                                                             </div>
                                                                         </td>
                                                                         <td>
+                                                                            <div class="form-check col-form-label">
+                                                                                <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
                                                                             <div class="form-group d-flex justify-content-center">
                                                                                 <div class="input-group-prepend">
                                                                                     <span class="input-group-text" id="prdhrg">Rp</span>
@@ -578,8 +589,8 @@
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
-                                                                        <th colspan="4" style="text-align:right;">Total Harga</th>
-                                                                        <th id="totalhargaprd" class="align-right">Rp.
+                                                                        <th colspan="5" style="text-align:right;">Total Harga</th>
+                                                                        <th colspan="2" id="totalhargaprd" class="align-right">Rp.
                                                                             @if(isset($e->pesanan->detailpesanan))
                                                                             <?php $x = 0;
                                                                             foreach ($e->pesanan->detailpesanan as $f) {
@@ -935,10 +946,6 @@
                 jasa_harga = true;
             }
 
-            console.log("produk :"+ penjualan_produk_id +', '+variasi+', '+produk_jumlah+', '+produk_harga);
-            console.log("part :"+ part_id +', '+part_jumlah+', '+part_harga);
-            console.log("jasa :"+ jasa_id +', '+jasa_harga);
-
             if ($('input[type="radio"][name="do"]:checked').val() == "yes") {
                 if ($('#customer_id').val() != "" && $("#no_do").val() != "" && $("#tanggal_do").val() != "" && penjualan_produk_id == true && variasi == true && produk_jumlah == true && produk_harga == true && part_id == true && part_jumlah == true && part_harga == true && jasa_id == true && jasa_harga == true) {
                     $('#btnsimpan').removeAttr("disabled");
@@ -1058,7 +1065,7 @@
                 }
             filter_jenis(jenis_arry);
             checkvalidasi();
-            });
+        });
 
 
             function filter_jenis(x){
@@ -1375,6 +1382,11 @@
                     </div>
                 </td>
                 <td>
+                    <div class="form-check col-form-label">
+                        <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                    </div>
+                </td>
+                <td>
                     <div class="form-group d-flex justify-content-center">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Rp</span>
@@ -1469,23 +1481,22 @@
                                         <select class="form-control variasi" name="variasi[` + index + `][` + x + `]" id="variasi` + index + `` + x + `" style="width:100%;" data-attr="variasi` + x + `" data-id="` + x + `"></select>
                                         <span class="invalid-feedback d-block ketstok" name="ketstok[` + index + `][` + x + `]" id="ketstok` + index + `` + x + `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
                                       </div>`);
-                            if (res[0].produk[x].gudang_barang_jadi.length <= 1) {
-                                data.push({
-                                    id: res[0].produk[x].gudang_barang_jadi[0].id,
-                                    text: res[0].produk[x].nama,
-                                    jumlah: res[0].produk[x].pivot.jumlah,
-                                    qt: cek_stok(res[0].produk[x].gudang_barang_jadi[0].id)
-                                });
-                            } else {
-                                for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
-                                    data.push({
-                                        id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                        text: res[0].produk[x].gudang_barang_jadi[y].nama,
-                                        jumlah: res[0].produk[x].pivot.jumlah,
-                                        qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y].id)
-                                    });
-                                }
-                            }
+                                    for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
+                                        var nama_var = "";
+                                        if(res[0].produk[x].gudang_barang_jadi[y].nama != ""){
+                                            nama_var = res[0].produk[x].gudang_barang_jadi[y].nama;
+                                        }
+                                        else {
+                                            nama_var = res[0].produk[x].nama;
+                                        }
+                                        data.push({
+                                            id: res[0].produk[x].gudang_barang_jadi[y].id,
+                                            text: nama_var,
+                                            jumlah: res[0].produk[x].pivot.jumlah,
+                                            qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y].id)
+                                        });
+                                    }
+
                             $(`select[name="variasi[` + index + `][` + x + `]"]`).select2({
                                 placeholder: 'Pilih Variasi',
                                 data: data,
@@ -1533,23 +1544,22 @@
                         success: function(res) {
                             for (var x = 0; x < res[0].produk.length; x++) {
                                 var data = [];
-                                if (res[0].produk[x].gudang_barang_jadi.length <= 1) {
-                                    data.push({
-                                        id: res[0].produk[x].gudang_barang_jadi[0].id,
-                                        text: res[0].produk[x].nama,
-                                        jumlah: res[0].produk[x].pivot.jumlah,
-                                        qt: cek_stok(res[0].produk[x].gudang_barang_jadi[0].id)
-                                    });
-                                } else {
-                                    for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
-                                        data.push({
-                                            id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                            text: res[0].produk[x].gudang_barang_jadi[y].nama,
-                                            jumlah: res[0].produk[x].pivot.jumlah,
-                                            qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y].id)
-                                        });
+                                for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
+                                    var nama_var = "";
+                                    if(res[0].produk[x].gudang_barang_jadi[y].nama != ""){
+                                        nama_var = res[0].produk[x].gudang_barang_jadi[y].nama;
                                     }
+                                    else {
+                                        nama_var = res[0].produk[x].nama;
+                                    }
+                                    data.push({
+                                        id: res[0].produk[x].gudang_barang_jadi[y].id,
+                                        text: nama_var,
+                                        jumlah: res[0].produk[x].pivot.jumlah,
+                                        qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y].id)
+                                    });
                                 }
+
                                 $('select[name="variasi[' + w + '][' + x + ']"]').select2({
                                     placeholder: 'Pilih Variasi',
                                     data: data,

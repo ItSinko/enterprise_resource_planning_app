@@ -239,6 +239,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
+        'Clockwork' => Clockwork\Support\Laravel\Facade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
     ],

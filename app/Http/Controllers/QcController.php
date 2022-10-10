@@ -28,6 +28,7 @@ use Illuminate\Support\Arr;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
+use DB;
 
 
 class QcController extends Controller
@@ -64,28 +65,9 @@ class QcController extends Controller
             ->rawColumns(['noseri_id', 'detail_pesanan_produk_id'])
             ->make(true);
     }
+
     public function get_data_seri_detail_ekatalog($jenis, $produk_id, $pesanan_id)
     {
-
-        // $value2 = array();
-        // $x = explode(',', $seri_id);
-        // if ($seri_id == '0') {
-        //     $data = NoseriTGbj::whereHas('detail', function ($q) use ($produk_id, $tfgbj_id) {
-        //         $q->where(['gdg_brg_jadi_id' => $produk_id, 't_gbj_id' => $tfgbj_id]);
-        //     })->get();
-        //     foreach ($data as $d) {
-        //         $value2[] = $d->id;
-        //     }
-        //     $id =  json_encode($value2);
-        // } else {
-        //     $data = NoseriTGbj::whereHas('detail', function ($q) use ($produk_id, $tfgbj_id) {
-        //         $q->where(['gdg_brg_jadi_id' => $produk_id, 't_gbj_id' => $tfgbj_id]);
-        //     })->whereIN('noseri_id', $x)->get();
-        //     foreach ($data as $d) {
-        //         $value2[] = $d->id;
-        //     }
-        //     $id =  json_encode($value2);
-        // }
         $data = "";
         if ($jenis == "produk") {
             $data = DetailPesananProduk::whereHas('DetailPesanan', function ($q) use ($pesanan_id) {
@@ -99,6 +81,7 @@ class QcController extends Controller
         }
         return view('page.qc.so.edit', ['jenis' => $jenis, 'pesanan_id' => $pesanan_id, 'produk_id' => $produk_id, 'data' => $data]);
     }
+
     public function get_data_seri_ekatalog($status, $id, $idpesanan)
     {
         if ($status == 'semua') {
@@ -121,13 +104,6 @@ class QcController extends Controller
             })->with(['NoseriBarangJadi'])->orderBy('id');
         }
 
-        // $data = NoseriTGbj::whereHas('detail', function ($q) use ($id) {
-        //     $q->where(['gdg_brg_jadi_id' => $id]);
-        // })->whereHas('detail.header', function ($q) use ($idpesanan) {
-        //     $q->where(['pesanan_id' => $idpesanan]);
-        // });
-
-
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('checkbox', function ($data) {
@@ -135,15 +111,12 @@ class QcController extends Controller
                 if (empty($get)) {
                     return '  <div class="form-check">
                     <input class=" form-check-input yet nosericheck" type="checkbox" data-value="' . $data->detail->gdg_brg_jadi_id . '" data-id="' . $data->noseri_id . '" />
-
                     </div>';
                 } else {
-                    //   return $get;
                     if ($get->status == 'nok') {
                         return '<div class="form-check">
-                    <input class=" form-check-input yet nosericheck" type="checkbox" data-value="' . $data->detail->gdg_brg_jadi_id . '" data-id="' . $data->noseri_id . '" />
-
-                    </div>';
+                        <input class=" form-check-input yet nosericheck" type="checkbox" data-value="' . $data->detail->gdg_brg_jadi_id . '" data-id="' . $data->noseri_id . '" />
+                        </div>';
                     } else {
                         return '';
                     }
@@ -224,24 +197,6 @@ class QcController extends Controller
                 return $string;
             })
             ->addColumn('jumlah', function ($data) {
-                // $j = DetailPesanan::whereIN('id', $x)->whereHas('DetailPesananProduk', function ($q) use ($id) {
-                // })->get();
-                // $jumlah_pesanan = 0;
-                // $jumlah_pivot = 0;
-                // $jumlah = 0;
-                // foreach ($j->detailpesanan as $k) {
-                //     // if ($data->gdg_barang_jadi_id == $k->DetailPesananProduk->gdg_barang_jadi_id) {
-                //     $jumlah_pesanan = $k->jumlah;
-                //     foreach ($k->PenjualanProduk as $l) {
-                //         if ($l->produk->id == $data->GudangBarangJadi->produk_id) {
-                //             $jumlah_pivot = $l->produk->pivot->jumlah;
-                //             $jumlah = $jumlah + ($jumlah_pesanan * $jumlah_pivot);
-                //         }
-                //     }
-                //     // }
-                // }
-                // return $jumlah;
-
                 //V1
                 $jumlah = 0;
                 if (isset($data->gudang_barang_jadi_id)) {
@@ -464,8 +419,8 @@ class QcController extends Controller
                     'cqcpart' => function($q){
                         $q->selectRaw('coalesce(sum(outgoing_pesanan_part.jumlah_ok), 0)')
                         ->from('outgoing_pesanan_part')
-                        ->leftJoin('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
-                        ->leftJoin('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                        ->join('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
+                        ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
                         ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
                         ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
                     },'clogprd' => function($q){
@@ -523,8 +478,8 @@ class QcController extends Controller
             'cqcpart' => function($q){
                 $q->selectRaw('coalesce(sum(outgoing_pesanan_part.jumlah_ok), 0)')
                 ->from('outgoing_pesanan_part')
-                ->leftJoin('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
-                ->leftJoin('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                ->join('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
+                ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
                 ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
                 ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
             },'clogprd' => function($q){
@@ -3149,7 +3104,7 @@ class QcController extends Controller
                ->limit(1);
         }])
         ->whereNotIn('log_id', ['7', '20'])
-        ->havingRaw('clogprd < cjumlahprd OR clogpart < cjumlahpart')
+        ->havingRaw('cjumlahprd > clogprd OR cjumlahpart > clogpart')
         ->get();
         return datatables()->of($data)
             ->addIndexColumn()
@@ -3690,5 +3645,10 @@ class QcController extends Controller
     {
         $result = DetailPesananProduk::where('detail_pesanan_id', $id)->with('GudangBarangJadi.Produk')->get();
         return $result;
+    }
+
+    //MANAGER
+    public function manager_qc_show(){
+        return view('page.qc.manager.sales_order.show');
     }
 }

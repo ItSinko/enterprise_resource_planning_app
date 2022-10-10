@@ -25,6 +25,9 @@
 
 @section('adminlte_css')
 <style>
+    .progresscust{
+        width: 100px;
+    }
     .alert-danger{
         color: #a94442;
         background-color: #f2dede;
@@ -223,7 +226,7 @@
                             <div class="p-2">
                                 <div class="margin">
                                     <div><small class="text-muted">Status</small></div>
-                                    <div>{!!$status!!}</div>
+                                    <div class="align-center">{!!$status!!}</div>
                                 </div>
                             </div>
                         </div>
@@ -243,6 +246,7 @@
             <div class="col-7">
                 <div class="card">
                     <div class="card-body">
+                        @if(Auth::user()->divisi->id == "23")
                         <div class="row" style="margin-bottom: 5px">
                             <div class="col-12">
                                 <span class="float-left filter">
@@ -253,6 +257,7 @@
                                 </span>
                             </div>
                         </div>
+                        @endif
                         <div class="row">
                             <div class="col-12">
                                 <div class="table-responsive">
@@ -282,7 +287,6 @@
             <div class="col-5 hide" id="noseridetail">
                 <div class="card">
                     <div class="card-body">
-                        @if(Auth::user()->divisi_id == "23")
                         <div class="row">
                             <div class="col-12">
                                 <span class="float-right filter">
@@ -321,6 +325,7 @@
                                         </form>
                                     </div>
                                 </span>
+                                @if(Auth::user()->divisi->id == "23")
                                 <span class="float-right filter">
                                     <a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr="" data-id="">
                                         <button class="btn btn-warning" id="cekbrg" disabled="true">
@@ -328,16 +333,16 @@
                                         </button>
                                     </a>
                                 </span>
+                                @endif
                             </div>
                         </div>
-                        @endif
+
 
                         <div class="row">
                             <div class="col-12">
                                 <div class="table-responsive">
                                     <table class="table" style="text-align:center; width:100%" id="noseritable">
                                         <thead>
-                                            @if(Auth::user()->divisi_id == "23")
                                             <th>
                                                 <div class="form-check cek_header">
                                                     <input class="form-check-input" type="checkbox" value="check_all" id="check_all" name="check_all" />
@@ -345,7 +350,6 @@
                                                     </label>
                                                 </div>
                                             </th>
-                                            @endif
                                             <th>No Seri</th>
                                             <th>Tanggal Uji</th>
                                             <th>Hasil</th>
@@ -381,6 +385,7 @@
 @section('adminlte_js')
 <script>
     $(function() {
+        var divisi = '{{Auth::user()->divisi->id}}';
         var showtable = $('#showtable').DataTable({
             destroy: true,
             processing: true,
@@ -435,16 +440,15 @@
             dataid = $(this).attr('data-id');
             var datacount = $(this).attr('data-count');
             $('input[type=radio][name=filter]').prop('checked', false);
-
             $('.nosericheck').prop('checked', false);
-            console.log(datacount);
-            if (datacount == 0) {
-                // $('.sericheckbox').addClass("hide");
-                $('#noseritable').DataTable().column(0).visible(false);
-            } else {
-                // $('.sericheckbox').removeClass("hide");
-                $('#noseritable').DataTable().column(0).visible(true);
-            }
+            // console.log(datacount);
+            // if (datacount == 0) {
+            //     // $('.sericheckbox').addClass("hide");
+            //     $('#noseritable').DataTable().column(0).visible(false);
+            // } else {
+            //     // $('.sericheckbox').removeClass("hide");
+            //     $('#noseritable').DataTable().column(0).visible(true);
+            // }
             $('#cekbrg').prop('disabled', true);
             $('input[name ="check_all"]').prop('checked', false);
             if (datacount == 0) {
@@ -452,7 +456,11 @@
                 $('#noseritable').DataTable().column(0).visible(false);
             } else {
                 // $('.sericheckbox').removeClass("hide");
-                $('#noseritable').DataTable().column(0).visible(true);
+                if(divisi == "23"){
+                    $('#noseritable').DataTable().column(0).visible(true);
+                }else{
+                    $('#noseritable').DataTable().column(0).visible(false);
+                }
             }
             $('#noseritable').DataTable().ajax.url('/api/qc/so/seri/belum/' + dataid + '/' + '{{$id}}').load();
             $('#showtable').find('tr').removeClass('bgcolor');
@@ -547,7 +555,8 @@
                 data: 'checkbox',
                 className: 'nowrap-text align-center',
                 orderable: false,
-                searchable: false
+                searchable: false,
+                visible: divisi == 23 ? true : false
             }, {
                 data: 'seri',
                 className: 'nowrap-text align-center',
@@ -631,13 +640,28 @@
             if ($('.nosericheck:checked', rows).length > 0) {
                 $('#cekbrg').prop('disabled', false);
                 checkedAry = [];
-                $.each($(".nosericheck:checked",rows), function() {
+                $.each($(".nosericheck:checked", rows), function() {
                     checkedAry.push($(this).closest('tr').find('.nosericheck').attr('data-id'));
                 });
             } else if ($('.nosericheck:checked', rows).length <= 0) {
                 $('#cekbrg').prop('disabled', true);
             }
         });
+
+
+        // function re_check(){
+        //     var rows = $('#noseritable').DataTable().rows().nodes();
+        //     $('#check_all').prop('checked', false);
+        //     if ($('.nosericheck:checked').length > 0) {
+        //         $('#cekbrg').prop('disabled', false);
+        //         checkedAry = [];
+        //         $.each($(".nosericheck:checked", rows), function() {
+        //             checkedAry.push($(this).closest('tr').find('.nosericheck').attr('data-id'));
+        //         });
+        //     } else if ($('.nosericheck:checked').length <= 0) {
+        //         $('#cekbrg').prop('disabled', true);
+        //     }
+        // }
 
         function max_date() {
             var today = new Date();
@@ -651,6 +675,7 @@
 
         $(document).on('click', '.editmodal', function(event) {
             event.preventDefault();
+        //    re_check();
             data = $(".nosericheck").data().value;
             console.log(checkedAry);
             console.log(data);
@@ -715,8 +740,6 @@
             }
             console.log('/api/qc/so/seri/' + stat + '/' + dataid + '/{{$id}}');
             var dat = $('#noseritable').DataTable().ajax.url('/api/qc/so/seri/' + stat + '/' + dataid + '/{{$id}}').load();
-
-
         });
     })
 </script>

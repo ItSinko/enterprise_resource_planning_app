@@ -234,6 +234,7 @@
                                                                                             class="wb">{{ $e->PenjualanProduk->nama }}</b>
                                                                                     </td>
                                                                                     <td class="nowraptxt">
+
                                                                                         <button class="btn btn-sm btn-outline-primary" id="lihatstok" data-id="{{$e->id}}" data-produk="paket"><i class="fas fa-eye"></i></button>
                                                                                     </td>
                                                                                     <td class="nowraptxt tabnum">
@@ -311,13 +312,13 @@
                                                                         @endif
                                                                     </tbody>
                                                                     <tfoot class="bg-chart-light">
-                                                                    <tr>
-                                                                        <th colspan="5" class="align-center">Total Harga</th>
-                                                                        <th class="tabnum nowraptxt">@currency($totalharga)</th>
-                                                                        @if(Auth::user()->divisi_id == "8")
-                                                                        <th></th>
-                                                                        @endif
-                                                                    </tr>
+                                                                        <tr>
+                                                                            <th colspan="5" class="align-center">Total Harga</th>
+                                                                            <th class="tabnum nowraptxt">@currency($totalharga)</th>
+                                                                            @if(Auth::user()->divisi_id == "8")
+                                                                            <th></th>
+                                                                            @endif
+                                                                        </tr>
                                                                     </tfoot>
 
                                                                 </table>

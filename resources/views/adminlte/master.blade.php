@@ -87,6 +87,10 @@
     <script src="{{ asset('vendor/datepicker/moment.js') }}"></script>
     <script src="{{ asset('vendor/datepicker/datepicker.js') }}"></script>
     <script src="{{ asset('vendor/jquery-ui/jquery-ui.js') }}"></script>
+    <script src="{{ asset('assets/js/justgage.js') }}"></script>
+    <script src="{{ asset('assets/js/raphael-2.1.4.min.js') }}"></script>
+
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- <script src="{{ asset('vendor/x-editable/jquery-editable-poshytip.min.js') }}"></script> --}}
     {{-- Custom Scripts --}}

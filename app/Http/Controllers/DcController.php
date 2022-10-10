@@ -320,6 +320,8 @@ class DcController extends Controller
                             return Carbon::createFromFormat('Y-m-d', $data->tgl_kontrak_custom)->format('d-m-Y');
                         }
                     }
+                } else {
+                    return "-";
                 }
             })
             ->addColumn('so', function ($data) {
@@ -518,7 +520,7 @@ class DcController extends Controller
                             }
                         } else {
                             return  '<div class="text-danger"><b> ' . Carbon::createFromFormat('Y-m-d', $tgl_parameter)->format('d-m-Y') . '</b></div>
-                                <div class="text-danger"><small><i class="fas fa-exclamation-circle"></i> ' . $hari . ' Hari Lagi</small></div>';
+                                <div class="text-danger"><small><i class="fas fa-exclamation-circle"></i> Lebih dari ' . $hari . ' Hari</small></div>';
                         }
                     } else {
                         return Carbon::createFromFormat('Y-m-d', $data->tgl_kontrak)->format('d-m-Y');
@@ -884,6 +886,7 @@ class DcController extends Controller
             ->rawColumns(['button', 'status', 'batas_paket'])
             ->make(true);
     }
+
     public function get_data_detail_so($id)
     {
         //pesanan_id
@@ -1012,7 +1015,6 @@ class DcController extends Controller
         } else {
             $data = NoseriDetailLogistik::where('detail_logistik_id', $id)->has('NoseriCoo')->get();
         }
-
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('checkbox', function ($data) {
@@ -1158,7 +1160,6 @@ class DcController extends Controller
             return view('page.dc.so.detail_ekatalog', ['data' => $data, 'status' => $status]);
         } else {
             $data = Pesanan::find($id);
-
 
             $x = array();
 
@@ -1555,6 +1556,37 @@ class DcController extends Controller
                 }
             ])->orderBy('tgl_kontrak', 'desc')->has('Ekatalog')->count();
 
+        $penjualan = Pesanan::addSelect(['cjumlahprd' => function ($q) {
+            $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                ->from('detail_pesanan')
+                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                ->join('produk', 'produk.id', '=', 'detail_penjualan_produk.produk_id')
+                ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id');
+        }, 'cjumlahpart' => function ($q) {
+            $q->selectRaw('sum(detail_pesanan_part.jumlah)')
+                ->from('detail_pesanan_part')
+                ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
+                ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
+        }, 'clogprd' => function ($q) {
+            $q->selectRaw('count(noseri_logistik.id)')
+                ->from('noseri_logistik')
+                ->leftJoin('noseri_detail_pesanan', 'noseri_detail_pesanan.id', '=', 'noseri_logistik.noseri_detail_pesanan_id')
+                ->leftJoin('detail_pesanan_produk', 'detail_pesanan_produk.id', '=', 'noseri_detail_pesanan.detail_pesanan_produk_id')
+                ->leftJoin('detail_pesanan', 'detail_pesanan.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
+                ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id');
+        }, 'clogpart' => function ($q) {
+            $q->selectRaw('sum(detail_logistik_part.jumlah)')
+                ->from('detail_logistik_part')
+                ->leftJoin('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'detail_logistik_part.detail_pesanan_part_id')
+                ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
+                ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
+        }])
+            ->whereIn('log_id', ['9'])
+            ->havingRaw('clogprd < cjumlahprd OR clogpart < cjumlahpart')
+            ->has('Ekatalog')
+            ->count();
 
         $lewat_batas = Pesanan::whereIn('id', function ($q) {
             $q->select('pesanan.id')
@@ -1737,6 +1769,7 @@ class DcController extends Controller
             ->count();
         return view('page.dc.dashboard', ['daftar_so' => $daftar_so, 'belum_coo' => $belum_coo, 'lewat_batas' => $lewat_batas, 'penjualan' => $penjualan, 'gudang' => $gudang, 'qc' => $qc, 'logistik' => $logistik]);
     }
+
     public function dashboard_data($value)
     {
         if ($value == 'pengirimansotable') {
@@ -1800,7 +1833,6 @@ class DcController extends Controller
                     return $data->so;
                 })
                 ->addColumn('status', function ($data) {
-
                     if ($data->ccoo <= 0) {
                         return  '<span class="badge red-text">Belum Diproses</span>';
                     } else {
@@ -2332,19 +2364,19 @@ class DcController extends Controller
             ->make(true);
     }
     //Another
-    public function bulan_romawi($value)
+    static function bulan_romawi($value)
     {
         $bulan =  Carbon::createFromFormat('Y-m-d', $value)->format('m');
         $to = new DcController();
         $x = $to->toRomawi($bulan);
         return $x;
     }
-    public function tahun($value)
+    static function tahun($value)
     {
         $tahun =  Carbon::createFromFormat('Y-m-d', $value)->format('Y');
         return $tahun;
     }
-    public function tgl_footer($value)
+    static function tgl_footer($value)
     {
         $footer = Carbon::createFromFormat('Y-m-d', $value)->isoFormat('D MMMM Y');
         return $footer;

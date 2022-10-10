@@ -29,6 +29,7 @@ class KaryawanController extends Controller
         $divisi = Divisi::all();
         return view('page.karyawan.karyawan_tambah', ['divisi' => $divisi]);
     }
+
     public function karyawan_data()
     {
         $data = Karyawan::with(['Divisi'])->orderBy('nama', 'ASC');
@@ -45,17 +46,27 @@ class KaryawanController extends Controller
                 }
             })
             ->addColumn('umur', function ($data) {
-                $tgl  = $data->tgllahir;
-                $age = Carbon::parse($tgl)->diff(Carbon::now())->y;
-                return $age . " Thn";
+                if($data->tgllahir){
+                    $tgl  = $data->tgllahir;
+                    $age = Carbon::parse($tgl)->diff(Carbon::now())->y;
+                    return $age . " Thn";
+                }
+
+            })
+            ->editColumn('tgl_kerja', function($data){
+                if($data->tgl_kerja){
+                    return Carbon::createFromFormat('Y-m-d', $data->tgl_kerja)->format('d-m-Y');
+                }
             })
             ->addColumn('button', function ($data) {
-                $btn = '<div class="inline-flex"><button type="button" id="edit" class="btn btn-block btn-success karyawan-img-small" style="border-radius:50%;" ><i class="fas fa-edit"></i></button></div>';
+                $btn = '<button type="button" id="edit" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Ubah</button>
+                <button type="button" id="delete" class="btn btn-sm btn-danger" data-id="'.$data->id.'"><i class="fas fa-trash"></i> Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['button'])
             ->make(true);
     }
+
     public function karyawan_cekdata($nama)
     {
         $data = Karyawan::where('nama', $nama)->get();
@@ -113,5 +124,17 @@ class KaryawanController extends Controller
             return redirect()->back()->with('error', 'Gagal menambahkan data');
         }
     }
+
+    public function karyawan_aksi_hapus(Request $request)
+    {
+        $b = Karyawan::find($request->id);
+        $delete = $b->delete();
+        if ($delete) {
+            return response()->json(['data' => 'success', 'msg' => 'Data berhasil di hapus']);
+        } else {
+            return response()->json(['data' => 'error', 'msg' => 'Hapus Gagal, periksa kembali']);
+        }
+    }
+
 
 }

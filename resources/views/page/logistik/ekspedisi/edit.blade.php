@@ -60,95 +60,95 @@
                 </div>
             </div>
 
-                    <div class="card card-outline card-warning">
-                        <div class="card-header">
-                            <h6 class="card-title">Detail Ekspedisi</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label for="" class="col-lg-4 col-md-12 col-form-label labelket">Jalur</label>
-                                <div class="col-lg-8 col-md-12 col-form-label">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jalur" type="checkbox" id="jalur1" value="1" name="jalur[]">
-                                        <label class="form-check-label" for="jalur1">Darat</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jalur" type="checkbox" id="jalur2" value="2" name="jalur[]">
-                                        <label class="form-check-label" for="jalur2">Laut</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jalur" type="checkbox" id="jalur3" value="3" name="jalur[]">
-                                        <label class="form-check-label" for="jalur3">Udara</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jalur" type="checkbox" id="jalur4" value="4" name="jalur[]">
-                                        <label class="form-check-label" for="jalur4">Lain</label>
-                                    </div>
-                                    <div class="invalid-feedback" id="msgjalur">
-                                        @if($errors->has('jalur'))
-                                        {{ $errors->first('jalur')}}
-                                        @endif
-                                    </div>
-                                </div>
+            <div class="card card-outline card-warning">
+                <div class="card-header">
+                    <h6 class="card-title">Detail Ekspedisi</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label for="" class="col-lg-4 col-md-12 col-form-label labelket">Jalur</label>
+                        <div class="col-lg-8 col-md-12 col-form-label">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jalur" type="checkbox" id="jalur1" value="1" name="jalur[]">
+                                <label class="form-check-label" for="jalur1">Darat</label>
                             </div>
-
-                            <div class="form-group row">
-                                <label for="" class="col-lg-4 col-md-12 col-form-label labelket">Jurusan</label>
-                                <div class="col-lg-8 col-md-12 col-form-label">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jurusan" type="radio" name="jurusan" id="jurusan1" value="indonesia" />
-                                        <label class="form-check-label" for="jurusan1">Seluruh Provinsi</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input jurusan" type="radio" name="jurusan" id="jurusan2" value="provinsi" />
-                                        <label class="form-check-label" for="jurusan2">Per Provinsi</label>
-                                    </div>
-
-                                    <div class="invalid-feedback" id="msgjurusan">
-                                    </div>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jalur" type="checkbox" id="jalur2" value="2" name="jalur[]">
+                                <label class="form-check-label" for="jalur2">Laut</label>
                             </div>
-
-                            <div class="form-group row" id="prov_select">
-                                <label for="keterangan" class="col-lg-4 col-md-12 col-form-label labelket">Provinsi</label>
-                                <div class="col-lg-8">
-                                    <select class="provinsi form-control" name="provinsi_id[]" id="provinsi" style="width: 100%;" >
-                                    </select>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jalur" type="checkbox" id="jalur3" value="3" name="jalur[]">
+                                <label class="form-check-label" for="jalur3">Udara</label>
                             </div>
-
-                            {{-- <div class="form-group row hide" id="kota_kabupaten_select">
-                                <label for="jurusan" class="col-lg-4 col-md-12 col-form-label labelket">Kota / Kabupaten</label>
-                                <div class="col-8">
-                                    <select class="select-info form-control custom-select kota_kabupaten" name="kota_kabupaten" id="kota_kabupaten" style="width: 100%;">
-                                    </select>
-                                    <div class="invalid-feedback" id="msgkota_kabupaten">
-                                        @if($errors->has('kota_kabupaten'))
-                                        {{ $errors->first('kota_kabupaten')}}
-                                        @endif
-                                    </div>
-                                </div>
-                            </div> --}}
-
-                            <div class="form-group row">
-                                <label for="keterangan" class="col-lg-4 col-md-12 col-form-label labelket">Keterangan</label>
-                                <div class="col-lg-5 col-md-10">
-                                    <textarea class="form-control" name="keterangan" id="keterangan">{{$e->ket}}</textarea>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jalur" type="checkbox" id="jalur4" value="4" name="jalur[]">
+                                <label class="form-check-label" for="jalur4">Lain</label>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <span class="float-right filter">
-                                <button type="submit" class="btn btn-warning" id="btnsimpan" disabled="true">
-                                    Simpan
-                                </button>
-                            </span>
-                            <span class="float-left filter"><button type="button" class="btn btn-danger" data-dismiss="modal">
-                                    Batal
-                                </button>
-                            </span>
+                            <div class="invalid-feedback" id="msgjalur">
+                                @if($errors->has('jalur'))
+                                {{ $errors->first('jalur')}}
+                                @endif
+                            </div>
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="" class="col-lg-4 col-md-12 col-form-label labelket">Jurusan</label>
+                        <div class="col-lg-8 col-md-12 col-form-label">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jurusan" type="radio" name="jurusan" id="jurusan1" value="indonesia" />
+                                <label class="form-check-label" for="jurusan1">Seluruh Provinsi</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input jurusan" type="radio" name="jurusan" id="jurusan2" value="provinsi" />
+                                <label class="form-check-label" for="jurusan2">Per Provinsi</label>
+                            </div>
+
+                            <div class="invalid-feedback" id="msgjurusan">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="prov_select">
+                        <label for="keterangan" class="col-lg-4 col-md-12 col-form-label labelket">Provinsi</label>
+                        <div class="col-lg-8">
+                            <select class="provinsi form-control" name="provinsi_id[]" id="provinsi" style="width: 100%;" >
+                            </select>
+                        </div>
+                    </div>
+
+                    {{-- <div class="form-group row hide" id="kota_kabupaten_select">
+                        <label for="jurusan" class="col-lg-4 col-md-12 col-form-label labelket">Kota / Kabupaten</label>
+                        <div class="col-8">
+                            <select class="select-info form-control custom-select kota_kabupaten" name="kota_kabupaten" id="kota_kabupaten" style="width: 100%;">
+                            </select>
+                            <div class="invalid-feedback" id="msgkota_kabupaten">
+                                @if($errors->has('kota_kabupaten'))
+                                {{ $errors->first('kota_kabupaten')}}
+                                @endif
+                            </div>
+                        </div>
+                    </div> --}}
+
+                    <div class="form-group row">
+                        <label for="keterangan" class="col-lg-4 col-md-12 col-form-label labelket">Keterangan</label>
+                        <div class="col-lg-5 col-md-10">
+                            <textarea class="form-control" name="keterangan" id="keterangan">{{$e->ket}}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="float-right filter">
+                        <button type="submit" class="btn btn-warning" id="btnsimpan" disabled="true">
+                            Simpan
+                        </button>
+                    </span>
+                    <span class="float-left filter"><button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Batal
+                        </button>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </form>

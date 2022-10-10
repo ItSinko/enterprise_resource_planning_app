@@ -233,20 +233,20 @@
                                                 </div>
                                                 <div class="form-group row">
                                                     <span class="col-lg-6 col-md-6 float-left">
-                                            <a type="button" class="btn btn-danger" href="{{route('logistik.ekspedisi.show')}}">
-                                                Batal
-                                            </a>
-                                        </span>
+                                                        <a type="button" class="btn btn-danger" href="{{route('logistik.ekspedisi.show')}}">
+                                                            Batal
+                                                        </a>
+                                                    </span>
 
-                                        <span class="col-lg-6 col-md-6">
-                                            <button type="submit" class="btn btn-info  float-right" id="btntambah" disabled>
-                                                Tambah
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
+                                                    <span class="col-lg-6 col-md-6">
+                                                        <button type="submit" class="btn btn-info  float-right" id="btntambah" disabled>
+                                                            Tambah
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
 
-                            </div>
+                                        </div>
 
                             </div>
                         </div>

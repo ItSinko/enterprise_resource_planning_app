@@ -72,7 +72,6 @@
         background-image: url("{{public_path('assets/image/spa_long.jpg') }}");
         background-size: 100%;
         background-repeat: no-repeat;
-
     }
 </style>
 <div class="wrapper-page">

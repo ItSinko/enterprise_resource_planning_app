@@ -177,6 +177,7 @@
                                                 <th>Bone</th>
                                                 <th>Kalori</th>
                                                 <th>Catatan</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
@@ -194,6 +195,7 @@
                                                 <th>Tgl</th>
                                                 <th>Dosis</th>
                                                 <th>Tahap</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
@@ -212,6 +214,7 @@
                                                 <th>Jenis Penyakit</th>
                                                 <th>Kriteria</th>
                                                 <th>Keterangan</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
@@ -231,6 +234,7 @@
                                                 <th>Nama</th>
                                                 <th>Analisa</th>
                                                 <th>Jumlah</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody style="text-align: center;">
@@ -255,6 +259,34 @@
 @section('adminlte_js')
 <script>
     $(function() {
+        $('#tabel_berat > tbody').on('click', '#delete', function() {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Yakin ingin menghapus data ini?',
+                icon: 'warning',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                showCloseButton: true
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: 'Berhasil menghapus data',
+                        icon: 'success',
+                        showCloseButton: true
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: 'Gagal menghapus data',
+                        icon: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        });
         $('.select2').select2();
         var karyawan_id = 0;
         var tabel_berat = $('#tabel_berat').DataTable({
@@ -277,7 +309,10 @@
                     searchable: false
                 },
                 {
-                    data: 'tgl_cek'
+                    data: 'tgl_cek',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
                 },
                 {
                     data: 'z'
@@ -300,7 +335,38 @@
                 {
                     data: 'keterangan'
                 },
+                {
+                    data: 'aksi'
+                }
             ]
+        });
+        $('#tabel_detail > tbody').on('click', '#delete', function() {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Yakin ingin menghapus data ini?',
+                icon: 'warning',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                showCloseButton: true
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: 'Berhasil menghapus data',
+                        icon: 'success',
+                        showCloseButton: true
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: 'Gagal menghapus data',
+                        icon: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
         var vaksin_karyawan = $('#tabel_detail').DataTable({
             processing: true,
@@ -322,7 +388,10 @@
                     searchable: false
                 },
                 {
-                    data: 'tgl'
+                    data: 'tgl',
+                    render: function (data, type, row) {
+                        return moment(new Date(data).toString()).format('DD-MM-YYYY');
+                    }
                 },
                 {
                     data: 'dosis'
@@ -330,7 +399,38 @@
                 {
                     data: 'tahap'
                 },
+                {
+                    data: 'aksi'
+                }
             ],
+        });
+        $('#tabel_detail_penyakit > tbody').on('click', '#delete', function() {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Yakin ingin menghapus data ini?',
+                icon: 'warning',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                showCloseButton: true
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: 'Berhasil menghapus data',
+                        icon: 'success',
+                        showCloseButton: true
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: 'Gagal menghapus data',
+                        icon: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
         $('#tabel_detail_penyakit').DataTable({
             processing: true,
@@ -365,7 +465,38 @@
                 {
                     data: 'keterangan'
                 },
+                {
+                    data: 'aksi'
+                }
             ],
+        });
+        $('#tabel_obat > tbody').on('click', '#delete', function() {
+            Swal.fire({
+                title: 'Hapus Data',
+                text: 'Yakin ingin menghapus data ini?',
+                icon: 'warning',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                showCloseButton: true
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: 'Berhasil menghapus data',
+                        icon: 'success',
+                        showCloseButton: true
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: 'Gagal menghapus data',
+                        icon: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
         });
         $('#tabel_obat').DataTable({
             processing: true,
@@ -400,6 +531,8 @@
                     data: 'jumlah_obat',
                     orderable: false,
                     searchable: false
+                }, {
+                    data: 'aksi'
                 }
 
             ],

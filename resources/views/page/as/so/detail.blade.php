@@ -130,172 +130,167 @@
 @section('content')
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-12">
-                <div class="row">
-                    <div class="col-4 align-items-stretch">
-                        <div class="card">
-                            <div class="card-body">
-                                @if($jenis == "produk")
-                                <h5>Info Produk</h5>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Nama Produk</small></div>
-                                            <div><b id="no_akn">{{$d->PenjualanProduk->nama}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Jumlah Produk</small></div>
-                                            <div><b id="no_so">{{$d->jumlah}}</b></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @else
-                                <h5>Info Part</h5>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Nama Part</small></div>
-                                            <div><b id="no_akn">{{$d->Sparepart->nama}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Jumlah Produk</small></div>
-                                            <div><b id="no_so">{{$d->jumlah}}</b></div>
+                    <div class="card-deck" width="100%">
+                            <div class="card col-4 align-items-stretch">
+                                <div class="card-body">
+                                    @if($jenis == "produk")
+                                    <h5>Info Produk</h5>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Nama Produk</small></div>
+                                                <div><b id="no_akn">{{$d->PenjualanProduk->nama}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Jumlah Produk</small></div>
+                                                <div><b id="no_so">{{$d->jumlah}}</b></div>
+                                            </div>
                                         </div>
                                     </div>
+                                    @else
+                                    <h5>Info Part</h5>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Nama Part</small></div>
+                                                <div><b id="no_akn">{{$d->Sparepart->nama}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Jumlah Produk</small></div>
+                                                <div><b id="no_so">{{$d->jumlah}}</b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
-                                @endif
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-8 align-items-stretch">
+                            <div class="card col-8 align-items-stretch">
+                                <div class="card-body">
+                                    <h5>Info Penjualan</h5>
+                                    @if(isset($d->Pesanan->Ekatalog))
+                                    <div class="row">
+                                        <div class="col-lg-5 col-md-12 align-md">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Distributor & Instansi</small></div>
+                                            </div>
+                                            <div class="margin">
+                                                <b id="distributor">{{$d->pesanan->Ekatalog->customer->nama}}</b><small> (Distributor)</small>
+                                            </div>
+                                            <div class="margin">
+                                                <div><b id="no_akn">{{$d->pesanan->Ekatalog->satuan}}</b></div>
+                                                <small>({{$d->pesanan->Ekatalog->instansi}})</small>
+                                            </div>
+                                        </div>
 
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>Info Penjualan</h5>
-                                @if(isset($d->Pesanan->Ekatalog))
-                                <div class="row">
-                                    <div class="col-lg-5 col-md-12 align-md">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Distributor & Instansi</small></div>
+                                        <div class="col-lg-3 col-md-4">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No AKN</small></div>
+                                                <div><b id="no_akn">{{$d->pesanan->Ekatalog->no_paket}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">No SO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->Ekatalog->pesanan->so}}</b></div>
+                                            </div>
                                         </div>
-                                        <div class="margin">
-                                            <b id="distributor">{{$d->pesanan->Ekatalog->customer->nama}}</b><small> (Distributor)</small>
+
+                                        <div class="col-lg-2 col-md-4">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No PO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Batas Pengiriman</small></div>
+                                                <div><b>{{date('d-m-Y', strtotime($d->pesanan->Ekatalog->tgl_kontrak))}}</b></div>
+                                            </div>
                                         </div>
-                                        <div class="margin">
-                                            <div><b id="no_akn">{{$d->pesanan->Ekatalog->satuan}}</b></div>
-                                            <small>({{$d->pesanan->Ekatalog->instansi}})</small>
+
+                                        <div class="col-lg-2 col-md-4">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Status</small></div>
+                                                <div>{!!$status!!}</div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-3 col-md-4">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No AKN</small></div>
-                                            <div><b id="no_akn">{{$d->pesanan->Ekatalog->no_paket}}</b></div>
+                                    @elseif(isset($d->Pesanan->Spa))
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 align-md">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Customer</small></div>
+                                            </div>
+                                            <div class="margin">
+                                                <b id="distributor">{{$d->pesanan->Spa->customer->nama}}</b>
+                                            </div>
+                                            <div class="margin">
+                                                <div><b id="no_akn">{{$d->pesanan->Spa->customer->alamat}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><b id="no_akn">{{$d->pesanan->Spa->customer->Provinsi->nama}}</b></div>
+                                            </div>
                                         </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">No SO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->Ekatalog->pesanan->so}}</b></div>
+                                        <div class="col-lg-3 col-md-6">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No SO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->Spa->pesanan->so}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Status</small></div>
+                                                <div>{!!$status!!}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No PO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Tanggal PO</small></div>
+                                                <div><b id="no_so">{{date('d-m-Y', strtotime($d->pesanan->tgl_po))}}</b></div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-2 col-md-4">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No PO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
+                                    @elseif(isset($d->Pesanan->Spb))
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 align-md">
+                                            <div class="margin">
+                                                <div><small class="text-muted">Customer</small></div>
+                                            </div>
+                                            <div class="margin">
+                                                <b id="distributor">{{$d->pesanan->Spb->customer->nama}}</b>
+                                            </div>
+                                            <div class="margin">
+                                                <div><b id="no_akn">{{$d->pesanan->Spb->customer->alamat}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><b id="no_akn">{{$d->pesanan->Spb->customer->Provinsi->nama}}</b></div>
+                                            </div>
                                         </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Batas Pengiriman</small></div>
-                                            <div><b>{{date('d-m-Y', strtotime($d->pesanan->Ekatalog->tgl_kontrak))}}</b></div>
+                                        <div class="col-lg-3 col-md-6">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No SO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->Spb->pesanan->so}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Status</small></div>
+                                                <div>{!!$status!!}</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6">
+                                            <div class="margin">
+                                                <div><small class="text-muted">No PO</small></div>
+                                                <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
+                                            </div>
+                                            <div class="margin">
+                                                <div><small class="text-muted">Tanggal PO</small></div>
+                                                <div><b id="no_so">{{date('d-m-Y', strtotime($d->pesanan->tgl_po))}}</b></div>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-2 col-md-4">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Status</small></div>
-                                            <div>{!!$status!!}</div>
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
-                                @elseif(isset($d->Pesanan->Spa))
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-12 align-md">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Customer</small></div>
-                                        </div>
-                                        <div class="margin">
-                                            <b id="distributor">{{$d->pesanan->Spa->customer->nama}}</b>
-                                        </div>
-                                        <div class="margin">
-                                            <div><b id="no_akn">{{$d->pesanan->Spa->customer->alamat}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><b id="no_akn">{{$d->pesanan->Spa->customer->Provinsi->nama}}</b></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No SO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->Spa->pesanan->so}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Status</small></div>
-                                            <div>{!!$status!!}</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No PO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Tanggal PO</small></div>
-                                            <div><b id="no_so">{{date('d-m-Y', strtotime($d->pesanan->tgl_po))}}</b></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @elseif(isset($d->Pesanan->Spb))
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-12 align-md">
-                                        <div class="margin">
-                                            <div><small class="text-muted">Customer</small></div>
-                                        </div>
-                                        <div class="margin">
-                                            <b id="distributor">{{$d->pesanan->Spb->customer->nama}}</b>
-                                        </div>
-                                        <div class="margin">
-                                            <div><b id="no_akn">{{$d->pesanan->Spb->customer->alamat}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><b id="no_akn">{{$d->pesanan->Spb->customer->Provinsi->nama}}</b></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No SO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->Spb->pesanan->so}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Status</small></div>
-                                            <div>{!!$status!!}</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-6">
-                                        <div class="margin">
-                                            <div><small class="text-muted">No PO</small></div>
-                                            <div><b id="no_so">{{$d->pesanan->no_po}}</b></div>
-                                        </div>
-                                        <div class="margin">
-                                            <div><small class="text-muted">Tanggal PO</small></div>
-                                            <div><b id="no_so">{{date('d-m-Y', strtotime($d->pesanan->tgl_po))}}</b></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @endif
                             </div>
-                        </div>
                     </div>
-                </div>
             </div>
         </div>
         <div class="row">

@@ -9,6 +9,14 @@
 
 @section('adminlte_css')
 <style lang="scss">
+    .modal-body{
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    table { border-collapse: collapse; empty-cells: show; }
+
+    td { position: relative; }
+
     .foo {
         border-radius: 50%;
         float: left;
@@ -17,12 +25,31 @@
         align-items: center !important;
     }
 
-
+    tr.line-through td:not(:nth-last-child(-n+2)):before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 35%;
+        border-bottom: 1px solid;
+        width: 100%;
+    }
 
     .alert-danger {
         color: #a94442;
         background-color: #f2dede;
         border-color: #ebccd1;
+    }
+
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
     }
 
     .separator {
@@ -252,7 +279,7 @@
             box-shadow: none;
         }
     }
-</style>
+</style> --}}
 @stop
 @section('content')
 <section class="content">
@@ -466,6 +493,30 @@
 @section('adminlte_js')
 <script>
     $(function() {
+        var optionpie = {
+            type: 'pie',
+            data: {
+                labels: [
+                    'Belum Diproses',
+                    'Gudang',
+                    'QC',
+                    'Logistik',
+                    'Kirim',
+                ],
+                datasets: [{
+                    label: 'STATUS PESANAN',
+                    data: [100, 0, 0, 0,0],
+                    backgroundColor: [
+                    'rgba(192, 192, 192, 0.2)',
+                    'rgb(236, 159, 5)',
+                    'rgb(255, 221, 0)',
+                    'rgb(11, 171, 100)',
+                    'rgb(8, 126, 225)'
+                    ],
+                    hoverOffset: 4
+                }]
+            }
+        }
 
         function detailtabel_ekatalog(id) {
                 var dt = $('#detailtabel').DataTable({

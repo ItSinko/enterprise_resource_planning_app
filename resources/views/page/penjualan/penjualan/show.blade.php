@@ -25,6 +25,10 @@
 
 @section('adminlte_css')
 <style>
+    .modal-body{
+        max-height: 80vh;
+        overflow-y: auto;
+    }
     table { border-collapse: collapse; empty-cells: show; }
 
     td { position: relative; }
@@ -838,116 +842,116 @@
             var divisi_id = "{{ Auth::user()->divisi->id }}";
 
             function p_show(){
-            var penjualantable = $('#penjualantable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': "/api/penjualan/penjualan/data/semua/semua",
-                    "dataType": "json",
-                    'type': 'POST',
-                    "headers": {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
-                    }, {
-                        data: 'so',
-                    }, {
-                        data: 'no_paket',
-                    }, {
-                        data: 'nopo',
-                    }, {
-                        data: 'tgl_order',
-                    }, {
-                        data: 'tgl_kontrak',
-                    }, {
-                        data: 'nama_customer',
-                    }, {
-                        data: 'status',
-                    }, {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
+                var penjualantable = $('#penjualantable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': "/api/penjualan/penjualan/data/semua/semua",
+                        "dataType": "json",
+                        'type': 'POST',
+                        "headers": {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        }
                     },
-                ]
-            });
-        }
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        }, {
+                            data: 'so',
+                        }, {
+                            data: 'no_paket',
+                        }, {
+                            data: 'nopo',
+                        }, {
+                            data: 'tgl_order',
+                        }, {
+                            data: 'tgl_kontrak',
+                        }, {
+                            data: 'nama_customer',
+                        }, {
+                            data: 'status',
+                        }, {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        },
+                    ]
+                });
+            }
 
-        function ekat_show(){
-            var ekatalogtable = $('#ekatalogtable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/penjualan/penjualan/ekatalog/data/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [
-                    {
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function ekat_show(){
+                var ekatalogtable = $('#ekatalogtable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/penjualan/penjualan/ekatalog/data/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'no_urut',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'so',
-                    },
-                    {
-                        data: 'no_paket',
-                    },
-                    {
-                        data: 'nopo',
-                    },
-                    {
-                        data: 'tgl_buat',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'tgl_edit',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'tgl_kontrak',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer',
-                    },
-                    {
-                        data: 'status',
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    },
+                    columns: [
+                        {
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'no_urut',
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'no_paket',
+                        },
+                        {
+                            data: 'nopo',
+                        },
+                        {
+                            data: 'tgl_buat',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tgl_edit',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tgl_kontrak',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer',
+                        },
+                        {
+                            data: 'status',
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        },
 
-                ],
+                    ],
 
 
-            });
-        }
+                });
+            }
 
             function spa_show(){
             var spatable = $('#spatable').DataTable({
@@ -1048,6 +1052,66 @@
     </script>
     <script>
         $(function() {
+            function validasi_batal(){
+                if($('#tanggal').val() != "" && $('#alasan').val() != ""){
+                    $('#btnkirimbatal').attr('disabled', false);
+                }
+                else{
+                    $('#btnkirimbatal').attr('disabled', true);
+                }
+            }
+
+            $(document).on('keyup change', '#tanggal', function(){
+                validasi_batal();
+            });
+
+            $(document).on('keyup change', '#alasan', function(){
+                validasi_batal();
+            });
+
+            var optionpie = {
+                type: 'pie',
+                data: {
+                    labels: [
+                        '-',
+                    ],
+                    datasets: [{
+                        label: 'STATUS PESANAN',
+                        data: [1],
+                        backgroundColor: [
+                            'rgba(192, 192, 192, 0.2)',
+                        ],
+                        hoverOffset: 4
+                    }]
+                }
+                }
+
+            function update_chart(gudang ,qc, log, ki){
+                const ctx = $('#myChart');
+                const myChart = new Chart(ctx, {
+                    type: 'pie',
+                data: {
+                    labels: [
+                        'Gudang',
+                        'QC',
+                        'Logistik',
+                        'Kirim',
+                    ],
+                    datasets: [{
+                        label: 'STATUS PESANAN',
+                        data: [gudang ,qc, log, ki],
+                        backgroundColor: [
+
+                        'rgb(236, 159, 5)',
+                        'rgb(255, 221, 0)',
+                        'rgb(11, 171, 100)',
+                        'rgb(8, 126, 225)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                }
+                });
+            }
 
             var optionpie = {
                         type: 'pie',
@@ -1070,25 +1134,25 @@
                 const ctx = $('#myChart');
                 if(produk == 'part'){
                     const myChart = new Chart(ctx, {
-                    type: 'pie',
-                data: {
-                    labels: [
-                        'QC',
-                        'Logistik',
-                        'Kirim',
-                    ],
-                    datasets: [{
-                        label: 'STATUS PESANAN',
-                        data: [qc, log, ki],
-                        backgroundColor: [
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                }
-                });
+                        type: 'pie',
+                        data: {
+                            labels: [
+                                'QC',
+                                'Logistik',
+                                'Kirim',
+                            ],
+                            datasets: [{
+                                label: 'STATUS PESANAN',
+                                data: [qc, log, ki],
+                                backgroundColor: [
+                                'rgb(255, 221, 0)',
+                                'rgb(11, 171, 100)',
+                                'rgb(8, 126, 225)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        }
+                    });
                 }else{
                     const myChart = new Chart(ctx, {
                     type: 'pie',
@@ -1117,6 +1181,12 @@
 
             }
 
+
+
+
+
+
+
             $(document).on('click', '.detailmodal', function(event) {
                 event.preventDefault();
                 var href = $(this).attr('data-attr');
@@ -1137,6 +1207,7 @@
                                 'bg-orange bg-lightblue');
                             $('#detailmodal').find(".modal-header").addClass('bg-purple');
                             $('#detailmodal').find(".modal-header > h4").text('E-Catalogue');
+
                             detailtabel_ekatalog(id);
                         } else if (label == 'spa') {
                             $('#detailmodal').find(".modal-header").removeClass(
@@ -1145,6 +1216,11 @@
                             $('#detailmodal').find(".modal-header > h4").text('SPA');
                             detailtabel_spa(id);
                         } else {
+                            // const ctx = $('#myChart');
+                            // const myChart = new Chart(ctx, optionpie);
+
+                            // var chart = new ApexCharts(document.querySelector("#chartproduk"), options);
+                            // chart.render();
                             // $('#detailmodal').find(".modal-header").attr('id', '');
                             // $('#detailmodal').find(".modal-header").attr('id', 'detailspb');
                             $('#detailmodal').find(".modal-header").removeClass(
@@ -1207,11 +1283,41 @@
                 event.preventDefault();
                 var jenis = $(this).attr('data-jenis');
                 var id = $(this).attr("data-id");
+                console.log('/penjualan/penjualan/cancel/'+id+'/'+jenis);
+                $.ajax({
+                    url: '/penjualan/penjualan/cancel/'+id+'/'+jenis,
+                    beforeSend: function() {
+                        $('#loader').show();
+                    },
+                    success: function(result) {
+                        $('#detailmodal').modal("show");
+                        $('#detail').html(result).show();
+                        $('#detailmodal').find(".modal-header").removeClass('bg-purple bg-orange bg-lightblue');
+                        $('#detailmodal').find(".modal-header").addClass('bg-dark');
+                        $('#detailmodal').find(".modal-header > h4").text('Pesanan Batal');
+                    },
+                    complete: function() {
+                        $('#loader').hide();
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page cannot open. Error:" + error);
+                        $('#loader').hide();
+                    },
+                    timeout: 8000
+                })
+            });
 
-                swalWithBootstrapButtons.fire({
-                    title: 'Batalkan Pesanan',
-                    text: "Ingin membatalkan Pesanan ini?",
-                    icon: 'warning',
+            $(document).on('submit', '#btnkirimbatal', function(event) {
+                event.preventDefault();
+                var alasan = $(this).find('#alasan').val();
+                var jenis = $(this).find('#jenis').val();
+                var id = $(this).find('#id').val();
+
+                swal({
+                    title: "Batalkan Pesanan",
+                    text: "Apakah anda yakin ingin membatalkan pesanan?",
+                    type: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Batalkan',
                     cancelButtonText: 'Tutup',
@@ -1458,36 +1564,6 @@
                 return false;
             });
 
-            // var detailRows = [];
-
-            // function format() {
-            //     return 'Full name: <br>' +
-            //         'Salary: <br>' +
-            //         'The child row can contain any data you wish, including links, images, inner tables etc.';
-            // }
-
-            // $('#detailtabel tbody').on('click', 'tr td.details-control', function() {
-            //     var tr = $(this).closest('tr');
-            //     var row = dt.row(tr);
-            //     var idx = $.inArray(tr.attr('id'), detailRows);
-
-            //     if (row.child.isShown()) {
-            //         tr.removeClass('details');
-            //         row.child.hide();
-
-            //         // Remove from the 'open' array
-            //         detailRows.splice(idx, 1);
-            //     } else {
-            //         tr.addClass('details');
-            //         row.child(format(row.data())).show();
-
-            //         // Add to the 'open' array
-            //         if (idx === -1) {
-            //             detailRows.push(tr.attr('id'));
-            //         }
-            //     }
-            // });
-
             function detailtabel_ekatalog(id) {
                 var dt = $('#detailtabel').DataTable({
                     destroy: true,
@@ -1572,13 +1648,6 @@
                         $(api.column(5).footer()).html(num_for(total_pesanan));
                     },
                 });
-
-                // dt.on('draw', function() {
-                //     $.each(detailRows, function(i, id) {
-                //         console.log(id);
-                //         $('#' + id + ' td.details-control').trigger('click');
-                //     });
-                // });
             }
 
             function detailtabel_spa(id) {
@@ -1744,6 +1813,7 @@
                     },
                 })
             }
+
             $('#filter_penjualan').submit(function() {
                 var jenis_penjualan = [];
                 var status_penjualan = [];
@@ -1772,6 +1842,7 @@
                     .load();
                 return false;
             });
+
             $('#filter_ekat').submit(function() {
                 var values_ekat = [];
                 $('input[name="status_ekatalog[]"]:checked').each(function() {
@@ -1787,6 +1858,7 @@
                 $('#ekatalogtable').DataTable().ajax.url('/penjualan/penjualan/ekatalog/data/' + x).load();
                 return false;
             });
+
             $('#filter_spa').submit(function() {
                 var values_spa = [];
                 $('input[name="status_spa[]"]:checked').each(function() {
@@ -1819,6 +1891,8 @@
                 $('#spbtable').DataTable().ajax.url('/penjualan/penjualan/spb/data/' + x).load();
                 return false;
             });
+
+
 
 
             $(document).on('click', '#tabledetailpesan #lihatstok', function(){

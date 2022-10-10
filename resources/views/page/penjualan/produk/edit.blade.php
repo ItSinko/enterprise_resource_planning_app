@@ -148,24 +148,24 @@
                                                 </tr>
                                             @endforeach
 
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="row d-flex justify-content-center">
-    <div class="col-11">
-        <span>
-            <button class="btn btn-danger float-left" data-dismiss="modal">Batal</button>
-        </span>
-        <span class="float-right">
-            <button type="submit" class="btn btn-warning float-right" id="btnsimpan" disabled="true">Simpan</button>
-        </span>
-    </div>
-</div>
-</form>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-11">
+                <span>
+                    <button class="btn btn-danger float-left" data-dismiss="modal">Batal</button>
+                </span>
+                <span class="float-right">
+                    <button type="submit" class="btn btn-warning float-right" id="btnsimpan" disabled="true">Simpan</button>
+                </span>
+            </div>
+        </div>
+    </form>
 @endforeach

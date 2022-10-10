@@ -35,6 +35,16 @@
         ]
     },
     {
+        "header": "Quality Control",
+        "menu": [
+            {
+                "text": "QC Outgoing",
+                "icon": "fas fa-cogs",
+                "url": "/manager-teknik/outgoing"
+            }
+        ]
+    },
+    {
         "header": "Fitur",
         "menu": [
             {

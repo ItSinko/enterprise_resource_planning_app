@@ -70,389 +70,356 @@
 
 <section class="content">
     <div class="row">
-        <div class="col-lg-12">
-            @if(session()->has('success'))
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{session()->get('success')}}
+            <div class="col-lg-12">
+                @if(session()->has('success'))
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{session()->get('success')}}
+                </div>
+                @elseif(session()->has('error') || count($errors) > 0)
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    Data gagal ditambahkan
+                </div>
+                @endif
             </div>
-            @elseif(session()->has('error') || count($errors) > 0)
-            <div class="alert alert-danger alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                Data gagal ditambahkan
-            </div>
-            @endif
             <div class="col-lg-12">
                 <form action="/kesehatan/store" method="post" enctype="multipart/form-data">
                     {{ csrf_field() }}
-                    <div class="card">
-                        <div class="card-header bg-success">
-                            <div class="card-title"><i class="fas fa-plus-circle"></i>&nbsp;Tambah</div>
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h6 class="card-title">Kondisi Umum</h6>
                         </div>
                         <div class="card-body">
-                            <div class="col-lg-12">
-                                <div class="row">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group row">
+                                            <label for="no_pemeriksaan" class="col-sm-5 col-form-label" style="text-align:right;">Nama</label>
+                                            <div class="col-sm-3">
+                                                <select type="text" class="form-control col-form-label @error('karyawan_id') is-invalid @enderror select2" name="karyawan_id">
+
+                                                    @foreach($karyawan as $k)
+                                                    <option value="{{$k->id}}">{{$k->nama}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if($errors->has('karyawan_id'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('karyawan_id')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Berat Badan</label>
+                                            <div class="col-sm-2">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="berat" id="berat" value="{{ old('berat') }}">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">Kg</span>
+                                                    </div>
+                                                </div>
+                                                @if($errors->has('berat'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('berat')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Tinggi Badan</label>
+                                            <div class="col-sm-2">
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" name="tinggi" id="tinggi" value="{{ old('tinggi') }}">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">Cm</span>
+                                                    </div>
+                                                </div>
+                                                @if($errors->has('tinggi'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('tinggi')}}
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-5 col-form-label" style="text-align:right;">Body Mass Index</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control col-form-label @error('data') is-invalid @enderror " id="bmi" readonly>
+                                                <small id="status_bmi" class="form-text text-muted"></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h6 class="card-title">Kondisi Mata</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Nilai Tes Warna</label>
+                                <div class="col-sm-2">
+                                    <input type="number" class="form-control" name="buta_warna" id="buta_warna" value="{{ old('buta_warna') }}" placeholder="Jumlah yang dibaca">
+                                    <input type="text" class="form-control d-none" name="status_mata" id="status_mata">
+                                    @if($errors->has('buta_warna'))
+                                    <div class="text-danger">
+                                        {{ $errors->first('buta_warna')}}
+                                    </div>
+                                    @endif
+                                    <small id="status_butawarna" class="form-text text-muted"></small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label" style="text-align:right;">Rabun Mata</label>
+                                <div class="col-sm-3">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="mata_kiri" placeholder="Mata Kiri" name="mata_kiri">
+                                            <small id="mata_kiri_status" class="form-text text-muted"></small>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="mata_kanan" placeholder="Mata Kanan" name="mata_kanan">
+                                            <small id="mata_kanan_status" class="form-text text-muted"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h6 class="card-title">Kondisi Tubuh</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Suhu</label>
+                                <div class="col-sm-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="suhu" id="suhu" value="{{ old('suhu') }}">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">°C</span>
+                                        </div>
+                                    </div>
+                                    @if($errors->has('suhu'))
+                                    <div class="text-danger">
+                                        {{ $errors->first('suhu')}}
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Saturasi Oksigen Darah</label>
+                                <div class="col-sm-3">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="spo2" id="spo2" value="{{ old('spo2') }}" placeholder="SPO2">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                            @if($errors->has('spo2'))
+                                            <div class="text-danger">
+                                                {{ $errors->first('spo2')}}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="pr" id="pr" value="{{ old('pr') }}" placeholder="PR">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">bpm</span>
+                                                    </div>
+                                                </div>
+                                                @if($errors->has('pr'))
+                                                <div class="text-danger">
+                                                    {{ $errors->first('pr')}}
+                                                </div>
+                                                @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="keterangan" class="col-sm-5 col-form-label" style="text-align:right;">Tekanan Darah</label>
+                                <div class="col-sm-3">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="sistolik" id="sistolik" value="{{ old('sistolik') }}" placeholder="Systol">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">mmHg</span>
+                                                </div>
+                                            </div>
+                                            @if($errors->has('sistolik'))
+                                            <div class="text-danger">
+                                                {{ $errors->first('sistolik')}}
+                                            </div>
+                                            @endif
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="diastolik" id="diastolik" value="{{ old('diastolik') }}" placeholder="Dyastol">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">mmHg</span>
+                                                </div>
+                                            </div>
+                                            @if($errors->has('diastolik'))
+                                            <div class="text-danger">
+                                                {{ $errors->first('diastolik')}}
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Komposisi tubuh</label>
+                                <div class="col-sm-7 col-form-label">
+                                    <div class="icheck-success d-inline col-sm-4">
+                                        <input type="radio" name="status_komposisi_tubuh" value="0" checked="0">
+                                        <label for="no">
+                                            Tidak Ada
+                                        </label>
+                                    </div>
+                                    <div class="icheck-warning d-inline col-sm-4">
+                                        <input type="radio" name="status_komposisi_tubuh" value="1">
+                                        <label for="sample">
+                                            Ada
+                                        </label>
+                                    </div>
+                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                </div>
+                            </div>
+
+                            <div class="card" id="detail_komposisi" style="display:none">
+                                <div class="card-header">
+                                    <div class="card-title">&nbsp;Komposisi Tubuh</div>
+                                </div>
+                                <div class="card-body">
                                     <div class="col-lg-12">
-                                        <div class="form-horizontal">
-                                            <div class="form-group row">
-                                                <label for="no_pemeriksaan" class="col-sm-4 col-form-label" style="text-align:right;">Nama</label>
-                                                <div class="col-sm-8">
-                                                    <select type="text" class="form-control  @error('karyawan_id') is-invalid @enderror select2" name="karyawan_id" style="width:45%;">
-
-                                                        @foreach($karyawan as $k)
-                                                        <option value="{{$k->id}}">{{$k->nama}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if($errors->has('karyawan_id'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('karyawan_id')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <table id="tabel" class="table table-hover styled-table table-striped">
+                                                    <thead style="text-align: center;">
+                                                        <tr>
+                                                            <th>Fat</th>
+                                                            <th>Tbw</th>
+                                                            <th>Muscle</th>
+                                                            <th>Bone</th>
+                                                            <th>Kalori</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="text-align: center;">
+                                                        <tr>
+                                                            <td>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" name="lemak" id="lemak" value="{{ old('lemak') }}">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">gram</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" name="kandungan_air" id="kandungan_air" value="{{ old('kandungan_air') }}">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" name="otot" id="otot" value="{{ old('otot') }}">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">Kg</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" name="tulang" id="tulang" value="{{ old('tulang') }}">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">Kg</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" name="kalori" id="kalori" value="{{ old('kalori') }}">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">kkal</span>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            <div class="form-group row">
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;">Vaksin</label>
-                                                <div class="col-sm-8" style="margin-top:7px;">
-                                                    <div class="icheck-success d-inline col-sm-4">
-                                                        <input type="radio" name="status_vaksin" value="Belum" checked="0">
-                                                        <label for="no">
-                                                            Belum
-                                                        </label>
-                                                    </div>
-                                                    <div class="icheck-warning d-inline col-sm-4">
-                                                        <input type="radio" name="status_vaksin" value="Sudah">
-                                                        <label for="sample">
-                                                            Sudah
-                                                        </label>
-                                                    </div>
-                                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row" id="vaksin_ket" hidden>
-                                                <label for="tanggal" class="col-sm-4 col-form-label" style="text-align:right;">Keterangan</label>
-                                                <div class="col-sm-8">
-                                                    <table id="tabel_vaksin" class="table table-hover styled-table table-striped col-sm-8">
-                                                        <thead style="text-align: center;">
-                                                            <tr>
-                                                                <th>No</th>
-                                                                <th>Tgl Vaksin</th>
-                                                                <th>Dosis</th>
-                                                                <th>Vaksin ke </th>
-                                                                <th></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody style="text-align: center;">
-                                                            <tr>
-                                                                <td>1</td>
-                                                                <td>
-                                                                    <input type="date" class="form-control date" name="date[]">
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-control select2 dosis" name="dosis[]">
-                                                                        <option value="">Pilih</option>
-                                                                        <option value="Astrazeneca">Astrazeneca</option>
-                                                                        <option value="Janssen">Janssen</option>
-                                                                        <option value="Moderna">Moderna</option>
-                                                                        <option value="Pfizer">Pfizer</option>
-                                                                        <option value="Sinovac">Sinovac</option>
-                                                                        <option value="Sinopharm">Sinopharm</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-control select2 ket" name="ket[]">
-                                                                        <option value="">Pilih</option>
-                                                                        <option value="1">1</option>
-                                                                        <option value="2">2</option>
-                                                                        <option value="3">3</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <button name="add" type="button" id="tambahitem_vaksin" class="btn btn-success"><i class="nav-icon fas fa-plus-circle"></i></button>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <span role="alert" id="no_seri-msg"></span>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Berat Badan</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="berat" id="berat" value="{{ old('berat') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">Kg</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('berat'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('berat')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Tinggi Badan</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="number" class="form-control" name="tinggi" id="tinggi" value="{{ old('tinggi') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">Cm</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('tinggi'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('tinggi')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Nilai Tes Warna</label>
-                                                <div class="col-sm-1">
-                                                    <input type="number" class="form-control" name="buta_warna" id="buta_warna" value="{{ old('buta_warna') }}" placeholder="Jumlah yang dibaca">
-                                                    <input type="text" class="form-control d-none" name="status_mata" id="status_mata">
-                                                    @if($errors->has('buta_warna'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('buta_warna')}}
-                                                    </div>
-                                                    @endif
-                                                    <small id="status_butawarna" class="form-text text-muted"></small>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label" style="text-align:right;">Body Mass Index</label>
-                                                <div class="col-sm-8">
-                                                    <input type="text" class="form-control @error('data') is-invalid @enderror " id="bmi" style="width:15%;" disabled>
-                                                    <small id="status_bmi" class="form-text text-muted"></small>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;">Komposisi tubuh</label>
-                                                <div class="col-sm-8" style="margin-top:7px;">
-                                                    <div class="icheck-success d-inline col-sm-4">
-                                                        <input type="radio" name="status_komposisi_tubuh" value="0" checked="0">
-                                                        <label for="no">
-                                                            Tidak Ada
-                                                        </label>
-                                                    </div>
-                                                    <div class="icheck-warning d-inline col-sm-4">
-                                                        <input type="radio" name="status_komposisi_tubuh" value="1">
-                                                        <label for="sample">
-                                                            Ada
-                                                        </label>
-                                                    </div>
-                                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
-                                                </div>
-                                            </div>
-
-                                            <div class="card" id="detail_komposisi" style="display:none">
-                                                <div class="card-header bg-success">
-                                                    <div class="card-title">&nbsp;Komposisi Tubuh</div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <table id="tabel" class="table table-hover styled-table table-striped">
-                                                                    <thead style="text-align: center;">
-                                                                        <tr>
-                                                                            <th>Fat</th>
-                                                                            <th>Tbw</th>
-                                                                            <th>Muscle</th>
-                                                                            <th>Bone</th>
-                                                                            <th>Kalori</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody style="text-align: center;">
-                                                                        <tr>
-                                                                            <td>
-                                                                                <div class="input-group mb-3">
-                                                                                    <input type="text" class="form-control" name="lemak" id="lemak" value="{{ old('lemak') }}">
-                                                                                    <div class="input-group-append">
-                                                                                        <span class="input-group-text">gram</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group mb-3">
-                                                                                    <input type="text" class="form-control" name="kandungan_air" id="kandungan_air" value="{{ old('kandungan_air') }}">
-                                                                                    <div class="input-group-append">
-                                                                                        <span class="input-group-text">%</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group mb-3">
-                                                                                    <input type="text" class="form-control" name="otot" id="otot" value="{{ old('otot') }}">
-                                                                                    <div class="input-group-append">
-                                                                                        <span class="input-group-text">Kg</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group mb-3">
-                                                                                    <input type="text" class="form-control" name="tulang" id="tulang" value="{{ old('tulang') }}">
-                                                                                    <div class="input-group-append">
-                                                                                        <span class="input-group-text">Kg</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                            <td>
-                                                                                <div class="input-group mb-3">
-                                                                                    <input type="text" class="form-control" name="kalori" id="kalori" value="{{ old('kalori') }}">
-                                                                                    <div class="input-group-append">
-                                                                                        <span class="input-group-text">kkal</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Suhu</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="suhu" id="suhu" value="{{ old('suhu') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">°C</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('suhu'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('suhu')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">SPO2</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="spo2" id="spo2" value="{{ old('spo2') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">%</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('spo2'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('spo2')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">PR</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="pr" id="pr" value="{{ old('pr') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">bpm</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('pr'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('pr')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Systol</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="sistolik" id="sistolik" value="{{ old('sistolik') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">mmHg</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('sistolik'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('sistolik')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="keterangan" class="col-sm-4 col-form-label" style="text-align:right;">Dyastol</label>
-                                                <div class="col-sm-2">
-                                                    <div class="input-group mb-3">
-                                                        <input type="text" class="form-control" name="diastolik" id="diastolik" value="{{ old('diastolik') }}">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">mmHg</span>
-                                                        </div>
-                                                    </div>
-                                                    @if($errors->has('diastolik'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('diastolik')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-4 col-form-label" style="text-align:right;">Rabun Mata</label>
-                                                <div class="col-sm-8 ">
-                                                    <div class="col-sm-4  d-inline">
-                                                        <input type="text" class="form-control d-inline col-sm-4 " id="mata_kiri" style="width:15%;" placeholder="Mata Kiri" name="mata_kiri">
-                                                        <small id="mata_kiri_status" class="form-text text-muted d-inline"></small>
-                                                    </div>
-                                                    <div class="col-sm-4  d-inline">
-                                                        <input type="text" class="form-control d-inline col-sm-4" id="mata_kanan" style="width:15%;" placeholder="Mata Kanan" name="mata_kanan">
-                                                        <small id="mata_kanan_status" class="form-text text-muted d-inline"></small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="tanggal" class="col-sm-4 col-form-label" style="text-align:right;">Hasil Medical Check Up</label>
-                                                <div class="col-sm-4">
-                                                    <input type="file" class="form-control @error('file_mcu') is-invalid @enderror" name="file_mcu" style="width:45%;">
-                                                    @if($errors->has('file_mcu'))
-                                                    <div class="text-danger">
-                                                        {{ $errors->first('file_mcu')}}
-                                                    </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;">Penyakit Bawaan</label>
-                                                <div class="col-sm-8" style="margin-top:7px;">
-                                                    <div class="icheck-success d-inline col-sm-4">
-                                                        <input type="radio" name="riwayat_penyakit" value="Iya">
-                                                        <label for="no">
-                                                            Iya
-                                                        </label>
-                                                    </div>
-                                                    <div class="icheck-warning d-inline col-sm-4">
-                                                        <input type="radio" name="riwayat_penyakit" value="Tidak" checked="0">
-                                                        <label for="sample">
-                                                            Tidak
-                                                        </label>
-                                                    </div>
-                                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row" id="penyakit_ket" hidden>
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;"></label>
-                                                <table class="table table-bordered table-striped" id="tabel_penyakit">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h6 class="card-title">Penyakit yang diderita</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="tanggal" class="col-sm-5 col-form-label" style="text-align:right;">Hasil Medical Check Up</label>
+                                <div class="col-sm-4">
+                                    <input type="file" class="form-control @error('file_mcu') is-invalid @enderror" name="file_mcu" style="width:45%;">
+                                    @if($errors->has('file_mcu'))
+                                    <div class="text-danger">
+                                        {{ $errors->first('file_mcu')}}
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Penyakit Bawaan</label>
+                                <div class="col-sm-7 col-form-label">
+                                    <div class="icheck-success d-inline col-sm-4">
+                                        <input type="radio" name="riwayat_penyakit" value="Iya">
+                                        <label for="no">
+                                            Iya
+                                        </label>
+                                    </div>
+                                    <div class="icheck-warning d-inline col-sm-4">
+                                        <input type="radio" name="riwayat_penyakit" value="Tidak" checked="0">
+                                        <label for="sample">
+                                            Tidak
+                                        </label>
+                                    </div>
+                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                </div>
+                            </div>
+                            <div class="form-group" id="penyakit_ket" hidden="hidden">
+                                <div class="row d-flex justify-content-center">
+                                    <div class="col-sm-10">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <table class="table table-hover" style="text-align: center;" id="tabel_penyakit">
                                                     <thead>
                                                         <tr>
                                                             <th>No</th>
                                                             <th>Nama Penyakit</th>
                                                             <th width="25%">Jenis Penyakit</th>
                                                             <th>Keterangan</th>
-                                                            <th></th>
+                                                            <th>Aksi</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody style="text-align: center;">
+                                                    <tbody>
                                                         <tr>
                                                             <td>1</td>
                                                             <td>
@@ -488,123 +455,209 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-
-                                            <div class="form-group row">
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;">Pemeriksaan Covid</label>
-                                                <div class="col-sm-8" style="margin-top:7px;">
-                                                    <div class="icheck-success d-inline col-sm-4">
-                                                        <input type="radio" name="status_tes" value="Iya">
-                                                        <label for="no">
-                                                            Iya
-                                                        </label>
-                                                    </div>
-                                                    <div class="icheck-warning d-inline col-sm-4">
-                                                        <input type="radio" name="status_tes" value="Tidak" checked="0">
-                                                        <label for="sample">
-                                                            Tidak
-                                                        </label>
-                                                    </div>
-                                                    <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row" id="tes_ket" hidden>
-                                                <label for="kondisi" class="col-sm-4 col-form-label" style="text-align:right;"></label>
-                                                <table id="tabel_tes" class="table table-hover styled-table table-striped ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="1%">No</th>
-                                                            <th width="20%">Jenis Tes</th>
-                                                            <th width="20%">Pemeriksa</th>
-                                                            <th width="20%">Tanggal</th>
-                                                            <th width="25%"></th>
-                                                            <th width="20%">Catatan</th>
-                                                            <th width="1%"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody style="text-align: center;">
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>
-                                                                <select class="form-control select2 jenis_tes" name="jenis_tes[]" id="0">
-                                                                    <option value="">Pilih</option>
-                                                                    <option value="Rapid">Rapid</option>
-                                                                    <option value="Antigen">Antigen</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <select type="text" class="form-control @error('pemeriksa_id') is-invalid @enderror pemeriksa_id select2 select2-info" name="pemeriksa_id[]" style="width:100%;" id="pemeriksa_id[]">
-
-                                                                    @foreach ($pengecek as $p)
-                                                                    <option value="{{$p->id}}">{{$p->nama}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </td>
-                                                            <td><input type="date" name="tgl_cek[]" class="form-control tgl_cek"></td>
-                                                            <td>
-                                                                <div id="rapids0" class="row rapids" hidden>
-                                                                    <div class="icheck-success d-inline col-sm-6">
-                                                                        <input type="radio" name="hasil_covid[]" value="Non reaktif" class="hasil_covid">
-                                                                        <label for="no">
-                                                                            Non reaktif
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="icheck-success d-inline col-sm-6">
-                                                                        <input type="radio" name="hasil_covid[]" value="IgG" class="hasil_covid">
-                                                                        <label for="no">
-                                                                            IgG
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="icheck-warning d-inline col-sm-6">
-                                                                        <input type="radio" name="hasil_covid[]" value="IgM" class="hasil_covid">
-                                                                        <label for="sample">
-                                                                            IgM
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="icheck-warning d-inline col-sm-6">
-                                                                        <input type="radio" name="hasil_covid[]" value="IgG-IgM" class="hasil_covid">
-                                                                        <label for="sample">
-                                                                            IgG-IgM
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div id="antigens0" class="row antigens" hidden>
-                                                                    <div class="icheck-success d-inline col-sm-12">
-                                                                        <input type="radio" name="hasil_covid[]" value="C" class="hasil_covid">
-                                                                        <label for="no">
-                                                                            C
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="icheck-warning d-inline col-sm-12">
-                                                                        <input type="radio" name="hasil_covid[]" value="C/T" class="hasil_covid">
-                                                                        <label for="sample">
-                                                                            C/T
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <textarea class="form-control keterangan" name="keterangan[]"></textarea>
-                                                            </td>
-                                                            <td style="text-align: right;">
-                                                                <button name="add" type="button" id="tambahitem_tes" class="btn btn-success"><i class="nav-icon fas fa-plus-circle"></i></button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="float-left"><a class="btn btn-danger rounded-pill" href="/kesehatan"><i class="fas fa-times"></i>&nbsp;Batal</a></span>
-                            <span class="float-right"><button class="btn btn-success rounded-pill" id="button_tambah"><i class="fas fa-plus"></i>&nbsp;Tambah Data</button></span>
+                    </div>
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h6 class="card-title">COVID-19</h6>
                         </div>
+                        <div class="card-body">
+                            <div class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Vaksin</label>
+                                        <div class="col-sm-7 col-form-label" >
+                                            <div class="icheck-success d-inline col-sm-4">
+                                                <input type="radio" name="status_vaksin" value="Belum" checked="0">
+                                                <label for="no">
+                                                    Belum
+                                                </label>
+                                            </div>
+                                            <div class="icheck-warning d-inline col-sm-4">
+                                                <input type="radio" name="status_vaksin" value="Sudah">
+                                                <label for="sample">
+                                                    Sudah
+                                                </label>
+                                            </div>
+                                            <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                        </div>
+                                    </div>
+                                    <div hidden="hidden" class="form-group" id="vaksin_ket">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-sm-8">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <table id="tabel_vaksin" class="table table-hover styled-table"  style="text-align: center;">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>No</th>
+                                                                    <th>Tgl Vaksin</th>
+                                                                    <th>Dosis</th>
+                                                                    <th>Vaksin ke </th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        <input type="date" class="form-control date" name="date[]">
+                                                                    </td>
+                                                                    <td>
+                                                                        <select class="form-control select2 dosis" name="dosis[]" placeholder="Pilih Dosis">
+                                                                            <option value="Astrazeneca">Astrazeneca</option>
+                                                                            <option value="Janssen">Janssen</option>
+                                                                            <option value="Moderna">Moderna</option>
+                                                                            <option value="Pfizer">Pfizer</option>
+                                                                            <option value="Sinovac">Sinovac</option>
+                                                                            <option value="Sinopharm">Sinopharm</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select class="form-control select2 ket" name="ket[]"  placeholder="Pilih Vaksin">
+                                                                            <option value="1">1</option>
+                                                                            <option value="2">2</option>
+                                                                            <option value="3">3</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <button name="add" type="button" id="tambahitem_vaksin" class="btn btn-success"><i class="nav-icon fas fa-plus-circle"></i></button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span role="alert" id="no_seri-msg"></span>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="kondisi" class="col-sm-5 col-form-label" style="text-align:right;">Pemeriksaan Covid</label>
+                                        <div class="col-sm-7 col-form-label">
+                                            <div class="icheck-success d-inline col-sm-6">
+                                                <input type="radio" name="status_tes" value="Iya">
+                                                <label for="no">
+                                                    Iya
+                                                </label>
+                                            </div>
+                                            <div class="icheck-warning d-inline col-sm-4">
+                                                <input type="radio" name="status_tes" value="Tidak" checked="0">
+                                                <label for="sample">
+                                                    Tidak
+                                                </label>
+                                            </div>
+                                            <span class="invalid-feedback" role="alert" id="kondisi-msg"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="tes_ket" hidden="hidden">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col-sm-10">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="table-responsive">
+                                                            <table id="tabel_tes" class="table table-hover styled-table table-striped"  style="text-align: center;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="1%">No</th>
+                                                                        <th width="20%">Jenis Tes</th>
+                                                                        <th width="20%">Pemeriksa</th>
+                                                                        <th width="20%">Tanggal</th>
+                                                                        <th width="25%"></th>
+                                                                        <th width="20%">Catatan</th>
+                                                                        <th width="1%"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody style="text-align: center;">
+                                                                    <tr>
+                                                                        <td>1</td>
+                                                                        <td>
+                                                                            <select class="form-control select2 jenis_tes" name="jenis_tes[]" id="0">
+                                                                                <option value="">Pilih</option>
+                                                                                <option value="Rapid">Rapid</option>
+                                                                                <option value="Antigen">Antigen</option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select type="text" class="form-control @error('pemeriksa_id') is-invalid @enderror pemeriksa_id select2 select2-info" name="pemeriksa_id[]" style="width:100%;" id="pemeriksa_id[]">
+
+                                                                                @foreach ($pengecek as $p)
+                                                                                <option value="{{$p->id}}">{{$p->nama}}</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><input type="date" name="tgl_cek[]" class="form-control tgl_cek"></td>
+                                                                        <td>
+                                                                            <div id="rapids0" class="row rapids" hidden>
+                                                                                <div class="icheck-success d-inline col-sm-6">
+                                                                                    <input type="radio" name="hasil_covid[]" value="Non reaktif" class="hasil_covid">
+                                                                                    <label for="no">
+                                                                                        Non reaktif
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="icheck-success d-inline col-sm-6">
+                                                                                    <input type="radio" name="hasil_covid[]" value="IgG" class="hasil_covid">
+                                                                                    <label for="no">
+                                                                                        IgG
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="icheck-warning d-inline col-sm-6">
+                                                                                    <input type="radio" name="hasil_covid[]" value="IgM" class="hasil_covid">
+                                                                                    <label for="sample">
+                                                                                        IgM
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="icheck-warning d-inline col-sm-6">
+                                                                                    <input type="radio" name="hasil_covid[]" value="IgG-IgM" class="hasil_covid">
+                                                                                    <label for="sample">
+                                                                                        IgG-IgM
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div id="antigens0" class="row antigens" hidden>
+                                                                                <div class="icheck-success d-inline col-sm-12">
+                                                                                    <input type="radio" name="hasil_covid[]" value="C" class="hasil_covid">
+                                                                                    <label for="no">
+                                                                                        C
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="icheck-warning d-inline col-sm-12">
+                                                                                    <input type="radio" name="hasil_covid[]" value="C/T" class="hasil_covid">
+                                                                                    <label for="sample">
+                                                                                        C/T
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <textarea class="form-control keterangan" name="keterangan[]"></textarea>
+                                                                        </td>
+                                                                        <td style="text-align: right;">
+                                                                            <button name="add" type="button" id="tambahitem_tes" class="btn btn-success"><i class="nav-icon fas fa-plus-circle"></i></button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6"><a class="btn btn-danger float-left" href="/kesehatan">Batal</a></div>
+                        <div class="col-6"><button class="btn btn-primary float-right" id="button_tambah">Simpan</button></div>
                     </div>
                 </form>
             </div>
-        </div>
+
     </div>
 </section>
 @endsection
@@ -675,16 +728,14 @@
                                                                 <input type="date" class="form-control date" name="date[]">
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control select2 dosis" name="dosis[]">
-                                                                        <option value="">Pilih</option>
+                                                                    <select class="form-control select2 dosis" name="dosis[]" placeholder="Pilih Dosis">
                                                                         <option value="Astrazeneca">Astrazeneca</option>
                                                                         <option value="Sinovac">Sinovac</option>
                                                                         <option value="Moderna">Moderna</option>
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select class="form-control select2 ket" name="ket[]">
-                                                                        <option value="">Pilih</option>
+                                                                    <select class="form-control select2 ket" name="ket[]" placeholder="Pilih Vaksin">
                                                                         <option value="1">1</option>
                                                                         <option value="2">2</option>
                                                                         <option value="3">3</option>

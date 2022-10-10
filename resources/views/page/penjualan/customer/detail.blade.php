@@ -104,6 +104,10 @@
         background-color: #d4edda;
         border-color: #c3e6cb;
     }
+<<<<<<< HEAD
+
+=======
+>>>>>>> dd058260e517c3328df4d9c0883f45f986a3133c
     li.list-group-item {
         border: 0 none;
     }
@@ -202,6 +206,10 @@
         .labelinfo{
             text-align: center;
         }
+<<<<<<< HEAD
+
+=======
+>>>>>>> dd058260e517c3328df4d9c0883f45f986a3133c
         .overflowcard {
             max-height: 500px;
             width: auto;
@@ -459,25 +467,28 @@
                 success: function(result) {
                     $('#detailmodal').modal("show");
                     $('#detail').html(result).show();
+
                     if (label == 'ekatalog') {
                         $('#detailmodal').find(".modal-header").removeClass(
-                                'bg-orange bg-lightblue');
-                            $('#detailmodal').find(".modal-header").addClass('bg-purple');
-                            $('#detailmodal').find(".modal-header > h4").text('E-Catalogue');
+                            'bg-orange bg-lightblue');
+                        $('#detailmodal').find(".modal-header").addClass('bg-purple');
+                        $('#detailmodal').find(".modal-header > h4").text('E-Catalogue');
+
                         detailtabel_ekatalog(id);
                     } else if (label == 'spa') {
                         $('#detailmodal').find(".modal-header").removeClass(
-                                'bg-purple bg-lightblue');
+                            'bg-purple bg-lightblue');
                         $('#detailmodal').find(".modal-header").addClass('bg-orange');
                         $('#detailmodal').find(".modal-header > h4").text('SPA');
                         detailtabel_spa(id);
                     } else {
                         $('#detailmodal').find(".modal-header").removeClass(
-                                'bg-orange bg-purple');
-                            $('#detailmodal').find(".modal-header").addClass('bg-lightblue');
-                            $('#detailmodal').find(".modal-header > h4").text('SPB');
+                            'bg-orange bg-purple');
+                        $('#detailmodal').find(".modal-header").addClass('bg-lightblue');
+                        $('#detailmodal').find(".modal-header > h4").text('SPB');
                         detailtabel_spb(id);
                     }
+
                     $('#detailmodal').find('[data-toggle="tooltip"]').tooltip();
                 },
                 complete: function() {
@@ -721,6 +732,54 @@
                 },
             })
         }
+
+        $(document).on('click', '#tabledetailpesan #lihatstok', function(){
+                var id = $(this).attr('data-id');
+                var produk = $(this).attr('data-produk');
+                var update = 'update';
+                 var array = [];
+                $.ajax({
+                    url: '/api/get_stok_pesanan',
+                    data: {'id': id, 'jenis': produk},
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(result) {
+                        if (produk == 'part'){
+                    $("#part_status").addClass('d-none');
+                }else{
+                    $("#part_status").removeClass('d-none');
+                }
+
+                    var chartExist = Chart.getChart("myChart"); // <canvas> id
+                    if (chartExist != undefined)
+                    chartExist.destroy();
+                    update_chart(produk,result.gudang,result.qc,result.log,result.kir);
+
+
+                $('#nama_prd').text(result.detail.penjualan_produk.nama);
+                $('#tot_gudang').text(" dari " + result.detail.count_jumlah);
+                $('#tot_qc').text(" dari " + result.detail.count_gudang);
+                $('#tot_log').text(" dari " + result.detail.count_qc_ok);
+                $('#tot_kirim').text(" dari " + result.kir);
+
+                $('#c_gudang').text(result.gudang);
+                $('#c_qc').text(result.qc);
+                $('#c_log').text(result.log);
+                $('#c_kirim').text(result.kir);
+
+                    },
+                    complete: function() {
+                        $('#loader').hide();
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page cannot open. Error:" + error);
+                        $('#loader').hide();
+                    },
+                    timeout: 8000
+                })
+
+            });
     });
 </script>
 @stop

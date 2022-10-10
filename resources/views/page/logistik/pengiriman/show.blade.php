@@ -66,10 +66,6 @@
         font-weight: 600;
     }
 
-    .list-group-item {
-        border: 0 none;
-    }
-
     .align-right {
         text-align: right;
     }
@@ -405,8 +401,8 @@
             <div class="modal fade" id="editmodal" role="dialog" aria-labelledby="editmodal" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content" style="margin: 10px">
-                        <div class="modal-header bg-warning">
-                            <h4 class="modal-title">Edit</h4>
+                        <div class="modal-header bg-warning-50">
+                            <h5 class="modal-title">Ubah Pengiriman</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -424,57 +420,64 @@
 @section('adminlte_js')
 <script>
     $(function() {
-        $('#riwayattable').DataTable({
-            destroy: true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                'url': '/api/logistik/pengiriman/riwayat/data/semua/semua/semua',
-                'dataType': 'json',
-                'type': 'POST',
-                'headers': {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
-                }
-            },
-            language: {
-                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-            },
-            columns: [{
-                    data: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'so'
-                },
-                {
-                    data: 'sj',
-
-                },
-                {
-                    data: 'ekspedisi',
-
-                },
-                {
-                    data: 'no_resi',
-
-                }, {
-                    data: 'tgl_kirim',
-
-                }, {
-                    data: 'nama_customer',
-
-                }, {
-                    data: 'provinsi',
-
-                }, {
-                    data: 'status',
-
-                }, {
-                    data: 'button',
-                }
-            ]
+        $(document).on('click', '#pills-selesai_kirim-tab', function(){
+            selesai_kirim();
         });
+
+        function selesai_kirim(){
+            $('#riwayattable').DataTable({
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    'url': '/api/logistik/pengiriman/riwayat/data/semua/semua/semua',
+                    'dataType': 'json',
+                    'type': 'POST',
+                    'headers': {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    }
+                },
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'so'
+                    },
+                    {
+                        data: 'sj',
+
+                    },
+                    {
+                        data: 'ekspedisi',
+
+                    },
+                    {
+                        data: 'no_resi',
+
+                    }, {
+                        data: 'tgl_kirim',
+
+                    }, {
+                        data: 'nama_customer',
+
+                    }, {
+                        data: 'provinsi',
+
+                    }, {
+                        data: 'status',
+
+                    }, {
+                        data: 'button',
+
+                    }
+                ]
+            });
+        }
 
         $('#filter_riwayat').submit(function() {
             var values_pengiriman = [];

@@ -450,7 +450,6 @@ tr.details td.details-control {
                                                 <thead>
                                                     <tr>
                                                         <th>No</th>
-
                                                         <th>No PO</th>
                                                         <th>Customer</th>
                                                         <th>Status</th>

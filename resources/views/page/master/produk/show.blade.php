@@ -22,6 +22,9 @@
 
 @section('adminlte_css')
 <style>
+    .hide{
+        display: none !important;
+    }
     .nowrap-text {
         white-space: nowrap;
     }
@@ -221,7 +224,7 @@
                 <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="editmodal" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content" style="margin: 10px">
-                            <div class="modal-header yellow-bg">
+                            <div class="modal-header bg-warning">
                                 <h4 class="modal-title"><b>Ubah</b></h4>
                             </div>
                             <div class="modal-body" id="edit">
@@ -269,6 +272,27 @@
 @section('adminlte_js')
 <script>
     $(function() {
+
+        $(document).on('click', '#btn_akd', function(){
+            if($(this).hasClass('tambah_akd')){
+                $('#btn_akd').removeClass('tambah_akd');
+                $('#btn_akd').addClass('batal_akd');
+                $('#btn_akd').html('<i class="fas fa-times"></i> Batal Tambah AKD');
+
+                $('#btn_akd').removeClass('btn-outline-info');
+                $('#btn_akd').addClass('btn-danger');
+                $('#akd_field').removeClass('hide');
+            }
+            else if($(this).hasClass('batal_akd')){
+                $('#btn_akd').removeClass('batal_akd');
+                $('#btn_akd').addClass('tambah_akd');
+                $('#btn_akd').html('<i class="fas fa-plus"></i> Tambah AKD Baru');
+
+                $('#btn_akd').removeClass('btn-danger');
+                $('#btn_akd').addClass('btn-outline-info');
+                $('#akd_field').addClass('hide');
+            }
+        })
         function checkvalidasi(){
             if(($('#nama_coo').val() != "" && !$('#nama_coo').hasClass('is-invalid')) && (($('#no_akd').val() != "" && !$('#no_akd').hasClass('is-invalid') && $('input[type="radio"][name="coo"]:checked').val() == '1') || ($('#no_akd').val() == "" && $('input[type="radio"][name="coo"]:checked').val() == '0'))){
                 $('#btnsimpan').removeAttr('disabled');

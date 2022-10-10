@@ -17,16 +17,7 @@
                 <div class="tab-content" id="custom-tabs-three-tabContent">
                     <div class="tab-pane fade active show" id="tabs-detail" role="tabpanel" aria-labelledby="tabs-detail-tab">
                         <div class="row">
-                            <div class="col-lg-4 col-md-6">
-                                <div class="info-box bg-maroon">
-                                    <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
-                                    <div class="info-box-content">
-                                    <span class="info-box-text">No SO</span>
-                                    <span class="info-box-number">{{$p->so}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6">
+                            <div class="col-lg-6 col-md-6">
                                 <div class="info-box bg-warning">
                                     <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
                                     <div class="info-box-content">
@@ -35,7 +26,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6">
+                            <div class="col-lg-6 col-md-6">
                                 <div class="info-box bg-olive">
                                     <span class="info-box-icon"><i class="far fa-user"></i></span>
                                     <div class="info-box-content">
@@ -45,17 +36,29 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="tabs-produk" role="tabpanel" aria-labelledby="tabs-produk-tab">
                         <div class="row">
-                            <div class="col-4">
-                                <div class="info-box bg-light" style="box-shadow: none">
+                            <div class="col-lg-6 col-md-6">
+                                <div class="info-box bg-maroon">
+                                    <span class="info-box-icon"><i class="fas fa-truck"></i></span>
+                                    <div class="info-box-content">
+                                    <span class="info-box-text">No SO</span>
+                                    <span class="info-box-number">{{$p->so}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6">
+                                <div class="info-box bg-navy" style="box-shadow: none">
+                                    <span class="info-box-icon"><i class="far fa-calendar"></i></span>
                                     <div class="info-box-content">
                                     <span class="info-box-text">Tanggal Batal</span>
                                     <span class="info-box-number">{{Carbon::now()->isoFormat('D MMMM Y')}}</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tabs-produk" role="tabpanel" aria-labelledby="tabs-produk-tab">
+                        <div class="row">
                             <div class="col-12">
                                 <div class="info-box bg-danger">
                                     <span class="info-box-icon"><i class="fas fa-exclamation-triangle fa-fw"></i></span>
@@ -74,11 +77,12 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-hover" id="produktable">
-                        <thead>
+                        <thead class="align-center">
                             <tr>
                                 <th>No</th>
                                 <th>Nama Produk</th>
                                 <th>Jumlah</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,8 +91,10 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+                <button type="button" class="btn btn-danger btn-sm @if(Auth::user()->divisi->nama != "Quality Control") float-right @endif" data-dismiss="modal"><i class="fas fa-times"></i> Tutup</button>
+                @if(Auth::user()->divisi->nama == "Quality Control")
                 <button type="button" class="btn btn-dark btn-sm float-right"><i class="fas fa-check"></i> Terima</button>
+                @endif
             </div>
         </div>
     </div>

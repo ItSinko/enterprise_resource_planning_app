@@ -6,14 +6,13 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0  text-dark">Retur</h1>
+                <h1 class="m-0  text-dark">Memo Retur</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26')
+                    @if (Auth::user()->divisi_id == '8')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('as.retur.show') }}">Retur</a></li>
-                        <li class="breadcrumb-item active">Tambah Retur</li>
+                        <li class="breadcrumb-item active">Memo Retur</li>
                     @endif
                 </ol>
             </div><!-- /.col -->
@@ -134,8 +133,9 @@
                                     <tr>
                                         <th>No</th>
                                         <th>No Retur</th>
+                                        <th>No Ref Penjualan</th>
                                         <th>Tanggal Retur</th>
-                                        <th>No Ref PO / No Ref Retur</th>
+                                        <th>Jenis Retur</th>
                                         <th>Customer</th>
                                         <th>Status</th>
                                         <th>Aksi</th>
@@ -145,8 +145,9 @@
                                     <tr>
                                         <td>1</td>
                                         <td>RET/0012/02/1293</td>
-                                        <td>20 Februari 2022</td>
-                                        <td>PO2022021009189</td>
+                                        <td>AKN-P2207-102345</td>
+                                        <td>20-02-2022</td>
+                                        <td><span class="badge blue-text">Komplain</span></td>
                                         <td>PT. Emiindo Jaya Bersama</td>
                                         <td><span class="badge red-text">Belum Diproses</span></td>
                                         <td><button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button></td>
@@ -154,8 +155,9 @@
                                     <tr>
                                         <td>2</td>
                                         <td>RET/0012/02/1293</td>
-                                        <td>20 Februari 2022</td>
-                                        <td>PO2022021009189</td>
+                                        <td>AKN-P2207-102345</td>
+                                        <td>20-02-2022</td>
+                                        <td><span class="badge orange-text">Service</span></td>
                                         <td>PT. Emiindo Jaya Bersama</td>
                                         <td><span class="badge red-text">Belum Diproses</span></td>
                                         <td><a data-toggle="detailmodal" data-target="#detailmodal" class="detailmodal" id="detailmodal"><button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button></a></td>
@@ -169,8 +171,8 @@
             <div class="modal fade" id="detail_modal" role="dialog" aria-labelledby="detail_modal" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content" style="margin: 10px">
-                        <div class="modal-header bg-info">
-                            <h4 class="modal-title">Detail</h4>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Detail Memo Retur</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -190,6 +192,7 @@
 <script>
     $(function(){
         $('#showtable').DataTable();
+
         $(document).on('click', "#detailmodal", function(event){
             event.preventDefault();
             $.ajax({
@@ -197,10 +200,11 @@
                 beforeSend: function() {
                     $('#loader').show();
                 },
-                // return the result
                 success: function(result) {
+
                     $('#detail_modal').modal("show");
                     $('#detail').html(result).show();
+                    $('#barangtable').DataTable();
                 },
                 complete: function() {
                     $('#loader').hide();
