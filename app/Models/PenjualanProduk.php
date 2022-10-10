@@ -9,11 +9,15 @@ class PenjualanProduk extends Model
 {
     protected $connection = 'erp';
     protected $table = 'penjualan_produk';
-    protected $fillable = ['nama_alias', 'nama', 'harga','jenis','status', 'is_aktif'];
+    protected $fillable = ['nama_alias', 'nama', 'harga', 'jenis', 'status', 'is_aktif'];
 
     public function DetailPesanan()
     {
         return $this->hasMany(DetailPesanan::class);
+    }
+    public function DetailPesananDsb()
+    {
+        return $this->hasMany(DetailPesananDsb::class);
     }
     public function Produk()
     {
