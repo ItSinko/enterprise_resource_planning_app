@@ -1975,7 +1975,7 @@ class QcController extends Controller
                 }
 
                 $param = "";
-
+                if($ds->tgl_kontrak != ""){
                 $tgl_sekarang = Carbon::now()->format('Y-m-d');
                 $tgl_parameter = $ds->tgl_kontrak;
 
@@ -1996,7 +1996,7 @@ class QcController extends Controller
                     $from = $tgl_parameter;
                     $hari = $to->diffInDays($from);
                     $param =  '<div class="urgent">' . Carbon::createFromFormat('Y-m-d', $tgl_parameter)->format('d-m-Y') . '</div><small class="invalid-feedback d-block"><i class="fa fa-exclamation-circle"></i> Lewat Batas ' . $hari . ' Hari</small>';
-                }
+                }}
             return view('page.qc.so.detail_ekatalog', ['id' => $id, 'data' => $data, 'detail_id' => $detail_id, 'param' => $param, 'status' => $status]);
         } elseif ($value == 'spa') {
             $data = Spa::whereHas('Pesanan', function ($q) use ($id) {
@@ -2028,11 +2028,11 @@ class QcController extends Controller
             'cqcpart' => function($q){
                 $q->selectRaw('coalesce(sum(outgoing_pesanan_part.jumlah_ok), 0)')
                 ->from('outgoing_pesanan_part')
-                ->leftJoin('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
-                ->leftJoin('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                ->join('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
+                ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
                 ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
-                ->where('detail_pesanan_part.pesanan_id', 'pesanan.id');
-            },'clogprd' => function($q){
+                ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
+            }, 'clogprd' => function($q){
                 $q->selectRaw('coalesce(count(noseri_logistik.id), 0)')
                    ->from('noseri_logistik')
                    ->leftJoin('noseri_detail_pesanan', 'noseri_detail_pesanan.id', '=', 'noseri_logistik.noseri_detail_pesanan_id')
@@ -2101,6 +2101,7 @@ class QcController extends Controller
                 if($res > 0){
                     $hitung = floor(((($ds->cqcprd + $ds->cqcpart) / ($ds->ctfprd + $ds->ctfpart)) * 100));
                     if($hitung > 0){
+
                     $status = '<div class="progress progresscust">
                         <div class="progress-bar bg-success" role="progressbar" aria-valuenow="'.$hitung.'"  style="width: '.$hitung.'%" aria-valuemin="0" aria-valuemax="100">'.$hitung.'%</div>
                     </div>
@@ -2117,6 +2118,7 @@ class QcController extends Controller
                     </div>
                     <small class="text-muted">Selesai</small>';
                 }
+
 
 
             return view('page.qc.so.detail_spa', ['id' => $id, 'data' => $data,  'detail_id' => $detail_id, 'status' => $status]);
@@ -2150,10 +2152,10 @@ class QcController extends Controller
             'cqcpart' => function($q){
                 $q->selectRaw('coalesce(sum(outgoing_pesanan_part.jumlah_ok), 0)')
                 ->from('outgoing_pesanan_part')
-                ->leftJoin('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
-                ->leftJoin('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
+                ->join('detail_pesanan_part', 'detail_pesanan_part.id', '=', 'outgoing_pesanan_part.detail_pesanan_part_id')
+                ->join('m_sparepart', 'm_sparepart.id', '=', 'detail_pesanan_part.m_sparepart_id')
                 ->whereRaw('m_sparepart.kode NOT LIKE "%JASA%"')
-                ->where('detail_pesanan_part.pesanan_id', 'pesanan.id');
+                ->whereColumn('detail_pesanan_part.pesanan_id', 'pesanan.id');
             },'clogprd' => function($q){
                 $q->selectRaw('coalesce(count(noseri_logistik.id), 0)')
                    ->from('noseri_logistik')

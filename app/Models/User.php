@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\Divisi;
+use App\Models\kesehatan\Karyawan;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -45,12 +46,18 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    public function Karyawan()
+    {
+        return $this->belongsTo(Karyawan::class);
+    }
+
     public function Divisi()
     {
         return $this->belongsTo(Divisi::class);
     }
-    public function hasRole($role){
-        if($role == $this->divisi_id){
+    public function hasRole($role)
+    {
+        if ($role == $this->Karyawan->divisi_id) {
             return true;
         }
         return false;

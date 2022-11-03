@@ -11,7 +11,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26')
+                    @if (Auth::user()->Karyawan->divisi_id == '26')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.penjualan.show') }}">Penjualan</a></li>
                         <li class="breadcrumb-item active">Tambah Penjualan</li>
@@ -125,13 +125,13 @@
         @media screen and (max-width: 1219px) {
 
             /* label,
-                                        .row {
-                                            font-size: 12px;
-                                        }
+                                                .row {
+                                                    font-size: 12px;
+                                                }
 
-                                        h4 {
-                                            font-size: 20px;
-                                        } */
+                                                h4 {
+                                                    font-size: 20px;
+                                                } */
             body {
                 font-size: 12px;
             }
@@ -148,13 +148,13 @@
         @media screen and (max-width: 991px) {
 
             /* label,
-                                        .row {
-                                            font-size: 12px;
-                                        }
+                                                .row {
+                                                    font-size: 12px;
+                                                }
 
-                                        h4 {
-                                            font-size: 20px;
-                                        } */
+                                                h4 {
+                                                    font-size: 20px;
+                                                } */
             section {
                 font-size: 12px;
             }
@@ -593,7 +593,6 @@
                                                                 <button type="button" class="btn btn-info float-right" id="pills-instansi-tab" data-toggle="pill" href="#pills-instansi" role="tab" aria-controls="pills-instansi" aria-selected="false">Selanjutnya</button>
                                                             </div> --}}
                                                             </div>
-<<<<<<< HEAD
                                                         </div>
                                                         <div class="tab-pane fade" id="pills-instansi" role="tabpanel"
                                                             aria-labelledby="pills-instansi-tab">
@@ -616,17 +615,6 @@
                                                                                     {{ $errors->first('instansi') }}
                                                                                 @endif
                                                                             </div>
-=======
-                                                            <div class="card-body">
-                                                                <div class="form-group row">
-                                                                    <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Instansi</label>
-                                                                    <div class="col-lg-4 col-md-12 autocomplete">
-                                                                        <input type="text" class="form-control col-form-label @error('instansi') is-invalid @enderror" name="instansi" id="instansi" autocomplete="off" />
-                                                                        <div class="invalid-feedback" id="msginstansi">
-                                                                            @if($errors->has('instansi'))
-                                                                            {{ $errors->first('instansi')}}
-                                                                            @endif
->>>>>>> della_v
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
@@ -645,7 +633,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-<<<<<<< HEAD
                                                                     <div class="form-group row">
                                                                         <label for=""
                                                                             class="col-form-label col-lg-5 col-md-12 labelket">Alamat
@@ -675,29 +662,6 @@
                                                                                     {{ $errors->first('provinsi') }}
                                                                                 @endif
                                                                             </div>
-=======
-                                                                </div>
-                                                                <div class="form-group row">
-                                                                    <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Alamat Instansi</label>
-                                                                    <div class="col-lg-6 col-md-12">
-                                                                        <textarea class="form-control col-form-label @error('alamatinstansi') is-invalid @enderror" name="alamatinstansi" id="alamatinstansi"></textarea>
-                                                                        <div class="invalid-feedback" id="msgalamatinstansi">
-                                                                            @if($errors->has('alamatinstansi'))
-                                                                            {{ $errors->first('alamatinstansi')}}
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="form-group row">
-                                                                    <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Provinsi</label>
-                                                                    <div class="col-lg-3 col-md-6">
-                                                                        <select name="provinsi" id="provinsi" class="form-control custom-select provinsi @error('provinsi') is-invalid @enderror" style="width: 100%;">
-                                                                        </select>
-                                                                        <div class="invalid-feedback" id="msgprovinsi">
-                                                                            @if($errors->has('provinsi'))
-                                                                            {{ $errors->first('provinsi')}}
-                                                                            @endif
->>>>>>> della_v
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
@@ -1448,28 +1412,10 @@
             }
 
 
-<<<<<<< HEAD
             function checkvalidasi() {
                 var jenis_array = [];
                 $("input[id=jenis_pen]:checked").each(function() {
                     jenis_array.push($(this).val());
-=======
-        function checkvalidasi() {
-            var jenis_array = [];
-            $("input[id=jenis_pen]:checked").each(function() {
-                jenis_array.push($(this).val());
-            });
-
-            if($.inArray("produk", jenis_array) !== -1 ) {
-                $('#produktable').find('.penjualan_produk_id').each(function() {
-                    if ($(this).val() != "") {
-                        penjualan_produk_id = true;
-                    }
-                    else {
-                        penjualan_produk_id = false;
-                        return false;
-                    }
->>>>>>> della_v
                 });
 
                 if ($.inArray("produk", jenis_array) !== -1) {
@@ -1925,23 +1871,10 @@
                 } else {
                     $("#datajasa").addClass("hide");
                 }
-<<<<<<< HEAD
                 if ($.inArray("sparepart", x) !== -1) {
                     $("#datapart").removeClass("hide");
                 } else {
                     $("#datapart").addClass("hide");
-=======
-                 else if ($(this).val() == "negosiasi"){
-                    $('#checkbox_nopaket').addClass('hide');
-                    $('#isi_nopaket').prop("checked", false);
-                    $('#isi_nopaket').val("true");
-                    $('#no_paket').attr('readonly', false);
-                    $("#batas_kontrak").val("");
-                    $("#batas_kontrak").attr('disabled', true);
-                    $("#dataproduk").removeClass("hide");
-                    $("#provinsi").attr('disabled', true);
-                    $("#provinsi").empty().trigger('change')
->>>>>>> della_v
                 }
             }
 
@@ -2354,7 +2287,6 @@
                     //     $('#btntambah').attr("disabled", true);
                     // }
 
-<<<<<<< HEAD
                 } else if ($(this).val() == "") {
                     $('#btntambah').attr("disabled", true);
                     $("#msgno_do").text("Nomor Do Harus diisi");
@@ -2381,11 +2313,6 @@
             $("#customer_id").attr('disabled', true);
             $('.customer_id').select2({
                 placeholder: "Pilih Customer",
-=======
-            $('.penjualan_produk_id').select2({
-                placeholder: "Pilih Produk",
-                width: 'resolve',
->>>>>>> della_v
                 ajax: {
                     minimumResultsForSearch: 20,
                     dataType: 'json',
@@ -2750,7 +2677,6 @@
                                 x + `]" id="ketstok` + index + `` + x +
                                 `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
                                       </div>`);
-<<<<<<< HEAD
                             if (res[0].produk[x].gudang_barang_jadi.length <= 1) {
                                 data.push({
                                     id: res[0].produk[x].gudang_barang_jadi[0].id,
@@ -2794,35 +2720,6 @@
                                     return $span;
                                 }
                             });
-=======
-                        for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
-                            var nama_var = "";
-                            if(res[0].produk[x].gudang_barang_jadi[y].nama != ""){
-                                nama_var = res[0].produk[x].gudang_barang_jadi[y].nama;
-                            }
-                            else {
-                                nama_var = res[0].produk[x].nama;
-                            }
-                            data.push({
-                                id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                text: nama_var,
-                                jumlah: res[0].produk[x].pivot.jumlah,
-                                qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y].id)
-                            });
-                        }
-                        $(`select[name="variasi[` + index + `][` + x + `]"]`).select2({
-                            placeholder: 'Pilih Variasi',
-                            data: data,
-                            templateResult: function(data) {
-                                var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
-                                return $span;
-                            },
-                            templateSelection: function(data) {
-                                var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
-                                return $span;
-                            }
-                        });
->>>>>>> della_v
 
                             $(`select[name="variasi[` + index + `][` + x + `]"]`).trigger(
                                 "change");
@@ -3032,32 +2929,10 @@
                                 x + `]" id="ketstok` + index + `` + x + `" data-attr="ketstok` + x +
                                 `" data-id="` + x + `"></span>
                                       </div>`);
-<<<<<<< HEAD
                             if (res[0].produk[x].gudang_barang_jadi.length <= 1) {
                                 data.push({
                                     id: res[0].produk[x].gudang_barang_jadi[0].id,
                                     text: res[0].produk[x].nama,
-=======
-                        // if (res[0].produk[x].gudang_barang_jadi.length <= 1) {
-                        //     data.push({
-                        //         id: res[0].produk[x].gudang_barang_jadi[0].id,
-                        //         text: res[0].produk[x].nama,
-                        //         jumlah: res[0].produk[x].pivot.jumlah,
-                        //         qt: cek_stok(res[0].produk[x].gudang_barang_jadi[0].id)
-                        //     });
-                        // } else {
-                            for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
-                                var nama_var = "";
-                                if(res[0].produk[x].gudang_barang_jadi[y].nama != ""){
-                                    nama_var = res[0].produk[x].gudang_barang_jadi[y].nama;
-                                }
-                                else if(res[0].produk[x].gudang_barang_jadi[y].nama == ""){
-                                    nama_var = res[0].produk[x].nama;
-                                }
-                                data.push({
-                                    id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                    text: nama_var,
->>>>>>> della_v
                                     jumlah: res[0].produk[x].pivot.jumlah,
                                     qt: cek_stok(res[0].produk[x].gudang_barang_jadi[0].id)
                                 });
@@ -3071,7 +2946,6 @@
                                     });
                                 }
                             }
-<<<<<<< HEAD
                             $(`select[name="variasi[` + index + `][` + x + `]"]`).select2({
                                 placeholder: 'Pilih Variasi',
                                 data: data,
@@ -3090,21 +2964,6 @@
                                     return $span;
                                 }
                             });
-=======
-                        // }
-                        $(`select[name="variasi[` + index + `][` + x + `]"]`).select2({
-                            placeholder: 'Pilih Variasi',
-                            data: data,
-                            templateResult: function(data) {
-                                var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
-                                return $span;
-                            },
-                            templateSelection: function(data) {
-                                var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
-                                return $span;
-                            }
-                        });
->>>>>>> della_v
 
                             $(`select[name="variasi[` + index + `][` + x + `]"]`).trigger("change");
                             tes.append(`</div>`)

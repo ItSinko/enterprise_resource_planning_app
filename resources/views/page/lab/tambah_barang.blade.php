@@ -11,7 +11,33 @@
 .bc-success{
     background-color:rgba(40, 167, 69, 0.2);
 }
+.ui-autocomplete-input {
+z-index: 1511;
+}
+.ui-autocomplete {
+z-index: 1510 !important;
+}
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.ui-state-hover, .ui-state-active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
+}
 </style>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
 <div class="container-fluid">
 
@@ -146,12 +172,27 @@
                     </div>
                 </div>
 
+                @error('tipe')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
+                <div class="row mb-2">
+                    <div class="col"><span class="float-right">Tipe</span></div>
+                    <div class="col">
+                        <input class="form-control" type="text" name="tipe" id="tipe" value="{{ old('tipe') }}" id="">
+                    </div>
+                </div>
+
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Nomor Urut</span></div>
                     <div class="col">
                         <div class="row">
                             <div class="col-4">
-                                <input class="form-control" type="number" name="nomor_urut" id="form_nourut" value="{{ old('nomor_urut') }}" id="">
+                                <input class="form-control" type="number" name="nomor_urut" id="form_nourut" value="{{ old('nomor_urut') }}" id="" readonly>
                             </div>
                             <div class="col">
                                 <div class="form-check">
@@ -296,8 +337,33 @@
         $('#selectNama').select2();
         $('#selectMerk').select2();
 
-        // get data nomor urut
+        // auto complete tipe
+        $(function() {
+            $.ajax({
+                type:'GET',
+                url:'{{ url("/api/inventory/get_data_tipe") }}',
+                success:function(data) {
+                    autoComp(data);
+                }
+            });
+        });
 
+        function autoComp(data){
+            //hapus value jika ada yang null
+            for(let i = 0; i<data.length;i++){
+                if ( data[i] == null) { 
+                    data.splice(i, 1); 
+                }
+            }
+            console.log(data);
+            $('#tipe').autocomplete({
+                source: data,
+                autofocus: true,
+            });
+        }
+        // auto complete tipe end
+
+        // get data nomor urut
         $('#selectNama').change(function(){
             var x = $('#selectNama').val();
             console.log(x);

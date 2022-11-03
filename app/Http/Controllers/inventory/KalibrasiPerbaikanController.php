@@ -46,10 +46,32 @@ class KalibrasiPerbaikanController extends Controller
             ->where('al.id_serial_number', '=', $id)
             ->first();
 
-            $data->status_pinjam_id == 16 ?
-            $data->status_pinjam_id = '<span class="badge w-25 bc-success"><span class="text-success">Tersedia</span></span>'
-            :
-            $data->status_pinjam_id = '<span class="badge w-25 bc-danger"><span class="text-danger">Tidak Tersedia</span></span>';
+            if($data->status_pinjam_id == 16){
+                $data->status_pinjam_id =
+                '<span class="badge bc-success">
+                    <span class="text-success">Tersedia</span>
+                </span>';
+            }elseif($data->status_pinjam_id == 15){
+                $data->status_pinjam_id =
+                '<span class="badge bc-primary">
+                <span class="text-primary">Sedang Di Pinjam</span>
+                </span>';
+            }elseif($data->status_pinjam_id == 17){
+                $data->status_pinjam_id =
+                '<span class="badge bc-warning">
+                <span class="text-warning">Pengajuan</span>
+                </span>';
+            }elseif($data->status_pinjam_id == 14){
+                $data->status_pinjam_id =
+                '<span class="badge bc-warning">
+                <span class="text-warning">Eksternal</span>
+                </span>';
+            }else{
+                $data->status_pinjam_id =
+                '<span class="badge bc-danger">
+                <span class="text-danger">Not Ok</span>
+                </span>';
+            }
 
             $tgl = DB::table(DB::raw('erp_kalibrasi.'.$jenis.' k'))
             ->select('tgl_kirim')
@@ -100,8 +122,6 @@ class KalibrasiPerbaikanController extends Controller
                 ->where('al.id_serial_number', $request->serial_number_id)
                 ->first();
 
-                $pj = DB::table('erp_spa.users')->where('id', $request->operator)->first();
-
                 //ganti nama gambar
                 $memo = null;
                 $surat_jalan = null;
@@ -140,7 +160,7 @@ class KalibrasiPerbaikanController extends Controller
                     'alat_uji' => $data->nm_alatuji,
                     'serial_num' => $data->serial_number,
                     'tgl_'.$request->jenis_mt => $request->tanggal_pengajuan,
-                    'pj_dilakukan_oleh' => $pj->nama,
+                    'pj_dilakukan_oleh' => auth()->user()->nama,
                 ];
 
                 DB::table('erp_spa.tbl_log')->insert([

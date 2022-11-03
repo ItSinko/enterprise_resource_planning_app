@@ -16,7 +16,7 @@
             {{ session('err') }}
         </div>
         @endif
-            
+
             <div class="table-responsive">
             <table class="table table-hover table-sm text-center border" id="dataTabel">
                 <thead>
@@ -237,9 +237,9 @@
                 {data: 'nama_klasifikasi', name: 'nama_klasifikasi'},
                 {data: 'nm_alatuji', name: 'nm_alatuji'},
                 {
-                    data: 'aksi', 
-                    name: 'aksi', 
-                    orderable: true, 
+                    data: 'aksi',
+                    name: 'aksi',
+                    orderable: true,
                     searchable: true
                 },
             ],
@@ -257,8 +257,12 @@
                     }
                     return group;
                 }
-                
-            }
+
+            },
+            columnDefs: [{
+                targets: [8,9],
+                visible: false,
+            }],
         });
 
     });

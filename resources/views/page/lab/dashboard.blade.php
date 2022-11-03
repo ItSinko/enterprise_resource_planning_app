@@ -53,7 +53,7 @@ table tbody tr td i{
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" integrity="sha256-+8RZJua0aEWg+QVVKg4LEzEEm/8RFez5Tb4JBNiV5xA=" crossorigin="anonymous"></script>
 <div class="container-fluid">
 
-    <div class="container p-3">
+    {{-- <div class="container p-3"> --}}
 
         <!-- card Alat uji & peminjaman -->
         <div class="row">
@@ -73,7 +73,7 @@ table tbody tr td i{
                                     <div class="icon">
                                         <i class="fa fa-list" aria-hidden="true"></i>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <div class="col p-1">
                                 <div class="small-box bc-primary text-primary flex-fill d-flex flex-column hoverwidget">
@@ -84,7 +84,7 @@ table tbody tr td i{
                                     <div class="icon">
                                         <i class="fa fa-check" aria-hidden="true"></i>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <!-- info total end -->
 
@@ -125,7 +125,7 @@ table tbody tr td i{
                                 <div class="icon">
                                     <i class="fa-solid fa-hand-holding" style="top:-15px;right:-5px;" aria-hidden="true"></i>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                         <!-- info permintaan pinjam end -->
 
@@ -139,7 +139,7 @@ table tbody tr td i{
                                         <i class="fa-regular fa-clock" aria-hidden="true"></i>
                                     </div>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                         <!-- info Dipinjam Pengembalian end -->
 
@@ -153,7 +153,7 @@ table tbody tr td i{
                                 <div class="icon">
                                     <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                         <!-- info batas pengembalian end -->
 
@@ -174,13 +174,13 @@ table tbody tr td i{
                         <div class="col p-1">
                             <div class="small-box bc-primary flex-fill d-flex flex-column hoverwidget">
                                 <div class="inner text-primary">
-                                    <div class="card-title fs-2"><strong>{{ json_decode($data)->external }}</strong></div>                                            
+                                    <div class="card-title fs-2"><strong>{{ json_decode($data)->external }}</strong></div>
                                     <div class="card-text text-left">External</div>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-external-link-alt fa-flip-horizontal" style="right:0px;"></i>
                                 </div>
-                            </div>    
+                            </div>
                         </div>
                         <!-- card sedang maintenence diluar end -->
                     </div>
@@ -211,11 +211,11 @@ table tbody tr td i{
                                     </div>
                                     <div class="icon">
                                         <i class="fas fa-calendar-plus" aria-hidden="true"></i>
-                                    </div>  
+                                    </div>
                                     <div class="overlay">
                                         <div class="btn btn-primary" data-toggle="modal" data-target="#model_mt_berikutnya">Detail</div>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <!-- card jadwal maintenence yang akan datang end -->
 
@@ -239,7 +239,7 @@ table tbody tr td i{
                                     <div class="overlay">
                                         <div class="btn btn-primary" data-toggle="modal" data-target="#model_mt_sekarng">Detail</div>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <!-- card jadwal maintenence bulan ini end -->
 
@@ -263,7 +263,7 @@ table tbody tr td i{
                                     <div class="overlay">
                                         <div class="btn btn-primary" data-toggle="modal" data-target="#model_mt_terlewati">Detail</div>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <!-- card jadwal maintenence terlewati end -->
 
@@ -281,7 +281,7 @@ table tbody tr td i{
                                         </div>
                                         <div class="card-text">Belum Terdata</div>
                                     </div>
-                                </div>    
+                                </div>
                             </div> -->
                             <!-- card alat uji yang belum memiliki data perawatan verifikasi end -->
                         </div>
@@ -372,7 +372,7 @@ table tbody tr td i{
         </div>
         <!-- bagian grafik end -->
 
-    </div>
+    {{-- </div> --}}
 </div>
 
 <!-- modal section -->
@@ -684,7 +684,7 @@ table tbody tr td i{
                                 <div class="row">
                                     <div class="col-auto">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kondisi_peminjaman" id="konfirmasi_ok" value="9" {{ old('kondisi_peminjaman') == 9 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="kondisi_peminjaman" id="konfirmasi_ok" value="9" {{ old('kondisi_peminjaman') == null ? 'checked' : (old('kondisi_peminjaman') == 9 ? 'checked' : '') }}>
                                             <label class="form-check-label" for="konfirmasi_ok">OK</label>
                                         </div>
                                     </div>
@@ -846,7 +846,7 @@ table tbody tr td i{
                                 <div class="row">
                                     <div class="col-auto">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="kondisi_kembali" id="kondisiOK" value="9" {{ old('kondisi_kembali') == 9 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="kondisi_kembali" id="kondisiOK" value="9" {{ old('kondisi_kembali') == null ? 'checked' : (old('kondisi_kembali') == 9 ? 'checked' : '') }}>
                                             <label class="form-check-label" for="kondisiOK">OK</label>
                                         </div>
                                     </div>
@@ -1014,7 +1014,7 @@ $(document).ready(function () {
                     display: true,
                     text: 'Jumlah Peminjaman Perbulan'
                 },
-                legend: { 
+                legend: {
                     display: false
                 },
             },
@@ -1095,7 +1095,7 @@ $(document).ready(function () {
         ],
         order:[[5, 'asc']]
     });
-    
+
     var tableMtBerikutnyaP = $('#tabel_mt_berikutnya_p').DataTable({
         processing: true,
         serverSide: true,
@@ -1114,7 +1114,7 @@ $(document).ready(function () {
         ],
         order:[[5, 'asc']]
     });
-    
+
     var tableMtBerikutnyaV = $('#tabel_mt_berikutnya_v').DataTable({
         processing: true,
         serverSide: true,

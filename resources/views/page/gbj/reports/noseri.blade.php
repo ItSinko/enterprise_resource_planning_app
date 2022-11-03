@@ -31,11 +31,11 @@
         <td>-</td>
     @endif
 
-    @if (isset($dd->used_by))
+    {{-- @if (isset($dd->used_by))
         <td style="width: 22ch">{{ $dd->pesanan->so }}</td>
     @else
         <td>-</td>
-    @endif
+    @endif --}}
 
     @if ($no % 5 == 0)
         </tr><tr>

@@ -16,18 +16,18 @@ class Divisi
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next,  ... $allowed_roles)
+    public function handle(Request $request, Closure $next,  ...$allowed_roles)
     {
-      // return $next($request);
+        // return $next($request);
 
-      $allow = array();
-            foreach($allowed_roles as $a){
-                $d = ModelsDivisi::where('kode',$a)->first();
-                $allow[] = $d->id;
-            }
+        $allow = array();
+        foreach ($allowed_roles as $a) {
+            $d = ModelsDivisi::where('kode', $a)->first();
+            $allow[] = $d->id;
+        }
         $role = strtolower(request()->user()->divisi_id);
 
-        if (in_array($role,$allow)){
+        if (in_array($role, $allow)) {
             return $next($request);
         }
 
@@ -58,7 +58,5 @@ class Divisi
         } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
             return redirect('/mtc/air/masuk');
         }
-
-
     }
 }

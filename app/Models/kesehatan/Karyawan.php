@@ -3,6 +3,7 @@
 namespace App\Models\kesehatan;
 
 use App\Models\Divisi;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,9 +14,13 @@ class Karyawan extends Model
     protected $connection = 'kesehatan';
     protected $fillable = ['nama', 'kode_karyawan', 'divisi_id', 'jabatan', 'foto', 'tgllahir', 'tgl_kerja', 'kelamin'];
 
-     public function Divisi()
+    public function User()
     {
-        return $this->belongsTo(Divisi::class,'divisi_id');
+        return $this->hasOne(User::class, 'divisi_id');
+    }
+    public function Divisi()
+    {
+        return $this->belongsTo(Divisi::class, 'divisi_id');
     }
     public function Kesehatan_awal()
     {

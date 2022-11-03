@@ -140,6 +140,7 @@
                                 <table id="berat_tabel_data" class="table table-hover styled-table table-striped"
                                     style="display:none">
                                     <thead style="text-align: center;">
+                                        @if(Auth::user()->divisi_id == '28')
                                         <tr>
                                             <th colspan="16">
                                                 <a href="/kesehatan/bulanan/berat/tambah" style="color: white;"><button
@@ -148,6 +149,7 @@
                                                         Tambah</i></button></a>
                                             </th>
                                         </tr>
+                                        @endif
                                         <tr>
                                             <th>No</th>
                                             <th>Tgl Cek</th>
@@ -173,6 +175,7 @@
                                 <table id="gcu_tabel_data" class="table table-hover styled-table table-striped"
                                     style="display:none">
                                     <thead style="text-align: center;">
+                                        @if(Auth::user()->divisi_id == '28')
                                         <tr>
                                             <th colspan="12">
                                                 <a href="/kesehatan/bulanan/gcu/tambah" style="color: white;"><button
@@ -181,6 +184,7 @@
                                                         Tambah</i></button></a>
                                             </th>
                                         </tr>
+                                        @endif
                                         <tr>
                                             <th>No</th>
                                             <th>Tanggal</th>
@@ -606,8 +610,9 @@
 @stop
 @section('adminlte_js')
     <script>
+        var divisi_id = '{{Auth::user()->divisi_id}}';
         $(function() {
-            $('#berat_tabel > tbody').on('click', '#delete', function() {
+            $('#berat_tabel_data > tbody').on('click', '#delete', function() {
                 var data_id = $(this).attr('data-id');
                 Swal.fire({
                         title: 'Hapus Data',
@@ -633,7 +638,7 @@
                                             'Berhasil melakukan Hapus Data',
                                             'success'
                                         );
-                                        $('#berat_tabel').DataTable().ajax.reload();
+                                        $('#berat_tabel_data').DataTable().ajax.reload();
                                         $("#hapusmodal").modal('hide');
                                     } else if (response['data'] == "error") {
                                         swal.fire(
@@ -661,7 +666,7 @@
                     });
             });
 
-            $('#gcu_tabel > tbody').on('click', '#delete', function() {
+            $('#gcu_tabel_data > tbody').on('click', '#delete', function() {
                 var data_id = $(this).attr('data-id');
                 Swal.fire({
                         title: 'Hapus Data',
@@ -687,7 +692,7 @@
                                             'Berhasil melakukan Hapus Data',
                                             'success'
                                         );
-                                        $('#gcu_tabel').DataTable().ajax.reload();
+                                        $('#gcu_tabel_data').DataTable().ajax.reload();
                                         $("#hapusmodal").modal('hide');
                                     } else if (response['data'] == "error") {
                                         swal.fire(
@@ -809,7 +814,8 @@
                             searchable: true,
                         },
                         {
-                            data: 'button'
+                            data: 'button',
+                            visible: divisi_id == '28' ? true : false
                         },
                     ]
                 });
@@ -939,7 +945,8 @@
                                 data: 'keterangan'
                             },
                             {
-                                data: 'button'
+                                data: 'button',
+                                visible: divisi_id == '28' ? true : false
                             },
                         ]
                     });
@@ -1113,7 +1120,8 @@
                         data: 'keterangan'
                     },
                     {
-                        data: 'aksi'
+                        data: 'aksi',
+                        visible: divisi_id == '28' ? true : false
                     },
                 ]
             });
@@ -1166,7 +1174,8 @@
                         data: 'keterangan'
                     },
                     {
-                        data: 'aksi'
+                        data: 'aksi',
+                        visible: divisi_id == '28' ? true : false
                     },
                 ]
             });

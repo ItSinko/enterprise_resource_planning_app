@@ -10,7 +10,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26')
+                    @if (Auth::user()->Karyawan->divisi_id == '26')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.penjualan.show') }}">Penjualan</a></li>
                         <li class="breadcrumb-item active">Tambah PO</li>
@@ -108,7 +108,6 @@
                 box-shadow: none;
             }
         }
-
     </style>
 @stop
 
@@ -126,7 +125,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         @if (session()->has('error') || count($errors) > 0)
-                                            <div class="alert alert-danger alert-dismissible fade show col-12" role="alert">
+                                            <div class="alert alert-danger alert-dismissible fade show col-12"
+                                                role="alert">
                                                 <strong>{{ session()->get('error') }}</strong> Periksa
                                                 kembali data yang diinput
                                                 <button type="button" class="close" data-dismiss="alert"
@@ -216,7 +216,8 @@
                                                             <div class="col-lg-5 col-md-12">
                                                                 <input type="text"
                                                                     class="form-control @error('no_po') is-invalid @enderror"
-                                                                    value="" placeholder="Masukkan Nomor Purchase Order"
+                                                                    value=""
+                                                                    placeholder="Masukkan Nomor Purchase Order"
                                                                     id="no_po" name="no_po" />
                                                                 <div class="invalid-feedback" id="msgno_po">
                                                                 </div>
@@ -229,7 +230,8 @@
                                                             <div class="col-lg-5 col-md-12">
                                                                 <input type="date"
                                                                     class="form-control @error('tanggal_po') is-invalid @enderror"
-                                                                    value="" placeholder="Masukkan Tanggal Purchase Order"
+                                                                    value=""
+                                                                    placeholder="Masukkan Tanggal Purchase Order"
                                                                     id="tanggal_po" name="tanggal_po" />
                                                                 <div class="invalid-feedback" id="msgtanggal_po">
                                                                 </div>
@@ -241,14 +243,14 @@
                                                                 Order</label>
                                                             <div class="col-lg-5 col-md-12 col-form-label">
                                                                 <div class="form-check form-check-inline">
-                                                                    <input class="form-check-input" type="radio" name="do"
-                                                                        id="yes" value="yes" />
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="do" id="yes" value="yes" />
                                                                     <label class="form-check-label"
                                                                         for="yes">Tersedia</label>
                                                                 </div>
                                                                 <div class="form-check form-check-inline">
-                                                                    <input class="form-check-input" type="radio" name="do"
-                                                                        id="no" value="no" />
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="do" id="no" value="no" />
                                                                     <label class="form-check-label" for="no">Tidak
                                                                         tersedia</label>
                                                                 </div>
@@ -313,53 +315,54 @@
                                                     </div>
                                                     <div class="card-body overflowy">
                                                         @if ($ekatalog->ket != null)
-                                                        <div class="alert alert-danger" role="alert">
-                                                            <strong><i class="fas fa-exclamation-triangle"></i> Catatan : </strong>{{ $ekatalog->ket }}
-                                                        </div>
-                                                    @endif
+                                                            <div class="alert alert-danger" role="alert">
+                                                                <strong><i class="fas fa-exclamation-triangle"></i> Catatan
+                                                                    : </strong>{{ $ekatalog->ket }}
+                                                            </div>
+                                                        @endif
                                                         <div class="card">
                                                             <div class="card-body">
                                                                 <div class="row d-flex justify-content-around">
                                                                     <div class="p-2">
-                                                                        <?php $totalharga = 0; $ongkir = 0; ?>
-                                                                                @foreach ($ekatalog->Pesanan->DetailPesanan as $i)
-                                                                                <?php
-                                                                                $totalharga = $totalharga + $i->jumlah * $i->harga;
-                                                                                $ongkir = $ongkir + $i->ongkir;
-                                                                                ?>
-                                                                            @endforeach
-                                                                            <div class="text-muted">Ongkir</div>
-                                                                            <div>
-                                                                                <h6><b>@currency($ongkir)</b></h6>
-                                                                            </div>
+                                                                        <?php $totalharga = 0;
+                                                                        $ongkir = 0; ?>
+                                                                        @foreach ($ekatalog->Pesanan->DetailPesanan as $i)
+                                                                            <?php
+                                                                            $totalharga = $totalharga + $i->jumlah * $i->harga;
+                                                                            $ongkir = $ongkir + $i->ongkir;
+                                                                            ?>
+                                                                        @endforeach
+                                                                        <div class="text-muted">Ongkir</div>
+                                                                        <div>
+                                                                            <h6><b>@currency($ongkir)</b></h6>
                                                                         </div>
-                                                                        <div class="p-2">
-                                                                            <div class="text-muted">Total Harga</div>
-                                                                            <div>
-                                                                                <h6>
-                                                                                    <b>
-                                                                                        @currency($totalharga)
-                                                                                    </b>
-                                                                                </h6>
-                                                                            </div>
+                                                                    </div>
+                                                                    <div class="p-2">
+                                                                        <div class="text-muted">Total Harga</div>
+                                                                        <div>
+                                                                            <h6>
+                                                                                <b>
+                                                                                    @currency($totalharga)
+                                                                                </b>
+                                                                            </h6>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-12">
-                                                                    <div class="table-responsive">
-                                                                        <table class="table table-hover" id="showtable"
-                                                                            style="width:100%;">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Paket Produk</th>
-                                                                                    <th>Produk</th>
-                                                                                    <th>Jumlah</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                        </table>
-                                                                    </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-hover" id="showtable"
+                                                                        style="width:100%;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Paket Produk</th>
+                                                                                <th>Produk</th>
+                                                                                <th>Jumlah</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -369,12 +372,13 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </section>
 @stop

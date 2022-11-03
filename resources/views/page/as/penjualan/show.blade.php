@@ -11,10 +11,10 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '8')
+                    @if (Auth::user()->Karyawan->divisi_id == '8')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Penjualan</li>
-                    @elseif(Auth::user()->divisi_id == '2')
+                    @elseif(Auth::user()->Karyawan->divisi_id == '2')
                         <li class="breadcrumb-item"><a href="{{ route('direksi.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Penjualan</li>
                     @endif
@@ -26,9 +26,9 @@
 @stop
 
 @section('adminlte_css')
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
-        .modal-body{
+        .modal-body {
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -50,6 +50,7 @@
             background-color: #d4edda;
             border-color: #c3e6cb;
         }
+
         .foo {
             border-radius: 50%;
             float: left;
@@ -58,23 +59,23 @@
             align-items: center !important;
         }
 
-        .bg-chart-light{
+        .bg-chart-light {
             background: rgba(192, 192, 192, 0.2);
         }
 
-        .bg-chart-orange{
+        .bg-chart-orange {
             background: rgb(236, 159, 5);
         }
 
-        .bg-chart-yellow{
+        .bg-chart-yellow {
             background: rgb(255, 221, 0);
         }
 
-        .bg-chart-green{
+        .bg-chart-green {
             background: rgb(11, 171, 100);
         }
 
-        .bg-chart-blue{
+        .bg-chart-blue {
             background: rgb(8, 126, 225);
         }
 
@@ -177,9 +178,9 @@
         }
 
         .overflowcard {
-                max-height:
+            max-height:
                 480px;
-            }
+        }
 
         @media screen and (min-width: 992px) {
 
@@ -228,7 +229,6 @@
                 box-shadow: none;
             }
         }
-
     </style>
 @stop
 
@@ -239,12 +239,14 @@
                 <div class="card-body">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="pills-belum_proses-tab" data-toggle="pill" href="#pills-belum_proses" role="tab"
-                                aria-controls="pills-belum_proses" aria-selected="true">Belum Proses</a>
+                            <a class="nav-link active" id="pills-belum_proses-tab" data-toggle="pill"
+                                href="#pills-belum_proses" role="tab" aria-controls="pills-belum_proses"
+                                aria-selected="true">Belum Proses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-selesai_proses-tab" data-toggle="pill" href="#pills-selesai_proses" role="tab"
-                                aria-controls="pills-selesai_proses" aria-selected="false">Selesai Proses</a>
+                            <a class="nav-link" id="pills-selesai_proses-tab" data-toggle="pill"
+                                href="#pills-selesai_proses" role="tab" aria-controls="pills-selesai_proses"
+                                aria-selected="false">Selesai Proses</a>
                         </li>
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
@@ -310,8 +312,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="11"
-                                                                id="status8" name="status_spa[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="11" id="status8" name="status_spa[]" />
                                                             <label class="form-check-label" for="status8">
                                                                 Kirim
                                                             </label>
@@ -319,7 +321,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <span class="float-right">
-                                                            <button class="btn btn-primary" id="filter_spa" type="submit">
+                                                            <button class="btn btn-primary" id="filter_spa"
+                                                                type="submit">
                                                                 Cari
                                                             </button>
                                                         </span>
@@ -353,7 +356,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="pills-selesai_proses" role="tabpanel" aria-labelledby="pills-selesai_proses-tab">
+                        <div class="tab-pane fade show" id="pills-selesai_proses" role="tabpanel"
+                            aria-labelledby="pills-selesai_proses-tab">
                             <div class="row">
                                 <div class="col-12">
                                     <span class="float-right filter">
@@ -369,8 +373,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="7"
-                                                                id="status_spb1" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="7" id="status_spb1" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb1">
                                                                 Penjualan
                                                             </label>
@@ -378,8 +382,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="9"
-                                                                id="status_spb2" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="9" id="status_spb2" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb2">
                                                                 PO
                                                             </label>
@@ -387,8 +391,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="6"
-                                                                id="status_spb3" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="6" id="status_spb3" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb3">
                                                                 Gudang
                                                             </label>
@@ -396,8 +400,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="8"
-                                                                id="status_spb4" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="8" id="status_spb4" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb4">
                                                                 QC
                                                             </label>
@@ -405,8 +409,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="13"
-                                                                id="status_spb5" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="13" id="status_spb5" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb5">
                                                                 Terkirim Sebagian
                                                             </label>
@@ -414,8 +418,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="11"
-                                                                id="status_spb6" name="status_spb[]" />
+                                                            <input class="form-check-input" type="checkbox"
+                                                                value="11" id="status_spb6" name="status_spb[]" />
                                                             <label class="form-check-label" for="status_spb6">
                                                                 Kirim
                                                             </label>
@@ -423,7 +427,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <span class="float-right">
-                                                            <button class="btn btn-primary" id="filter_spb" type="submit">
+                                                            <button class="btn btn-primary" id="filter_spb"
+                                                                type="submit">
                                                                 Cari
                                                             </button>
                                                         </span>
@@ -476,8 +481,8 @@
                     </div>
                 </div>
 
-                <div class="modal fade" id="komentarmodal" tabindex="-1" role="dialog" aria-labelledby="komentarmodal"
-                    aria-hidden="true">
+                <div class="modal fade" id="komentarmodal" tabindex="-1" role="dialog"
+                    aria-labelledby="komentarmodal" aria-hidden="true">
                     <div class="modal-dialog modal-xl" role="document">
                         <div class="modal-content" style="margin: 10px">
                             <div class="modal-header bg-warning">
@@ -511,66 +516,66 @@
                     ],
                     datasets: [{
                         label: 'STATUS PESANAN',
-                        data: [100, 0, 0, 0,0],
+                        data: [100, 0, 0, 0, 0],
                         backgroundColor: [
-                        'rgba(192, 192, 192, 0.2)',
-                        'rgb(236, 159, 5)',
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
+                            'rgba(192, 192, 192, 0.2)',
+                            'rgb(236, 159, 5)',
+                            'rgb(255, 221, 0)',
+                            'rgb(11, 171, 100)',
+                            'rgb(8, 126, 225)'
                         ],
                         hoverOffset: 4
                     }]
                 }
             }
 
-            function update_chart(produk,gudang ,qc, log, ki){
+            function update_chart(produk, gudang, qc, log, ki) {
                 const ctx = $('#myChart');
-                if(produk == 'part'){
+                if (produk == 'part') {
                     const myChart = new Chart(ctx, {
-                    type: 'pie',
-                data: {
-                    labels: [
-                        'QC',
-                        'Logistik',
-                        'Kirim',
-                    ],
-                    datasets: [{
-                        label: 'STATUS PESANAN',
-                        data: [qc, log, ki],
-                        backgroundColor: [
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                }
-                });
-                }else{
+                        type: 'pie',
+                        data: {
+                            labels: [
+                                'QC',
+                                'Logistik',
+                                'Kirim',
+                            ],
+                            datasets: [{
+                                label: 'STATUS PESANAN',
+                                data: [qc, log, ki],
+                                backgroundColor: [
+                                    'rgb(255, 221, 0)',
+                                    'rgb(11, 171, 100)',
+                                    'rgb(8, 126, 225)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        }
+                    });
+                } else {
                     const myChart = new Chart(ctx, {
-                    type: 'pie',
-                data: {
-                    labels: [
-                        'Gudang',
-                        'QC',
-                        'Logistik',
-                        'Kirim',
-                    ],
-                    datasets: [{
-                        label: 'STATUS PESANAN',
-                        data: [gudang ,qc, log, ki],
-                        backgroundColor: [
+                        type: 'pie',
+                        data: {
+                            labels: [
+                                'Gudang',
+                                'QC',
+                                'Logistik',
+                                'Kirim',
+                            ],
+                            datasets: [{
+                                label: 'STATUS PESANAN',
+                                data: [gudang, qc, log, ki],
+                                backgroundColor: [
 
-                        'rgb(236, 159, 5)',
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                }
-                });
+                                    'rgb(236, 159, 5)',
+                                    'rgb(255, 221, 0)',
+                                    'rgb(11, 171, 100)',
+                                    'rgb(8, 126, 225)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        }
+                    });
                 }
 
             }
@@ -903,7 +908,7 @@
                 event.preventDefault();
                 var id = $(this).data("id");
                 $.ajax({
-                    url: '/as/so/edit/'+id,
+                    url: '/as/so/edit/' + id,
                     beforeSend: function() {
                         $('#loader').show();
                     },
@@ -923,39 +928,42 @@
                 })
             });
 
-            $(document).on('click', '#tabledetailpesan #lihatstok', function(){
+            $(document).on('click', '#tabledetailpesan #lihatstok', function() {
                 var id = $(this).attr('data-id');
                 var produk = $(this).attr('data-produk');
                 var update = 'update';
-                 var array = [];
+                var array = [];
                 $.ajax({
                     url: '/api/get_stok_pesanan',
-                    data: {'id': id, 'jenis': produk},
+                    data: {
+                        'id': id,
+                        'jenis': produk
+                    },
                     type: 'GET',
                     dataType: 'json',
                     success: function(result) {
-                        if (produk == 'part'){
-                    $("#part_status").addClass('d-none');
-                }else{
-                    $("#part_status").removeClass('d-none');
-                }
+                        if (produk == 'part') {
+                            $("#part_status").addClass('d-none');
+                        } else {
+                            $("#part_status").removeClass('d-none');
+                        }
 
-                    var chartExist = Chart.getChart("myChart"); // <canvas> id
-                    if (chartExist != undefined)
-                    chartExist.destroy();
-                    update_chart(produk,result.gudang,result.qc,result.log,result.kir);
+                        var chartExist = Chart.getChart("myChart"); // <canvas> id
+                        if (chartExist != undefined)
+                            chartExist.destroy();
+                        update_chart(produk, result.gudang, result.qc, result.log, result.kir);
 
 
-                    $('#nama_prd').text(result.detail.penjualan_produk.nama);
-                    $('#tot_gudang').text(" dari " + result.detail.count_jumlah);
-                    $('#tot_qc').text(" dari " + result.detail.count_gudang);
-                    $('#tot_log').text(" dari " + result.detail.count_qc_ok);
-                    $('#tot_kirim').text(" dari " + result.kir);
+                        $('#nama_prd').text(result.detail.penjualan_produk.nama);
+                        $('#tot_gudang').text(" dari " + result.detail.count_jumlah);
+                        $('#tot_qc').text(" dari " + result.detail.count_gudang);
+                        $('#tot_log').text(" dari " + result.detail.count_qc_ok);
+                        $('#tot_kirim').text(" dari " + result.kir);
 
-                    $('#c_gudang').text(result.gudang);
-                    $('#c_qc').text(result.qc);
-                    $('#c_log').text(result.log);
-                    $('#c_kirim').text(result.kir);
+                        $('#c_gudang').text(result.gudang);
+                        $('#c_qc').text(result.qc);
+                        $('#c_log').text(result.log);
+                        $('#c_kirim').text(result.kir);
 
                     },
                     complete: function() {

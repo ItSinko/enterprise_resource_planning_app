@@ -23,7 +23,7 @@
                     <!-- col gambar -->
                     <div class="col-4">
                         <object data="{{ asset('/storage/gambar/'.$data->gbr_alatuji) }}" type="image/png" class="img-fluid text-center">
-                            <img src="{{ asset('/img/default.png') }}" class="img-fluid text-center" alt="gambar alat uji">
+                            <img src="{{ asset('/storage/gambar/default.png') }}" class="img-fluid text-center" alt="gambar alat uji">
                         </object>
                     </div>
 
@@ -59,12 +59,21 @@
 
                 <input type="hidden" name="serial_number" value="{{ $id }}">
 
+                @error('operator')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col mb-0">
+                            <div class="alert bc-danger text-danger border border-danger p-1 mb-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Operator</span></div>
                     <div class="col">
                         <select name="operator" id="selectOperator" class="form-control form-control-sm">
+                            <option value="" disabled selected hidden>Pilih Operator Perawatan</option>
                             @foreach($user as $u)
-                            <option value="{{ $u->id }}">{{ $u->nama }}</option>
+                            <option value="{{ $u->id }}" {{ old('operator') == $u->id ? 'selected' : '' }}>{{ $u->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -109,7 +118,7 @@
                     <div class="col"><span class="float-right">Cek Fungsi</span></div>
                     <div class="col">
                         <div class="form-group">
-                            <input type="text" name="cek_fungsi_txt" class="form-control" value="{{ old('tgl_perawatan') }}">
+                            <input type="text" name="cek_fungsi_txt" class="form-control" value="{{ old('cek_fungsi_txt') }}">
                         </div>
                     </div>
                 </div>

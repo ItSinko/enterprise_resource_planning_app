@@ -3099,7 +3099,7 @@ class LogistikController extends Controller
                 }
             }else{
 
-                if ($prd_id != '0' && $part_id == '0') {
+                if (isset($request->produk_id) && !isset($request->part_id)) {
                     if ($Logistik) {
                         for ($i = 0; $i < count($request->produk_id); $i++) {
                             $c = DetailLogistik::create([
@@ -3129,7 +3129,7 @@ class LogistikController extends Controller
                         $iddp = DetailPesananProduk::find($ids);
                         $poid = $iddp->DetailPesanan->pesanan_id;
                     }
-                }else if ($prd_id == '0' && $part_id != '0') {
+                }if (!isset($request->produk_id) && isset($request->part_id)) {
                     if ($Logistik) {
                         for ($i = 0; $i < count($request->part_id); $i++) {
                             $c = DetailLogistikPart::create([
@@ -3145,7 +3145,7 @@ class LogistikController extends Controller
                     } else {
                         return response()->json(['data' =>  $Logistik]);
                     }
-                }else if ($prd_id != '0' && $part_id != '0') {
+                }if (isset($request->produk_id) && isset($request->part_id)) {
                     if ($Logistik) {
                         for ($i = 0; $i < count($request->produk_id); $i++) {
                             $c = DetailLogistik::create([

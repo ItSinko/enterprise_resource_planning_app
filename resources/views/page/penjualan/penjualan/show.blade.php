@@ -10,10 +10,10 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26')
+                    @if (Auth::user()->Karyawan->divisi_id == '26')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Penjualan</li>
-                    @elseif(Auth::user()->divisi_id == '2')
+                    @elseif(Auth::user()->Karyawan->divisi_id == '2')
                         <li class="breadcrumb-item"><a href="{{ route('direksi.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Penjualan</li>
                     @endif
@@ -24,274 +24,279 @@
 @stop
 
 @section('adminlte_css')
-<style>
-    .modal-body{
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-    table { border-collapse: collapse; empty-cells: show; }
-
-    td { position: relative; }
-
-    .foo {
-        border-radius: 50%;
-        float: left;
-        width: 10px;
-        height: 10px;
-        align-items: center !important;
-    }
-
-    tr.line-through td:not(:nth-last-child(-n+2)):before {
-        content: " ";
-        position: absolute;
-        left: 0;
-        top: 35%;
-        border-bottom: 1px solid;
-        width: 100%;
-    }
-
-    .alert-danger {
-        color: #a94442;
-        background-color: #f2dede;
-        border-color: #ebccd1;
-    }
-
-    .alert-info {
-        color: #0c5460;
-        background-color: #d1ecf1;
-        border-color: #bee5eb;
-    }
-
-    .alert-success {
-        color: #155724;
-        background-color: #d4edda;
-        border-color: #c3e6cb;
-    }
-
-    .separator {
-        border-top: 1px solid #bbb;
-        width: 90%;
-    }
-
-    .wb {
-        word-break: break-all;
-        white-space: normal;
-    }
-
-    .nowraptxt {
-        white-space: nowrap;
-    }
-
-    .filter {
-        margin: 5px;
-    }
-
-    thead {
-        text-align: center;
-    }
-
-    td {
-        text-align: center;
-        white-space: nowrap;
-    }
-
-    #urgent {
-        color: #dc3545;
-        font-weight: 600;
-    }
-
-    #warning {
-        color: #FFC700;
-        font-weight: 600;
-    }
-
-    #info {
-        color: #3a7bb0;
-        font-weight: 600;
-    }
-
-    .minimizechar {
-        display: inline-block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 13ch;
-    }
-
-    .hide {
-        display: none;
-    }
-
-    .dropdown-toggle:hover {
-        color: #4682B4;
-    }
-
-    .dropdown-toggle:active {
-        color: #C0C0C0;
-    }
-
-    td.details-control {
-        content: "\f055";
-        font-family: FontAwesome;
-        left: -5px;
-        position: absolute;
-        top: 0;
-    }
-
-    tr.details td.details-control {
-        background: url('../resources/details_close.png') no-repeat center center;
-    }
-
-    #detailekat {
-        background-color: #E9DDE5;
-
-    }
-
-    #detailspa {
-        background-color: #FFE6C9;
-    }
-
-    #detailspb {
-        background-color: #E1EBF2;
-        /* color: #7D6378; */
-
-    }
-
-    .tabnum {
-        font-variant-numeric: tabular-nums;
-    }
-
-    .removeshadow {
-        box-shadow: none;
-    }
-
-    .align-center {
-        text-align: center;
-    }
-
-    .bordertopnone {
-        border-top: 0;
-        border-left: 0;
-        border-right: 0;
-        border-bottom: 0;
-        vertical-align: top;
-    }
-
-    .margin {
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 15px;
-        margin-bottom: 15px;
-    }
-
-    .card-detail {
-        align-items: center;
-        flex-direction: row;
-        shadow: none;
-        border: none;
-    }
-
-    .card-detail img {
-        width: 25%;
-        border-top-right-radius: 0;
-        border-bottom-left-radius: calc(0.25rem - 1px);
-    }
-
-    /* .overflowcard {
-            max-height:
-            700px;
-        } */
-
-    .bg-chart-light{
-        background: rgba(192, 192, 192, 0.2);
-    }
-
-    .bg-chart-orange{
-        background: rgb(236, 159, 5);
-    }
-
-    .bg-chart-yellow{
-        background: rgb(255, 221, 0);
-    }
-
-    .bg-chart-green{
-        background: rgb(11, 171, 100);
-    }
-
-    .bg-chart-blue{
-        background: rgb(8, 126, 225);
-    }
-
-    @media screen and (min-width: 1440px) {
-
-        body {
-            font-size: 14px;
+    <style>
+        .modal-body {
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        #detailmodal {
-            font-size: 14px;
+        table {
+            border-collapse: collapse;
+            empty-cells: show;
         }
 
-        .btn {
-            font-size: 14px;
+        td {
+            position: relative;
         }
 
-        .overflowcard {
-            max-height:
-            550px;
-            width: auto;
-            overflow-y: scroll;
+        .foo {
+            border-radius: 50%;
+            float: left;
+            width: 10px;
+            height: 10px;
+            align-items: center !important;
+        }
+
+        tr.line-through td:not(:nth-last-child(-n+2)):before {
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 35%;
+            border-bottom: 1px solid;
+            width: 100%;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .alert-info {
+            color: #0c5460;
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .separator {
+            border-top: 1px solid #bbb;
+            width: 90%;
+        }
+
+        .wb {
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        .nowraptxt {
+            white-space: nowrap;
+        }
+
+        .filter {
+            margin: 5px;
+        }
+
+        thead {
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #urgent {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        #warning {
+            color: #FFC700;
+            font-weight: 600;
+        }
+
+        #info {
+            color: #3a7bb0;
+            font-weight: 600;
+        }
+
+        .minimizechar {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 13ch;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .dropdown-toggle:hover {
+            color: #4682B4;
+        }
+
+        .dropdown-toggle:active {
+            color: #C0C0C0;
+        }
+
+        td.details-control {
+            content: "\f055";
+            font-family: FontAwesome;
+            left: -5px;
+            position: absolute;
+            top: 0;
+        }
+
+        tr.details td.details-control {
+            background: url('../resources/details_close.png') no-repeat center center;
+        }
+
+        #detailekat {
+            background-color: #E9DDE5;
+
+        }
+
+        #detailspa {
+            background-color: #FFE6C9;
+        }
+
+        #detailspb {
+            background-color: #E1EBF2;
+            /* color: #7D6378; */
+
+        }
+
+        .tabnum {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .removeshadow {
             box-shadow: none;
         }
 
-        .labelket {
-            text-align: right;
-        }
-    }
-
-    @media screen and (max-width: 1439px) {
-        body {
-            font-size: 12px;
+        .align-center {
+            text-align: center;
         }
 
-        h4 {
-            font-size: 20px;
+        .bordertopnone {
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+            vertical-align: top;
         }
 
-        #detailmodal {
-            font-size: 12px;
+        .margin {
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
-        .btn {
-            font-size: 12px;
+        .card-detail {
+            align-items: center;
+            flex-direction: row;
+            shadow: none;
+            border: none;
         }
 
-        .overflowcard {
-            max-height: 500px;
-            width: auto;
-            overflow-y: scroll;
-            box-shadow: none;
+        .card-detail img {
+            width: 25%;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: calc(0.25rem - 1px);
         }
 
-        .labelket {
-            text-align: right;
-        }
-    }
+        /* .overflowcard {
+                            max-height:
+                            700px;
+                        } */
 
-    @media screen and (max-width: 991px) {
-        .labelket {
-            text-align: left;
+        .bg-chart-light {
+            background: rgba(192, 192, 192, 0.2);
         }
 
-        .overflowcard {
-            max-height: 150px;
-            width: auto;
-            overflow-y: scroll;
-            box-shadow: none;
+        .bg-chart-orange {
+            background: rgb(236, 159, 5);
         }
-    }
 
-</style>
+        .bg-chart-yellow {
+            background: rgb(255, 221, 0);
+        }
+
+        .bg-chart-green {
+            background: rgb(11, 171, 100);
+        }
+
+        .bg-chart-blue {
+            background: rgb(8, 126, 225);
+        }
+
+        @media screen and (min-width: 1440px) {
+
+            body {
+                font-size: 14px;
+            }
+
+            #detailmodal {
+                font-size: 14px;
+            }
+
+            .btn {
+                font-size: 14px;
+            }
+
+            .overflowcard {
+                max-height:
+                    550px;
+                width: auto;
+                overflow-y: scroll;
+                box-shadow: none;
+            }
+
+            .labelket {
+                text-align: right;
+            }
+        }
+
+        @media screen and (max-width: 1439px) {
+            body {
+                font-size: 12px;
+            }
+
+            h4 {
+                font-size: 20px;
+            }
+
+            #detailmodal {
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 12px;
+            }
+
+            .overflowcard {
+                max-height: 500px;
+                width: auto;
+                overflow-y: scroll;
+                box-shadow: none;
+            }
+
+            .labelket {
+                text-align: right;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .labelket {
+                text-align: left;
+            }
+
+            .overflowcard {
+                max-height: 150px;
+                width: auto;
+                overflow-y: scroll;
+                box-shadow: none;
+            }
+        }
+    </style>
 @stop
 
 @section('content')
@@ -299,25 +304,24 @@
         <div class="container-fluid">
             <div class="col-12">
                 <div class="row">
-                    <div id="auth" class="hide">{{ Auth::user()->divisi->id }}</div>
+                    <div id="auth" class="hide">{{ Auth::user()->Karyawan->divisi_id }}</div>
                     <div class="col-12">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="ekatalog-tab" data-toggle="tab" href="#ekatalog" role="tab"
-                                    aria-controls="ekatalog" aria-selected="false">E-Catalogue</a>
+                                <a class="nav-link active" id="ekatalog-tab" data-toggle="tab" href="#ekatalog"
+                                    role="tab" aria-controls="ekatalog" aria-selected="false">E-Catalogue</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="spa-tab" data-toggle="tab" href="#spa" role="tab"
-                                    aria-controls="spa" aria-selected="false" >SPA</a>
+                                    aria-controls="spa" aria-selected="false">SPA</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="spb-tab" data-toggle="tab" href="#spb" role="tab"
                                     aria-controls="spb" aria-selected="false">SPB</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link " id="semua-penjualan-tab" data-toggle="tab"
-                                    href="#semua-penjualan" role="tab" aria-controls="semua-penjualan"
-                                    aria-selected="true">Penjualan</a>
+                                <a class="nav-link " id="semua-penjualan-tab" data-toggle="tab" href="#semua-penjualan"
+                                    role="tab" aria-controls="semua-penjualan" aria-selected="true">Penjualan</a>
                             </li>
                         </ul>
                         <div class="tab-content card" id="myTabContent">
@@ -325,13 +329,14 @@
                                 aria-labelledby="ekatalog-tab">
                                 <div class="row">
                                     <div class="col-12">
-                                        @if(Auth::user()->divisi->id == "26")
-                                        <span class="float-right filter">
-                                            <a href="{{route('penjualan.penjualan.create')}}"><button class="btn btn-outline-info">
-                                                    <i class="fas fa-plus"></i> Tambah
-                                                </button>
-                                            </a>
-                                        </span>
+                                        @if (Auth::user()->Karyawan->divisi_id == '26')
+                                            <span class="float-right filter">
+                                                <a href="{{ route('penjualan.penjualan.create') }}"><button
+                                                        class="btn btn-outline-info">
+                                                        <i class="fas fa-plus"></i> Tambah
+                                                    </button>
+                                                </a>
+                                            </span>
                                         @endif
                                         <span class="float-right filter">
                                             <button class="btn btn-outline-secondary" data-toggle="dropdown"
@@ -347,7 +352,8 @@
                                                         <div class="form-group">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    value="sepakat" id="status1" name="status_ekatalog[]" />
+                                                                    value="sepakat" id="status1"
+                                                                    name="status_ekatalog[]" />
                                                                 <label class="form-check-label" for="status1">
                                                                     Sepakat
                                                                 </label>
@@ -366,7 +372,8 @@
                                                         <div class="form-group">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    value="batal" id="status3" name="status_ekatalog[]" />
+                                                                    value="batal" id="status3"
+                                                                    name="status_ekatalog[]" />
                                                                 <label class="form-check-label" for="status3">
                                                                     Batal
                                                                 </label>
@@ -375,7 +382,8 @@
                                                         <div class="form-group">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    value="draft" id="status4" name="status_ekatalog[]" />
+                                                                    value="draft" id="status4"
+                                                                    name="status_ekatalog[]" />
                                                                 <label class="form-check-label" for="status4">
                                                                     Draft
                                                                 </label>
@@ -421,16 +429,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade card-body" id="spa" role="tabpanel" aria-labelledby="spa-tab">
+                            <div class="tab-pane fade card-body" id="spa" role="tabpanel"
+                                aria-labelledby="spa-tab">
                                 <div class="row">
                                     <div class="col-12">
-                                        @if(Auth::user()->divisi->id == "26")
-                                        <span class="float-right filter">
-                                            <a href="{{route('penjualan.penjualan.create')}}"><button class="btn btn-outline-info">
-                                                    <i class="fas fa-plus"></i> Tambah
-                                                </button>
-                                            </a>
-                                        </span>
+                                        @if (Auth::user()->Karyawan->divisi_id == '26')
+                                            <span class="float-right filter">
+                                                <a href="{{ route('penjualan.penjualan.create') }}"><button
+                                                        class="btn btn-outline-info">
+                                                        <i class="fas fa-plus"></i> Tambah
+                                                    </button>
+                                                </a>
+                                            </span>
                                         @endif
                                         <span class="float-right filter">
                                             <button class="btn btn-outline-secondary" data-toggle="dropdown"
@@ -445,8 +455,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="7"
-                                                                    id="status1" name="status_spa[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="7" id="status1" name="status_spa[]" />
                                                                 <label class="form-check-label" for="status1">
                                                                     Penjualan
                                                                 </label>
@@ -454,8 +464,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="9"
-                                                                    id="status4" name="status_spa[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="9" id="status4" name="status_spa[]" />
                                                                 <label class="form-check-label" for="status4">
                                                                     PO
                                                                 </label>
@@ -463,8 +473,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="6"
-                                                                    id="status5" name="status_spa[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="6" id="status5" name="status_spa[]" />
                                                                 <label class="form-check-label" for="status5">
                                                                     Gudang
                                                                 </label>
@@ -472,8 +482,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="8"
-                                                                    id="status6" name="status_spa[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="8" id="status6" name="status_spa[]" />
                                                                 <label class="form-check-label" for="status6">
                                                                     QC
                                                                 </label>
@@ -481,8 +491,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="11"
-                                                                    id="status8" name="status_spa[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="11" id="status8" name="status_spa[]" />
                                                                 <label class="form-check-label" for="status8">
                                                                     Kirim
                                                                 </label>
@@ -524,16 +534,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade card-body" id="spb" role="tabpanel" aria-labelledby="spb-tab">
+                            <div class="tab-pane fade card-body" id="spb" role="tabpanel"
+                                aria-labelledby="spb-tab">
                                 <div class="row">
                                     <div class="col-12">
-                                        @if(Auth::user()->divisi->id == "26")
-                                        <span class="float-right filter">
-                                            <a href="{{route('penjualan.penjualan.create')}}"><button class="btn btn-outline-info">
-                                                    <i class="fas fa-plus"></i> Tambah
-                                                </button>
-                                            </a>
-                                        </span>
+                                        @if (Auth::user()->Karyawan->divisi_id == '26')
+                                            <span class="float-right filter">
+                                                <a href="{{ route('penjualan.penjualan.create') }}"><button
+                                                        class="btn btn-outline-info">
+                                                        <i class="fas fa-plus"></i> Tambah
+                                                    </button>
+                                                </a>
+                                            </span>
                                         @endif
                                         <span class="float-right filter">
                                             <button class="btn btn-outline-secondary" data-toggle="dropdown"
@@ -548,8 +560,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="7"
-                                                                    id="status_spb1" name="status_spb[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="7" id="status_spb1"
+                                                                    name="status_spb[]" />
                                                                 <label class="form-check-label" for="status_spb1">
                                                                     Penjualan
                                                                 </label>
@@ -557,8 +570,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="9"
-                                                                    id="status_spb2" name="status_spb[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="9" id="status_spb2"
+                                                                    name="status_spb[]" />
                                                                 <label class="form-check-label" for="status_spb2">
                                                                     PO
                                                                 </label>
@@ -566,8 +580,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="6"
-                                                                    id="status_spb3" name="status_spb[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="6" id="status_spb3"
+                                                                    name="status_spb[]" />
                                                                 <label class="form-check-label" for="status_spb3">
                                                                     Gudang
                                                                 </label>
@@ -575,8 +590,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="8"
-                                                                    id="status_spb4" name="status_spb[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="8" id="status_spb4"
+                                                                    name="status_spb[]" />
                                                                 <label class="form-check-label" for="status_spb4">
                                                                     QC
                                                                 </label>
@@ -585,8 +601,9 @@
 
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="11"
-                                                                    id="status_spb6" name="status_spb[]" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="11" id="status_spb6"
+                                                                    name="status_spb[]" />
                                                                 <label class="form-check-label" for="status_spb6">
                                                                     Kirim
                                                                 </label>
@@ -630,19 +647,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade  card-body" id="semua-penjualan" role="tabpanel" aria-labelledby="semua-penjualan-tab">
+                            <div class="tab-pane fade  card-body" id="semua-penjualan" role="tabpanel"
+                                aria-labelledby="semua-penjualan-tab">
                                 <div class="row">
                                     <div class="col-12">
-                                        @if(Auth::user()->divisi->id == "26")
-                                        <span class="float-right filter">
-                                            <a href="{{route('penjualan.penjualan.create')}}"><button class="btn btn-outline-info">
-                                                    <i class="fas fa-plus"></i> Tambah
-                                                </button>
-                                            </a>
-                                        </span>
+                                        @if (Auth::user()->Karyawan->divisi_id == '26')
+                                            <span class="float-right filter">
+                                                <a href="{{ route('penjualan.penjualan.create') }}"><button
+                                                        class="btn btn-outline-info">
+                                                        <i class="fas fa-plus"></i> Tambah
+                                                    </button>
+                                                </a>
+                                            </span>
                                         @endif
                                         <span class="float-right filter">
-                                            <button class="btn btn-outline-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button class="btn btn-outline-secondary" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-filter"></i> Filter
                                             </button>
                                             <form id="filter_penjualan">
@@ -653,7 +673,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="ekatalog" name="jenis_penjualan[]" id="jenis1" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="ekatalog" name="jenis_penjualan[]"
+                                                                    id="jenis1" />
                                                                 <label class="form-check-label" for="jenis1">
                                                                     E-Catalogue
                                                                 </label>
@@ -661,7 +683,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="spa" name="jenis_penjualan[]" id="jenis2" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="spa" name="jenis_penjualan[]"
+                                                                    id="jenis2" />
                                                                 <label class="form-check-label" for="jenis2">
                                                                     SPA
                                                                 </label>
@@ -669,7 +693,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="spb" name="jenis_penjualan[]" id="jenis3" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="spb" name="jenis_penjualan[]"
+                                                                    id="jenis3" />
                                                                 <label class="form-check-label" for="jenis3">
                                                                     SPB
                                                                 </label>
@@ -680,7 +706,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="7" name="status_penjualan[]" id="status3" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="7" name="status_penjualan[]"
+                                                                    id="status3" />
                                                                 <label class="form-check-label" for="status3">
                                                                     Penjualan
                                                                 </label>
@@ -688,7 +716,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="9" name="status_penjualan[]" id="status4" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="9" name="status_penjualan[]"
+                                                                    id="status4" />
                                                                 <label class="form-check-label" for="status4">
                                                                     PO
                                                                 </label>
@@ -696,7 +726,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="6" name="status_penjualan[]" id="status5" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="6" name="status_penjualan[]"
+                                                                    id="status5" />
                                                                 <label class="form-check-label" for="status5">
                                                                     Gudang
                                                                 </label>
@@ -704,7 +736,9 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="8" name="status_penjualan[]" id="status6" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="8" name="status_penjualan[]"
+                                                                    id="status6" />
                                                                 <label class="form-check-label" for="status6">
                                                                     QC
                                                                 </label>
@@ -713,7 +747,9 @@
 
                                                         <div class="form-group">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" value="11" name="status_penjualan[]" id="status8" />
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    value="11" name="status_penjualan[]"
+                                                                    id="status8" />
                                                                 <label class="form-check-label" for="status8">
                                                                     Logistik
                                                                 </label>
@@ -721,7 +757,8 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <span class="float-right">
-                                                                <button class="btn btn-primary" id="filter_penjualan" type="submit">
+                                                                <button class="btn btn-primary" id="filter_penjualan"
+                                                                    type="submit">
                                                                     Cari
                                                                 </button>
                                                             </span>
@@ -834,14 +871,15 @@
             document.querySelector('#semua-penjualan-tab').addEventListener('click', p_show);
 
             ekat_show();
+
             function tbldetailpesanan() {
                 $('#tabledetailpesan').DataTable({
                     "scrollX": false
                 });
             }
-            var divisi_id = "{{ Auth::user()->divisi->id }}";
+            var divisi_id = "{{ Auth::user()->Karyawan->divisi_id }}";
 
-            function p_show(){
+            function p_show() {
                 var penjualantable = $('#penjualantable').DataTable({
                     destroy: true,
                     processing: true,
@@ -858,34 +896,33 @@
                         processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
                     columns: [{
-                            data: 'DT_RowIndex',
-                            className: 'nowrap-text align-center',
-                            orderable: false,
-                            searchable: false
-                        }, {
-                            data: 'so',
-                        }, {
-                            data: 'no_paket',
-                        }, {
-                            data: 'nopo',
-                        }, {
-                            data: 'tgl_order',
-                        }, {
-                            data: 'tgl_kontrak',
-                        }, {
-                            data: 'nama_customer',
-                        }, {
-                            data: 'status',
-                        }, {
-                            data: 'button',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ]
+                        data: 'DT_RowIndex',
+                        className: 'nowrap-text align-center',
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: 'so',
+                    }, {
+                        data: 'no_paket',
+                    }, {
+                        data: 'nopo',
+                    }, {
+                        data: 'tgl_order',
+                    }, {
+                        data: 'tgl_kontrak',
+                    }, {
+                        data: 'nama_customer',
+                    }, {
+                        data: 'status',
+                    }, {
+                        data: 'button',
+                        orderable: false,
+                        searchable: false
+                    }, ]
                 });
             }
 
-            function ekat_show(){
+            function ekat_show() {
                 var ekatalogtable = $('#ekatalogtable').DataTable({
                     destroy: true,
                     processing: true,
@@ -901,8 +938,7 @@
                     language: {
                         processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    columns: [
-                        {
+                    columns: [{
                             data: 'DT_RowIndex',
                             className: 'nowrap-text align-center',
                             orderable: false,
@@ -953,119 +989,118 @@
                 });
             }
 
-            function spa_show(){
-            var spatable = $('#spatable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/penjualan/penjualan/spa/data/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function spa_show() {
+                var spatable = $('#spatable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/penjualan/penjualan/spa/data/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'so',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'nopo'
-                    },
-                    {
-                        data: 'tglpo',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    }
-                ]
-            });
-          }
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'nopo'
+                        },
+                        {
+                            data: 'tglpo',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer'
+                        },
+                        {
+                            data: 'status'
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
+                });
+            }
 
-            function spb_show(){
-            var spbtable = $('#spbtable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/penjualan/penjualan/spb/data/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function spb_show() {
+                var spbtable = $('#spbtable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/penjualan/penjualan/spb/data/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'so',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'nopo'
-                    },
-                    {
-                        data: 'tglpo',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-            });
-        }
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'nopo'
+                        },
+                        {
+                            data: 'tglpo',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer'
+                        },
+                        {
+                            data: 'status'
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                });
+            }
         })
     </script>
     <script>
         $(function() {
-            function validasi_batal(){
-                if($('#tanggal').val() != "" && $('#alasan').val() != ""){
+            function validasi_batal() {
+                if ($('#tanggal').val() != "" && $('#alasan').val() != "") {
                     $('#btnkirimbatal').attr('disabled', false);
-                }
-                else{
+                } else {
                     $('#btnkirimbatal').attr('disabled', true);
                 }
             }
 
-            $(document).on('keyup change', '#tanggal', function(){
+            $(document).on('keyup change', '#tanggal', function() {
                 validasi_batal();
             });
 
-            $(document).on('keyup change', '#alasan', function(){
+            $(document).on('keyup change', '#alasan', function() {
                 validasi_batal();
             });
 
@@ -1084,37 +1119,37 @@
                         hoverOffset: 4
                     }]
                 }
-                }
+            }
 
-            function update_chart(gudang ,qc, log, ki){
+            function update_chart(gudang, qc, log, ki) {
                 const ctx = $('#myChart');
                 const myChart = new Chart(ctx, {
                     type: 'pie',
-                data: {
-                    labels: [
-                        'Gudang',
-                        'QC',
-                        'Logistik',
-                        'Kirim',
-                    ],
-                    datasets: [{
-                        label: 'STATUS PESANAN',
-                        data: [gudang ,qc, log, ki],
-                        backgroundColor: [
-
-                        'rgb(236, 159, 5)',
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
+                    data: {
+                        labels: [
+                            'Gudang',
+                            'QC',
+                            'Logistik',
+                            'Kirim',
                         ],
-                        hoverOffset: 4
-                    }]
-                }
+                        datasets: [{
+                            label: 'STATUS PESANAN',
+                            data: [gudang, qc, log, ki],
+                            backgroundColor: [
+
+                                'rgb(236, 159, 5)',
+                                'rgb(255, 221, 0)',
+                                'rgb(11, 171, 100)',
+                                'rgb(8, 126, 225)'
+                            ],
+                            hoverOffset: 4
+                        }]
+                    }
                 });
             }
 
             var optionpie = {
-                        type: 'pie',
+                type: 'pie',
                 data: {
                     labels: [
                         '-',
@@ -1128,11 +1163,11 @@
                         hoverOffset: 4
                     }]
                 }
-                }
+            }
 
-            function update_chart(produk,gudang ,qc, log, ki){
+            function update_chart(produk, gudang, qc, log, ki) {
                 const ctx = $('#myChart');
-                if(produk == 'part'){
+                if (produk == 'part') {
                     const myChart = new Chart(ctx, {
                         type: 'pie',
                         data: {
@@ -1145,38 +1180,38 @@
                                 label: 'STATUS PESANAN',
                                 data: [qc, log, ki],
                                 backgroundColor: [
-                                'rgb(255, 221, 0)',
-                                'rgb(11, 171, 100)',
-                                'rgb(8, 126, 225)'
+                                    'rgb(255, 221, 0)',
+                                    'rgb(11, 171, 100)',
+                                    'rgb(8, 126, 225)'
                                 ],
                                 hoverOffset: 4
                             }]
                         }
                     });
-                }else{
+                } else {
                     const myChart = new Chart(ctx, {
-                    type: 'pie',
-                data: {
-                    labels: [
-                        'Gudang',
-                        'QC',
-                        'Logistik',
-                        'Kirim',
-                    ],
-                    datasets: [{
-                        label: 'STATUS PESANAN',
-                        data: [gudang ,qc, log, ki],
-                        backgroundColor: [
+                        type: 'pie',
+                        data: {
+                            labels: [
+                                'Gudang',
+                                'QC',
+                                'Logistik',
+                                'Kirim',
+                            ],
+                            datasets: [{
+                                label: 'STATUS PESANAN',
+                                data: [gudang, qc, log, ki],
+                                backgroundColor: [
 
-                        'rgb(236, 159, 5)',
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
-                        ],
-                        hoverOffset: 4
-                    }]
-                }
-                });
+                                    'rgb(236, 159, 5)',
+                                    'rgb(255, 221, 0)',
+                                    'rgb(11, 171, 100)',
+                                    'rgb(8, 126, 225)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        }
+                    });
                 }
 
             }
@@ -1283,16 +1318,17 @@
                 event.preventDefault();
                 var jenis = $(this).attr('data-jenis');
                 var id = $(this).attr("data-id");
-                console.log('/penjualan/penjualan/cancel/'+id+'/'+jenis);
+                console.log('/penjualan/penjualan/cancel/' + id + '/' + jenis);
                 $.ajax({
-                    url: '/penjualan/penjualan/cancel/'+id+'/'+jenis,
+                    url: '/penjualan/penjualan/cancel/' + id + '/' + jenis,
                     beforeSend: function() {
                         $('#loader').show();
                     },
                     success: function(result) {
                         $('#detailmodal').modal("show");
                         $('#detail').html(result).show();
-                        $('#detailmodal').find(".modal-header").removeClass('bg-purple bg-orange bg-lightblue');
+                        $('#detailmodal').find(".modal-header").removeClass(
+                            'bg-purple bg-orange bg-lightblue');
                         $('#detailmodal').find(".modal-header").addClass('bg-dark');
                         $('#detailmodal').find(".modal-header > h4").text('Pesanan Batal');
                     },
@@ -1424,59 +1460,63 @@
                 var id = $(this).find('#id').val();
 
                 swal({
-                    title: "Batalkan Pesanan",
-                    text: "Apakah anda yakin ingin membatalkan pesanan?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Batalkan",
-                    cancelButtonText: "Kembali",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                function(isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            url: '/api/penjualan/penjualan/cancel',
-                            type: 'POST',
-                            data: {'id': id, 'jenis': jenis, 'alasan': alasan},
-                            beforeSend: function() {
-                                $('#loader').show();
-                            },
-                            success: function(result) {
-                                if (response['data'] == "success") {
-                                    swal.fire(
-                                        'Berhasil',
-                                        'Berhasil melakukan Perubahan Pesanan',
-                                        'success'
-                                    );
-                                    $("#editmodal").modal('hide');
-                                    location.reload();
-                                } else if (response['data'] == "error") {
-                                    swal.fire(
-                                        'Gagal',
-                                        'Gagal melakukan Perubahan Pesanan',
-                                        'error'
-                                    );
-                                }
-                            },
-                            complete: function() {
-                                $('#loader').hide();
-                            },
-                            error: function(jqXHR, testStatus, error) {
-                                console.log(error);
-                                alert("Page " + href + " cannot open. Error:" + error);
-                                $('#loader').hide();
-                            },
-                            timeout: 8000
-                        })
-                    } else {
-                        swal("Cancelled", "Your imaginary file is safe :)", "error");
-                    }
-                });
+                        title: "Batalkan Pesanan",
+                        text: "Apakah anda yakin ingin membatalkan pesanan?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Batalkan",
+                        cancelButtonText: "Kembali",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                url: '/api/penjualan/penjualan/cancel',
+                                type: 'POST',
+                                data: {
+                                    'id': id,
+                                    'jenis': jenis,
+                                    'alasan': alasan
+                                },
+                                beforeSend: function() {
+                                    $('#loader').show();
+                                },
+                                success: function(result) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Perubahan Pesanan',
+                                            'success'
+                                        );
+                                        $("#editmodal").modal('hide');
+                                        location.reload();
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Gagal melakukan Perubahan Pesanan',
+                                            'error'
+                                        );
+                                    }
+                                },
+                                complete: function() {
+                                    $('#loader').hide();
+                                },
+                                error: function(jqXHR, testStatus, error) {
+                                    console.log(error);
+                                    alert("Page " + href + " cannot open. Error:" + error);
+                                    $('#loader').hide();
+                                },
+                                timeout: 8000
+                            })
+                        } else {
+                            swal("Cancelled", "Your imaginary file is safe :)", "error");
+                        }
+                    });
             });
 
             $(document).on('click', '.deletemodal', function(event) {
@@ -1895,39 +1935,42 @@
 
 
 
-            $(document).on('click', '#tabledetailpesan #lihatstok', function(){
+            $(document).on('click', '#tabledetailpesan #lihatstok', function() {
                 var id = $(this).attr('data-id');
                 var produk = $(this).attr('data-produk');
                 var update = 'update';
-                 var array = [];
+                var array = [];
                 $.ajax({
                     url: '/api/get_stok_pesanan',
-                    data: {'id': id, 'jenis': produk},
+                    data: {
+                        'id': id,
+                        'jenis': produk
+                    },
                     type: 'GET',
                     dataType: 'json',
                     success: function(result) {
-                        if (produk == 'part'){
-                    $("#part_status").addClass('d-none');
-                }else{
-                    $("#part_status").removeClass('d-none');
-                }
+                        if (produk == 'part') {
+                            $("#part_status").addClass('d-none');
+                        } else {
+                            $("#part_status").removeClass('d-none');
+                        }
 
-                    var chartExist = Chart.getChart("myChart"); // <canvas> id
-                    if (chartExist != undefined)
-                    chartExist.destroy();
-                    update_chart(produk,result.gudang,result.qc,result.log,result.kir);
+                        var chartExist = Chart.getChart("myChart"); // <canvas> id
+                        if (chartExist != undefined)
+                            chartExist.destroy();
+                        update_chart(produk, result.gudang, result.qc, result.log, result.kir);
 
 
-                $('#nama_prd').text(result.detail.penjualan_produk.nama);
-                $('#tot_gudang').text(" dari " + result.detail.count_jumlah);
-                $('#tot_qc').text(" dari " + result.detail.count_gudang);
-                $('#tot_log').text(" dari " + result.detail.count_qc_ok);
-                $('#tot_kirim').text(" dari " + result.kir);
+                        $('#nama_prd').text(result.detail.penjualan_produk.nama);
+                        $('#tot_gudang').text(" dari " + result.detail.count_jumlah);
+                        $('#tot_qc').text(" dari " + result.detail.count_gudang);
+                        $('#tot_log').text(" dari " + result.detail.count_qc_ok);
+                        $('#tot_kirim').text(" dari " + result.kir);
 
-                $('#c_gudang').text(result.gudang);
-                $('#c_qc').text(result.qc);
-                $('#c_log').text(result.log);
-                $('#c_kirim').text(result.kir);
+                        $('#c_gudang').text(result.gudang);
+                        $('#c_qc').text(result.qc);
+                        $('#c_log').text(result.log);
+                        $('#c_kirim').text(result.kir);
 
                     },
                     complete: function() {

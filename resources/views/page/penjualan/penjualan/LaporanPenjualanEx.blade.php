@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <th>No</th>
-                <th>No SO</th>
+                <th>No SxO</th>
                 <th>No PO</th>
                 <th>Tanggal PO</th>
                 <th>Surat Jalan</th>

@@ -9,6 +9,7 @@ use App\Models\DetailEkatalog;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
+use App\Models\DetailPesananProdukDsb;
 use App\Models\DetailRencanaPenjualan;
 use App\Models\DetailSpa;
 use App\Models\DetailSpb;
@@ -2365,13 +2366,22 @@ class PenjualanController extends Controller
     }
     public function get_data_paket_pesanan_ekat($id)
     {
-        $data = DetailPesananProduk::whereHas('DetailPesanan.Pesanan.Ekatalog', function ($q) use ($id) {
+        $produk = DetailPesananProduk::whereHas('DetailPesanan.Pesanan.Ekatalog', function ($q) use ($id) {
             $q->where('id', $id);
         })->get();
+        $produk_dsb = DetailPesananProdukDsb::whereHas('DetailPesananDsb.Pesanan.Ekatalog', function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $data = $produk->merge($produk_dsb);
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('paket_produk', function ($data) {
-                return $data->DetailPesanan->PenjualanProduk->nama . ' (' . $data->DetailPesanan->jumlah . ' unit)';
+                if ($data->DetailPesanan) {
+                    return $data->DetailPesanan->PenjualanProduk->nama . ' (' . $data->DetailPesanan->jumlah . ' unit)';
+                } else {
+                    return $data->DetailPesananDsb->PenjualanProduk->nama . ' (' . $data->DetailPesananDsb->jumlah . ' unit)' . ' <span class="badge info-text">Stok
+                    distributor</span>';
+                }
             })
             ->addColumn('nama_produk', function ($data) {
                 return $data->GudangBarangJadi->Produk->nama . ' ' . $data->GudangBarangJadi->nama;
@@ -2523,7 +2533,7 @@ class PenjualanController extends Controller
     }
     public function get_data_ekatalog($value)
     {
-        $divisi_id = Auth::user()->divisi->id;
+        $divisi_id = Auth::user()->Karyawan->divisi_id;
 
         $x = explode(',', $value);
         $data = "";
@@ -2867,7 +2877,7 @@ class PenjualanController extends Controller
     }
     public function get_data_spa($value)
     {
-        $divisi_id = Auth::user()->divisi->id;
+        $divisi_id = Auth::user()->Karyawan->divisi_id;
         $x = explode(',', $value);
         $data = "";
         if ($value == 'semua') {
@@ -3039,7 +3049,7 @@ class PenjualanController extends Controller
                 return $data->Customer->nama;
             })
             ->addColumn('button', function ($data) {
-                $divisi_id = Auth::user()->divisi->id;
+                $divisi_id = Auth::user()->Karyawan->divisi_id;
                 $return = "";
 
                 if ($divisi_id == "26") {
@@ -3131,7 +3141,7 @@ class PenjualanController extends Controller
     }
     public function get_data_spb($value)
     {
-        $divisi_id = Auth::user()->divisi->id;
+        $divisi_id = Auth::user()->Karyawan->divisi_id;
         $x = explode(',', $value);
         $data = "";
         if ($value == 'semua') {
@@ -3297,7 +3307,7 @@ class PenjualanController extends Controller
                 return $data->Customer->nama;
             })
             ->addColumn('button', function ($data) {
-                $divisi_id = Auth::user()->divisi->id;
+                $divisi_id = Auth::user()->Karyawan->divisi_id;
                 $return = "";
 
                 if ($divisi_id == "26") {
@@ -3787,6 +3797,8 @@ class PenjualanController extends Controller
     }
     public function update_ekatalog(Request $request, $id)
     {
+        //dd($request->no_urut);
+
         echo json_encode($request->all());
         if ($request->namadistributor == 'belum') {
             $c_id = '484';
@@ -3798,7 +3810,7 @@ class PenjualanController extends Controller
 
         $ekatalog = Ekatalog::find($id);
 
-        if ($request->status_akn == 'draft') {
+        if ($request->status_akn == 'draft' ||  $request->status_akn == 'batal') {
             if ($request->no_paket == '') {
                 $c_akn = NULL;
             } else {
@@ -3809,6 +3821,7 @@ class PenjualanController extends Controller
         } else {
             $akn = $ekatalog->no_paket;
         }
+
 
         $poid = $ekatalog->pesanan_id;
         $ekatalog->customer_id = $c_id;
@@ -6321,6 +6334,11 @@ class PenjualanController extends Controller
                 $po->save();
             }
 
+            if ($po->log_id == 7) {
+                $po->log_id = 9;
+                $po->save();
+            }
+
 
 
             $dekatp = DetailPesananProduk::whereHas('DetailPesanan', function ($q) use ($ekat) {
@@ -6981,12 +6999,17 @@ class PenjualanController extends Controller
     {
         $e = Ekatalog::where('no_paket', $akn)->first();
         if ($e) {
-            $dp = TFProduksi::where('pesanan_id', $e->pesanan_id)->count();
-
-            if ($dp > 0) {
-                return response()->json(['message'  => 'Sudah Proses']);
+            if ($e->customer_id == 484) {
+                return response()->json(['message'  => 'Tidak Ditemukan']);
             } else {
-                return response()->json(['message'  => 'Belum Proses']);
+                $dp = TFProduksi::where('pesanan_id', $e->pesanan_id)->count();
+
+
+                if ($dp > 0) {
+                    return response()->json(['message'  => 'Sudah Proses']);
+                } else {
+                    return response()->json(['message'  => 'Belum Proses']);
+                }
             }
         } else {
             return response()->json(['message'  => 'Tidak Ditemukan']);

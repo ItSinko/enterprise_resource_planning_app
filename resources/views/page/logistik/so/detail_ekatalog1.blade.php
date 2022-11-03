@@ -10,9 +10,9 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '15')
+                    @if (Auth::user()->Karyawan->divisi_id == '15')
                         <li class="breadcrumb-item"><a href="{{ route('logistik.dashboard') }}">Beranda</a></li>
-                    @elseif(Auth::user()->divisi_id == '2')
+                    @elseif(Auth::user()->Karyawan->divisi_id == '2')
                         <li class="breadcrumb-item"><a href="{{ route('direksi.dashboard') }}">Beranda</a></li>
                     @endif
                     <li class="breadcrumb-item"><a href="{{ route('logistik.so.show') }}">Sales Order</a></li>
@@ -26,10 +26,11 @@
 
 @section('adminlte_css')
     <style>
-        .select-style{
+        .select-style {
             top: 50% !important;
             margin-top: 10px !important;
         }
+
         .alert-danger {
             color: #a94442;
             background-color: #f2dede;
@@ -154,7 +155,6 @@
                 text-align: center;
             }
         }
-
     </style>
 @stop
 
@@ -281,8 +281,8 @@
                                         @if ($proses == 'proses')
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="pills-belum_kirim-tab" data-toggle="pill"
-                                                    href="#pills-belum_kirim" role="tab" aria-controls="pills-belum_kirim"
-                                                    aria-selected="true">Belum Kirim</a>
+                                                    href="#pills-belum_kirim" role="tab"
+                                                    aria-controls="pills-belum_kirim" aria-selected="true">Belum Kirim</a>
                                             </li>
                                         @endif
                                         <li class="nav-item">
@@ -295,15 +295,17 @@
                                         @if ($proses == 'selesai')
                                             <li class="nav-item">
                                                 <a class="nav-link" id="pills-surat_jalan-tab" data-toggle="pill"
-                                                    href="#pills-surat_jalan" role="tab" aria-controls="pills-surat_jalan"
-                                                    aria-selected="false">Surat Jalan</a>
+                                                    href="#pills-surat_jalan" role="tab"
+                                                    aria-controls="pills-surat_jalan" aria-selected="false">Surat
+                                                    Jalan</a>
                                             </li>
                                         @endif
                                     </ul>
                                     <div class="tab-content" id="pills-tabContent">
 
                                         <div class="tab-pane fade  @if ($proses == 'proses') show active @endif"
-                                            id="pills-belum_kirim" role="tabpanel" aria-labelledby="pills-belum_kirim-tab">
+                                            id="pills-belum_kirim" role="tabpanel"
+                                            aria-labelledby="pills-belum_kirim-tab">
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="row">
@@ -315,14 +317,15 @@
                                                                 <div class="card-body">
                                                                     <div class="row">
                                                                         <div class="col-12">
-                                                                            @if (Auth::user()->divisi->id == '15')
+                                                                            @if (Auth::user()->Karyawan->divisi_id == '15')
                                                                                 <a data-toggle="modal"
                                                                                     data-target="#editmodal"
                                                                                     class="editmodal" data-attr=""
                                                                                     data-id="">
                                                                                     <span class="float-right filter">
                                                                                         <button class="btn btn-primary"
-                                                                                            type="button" id="kirim_produk"
+                                                                                            type="button"
+                                                                                            id="kirim_produk"
                                                                                             disabled="true"><i
                                                                                                 class="fas fa-plus"></i>
                                                                                             Pengiriman</button>
@@ -340,20 +343,36 @@
 
                                                                                     <thead>
                                                                                         <tr>
-                                                                                            <th rowspan="2" width="8%" class="align-middle">
+                                                                                            <th rowspan="2"
+                                                                                                width="8%"
+                                                                                                class="align-middle">
                                                                                                 <div class="form-check">
-                                                                                                    <input class="form-check-input" type="checkbox" value="check_all" id="check_all" name="check_all" />
-                                                                                                    <label class="form-check-label" for="check_all"></label>
+                                                                                                    <input
+                                                                                                        class="form-check-input"
+                                                                                                        type="checkbox"
+                                                                                                        value="check_all"
+                                                                                                        id="check_all"
+                                                                                                        name="check_all" />
+                                                                                                    <label
+                                                                                                        class="form-check-label"
+                                                                                                        for="check_all"></label>
                                                                                                 </div>
                                                                                             </th>
-                                                                                            <th rowspan="2" width="8%">No </th>
-                                                                                            <th rowspan="2" width="40%">Nama Produk</th>
-                                                                                            <th colspan="2" width="30%">Jumlah</th>
-                                                                                            <th rowspan="2">Array Check</th>
-                                                                                            <th rowspan="2" width="14%">Aksi</th>
+                                                                                            <th rowspan="2"
+                                                                                                width="8%">No </th>
+                                                                                            <th rowspan="2"
+                                                                                                width="40%">Nama Produk
+                                                                                            </th>
+                                                                                            <th colspan="2"
+                                                                                                width="30%">Jumlah</th>
+                                                                                            <th rowspan="2">Array Check
+                                                                                            </th>
+                                                                                            <th rowspan="2"
+                                                                                                width="14%">Aksi</th>
                                                                                         </tr>
                                                                                         <tr>
-                                                                                            <th width="15%">Diterima</th>
+                                                                                            <th width="15%">Diterima
+                                                                                            </th>
                                                                                             <th width="15%">Dikirim</th>
                                                                                         </tr>
                                                                                     </thead>
@@ -513,7 +532,7 @@
             } else {
                 echo $data->Customer->Provinsi->id;
             } ?>;
-            var divisi_id = "{{ Auth::user()->divisi->id }}";
+            var divisi_id = "{{ Auth::user()->Karyawan->divisi_id }}";
             var jenis_penjualan = "{{ $value }}";
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -668,32 +687,37 @@
                 }]
             });
 
-            function validasi(){
-                if(($('input[type="radio"][name="no_sj_exist"]:checked').val() == "baru" && ($('#no_invoice').val() != "" && !$('#no_invoice').hasClass('is-invalid')) && $('#tgl_kirim').val() != "" && ((($('input[type="radio"][name="pengiriman"]:checked').val() == "nonekspedisi" && $('#nama_pengirim').val() != "") ||
-                ($('input[type="radio"][name="pengiriman"]:checked').val() == "ekspedisi" && $('#ekspedisi_id').val() != "")))) || ($('input[type="radio"][name="no_sj_exist"]:checked').val() == "lama" && $("#sj_lama").val() != "")){
+            function validasi() {
+                if (($('input[type="radio"][name="no_sj_exist"]:checked').val() == "baru" && ($('#no_invoice')
+                            .val() != "" && !$('#no_invoice').hasClass('is-invalid')) && $('#tgl_kirim').val() !=
+                        "" &&
+                        ((($('input[type="radio"][name="pengiriman"]:checked').val() == "nonekspedisi" && $(
+                                '#nama_pengirim').val() != "") ||
+                            ($('input[type="radio"][name="pengiriman"]:checked').val() == "ekspedisi" && $(
+                                '#ekspedisi_id').val() != "")))) || ($(
+                            'input[type="radio"][name="no_sj_exist"]:checked').val() == "lama" && $("#sj_lama")
+                        .val() != "")) {
                     $('#btnsimpan').attr('disabled', false);
-                }else{
+                } else {
                     $('#btnsimpan').attr('disabled', true);
                 }
             }
 
-            function validasi_checked_produk(){
+            function validasi_checked_produk() {
                 var rows = $('#belumkirimtable').DataTable().rows({
                     'search': 'applied'
                 }).nodes();
-                if($('.check_detail:checked', rows).length <= 0){
+                if ($('.check_detail:checked', rows).length <= 0) {
                     $('#check_all').prop('checked', false);
                     $('#kirim_produk').attr('disabled', true);
-                }
-                else{
+                } else {
                     $('#kirim_produk').attr('disabled', false);
                 }
             }
 
             $(document).on('click', '#belumkirimtable .noserishow', function() {
                 var array = $(this).closest('tr').find('div[name="array_check[]"]').text();
-                if(array == "")
-                {
+                if (array == "") {
                     array = "0";
                 }
                 var data = $(this).attr('data-id');
@@ -708,7 +732,7 @@
                 $('#noseridetail').removeClass('hide');
                 var jumlahtransfer = $(this).closest('tr').find('#jumlah_transfer').text();
                 var jumlahkirim = $(this).closest('tr').find('.jumlah_kirim').val();
-                if(jumlahtransfer == jumlahkirim){
+                if (jumlahtransfer == jumlahkirim) {
                     $('input[name="check_all_noseri"]').prop('checked', true);
                 } else {
                     $('input[name="check_all_noseri"]').prop('checked', false);
@@ -802,7 +826,10 @@
                         // 'url': '/api/logistik/so/detail/select/' + produk_id + '/' + part_id + '/' +
                         //     pesanan_id + '/' + jenis_penjualan,
                         'url': '/api/logistik/so/detail/select/' + pesanan_id + '/' + jenis_penjualan,
-                        'data': {'produk_id': produk_id, 'part_id': part_id},
+                        'data': {
+                            'produk_id': produk_id,
+                            'part_id': part_id
+                        },
                         'dataType': 'json',
                         'type': 'GET',
                         'headers': {
@@ -838,7 +865,7 @@
                     serverSide: false,
                     autowidth: true,
                     ajax: {
-                        'url': '/api/logistik/so/noseri/detail/belum_kirim/' + id+ '/'+ array,
+                        'url': '/api/logistik/so/noseri/detail/belum_kirim/' + id + '/' + array,
                         'dataType': 'json',
                         'type': 'POST',
                         'headers': {
@@ -913,9 +940,11 @@
                 produk_id = [];
                 $.each($(".detail_produk_id:checked", rows), function() {
                     produk_id_arr = {};
-                    produk_id_arr.id = $(this).closest('tr').find('.detail_produk_id').attr('data-id');
+                    produk_id_arr.id = $(this).closest('tr').find('.detail_produk_id').attr(
+                        'data-id');
                     produk_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim').val();
-                    produk_id_arr.array_no_seri = $(this).closest('tr').find('div[name="array_check[]"]').text();
+                    produk_id_arr.array_no_seri = $(this).closest('tr').find(
+                        'div[name="array_check[]"]').text();
                     produk_id.push(produk_id_arr);
                 });
                 part_id = [];
@@ -955,7 +984,8 @@
                 $.each($(".check_noseri:checked", rows), function() {
                     checkedAry.push($(this).closest('tr').find('.check_noseri').attr('data-id'));
                 });
-                $('#belumkirimtable > tbody > tr.bgcolor').find('div[name="array_check[]"]').text(checkedAry);
+                $('#belumkirimtable > tbody > tr.bgcolor').find('div[name="array_check[]"]').text(
+                    checkedAry);
                 $('#belumkirimtable > tbody > tr.bgcolor').find('.jumlah_kirim').val($(
                         '.check_noseri:checked', rows)
                     .length);
@@ -970,9 +1000,12 @@
                     produk_id = [];
                     $.each($(".detail_produk_id:checked"), function() {
                         var produk_id_arr = {};
-                        produk_id_arr.id = $(this).closest('tr').find('.detail_produk_id').attr('data-id');
-                        produk_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim').val();
-                        produk_id_arr.array_no_seri = $(this).closest('tr').find('div[name="array_check[]"]').text();
+                        produk_id_arr.id = $(this).closest('tr').find('.detail_produk_id').attr(
+                            'data-id');
+                        produk_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim')
+                            .val();
+                        produk_id_arr.array_no_seri = $(this).closest('tr').find(
+                            'div[name="array_check[]"]').text();
                         produk_id.push(produk_id_arr);
                     });
 
@@ -988,8 +1021,10 @@
                     part_id = [];
                     $.each($(".detail_part_id:checked"), function() {
                         var part_id_arr = {};
-                        part_id_arr.id = $(this).closest('tr').find('.detail_part_id').attr('data-id');
-                        part_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim').val();
+                        part_id_arr.id = $(this).closest('tr').find('.detail_part_id').attr(
+                            'data-id');
+                        part_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim')
+                            .val();
                         part_id.push(part_id_arr);
                     });
                 } else if ($('.detail_part_id:checked').length <= 0) {
@@ -1037,7 +1072,8 @@
                     }
                     $('#belumkirimtable > tbody > tr.bgcolor').find('.jumlah_kirim').removeClass(
                         'is-invalid');
-                    $('#belumkirimtable > tbody > tr.bgcolor').find('.check_detail').attr('disabled', false);
+                    $('#belumkirimtable > tbody > tr.bgcolor').find('.check_detail').attr('disabled',
+                        false);
                 } else {
                     const index = array_noseri_produk.indexOf($(this).closest('tr').find('.check_noseri')
                         .attr('data-id'));
@@ -1060,7 +1096,7 @@
                     .val());
                 var jumlah_transfer = parseInt($(this).closest('tr').find('#jumlah_transfer').text());
                 var produk_ids = $(this).closest('tr').find('.detail_produk_id').attr('data-id');
-                if (jumlah_dikirim <= jumlah_transfer && jumlah_dikirim != 0){
+                if (jumlah_dikirim <= jumlah_transfer && jumlah_dikirim != 0) {
                     $(this).closest('tr').find('input[name="jumlah_dikirim[]"]').removeClass('is-invalid');
                     $(this).closest('tr').find('.check_detail').attr('disabled', false);
 
@@ -1071,8 +1107,10 @@
                         dataType: 'json',
                         success: function(result) {
                             this_table.find('div[name="array_check[]"]').text(result);
-                            if(this_table.hasClass('bgcolor')){
-                                $('#noseritable').DataTable().ajax.url('/api/logistik/so/noseri/detail/belum_kirim/' + produk_ids+ '/'+ result).load();
+                            if (this_table.hasClass('bgcolor')) {
+                                $('#noseritable').DataTable().ajax.url(
+                                    '/api/logistik/so/noseri/detail/belum_kirim/' +
+                                    produk_ids + '/' + result).load();
                             }
                         },
                         error: function(jqXHR, testStatus, error) {
@@ -1088,8 +1126,9 @@
                     $(this).closest('tr').find('.check_detail').prop('checked', false);
                     $(this).closest('tr').find('.check_detail').attr('disabled', true);
                     $(this).closest('tr').find('div[name="array_check[]"]').text("");
-                    if($(this).closest('tr').hasClass('bgcolor')){
-                        $('#noseritable').DataTable().ajax.url('/api/logistik/so/noseri/detail/belum_kirim/' + produk_ids+ '/0').load();
+                    if ($(this).closest('tr').hasClass('bgcolor')) {
+                        $('#noseritable').DataTable().ajax.url(
+                            '/api/logistik/so/noseri/detail/belum_kirim/' + produk_ids + '/0').load();
                     }
                 }
                 validasi_checked_produk();
@@ -1148,14 +1187,14 @@
                 var href = $(this).attr('data-attr');
                 var id = $(this).data('id');
                 var pesanan_id = '{{ $data->pesanan_id }}';
-                if(produk_id.length <= 0){
+                if (produk_id.length <= 0) {
                     var produk_id_arr = {}
                     produk_id_arr.id = "0";
                     produk_id_arr.jumlah_kirim = "0";
                     produk_id_arr.array_no_seri = "0";
                     produk_id.push(produk_id_arr);
                 }
-                if(part_id.length <= 0){
+                if (part_id.length <= 0) {
                     var part_id_arr = {}
                     part_id_arr.id = "0";
                     part_id_arr.jumlah_kirim = "0";
@@ -1163,7 +1202,10 @@
                 }
                 $.ajax({
                     url: "/logistik/so/create/" + pesanan_id + '/' + jenis_penjualan,
-                    data: {'produk_id':produk_id, 'part_id':part_id},
+                    data: {
+                        'produk_id': produk_id,
+                        'part_id': part_id
+                    },
                     beforeSend: function() {
                         $('#loader').show();
                     },
@@ -1372,14 +1414,16 @@
                             dataType: 'json',
                             success: function(data) {
                                 $('#tgl_kirim').val(data[0]['tgl_kirim']);
-                                if(data[0]['ekspedisi_id'] !== ""){
-                                    $('input[name="pengiriman"][value="ekspedisi"]').prop("checked", "checked");
+                                if (data[0]['ekspedisi_id'] !== "") {
+                                    $('input[name="pengiriman"][value="ekspedisi"]').prop(
+                                        "checked", "checked");
                                     $('#ekspedisi').removeClass('hide');
                                     $('.ekspedisi_id').addClass('hide');
                                     $('#ekspedisi_nama').removeClass('hide');
                                     $("#ekspedisi_nama").text(data[0]['ekspedisi']['nama']);
-                                }else{
-                                    $('input[name="pengiriman"][value="nonekspedisi"]').prop("checked", "checked");
+                                } else {
+                                    $('input[name="pengiriman"][value="nonekspedisi"]').prop(
+                                        "checked", "checked");
                                     $('#nonekspedisi').removeClass('hide');
                                     $('#nama_pengirim').val(data[0]['nama_pengirim']);
                                 }

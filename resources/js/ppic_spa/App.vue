@@ -20,7 +20,7 @@
       </p>
     </footer>
   </div>
-</template> 
+</template>
 
 <script>
 import Navbar from "./components/Navbar.vue";
@@ -44,7 +44,7 @@ export default {
     yearNow() {
       return new Date().getFullYear();
     },
-  }
+  },
 };
 </script>
 

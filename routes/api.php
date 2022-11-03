@@ -21,7 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [App\Http\Controllers\ApiController::class, 'authenticate']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json([
+        'username' => $request->user()->karyawan->nama,
+        'divisi_id' =>  $request->user()->divisi_id,
+        'foto' => $request->user()->foto,
+    ]);
 });
 
 Route::prefix('/master')->group(function () {

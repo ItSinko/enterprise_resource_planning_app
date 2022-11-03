@@ -28,10 +28,13 @@
         <div class="navbar-item has-dropdown has-user-avatar is-hoverable">
           <a class="navbar-link">
             <div class="is-user-avatar">
-              <img src="/assets/image/user/unknown.png" alt="not found" />
+              <img
+                :src="`/assets/image/user/${$store.state.user.foto}`"
+                alt="not found"
+              />
             </div>
             <div class="is-user-name">
-              <span>{{ $store.state.user.nama }}</span>
+              <span>{{ $store.state.user.username }}</span>
             </div>
           </a>
 

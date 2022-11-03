@@ -88,11 +88,13 @@
         <div class='table-responsive'>
           <table id="tabel" class="table table-hover styled-table table-striped">
             <thead style="text-align: center;">
+              @if(Auth::user()->divisi_id == '28')
               <tr>
                 <th colspan="12">
                   <a href="/karyawan/masuk/tambah" style="color: white;"><button type="button" class="btn btn-block btn-success btn-sm" style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button></a>
                 </th>
               </tr>
+              @endif
               <tr>
                 <th>No</th>
                 <th>Tgl</th>
@@ -220,6 +222,7 @@
 @section('adminlte_js')
 <script>
   $(function() {
+    var divisi_id = '{{Auth::user()->divisi_id}}';
     var tabel = $('#tabel').DataTable({
       processing: true,
       serverSide: true,
@@ -257,7 +260,20 @@
           data: 'keterangan'
         },
         {
-          data: 'button'
+          data: null,
+          render: function(data, type, row){
+            var btn = '<div class="btn-group">';
+                if (row.alasan == "Sakit") {
+                    btn += '<span class="m-1"><button type="button" id="riwayat" class="btn btn-block btn-outline-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Detail</button></span>';
+                } else {
+                    btn += '<span class="m-1"><button type="button"  class="btn btn-block btn-light btn-sm" disabled><i class="fa fa-eye" aria-hidden="true"></i> Detail</button></span>';
+                }
+                if(divisi_id == "28"){
+                    btn += '<span class="m-1"><button type="button" id="delete" class="btn btn-sm btn-danger" data-id="' + row.id + '"><i class="fas fa-trash"></i> Hapus</button></span>';
+                }
+                btn += '</div>';
+                return btn;
+          }
         }
       ]
     });

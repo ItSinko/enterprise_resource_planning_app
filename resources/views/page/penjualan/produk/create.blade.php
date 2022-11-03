@@ -3,16 +3,17 @@
 @section('title', 'ERP')
 
 @section('adminlte_css')
-<style>
-    table > tbody > tr > td > .form-group > .select2 > .selection > .select2-selection--single {
-        height: 100% !important;
-    }
-    table > tbody > tr > td > .form-group > .select2 > .selection > .select2-selection > .select2-selection__rendered {
-        word-wrap: break-word !important;
-        text-overflow: inherit !important;
-        white-space: normal !important;
-    }
-</style>
+    <style>
+        table>tbody>tr>td>.form-group>.select2>.selection>.select2-selection--single {
+            height: 100% !important;
+        }
+
+        table>tbody>tr>td>.form-group>.select2>.selection>.select2-selection>.select2-selection__rendered {
+            word-wrap: break-word !important;
+            text-overflow: inherit !important;
+            white-space: normal !important;
+        }
+    </style>
 @endsection
 @section('content_header')
     <div class="container-fluid">
@@ -22,7 +23,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26')
+                    @if (Auth::user()->Karyawan->divisi_id == '26')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.produk.show') }}">Produk</a></li>
                         <li class="breadcrumb-item active">Tambah PO</li>
@@ -71,14 +72,15 @@
                                                         style="text-align: right">Jenis Paket</label>
                                                     <div class="col-6 col-form-label">
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="jenis_paket"
-                                                                id="jenis_paket1" value="ekat" checked="true" />
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenis_paket" id="jenis_paket1" value="ekat"
+                                                                checked="true" />
                                                             <label class="form-check-label" for="jenis_paket1">Produk
                                                                 Ekatalog</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="jenis_paket"
-                                                                id="jenis_paket2" value="non" />
+                                                            <input class="form-check-input" type="radio"
+                                                                name="jenis_paket" id="jenis_paket2" value="non" />
                                                             <label class="form-check-label" for="jenis_paket2">Produk Non
                                                                 Ekatalog</label>
                                                         </div>
@@ -88,8 +90,8 @@
                                                     <label for="nama_produk" class="col-5 col-form-label"
                                                         style="text-align: right">Nama Alias</label>
                                                     <div class="col-6">
-                                                        <textarea type="text" class="form-control @error('nama_alias') is-invalid @enderror" name="nama_alias" id="nama_alias"
-                                                            placeholder="Masukkan Nama Alias / Panjang"></textarea>
+                                                        <textarea type="text" class="form-control @error('nama_alias') is-invalid @enderror" name="nama_alias"
+                                                            id="nama_alias" placeholder="Masukkan Nama Alias / Panjang"></textarea>
                                                         <div class="invalid-feedback" id="msgnama_alias">
                                                             @if ($errors->has('nama_alias'))
                                                                 {{ $errors->first('nama_alias') }}
@@ -122,8 +124,8 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-text">Rp</span>
                                                         </div>
-                                                        <input type="text" class="form-control" name="harga" id="harga"
-                                                            placeholder="Masukkan Harga" />
+                                                        <input type="text" class="form-control" name="harga"
+                                                            id="harga" placeholder="Masukkan Harga" />
                                                         <div class="invalid-feedback" id="msgharga">
                                                             @if ($errors->has('harga'))
                                                                 {{ $errors->first('harga') }}
@@ -136,14 +138,16 @@
                                                         style="text-align: right">Status</label>
                                                     <div class="col-6 col-form-label">
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="is_aktif"
-                                                                id="is_aktif1" value="1" checked="true" />
+                                                            <input class="form-check-input" type="radio"
+                                                                name="is_aktif" id="is_aktif1" value="1"
+                                                                checked="true" />
                                                             <label class="form-check-label" for="is_aktif1">Aktif</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" name="is_aktif"
-                                                                id="is_aktif2" value="0" />
-                                                            <label class="form-check-label" for="is_aktif2">Tidak Aktif</label>
+                                                            <input class="form-check-input" type="radio"
+                                                                name="is_aktif" id="is_aktif2" value="0" />
+                                                            <label class="form-check-label" for="is_aktif2">Tidak
+                                                                Aktif</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,13 +166,13 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="table-responsive">
-                                                    <table class="table" style="text-align: center;"
-                                                        id="createtable">
+                                                    <table class="table" style="text-align: center;" id="createtable">
                                                         <thead>
                                                             <tr>
                                                                 <th colspan="5">
                                                                     <button type="button"
-                                                                        class="btn btn-primary float-right" id="addrow">
+                                                                        class="btn btn-primary float-right"
+                                                                        id="addrow">
                                                                         <i class="fas fa-plus"></i>
                                                                         Produk
                                                                     </button>
@@ -187,10 +191,9 @@
                                                                 <td>1</td>
                                                                 <td>
                                                                     <div class="form-group row">
-                                                                            <select
-                                                                                class="select-info form-control produk_id"
-                                                                                name="produk_id[]" id="0">
-                                                                            </select>
+                                                                        <select class="select-info form-control produk_id"
+                                                                            name="produk_id[]" id="0">
+                                                                        </select>
                                                                     </div>
                                                                 </td>
                                                                 <td><span class="badge" name="kelompok_produk[]"
@@ -241,7 +244,8 @@
             select_data();
             var inputproduk = false;
             var inputjumlah = false;
-            function validasi(){
+
+            function validasi() {
 
                 $('#createtable').find('.produk_id').each(function() {
                     if ($(this).val() != null) {
@@ -271,7 +275,10 @@
                 //     return false;
                 // }
 
-                if(($('#nama_paket').val() != "" && !$('#nama_paket').hasClass('is-invalid')) && $('#nama_alias').val() != "" && inputproduk == true && inputjumlah == true && $("#createtable tbody").length > 0 && $("#harga").val() != "" && $('input[name="is_aktif"]:checked').val() != "" && $('input[name="jenis_paket"]:checked').val() != ""){
+                if (($('#nama_paket').val() != "" && !$('#nama_paket').hasClass('is-invalid')) && $('#nama_alias')
+                    .val() != "" && inputproduk == true && inputjumlah == true && $("#createtable tbody").length >
+                    0 && $("#harga").val() != "" && $('input[name="is_aktif"]:checked').val() != "" && $(
+                        'input[name="jenis_paket"]:checked').val() != "") {
                     $("#btntambah").attr('disabled', false);
                 } else {
                     $("#btntambah").attr('disabled', true);
@@ -368,21 +375,22 @@
                 validasi();
             });
 
-            $(document).on('keyup change', '#createtable .jumlah', function(){
+            $(document).on('keyup change', '#createtable .jumlah', function() {
                 validasi();
             });
 
-            $(document).on('change', 'input[name="is_aktif"]', function(){
+            $(document).on('change', 'input[name="is_aktif"]', function() {
                 validasi();
             });
 
-            $(document).on('change', 'input[name="jenis_paket"]', function(){
+            $(document).on('change', 'input[name="jenis_paket"]', function() {
                 validasi();
             });
 
-            $(document).on('keyup change', '#createtable .jumlah', function(){
+            $(document).on('keyup change', '#createtable .jumlah', function() {
                 validasi();
             });
+
             function select_data() {
                 $('.produk_id').select2({
                     placeholder: "Pilih Produk",

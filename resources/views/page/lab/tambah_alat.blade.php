@@ -48,7 +48,7 @@
                         <select class="form-control form-control-sm" name="klasifikasi" id="selectKlasifikasi">
                             <option value="" disabled selected hidden>Pilih Klasifikasi</option>
                             @foreach($klasifikasi as $k)
-                            <option value="{{ $k->id_klasifikasi }}">{{ $k->nama_klasifikasi }}</option>
+                            <option value="{{ $k->id_klasifikasi }}" {{ old('klasifikasi') == $k->id_klasifikasi ? 'selected' : '' }}>{{ $k->nama_klasifikasi }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -68,7 +68,7 @@
                         <select class="form-control form-control-sm" name="satuan" id="selectSatuan">
                             <option value="" disabled selected hidden>Pilih Satuan Pengukuran</option>
                             @foreach($satuan as $s)
-                            <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            <option value="{{ $s->id }}" {{ old('satuan') == $s->id ? 'selected' : '' }}>{{ $s->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Nama Alat Uji</span></div>
                     <div class="col">
-                        <input class="form-control" type="text" name="nama_alat" value="{{ old('nama') }}" id="">
+                        <input class="form-control" type="text" name="nama_alat" value="{{ old('nama_alat') }}" id="">
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Fungsi</span></div>
                     <div class="col">
-                        <textarea class="form-control" name="fungsi_alat" value="{{ old('fungsi_alat<') }}" id="" cols="30" rows="1"></textarea>
+                        <textarea class="form-control" name="fungsi_alat" value="{{ old('fungsi_alat') }}" id="" cols="30" rows="1">{{ old('fungsi_alat') }}</textarea>
                     </div>
                 </div>
 
@@ -130,37 +130,64 @@
                     <h3 class="card-title">Dokumen Penunjang</h3>
                 </div>
 
+                @error('gambar')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Gambar</span></div>
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="gambar" class="form-control-file">
+                            <small class="text-muted">Gambar berupa jpg/jpeg/png maksimal 2mb</small>
                         </div>
                     </div>
                 </div>
 
+                @error('manual_book')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Manual Book</span></div>
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="manual_book" class="form-control-file">
+                            <small class="text-muted">Dokumen berupa pdf maksimal 10mb</small>
                         </div>
                     </div>
                 </div>
 
+                @error('sop')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">SOP</span></div>
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="sop" class="form-control-file">
+                            <small class="text-muted">Gambar berupa jpg/jpeg/png maksimal 2mb</small>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mb-2">
+                <!-- <div class="row mb-2">
                     <div class="col"><span class="float-right">Barcode</span></div>
                     <div class="col">barcode</div>
-                </div>
+                </div> -->
 
             </div>
         </div>

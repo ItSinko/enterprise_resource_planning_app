@@ -42,9 +42,153 @@
             $no = 1;
         @endphp
         @foreach ($data as $d)
+            @foreach ($d->DetailPesananUniqueDsb() as $e)
+                <tr>
+                    <td>{{ $no }}</td>
+                    <td>{{ $e->Pesanan->so }}</td>
+                    <td>{{ $e->Pesanan->no_po }} (Stok Distributor)</td>
+                    <td>{{ date('d-m-Y', strtotime($e->Pesanan->tgl_po)) }}</td>
+                    <td>-</td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->no_urut }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->no_paket }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->Customer->nama }}
+                        @elseif($e->Pesanan->Spa)
+                            {{ $e->Pesanan->Spa->Customer->nama }}
+                        @elseif($e->Pesanan->Spb)
+                            {{ $e->Pesanan->Spb->Customer->nama }}
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->instansi }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->alamat }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->satuan }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ date('d-m-Y', strtotime($e->Pesanan->Ekatalog->tgl_buat)) }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ date('d-m-Y', strtotime($e->Pesanan->Ekatalog->tgl_kontrak)) }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        @if ($e->Sparepart)
+                            {{ $e->Sparepart->nama }}
+                        @else
+                            {{ $e->PenjualanProduk->nama }}
+                        @endif
+
+                    </td>
+                    <td>
+                        @if ($e->Sparepart)
+                            {{ $e->Sparepart->nama }}
+                        @else
+                            @if ($e->PenjualanProduk->nama_alias != '')
+                                {{ $e->PenjualanProduk->nama_alias }}
+                            @else
+                                {{ $e->PenjualanProduk->nama }}
+                            @endif
+                        @endif
+
+                    </td>
+
+
+                    <td>-
+                    </td>
+
+                    <td>
+
+                        {{ $d->getJumlahPesananUniqueDsb($e->penjualan_produk_id) }}
+
+                    </td>
+                    <td>
+                        {{ $e->harga }}
+                    </td>
+                    <td>
+                        @if ($e->Sparepart)
+                            0
+                        @else
+                            {{ $d->getOngkirPesananUniqueDsb($e->penjualan_produk_id) }}
+                        @endif
+                    </td>
+                    <td>
+
+                        {{ $d->getTotalPesananUniqueDsb($e->penjualan_produk_id) + $d->getOngkirPesananUniqueDsb($e->penjualan_produk_id) }}
+
+                    </td>
+                    <td>
+                        {{ $e->Pesanan->state->nama }}
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            {{ $e->Pesanan->Ekatalog->status }}
+                        @else
+                            -
+                        @endif
+
+                    </td>
+                    <td>
+                        @if ($e->Pesanan->Ekatalog)
+                            @if ($e->Pesanan->Ekatalog->ket != '')
+                                {{ $e->Pesanan->Ekatalog->ket }}
+                            @else
+                                -
+                            @endif
+                        @else
+                            -
+                        @endif
+
+
+                    </td>
+                </tr>
+            @endforeach
             @foreach ($d->DetailPesananUnique() as $e)
                 <tr>
-                    <td>{{ $no++ }}</td>
+                    <td>
+                        @php
+                            if ($d->DetailPesananDsb) {
+                                echo $no++ + count($d->detailpesanandsb);
+                            } else {
+                                echo $no++;
+                            }
+                        @endphp
+                    </td>
                     <td>{{ $e->Pesanan->so }}</td>
                     <td>{{ $e->Pesanan->no_po }}</td>
                     <td>{{ date('d-m-Y', strtotime($e->Pesanan->tgl_po)) }}</td>

@@ -164,9 +164,9 @@ export default {
 
   computed: {
     sorting_jadwal() {
-        return this.$store.state.jadwal.sort(
-          (a, b) => new Date(a.tanggal_mulai) - new Date(b.tanggal_mulai)
-        );
+      return this.$store.state.jadwal.sort(
+        (a, b) => new Date(a.tanggal_mulai) - new Date(b.tanggal_mulai)
+      );
     },
     events() {
       let data = mixins.convertJadwal(this.$store.state.jadwal);
@@ -177,7 +177,7 @@ export default {
   updated() {
     if (this.view === "calendar") {
       if (this.sorting_jadwal !== null) {
-          $("#table-jadwal").DataTable();
+        $("#table-jadwal").DataTable();
       }
     }
   },

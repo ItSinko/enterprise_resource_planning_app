@@ -1064,8 +1064,9 @@ return [
         ],
         [
             'header' => 'ALAT UJI',
-            'auth' => [23, 34]
+            'auth' => [34]
         ],
+
 
         // alatuji
         [
@@ -1109,13 +1110,22 @@ return [
         //     'url'  => '/acc_kalibrasi',
         //     'auth' => [22],
         // ],
-
         [
             'text' => 'Dashboard',
             'url' => '/gbj/dashboard',
             'icon' => 'fas fa-layer-group',
             'auth' => [31, 13],
         ],
+        // [
+        //     'header' => 'Produksi',
+        //     'auth' => [13]
+        // ],
+        // [
+        //     'text' => 'BPPB',
+        //     'url' => '/bppb',
+        //     'icon' => 'fas fa-circle',
+        //     'auth' => [13],
+        // ],
         // [
         //     'header' => 'Produksi',
         //     'auth' => [13]
@@ -1565,44 +1575,44 @@ return [
 
         [
             'header' => 'AIR',
-            'auth' => [16,10]
+            'auth' => [16, 10]
         ],
 
         [
             'text'    => 'Grafik Air',
             'icon'    => 'fas fa-tint fa-fw',
-            'auth' => [16,10],
+            'auth' => [16, 10],
             'url' => '/mtc/air/masuk',
-                // [
-                //     'text' => 'Air Keluar',
-                //     'icon' => 'far fa-circle',
-                //     'url' => '/mtc/air/masuk',
-                //     'auth' => [16,10],
-                // ],
+            // [
+            //     'text' => 'Air Keluar',
+            //     'icon' => 'far fa-circle',
+            //     'url' => '/mtc/air/masuk',
+            //     'auth' => [16,10],
+            // ],
         ],
 
         [
             'header' => 'LISTRIK',
-            'auth' => [16,10]
+            'auth' => [16, 10]
         ],
 
         [
             'text' => 'Panel Listrik',
             'icon' => 'fas fa-bolt fa-fw',
             'url' => '/mtc/listrik/panel',
-            'auth' => [16,10],
+            'auth' => [16, 10],
         ],
         [
             'text' => 'Data Monitoring',
             'icon' => 'fas fa-database fa-fw',
             'url' => '/mtc/listrik/monitoring/table',
-            'auth' => [16,10],
+            'auth' => [16, 10],
         ],
         [
             'text' => 'Grafik Monitoring',
             'icon' => 'far fa-chart-bar fa-fw',
             'url' => '/mtc/listrik/monitoring/grafik',
-            'auth' => [16,10],
+            'auth' => [16, 10],
         ],
 
         // [
@@ -1652,6 +1662,16 @@ return [
             'icon' => 'fas fa-dolly fa-fw',
             'url' => '/manager/logistik/show',
             'auth' => [32],
+        ],
+        [
+            'header' => 'Setting',
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        [
+            'text' => 'Ubah Password',
+            'icon' => 'fa-solid fa-gear',
+            'url' => '/edit_pwd',
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
     ],
 

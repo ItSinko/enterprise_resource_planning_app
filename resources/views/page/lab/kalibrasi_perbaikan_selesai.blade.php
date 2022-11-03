@@ -25,7 +25,7 @@
                     <!-- gambar -->
                     <div class="col-4">
                         <object data="{{ asset('/storage/gambar/'.$data->gbr_alatuji) }}" type="image/png" class="img-fluid text-center">
-                            <img src="{{ asset('/img/default.png') }}" class="img-fluid text-center" alt="gambar alat uji">
+                            <img src="{{ asset('/storage/gambar/default.png') }}" class="img-fluid text-center" alt="gambar alat uji">
                         </object>
                     </div>
 
@@ -201,6 +201,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="sertif_kalibrasi" class="form-control-file">
+                            <small class="text-muted">File Berupa Gambar, Maksimal 2MB</small>
                         </div>
                     </div>
                 </div>
@@ -212,7 +213,7 @@
         <div class="card-body">
             <div class="row float-right">
                 <div class="col-auto">
-                    <a href="{{ route('detail', ['id' => $id, $jenis == 'kaibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
+                    <a href="{{ route('alatuji.detail', ['id' => $id, $jenis == 'kaibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
                 </div>
                 <div class="col-auto">
                     <input type="submit" value="Simpan" class="btn btn-warning float-right">

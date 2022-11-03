@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\SparepartController;
@@ -31,8 +32,8 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 // Route::get('/', function () {
-//     if (auth()->user()->divisi->id == 24) return redirect('/ppic');
-//     else if (auth()->user()->divisi->id == 3) return redirect('/manager-teknik');
+//     if (auth()->user()->Karyawan->divisi_id == 24) return redirect('/ppic');
+//     else if (auth()->user()->Karyawan->divisi_id == 3) return redirect('/manager-teknik');
 //     else return view('home');
 // })->middleware('auth');
 
@@ -44,7 +45,10 @@ Route::get("/test", function () {
     return view('test');
 });
 Route::view('/modul_dashboard/show', 'auth.dashboard');
-
+Route::group(['middleware' => 'auth', 'middleware' => ['auth', 'divisi:jual,kes,prd,dc,gbj,qc,log,gk,mtc,mgrgdg,dirut']], function () {
+    Route::view('/edit_pwd', 'page.setting.edit_pwd');
+    Route::post('/edit_pwd', [App\Http\Controllers\Auth\ResetPasswordController::class, 'update_pwd'])->name('penjualan.produk.store');
+});
 Route::group(['prefix' => 'ppic', 'middleware' => 'auth'], function () {
     Route::view('/{any?}', 'spa.ppic.spa')->middleware('divisi:ppic');
     Route::group(['middleware' => ['divisi:jual,dirut,ppic']], function () {

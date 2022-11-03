@@ -44,59 +44,58 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    function username() {
+    function username()
+    {
         return 'username';
     }
 
- //   protected function sendLoginResponse(Request $request)
-  //  {
-        // $user = User::where('username', $request->username)->firstOrFail();
-        // $token = $user->createToken('auth_token')->plainTextToken;
+    //   protected function sendLoginResponse(Request $request)
+    //  {
+    // $user = User::where('username', $request->username)->firstOrFail();
+    // $token = $user->createToken('auth_token')->plainTextToken;
 
-        // $user = User::where('username', $request->username)->firstOrFail();
-        // $user->createToken('auth_token')->accessToken;
-
-
-
-      //  return response()->json(compact('token'));
+    // $user = User::where('username', $request->username)->firstOrFail();
+    // $user->createToken('auth_token')->accessToken;
 
 
-      //  return $this->authenticated();
-  //  }
+
+    //  return response()->json(compact('token'));
+
+
+    //  return $this->authenticated();
+    //  }
 
 
     public function authenticated()
     {
-        if (auth()->user()->divisi->id == 24) {
+        if (auth()->user()->karyawan->divisi_id == 24) {
             return redirect('/ppic');
-        } else if (auth()->user()->divisi->id == 15) {
+        } else if (auth()->user()->karyawan->divisi_id == 15) {
             return redirect('/logistik/dashboard');
-        } else if (auth()->user()->divisi->id == 3) {
+        } else if (auth()->user()->karyawan->divisi_id == 3) {
             return redirect('/manager-teknik');
-        } else if (auth()->user()->divisi->id == 23) {
+        } else if (auth()->user()->karyawan->divisi_id == 23) {
             return redirect('/qc/dashboard');
-        } else if (auth()->user()->divisi->id == 26 || auth()->user()->divisi->id == 8 || auth()->user()->divisi->id == 32) {
+        } else if (auth()->user()->karyawan->divisi_id == 26 || auth()->user()->karyawan->divisi_id == 8 || auth()->user()->karyawan->divisi_id == 32) {
             return redirect('/penjualan/dashboard');
-        } else if (auth()->user()->divisi->id == 31 || auth()->user()->divisi->id == 13) {
+        } else if (auth()->user()->karyawan->divisi_id == 31 || auth()->user()->karyawan->divisi_id == 13) {
             return redirect('/gbj/dashboard');
-        } else if (auth()->user()->divisi->id == 17) {
+        } else if (auth()->user()->karyawan->divisi_id == 17) {
             return redirect('/produksi/dashboard');
-        } else if (auth()->user()->divisi->id == 12) {
+        } else if (auth()->user()->karyawan->divisi_id == 12) {
             return redirect('/gk/dashboard');
-        } else if (auth()->user()->divisi->id == 9) {
+        } else if (auth()->user()->karyawan->divisi_id == 9) {
             return redirect('/dc/dashboard');
-        } else if (auth()->user()->divisi->id == 2) {
+        } else if (auth()->user()->karyawan->divisi_id == 2) {
             return redirect('/direksi/dashboard');
-        } else if (auth()->user()->divisi->id == 28) {
+        } else if (auth()->user()->karyawan->divisi_id == 28) {
             return redirect('/kesehatan/dashboard');
-        } else if (auth()->user()->divisi->id == 22) {
+        } else if (auth()->user()->karyawan->divisi_id == 22) {
             return redirect('/lab/dashboard');
-        } else if (auth()->user()->divisi->id == 16 || auth()->user()->divisi->id == 10) {
+        } else if (auth()->user()->karyawan->divisi_id == 16 || auth()->user()->karyawan->divisi_id == 10) {
             return redirect('/mtc/air/masuk');
         }
 
         return redirect('/home');
     }
-
-
 }

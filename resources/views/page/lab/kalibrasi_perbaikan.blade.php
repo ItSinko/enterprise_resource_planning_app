@@ -89,7 +89,7 @@
                 </div>
 
                 <div class="row mb-2">
-                    <div class="col"><span class="float-right">Jenis Kalibrasi</span></div>
+                    <div class="col"><span class="float-right">Jenis {{ $jenis }}</span></div>
                     <div class="col">
                         <div class="row">
                             <div class="col-auto">
@@ -121,12 +121,20 @@
                     <h3 class="card-title">Hasil {{ $jenis }} Internal</h3>
                 </div>
 
+                @error('operator')
+                    <div class="row mb-0">
+                        <div class="col"></div>
+                        <div class="col alert bc-danger text-danger border border-danger p-1">{{ $message }}</div>
+                    </div>
+                @enderror
+
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Operator Pelaksana</span></div>
                     <div class="col">
                         <select name="operator" id="selectOperator" class="form-control form-control-sm">
+                            <option></option>
                             @foreach($user as $u)
-                            <option value="{{ $u->id }}">{{ $u->nama }}</option>
+                            <option value="{{ $u->id }}" {{ old('operator') == $u->id ? 'selected' : '' }}>{{ $u->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -208,7 +216,7 @@
                     <h3 class="card-title">Dokumen {{ $jenis }} External</h3>
                 </div>
 
-                @error('surat')
+                @error('surat_jalan')
                     <div class="row mb-0">
                         <div class="col"></div>
                         <div class="col alert bc-danger text-danger border border-danger p-1">{{ $message }}</div>
@@ -220,6 +228,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="surat_jalan" class="form-control-file">
+                            <small class="text-muted">File Berupa Gambar, Maksimal 2MB</small>
                         </div>
                     </div>
                 </div>
@@ -236,6 +245,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="memo" class="form-control-file">
+                            <small class="text-muted">File Berupa Gambar, Maksimal 2MB</small>
                         </div>
                     </div>
                 </div>
@@ -248,7 +258,7 @@
         <div class="card-body">
             <div class="row float-right">
                 <div class="col-auto">
-                    <a href="{{ route('alatuji.detail', ['id' => $id, $jenis == 'kalibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
+                    <a href="{{ route('alatuji.detail', ['id' => $id, $jenis == 'Kalibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
                 </div>
                 <div class="col-auto">
                     <input type="submit" id="btnSubmit" value="Simpan" class="btn btn-primary float-right">
@@ -287,7 +297,9 @@
             }
         })
 
-        $('#selectOperator').select2();
+        $('#selectOperator').select2({
+            placeholder: "Pilih Penanggung Jawab"
+        });
     });
 
     // tampilkan modal konfirmasi

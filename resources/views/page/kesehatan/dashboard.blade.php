@@ -21,8 +21,8 @@
         }
 
         /* #justgage2 > svg > path {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        width: 100% !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                width: 100% !important;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
 
         .foo {
             border-radius: 50%;
@@ -197,8 +197,9 @@
                                         <div class="btn-group float-right">
                                             <button type="button" class="btn btn-outline-info">Pilih Bulan</button>
                                             <button type="button"
-                                                class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-display="static"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                class="btn btn-outline-info dropdown-toggle dropdown-toggle-split"
+                                                data-display="static" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -342,7 +343,10 @@
                                         </div> --}}
                                         <div class="btn-group mx-3 float-right">
                                             <button type="button" class="btn btn-outline-info">Pilih Bulan</button>
-                                            <button type="button" class="btn btn-outline-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                            <button type="button"
+                                                class="btn btn-outline-info dropdown-toggle dropdown-toggle-split"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                data-display="static">
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -444,8 +448,8 @@
 @section('adminlte_js')
     <script>
         $(document).ready(function() {
-            var bulan_select = "";
-            var bulan_sakit_select = "";
+            var bulan_select = {{ now()->month }};
+            var bulan_sakit_select = {{ now()->month }};
             var obat_table = $('#karyawan_obat_table').DataTable({
                 destroy: true,
                 processing: true,

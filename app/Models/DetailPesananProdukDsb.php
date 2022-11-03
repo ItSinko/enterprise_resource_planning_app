@@ -20,4 +20,21 @@ class DetailPesananProdukDsb extends Model
     {
         return $this->belongsTo(DetailPesananDsb::class, 'detail_pesanan_dsb_id');
     }
+    public function getJumlahPesanan()
+    {
+        $id = $this->id;
+        $produk_id = $this->GudangBarangJadi->produk_id;
+        $s = DetailPesananDsb::whereHas('DetailPesananProdukDSB', function ($q) use ($id) {
+            $q->where('id', $id);
+        })->get();
+        $jumlah = 0;
+        foreach ($s as $i) {
+            foreach ($i->PenjualanProduk->Produk as $j) {
+                if ($j->id == $produk_id) {
+                    $jumlah = $i->jumlah * $j->pivot->jumlah;
+                }
+            }
+        }
+        return $jumlah;
+    }
 }

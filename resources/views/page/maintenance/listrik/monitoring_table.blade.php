@@ -20,6 +20,7 @@
 
 @section('adminlte_css')
 <style>
+
     td.dt-control {
         background: url("/assets/image/logo/plus.png") no-repeat center center;
         cursor: pointer;
@@ -30,6 +31,10 @@
         background: url("/assets/image/logo/minus.png") no-repeat center center;
         background-size: 15px 15px;
     }
+    tr.group,
+tr.group:hover {
+    background-color: #ddd !important;
+}
 
     .bc-success {
         background-color: rgba(40, 167, 69, 0.2) !important;
@@ -50,6 +55,10 @@
     .bc-primary {
         background-color: rgba(0, 123, 255, 0.2) !important;
     }
+    tr.odd td:first-child,
+tr.even td:first-child {
+    padding-left: 4em;
+}
 
 </style>
 
@@ -367,15 +376,15 @@
                                                     style="vertical-align : middle;text-align:center;">Date Time</th>
                                                 <th colspan="8" style="text-align: center">Avarage/Total</th>
                                                 <th rowspan="2" style="vertical-align : middle;text-align:center;">
-                                                    Frequency</th>
+                                                    Device ID</th>
                                             </tr>
                                             <tr>
                                                 <th scope="col"  style="vertical-align : middle;text-align:center;">
                                                     Current(avg)</th>
                                                 <th scope="col"  style="vertical-align : middle;text-align:center;">
-                                                    Volatage L-L(avg)</th>
+                                                    Voltage L-L(avg)</th>
                                                 <th scope="col"  style="vertical-align : middle;text-align:center;">
-                                                    Volatage L-N (avg)</th>
+                                                    Voltage L-N (avg)</th>
                                                 <th scope="col"  style="text-align: center">Active Power (total) </th>
                                                 <th scope="col"  style="text-align: center">Reactive Power (total)
                                                 </th>
@@ -772,37 +781,12 @@
                             </div>
                         </div>`
 
-            // '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-            // '<tr>' +
-            // '<td>Current A:</td>' +
-            // '<td>15</td>' +
-            // '<td>Current B:</td>' +
-            // '<td>15</td>' +
-            // '<td>Current C:</td>' +
-            // '<td>15</td>' +
-            // '<td>Current N:</td>' +
-            // '<td>15</td>' +
-            // '<td>Current G:</td>' +
-            // '</tr>' +
 
-            // '<tr>' +
-            // '<td>Current B:</td>' +
-            // '<td>15</td>' +
-            // '<td>Voltage A-B:</td>' +
-            // '<td>15</td>' +
-            // '<td>Voltage A-N:</td>' +
-            // '<td>15</td>' +
-
-            // '</tr>' +
-            // // '<th'+
-            // // '<td>Current A:</td>' +
-            // // '<td>15</td>'+
-            // // '</th>'+
-            // '</table>'
         );
     }
 
     $(function () {
+
         var tableNonReal = $('#non_real').DataTable({
             processing: true,
             serverSide: false,
@@ -814,7 +798,11 @@
 
                 'url': 'http://192.168.13.2:85/listrik/data/15m',
             },
-            columns: [{
+
+            columns: [
+
+
+                {
                     className: 'dt-control',
                     orderable: false,
                     defaultContent: '',
@@ -823,6 +811,7 @@
                     data: 'date_time',
                     searchable: true
                 },
+
                 {
                     data: 'Current_Avg'
                 },
@@ -848,13 +837,38 @@
                     data: 'Displacement_Power_Factor_Total'
                 },
                 {
-                    data: 'Frequency'
+                    data: 'device_id'
+
+                },
+
+            ],
+
+                order: [[1, 'desc']],
+
+
+
+            "drawCallback": function ( settings ) {
+
+
+            var api = this.api();
+            var rows = api.rows( {page:'ew'} ).nodes();
+            var last=null;
+
+            api.column(10,{page:'ew'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        '<tr class="group"><td colspan="12">'+group+'</td></tr>'
+
+
+                    );
+
+                    last = group;
                 }
-            ],
-            order: [
-                [1, 'desc']
-            ],
+            } );
+        }
+
         });
+
         // Add event listener for opening and closing details
         $('#non_real tbody').on('click', 'td.dt-control', function () {
             var tr = $(this).closest('tr');
@@ -871,6 +885,7 @@
             }
         });
     });
+
 
 </script>
 @stop

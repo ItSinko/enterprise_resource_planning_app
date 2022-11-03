@@ -120,13 +120,14 @@
                     <div class='table-responsive'>
                         <table id="tabel" class="table table-hover styled-table table-striped">
                             <thead style="text-align: center;">
-                                @if(Auth::user()->divisi_id == "28")
-                                <tr>
-                                    <th colspan="12">
-                                        <button type="button" id="btntambahobat" class="btn btn-block btn-success btn-sm"
-                                            style="width: 200px;"><i class="fas fa-plus"></i> &nbsp; Tambah</i></button>
-                                    </th>
-                                </tr>
+                                @if (Auth::user()->Karyawan->divisi_id == '28')
+                                    <tr>
+                                        <th colspan="12">
+                                            <button type="button" id="btntambahobat"
+                                                class="btn btn-block btn-success btn-sm" style="width: 200px;"><i
+                                                    class="fas fa-plus"></i> &nbsp; Tambah</i></button>
+                                        </th>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <th>No</th>
@@ -205,7 +206,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="col-lg-12">
-                                    <form method="post" action="/obat/aksi_ubah"  id="form_ubah_obat">
+                                    <form method="post" action="/obat/aksi_ubah" id="form_ubah_obat">
                                         {{ csrf_field() }}
                                         {{ method_field('PUT') }}
                                         <div class="row">
@@ -217,7 +218,8 @@
                                                                 placeholder="Masukkan Nama Obat" value="{{ old('id') }}"
                                                                 id="id">
                                                             <div class="form-group row">
-                                                                <label for="no_pemeriksaan" class="col-lg-4 col-sm-12 col-form-label"
+                                                                <label for="no_pemeriksaan"
+                                                                    class="col-lg-4 col-sm-12 col-form-label"
                                                                     style="text-align:right;">Nama Obat</label>
                                                                 <div class="col-sm-7 col-lg-5">
                                                                     <input type="text" class="form-control"
@@ -244,7 +246,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group row">
-                                                                <label for="" class="col-sm-12 col-lg-4 col-form-label"
+                                                                <label for=""
+                                                                    class="col-sm-12 col-lg-4 col-form-label"
                                                                     style="text-align: right;">Aturan</label>
                                                                 <div class="col-sm-8 col-lg-7 col-form-label">
                                                                     <div class="form-check form-check-inline">
@@ -265,7 +268,8 @@
                                                             </div>
 
                                                             <div class="form-group row">
-                                                                <label for="tanggal" class="col-sm-12 col-lg-4 col-form-label"
+                                                                <label for="tanggal"
+                                                                    class="col-sm-12 col-lg-4 col-form-label"
                                                                     style="text-align:right;">Keterangan</label>
                                                                 <div class="col-sm-6 col-lg-5">
                                                                     <textarea type="text" class="form-control @error('keterangan') is-invalid @enderror" name="keterangan"
@@ -328,7 +332,8 @@
                                         <div class="form-group">
                                             <label for="stok">Stok</label>
                                             <div class="input-group" style="width:50%;">
-                                                <input type="number" class="form-control" id="stok_pembelian" name="stok">
+                                                <input type="number" class="form-control" id="stok_pembelian"
+                                                    name="stok">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">Pcs</span>
                                                 </div>
@@ -341,7 +346,8 @@
                                     </div>
                                     <div class="card-footer">
                                         <button class="btn btn-danger" data-dismiss="modal">Batal</button>
-                                        <button class="btn btn-warning float-right" id="button_tambah_stok">Simpan</button>
+                                        <button class="btn btn-warning float-right"
+                                            id="button_tambah_stok">Simpan</button>
                                     </div>
                                 </div>
                             </form>
@@ -470,42 +476,45 @@
 @stop
 @section('adminlte_js')
     <script>
-            @if(Session::has('error'))
+        @if (Session::has('error'))
             Swal.fire({
                 title: 'Gagal',
                 text: "{{ Session::get('error') }}",
                 icon: 'error',
             });
-            @endif
-            @if(Session::has('success'))
+        @endif
+        @if (Session::has('success'))
             Swal.fire({
                 title: 'Berhasil',
                 text: "{{ Session::get('success') }}",
                 icon: 'success',
             });
-            @endif
+        @endif
         $(function() {
-            var divisi_id = '{{Auth::user()->divisi_id}}';
-            $(document).on('keyup change', '#form_stok_obat', function(){
-                if($('#tgl_pembelian').val() != "" && $('#stok_pembelian').val() != ""){
+            var divisi_id = '{{ Auth::user()->Karyawan->divisi_id }}';
+            $(document).on('keyup change', '#form_stok_obat', function() {
+                if ($('#tgl_pembelian').val() != "" && $('#stok_pembelian').val() != "") {
                     $('#button_tambah_stok').attr('disabled', false);
-                }else{
+                } else {
                     $('#button_tambah_stok').attr('disabled', true);
                 }
             });
-            $(document).on('keyup change', '#form_ubah_obat', function(){
-                if($(this).find('#nama_obat').val() != "" && $(this).find('input[name="aturan_obat"][type="radio"]:checked').val() != ""){
+            $(document).on('keyup change', '#form_ubah_obat', function() {
+                if ($(this).find('#nama_obat').val() != "" && $(this).find(
+                        'input[name="aturan_obat"][type="radio"]:checked').val() != "") {
                     $('#button_ubah').attr('disabled', false);
-                }else{
+                } else {
                     $('#button_ubah').attr('disabled', true);
                 }
             });
 
-            $(document).on('keyup change', '#form_tambah_obat', function(){
+            $(document).on('keyup change', '#form_tambah_obat', function() {
 
-                if($(this).find('#nama_obat_tambah').val() != ""  && !$(this).find('#nama_obat_tambah').hasClass('is-invalid') && $(this).find('input[name="aturan_obat"][type="radio"]:checked').val() != ""){
+                if ($(this).find('#nama_obat_tambah').val() != "" && !$(this).find('#nama_obat_tambah')
+                    .hasClass('is-invalid') && $(this).find(
+                        'input[name="aturan_obat"][type="radio"]:checked').val() != "") {
                     $('#button_tambah').attr('disabled', false);
-                }else{
+                } else {
                     $('#button_tambah').attr('disabled', true);
                 }
             });
@@ -597,7 +606,14 @@
                         data: 'keterangan'
                     },
                     {
-                        data: 'button'
+                        data: 'button',
+                        render: function(data, type, row){
+                            var btn = '<div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+                            <button type="button" id="riwayat"  class="btn btn-sm btn-outline-primary btn-sm m-1"><i class="fas fa-eye"></i> Riwayat Pakai</button>
+                            <button type="button" id="edit" class="btn btn-sm btn-warning btn-sm m-1"><i class="fas fa-edit"></i> Ubah</button>
+                            <button type="button" id="delete" class="btn btn-sm btn-danger btn-sm m-1" data-id="' . $data->id . '"><i class="fas fa-trash"></i> Hapus</button>
+                            </div>';
+                        }
                     }
                 ]
             });
@@ -723,7 +739,8 @@
                 var rows = tabel.rows($(this).parents('tr')).data();
                 $('input[id="id"]').val(rows[0]['id']);
                 $('input[id="nama_obat"]').val(rows[0]['nama']);
-                $('input[type="radio"][name="aturan"][value="'+rows[0]['aturan']+'"]').attr('checked', true);
+                $('input[type="radio"][name="aturan"][value="' + rows[0]['aturan'] + '"]').attr('checked',
+                    true);
                 $('input[id="stok"]').val(rows[0]['stok']);
 
                 $('input:radio[name="aturan_obat"][value="' + rows[0]['aturan'] + '"]').attr('checked',

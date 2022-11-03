@@ -128,15 +128,15 @@
                                         <table id="tabel"
                                             class="table table-hover styled-table table-striped align-center">
                                             <thead>
-                                                @if(Auth::user()->divisi_id == "28")
-                                                <tr>
-                                                    <th colspan="14">
-                                                        <a href="/kesehatan/tambah" style="color: white;"><button
-                                                                type="button" class="btn btn-block btn-success btn-sm"
-                                                                style="width: 200px;"><i class="fas fa-plus"></i> &nbsp;
-                                                                Tambah</i></button></a>
-                                                    </th>
-                                                </tr>
+                                                @if (Auth::user()->Karyawan->divisi_id == '28')
+                                                    <tr>
+                                                        <th colspan="14">
+                                                            <a href="/kesehatan/tambah" style="color: white;"><button
+                                                                    type="button" class="btn btn-block btn-success btn-sm"
+                                                                    style="width: 200px;"><i class="fas fa-plus"></i> &nbsp;
+                                                                    Tambah</i></button></a>
+                                                        </th>
+                                                    </tr>
                                                 @endif
                                                 <tr>
                                                     <th>No</th>
@@ -230,8 +230,8 @@
                                                 <li class="nav-item"><a class="nav-link" href="#vaksin"
                                                         data-toggle="tab"><i class="fas fa-syringe"></i> Riwayat
                                                         vaksin</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="#penyakit"
-                                                        data-toggle="tab"><i class="fas fa-head-side-cough"></i> Riwayat
+                                                <li class="nav-item"><a class="nav-link" href="#penyakits"
+                                                        data-toggle="tab"><i class="fa fa-heartbeat"></i> Riwayat
                                                         penyakit</a></li>
                                                 <li class="nav-item"><a class="nav-link" href="#obat"
                                                         data-toggle="tab"><i class="fas fa-tablets"></i> Riwayat
@@ -284,7 +284,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- /.tab-pane -->
-                                                <div class="tab-pane" id="penyakit">
+                                                <div class="tab-pane" id="penyakits">
                                                     <div class='table-responsive'>
                                                         <table class="table table-hover styled-table table-striped"
                                                             style="width:100%" id="tabel_detail_penyakit_data">
@@ -316,7 +316,7 @@
                                                                     <th>Nama</th>
                                                                     <th>Analisa</th>
                                                                     <th>Jumlah</th>
-                                                                    <th></th>
+
                                                                 </tr>
                                                             </thead>
                                                             <tbody style="text-align: center;">
@@ -400,15 +400,15 @@
                         <table class="table table-hover styled-table table-striped align-center" width="100%"
                             id="tabel_detail">
                             <thead>
-                                @if(Auth::user()->divisi_id == "28")
-                                <tr>
-                                    <th colspan="12">
-                                        <button type="button" class="btn btn-block btn-success btn-sm"
-                                            style="width: 200px;" data-target="#tambah_mod" data-toggle="modal"
-                                            data-dismiss="modal"><i class="fas fa-plus"></i> &nbsp;Tambah
-                                            Data</i></button>
-                                    </th>
-                                </tr>
+                                @if (Auth::user()->Karyawan->divisi_id == '28')
+                                    <tr>
+                                        <th colspan="12">
+                                            <button type="button" class="btn btn-block btn-success btn-sm"
+                                                style="width: 200px;" data-target="#tambah_mod" data-toggle="modal"
+                                                data-dismiss="modal"><i class="fas fa-plus"></i> &nbsp;Tambah
+                                                Data</i></button>
+                                        </th>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <th>No</th>
@@ -514,8 +514,10 @@
                                             </div>
                                         </div>
                                         <div class="card-footer">
-                                            <button class="btn btn-sm btn-danger" id="btnbatal" data-dismiss="modal">Batal</button>
-                                            <button class="btn btn-primary float-right" id="button_tambah" type="submit" disabled="true">Simpan Data</button>
+                                            <button class="btn btn-sm btn-danger" id="btnbatal"
+                                                data-dismiss="modal">Batal</button>
+                                            <button class="btn btn-primary float-right" id="button_tambah" type="submit"
+                                                disabled="true">Simpan Data</button>
                                         </div>
                                     </div>
                                 </form>
@@ -545,15 +547,16 @@
                         <table class="table table-hover styled-table table-striped align-center" width="100%"
                             id="tabel_detail_penyakit">
                             <thead>
-                                @if(Auth::user()->divisi_id == "28")
-                                <tr>
-                                    <th colspan="12">
-                                        <button type="button" class="btn btn-block btn-success btn-sm"
-                                            style="width: 200px;" data-target="#tambah_mod_penyakit" data-toggle="modal"
-                                            data-dismiss="modal"><i class="fas fa-plus"></i> &nbsp;Tambah
-                                            Data</i></button>
-                                    </th>
-                                </tr>
+                                @if (Auth::user()->Karyawan->divisi_id == '28')
+                                    <tr>
+                                        <th colspan="12">
+                                            <button type="button" class="btn btn-block btn-success btn-sm"
+                                                style="width: 200px;" data-target="#tambah_mod_penyakit"
+                                                data-toggle="modal" data-dismiss="modal"><i class="fas fa-plus"></i>
+                                                &nbsp;Tambah
+                                                Data</i></button>
+                                        </th>
+                                    </tr>
                                 @endif
                                 <tr>
                                     <th>No</th>
@@ -666,8 +669,10 @@
                                             </div>
                                         </div>
                                         <div class="card-footer">
-                                            <button class="btn btn-sm btn-danger" id="btnbatal" data-dismiss="modal">Batal</button>
-                                            <button class="btn btn-primary float-right" id="button_tambah_penyakit" type="submit" disabled="true">Simpan Data</button></span>
+                                            <button class="btn btn-sm btn-danger" id="btnbatal"
+                                                data-dismiss="modal">Batal</button>
+                                            <button class="btn btn-primary float-right" id="button_tambah_penyakit"
+                                                type="submit" disabled="true">Simpan Data</button></span>
                                         </div>
                                     </form>
                                 </div>
@@ -683,7 +688,7 @@
 @stop
 @section('adminlte_js')
     <script>
-        var divisi_id = '{{Auth::user()->divisi_id}}';
+        var divisi_id = '{{ Auth::user()->Karyawan->divisi_id }}';
         $(function() {
             $('#tabel_detail_penyakit > tbody').on('click', '#delete', function() {
                 var data_id = $(this).attr('data-id');
@@ -1027,62 +1032,67 @@
                 });
             })
 
-            function validasiform(array){
-                for(var i=0; i < array.length; i++){
-                    if(array[i] == '' || array[i] == null){
+            function validasiform(array) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i] == '' || array[i] == null) {
                         return false;
                         break;
                     }
                 }
             }
             $('#tambahitem_vaksin').click(function(e) {
-        var date_form = $('#date_form').val();
-        var dosis_form = $('#dosis_form').val();
-        var ket_form = $('#ket_form').val();
+                var date_form = $('#date_form').val();
+                var dosis_form = $('#dosis_form').val();
+                var ket_form = $('#ket_form').val();
 
-        var validasi_form = validasiform([date_form, dosis_form, ket_form]);
-        if(validasi_form == false){
-            swal.fire(
-                'Gagal',
-                'Lengkapi form',
-                'warning'
-            );
-        }else{
-            const day = new Date(date_form).getDate();
-            const month = (new Date(date_form).getMonth() + 1).toString().padStart(2,"0");
-            const year = new Date(date_form).getFullYear();
+                var validasi_form = validasiform([date_form, dosis_form, ket_form]);
+                if (validasi_form == false) {
+                    swal.fire(
+                        'Gagal',
+                        'Lengkapi form',
+                        'warning'
+                    );
+                } else {
+                    const day = new Date(date_form).getDate();
+                    const month = (new Date(date_form).getMonth() + 1).toString().padStart(2, "0");
+                    const year = new Date(date_form).getFullYear();
 
-            const date_format = day+"-"+month+"-"+year;
-            $('#date_form').val('');
-            $('#dosis_form').val('');
-            $('#ket_form').val('');
-            var data = `  <tr>
+                    const date_format = day + "-" + month + "-" + year;
+                    $('#date_form').val('');
+                    $('#dosis_form').val('');
+                    $('#ket_form').val('');
+                    var data = `  <tr>
                 <td>1</td>
-                <td>`+date_format+`<input type="date" class="form-control date d-none" name="date[]" value="`+date_form+`"></td>
-                <td>`+dosis_form+`<input type="text" class="form-control dosis_table d-none" name="dosis[]" value="`+dosis_form+`"></td>
-                <td>`+ket_form+`<input type="text" class="form-control ket_table d-none" name="ket[]" value="`+ket_form+`"></td>
+                <td>` + date_format + `<input type="date" class="form-control date d-none" name="date[]" value="` +
+                        date_form + `"></td>
+                <td>` + dosis_form +
+                        `<input type="text" class="form-control dosis_table d-none" name="dosis[]" value="` +
+                        dosis_form + `"></td>
+                <td>` + ket_form + `<input type="text" class="form-control ket_table d-none" name="ket[]" value="` +
+                        ket_form + `"></td>
                 <td><i class="fas fa-minus text-danger" id="closetable_vaksin"></i></td>
             </tr>`;
 
-            if($('#tabel_vaksin > tbody > tr > td > .date').length <= 0){
-                $('#tabel_vaksin > tbody > tr').remove();
-                $('#tabel_vaksin tbody').append(data);
-            }else{
-                $('#tabel_vaksin tbody tr:last').after(data);
-            }
-            $('#button_tambah').attr('disabled', false);
-            numberRow_vaksin($("#tabel_vaksin"));
-        }
-    });
+                    if ($('#tabel_vaksin > tbody > tr > td > .date').length <= 0) {
+                        $('#tabel_vaksin > tbody > tr').remove();
+                        $('#tabel_vaksin tbody').append(data);
+                    } else {
+                        $('#tabel_vaksin tbody tr:last').after(data);
+                    }
+                    $('#button_tambah').attr('disabled', false);
+                    numberRow_vaksin($("#tabel_vaksin"));
+                }
+            });
 
-    $('#tabel_vaksin').on('click', '#closetable_vaksin', function(e) {
-        $(this).closest('tr').remove();
-        numberRow_vaksin($("#tabel_vaksin"));
-        if($('#tabel_vaksin > tbody > tr').length <= 0){
-            $('#button_tambah').attr('disabled', true);
-            $('#tabel_vaksin tbody').append('<tr><td colspan="5">Belum Ada Data Ditambahkan</td></tr>');
-        }
-    });
+            $('#tabel_vaksin').on('click', '#closetable_vaksin', function(e) {
+                $(this).closest('tr').remove();
+                numberRow_vaksin($("#tabel_vaksin"));
+                if ($('#tabel_vaksin > tbody > tr').length <= 0) {
+                    $('#button_tambah').attr('disabled', true);
+                    $('#tabel_vaksin tbody').append(
+                        '<tr><td colspan="5">Belum Ada Data Ditambahkan</td></tr>');
+                }
+            });
 
             function numberRow_penyakit($t) {
                 var c = 0 - 1;
@@ -1094,7 +1104,10 @@
                     $(el).find('.keterangan').attr('name', 'keterangan[' + j + ']');
                     $(el).find('.kriteria').attr('name', 'kriteria[' + j + ']');
                     // $(el).find('input[type="radio"]').attr('name', 'kriteria[' + j + ']');
-                    $('.jenis').select2({allowClear: true, placeholder: 'Pilih Jenis Penyakit'});
+                    $('.jenis').select2({
+                        allowClear: true,
+                        placeholder: 'Pilih Jenis Penyakit'
+                    });
                 });
             }
 
@@ -1102,7 +1115,10 @@
                 $('#nama_form').val('');
                 $('input[type="radio"][name="kriteria_form"]').prop('checked', false);
                 $('#keterangan_form').val('');
-                $('.jenis').select2({allowClear: true, placeholder: 'Pilih Jenis Penyakit'});
+                $('.jenis').select2({
+                    allowClear: true,
+                    placeholder: 'Pilih Jenis Penyakit'
+                });
             }
             $(document).on('click', '#btnreset_penyakit', function() {
                 resetpenyakit();
@@ -1126,31 +1142,39 @@
 
 
                 var validasi_form = validasiform([nama_form, jenis_form, kriteria_form]);
-                if(validasi_form == false){
+                if (validasi_form == false) {
                     swal.fire(
                         'Gagal',
                         'Lengkapi form',
                         'warning'
                     );
-                }else{
+                } else {
                     $('#nama_form').val('');
                     $('#jenis_form').val('');
                     $('input[type="radio"][name="kriteria_form"]').prop('checked', false);
                     $('#keterangan_form').val('');
                     var data = `<tr>
                             <td>1</td>
-                            <td>`+nama_form+`<input type="text" class="form-control d-none nama" name="nama[]" id="nama" value="`+nama_form+`"></td>
-                            <td>`+jenis_form+`<input type="text" class="form-control d-none jenis_table" name="jenis[]" id="jenis" value="`+jenis_form+`"></td>
-                            <td>`+kriteria_exp+`<input type="text" class="form-control d-none kriteria" name="kriteria[]" id="kriteria" value="`+kriteria_form+`"></td>
-                            <td>`+keterangan_form+`<input type="text" class="form-control d-none keterangan" name="keterangan[]" id ="kriteria" value="`+keterangan_form+`"></td>
+                            <td>` + nama_form +
+                        `<input type="text" class="form-control d-none nama" name="nama[]" id="nama" value="` +
+                        nama_form + `"></td>
+                            <td>` + jenis_form +
+                        `<input type="text" class="form-control d-none jenis_table" name="jenis[]" id="jenis" value="` +
+                        jenis_form + `"></td>
+                            <td>` + kriteria_exp +
+                        `<input type="text" class="form-control d-none kriteria" name="kriteria[]" id="kriteria" value="` +
+                        kriteria_form + `"></td>
+                            <td>` + keterangan_form +
+                        `<input type="text" class="form-control d-none keterangan" name="keterangan[]" id ="kriteria" value="` +
+                        keterangan_form + `"></td>
                             <td>
                                 <i class="fas fa-minus text-danger" id="closetable_penyakit"></i>
                             </td>
                         </tr>`;
-                    if($('#tabel_penyakit > tbody > tr > td > .nama').length <= 0){
+                    if ($('#tabel_penyakit > tbody > tr > td > .nama').length <= 0) {
                         $('#tabel_penyakit > tbody > tr').remove();
                         $('#tabel_penyakit tbody').append(data);
-                    }else{
+                    } else {
                         $('#tabel_penyakit tbody tr:last').after(data);
                     }
                     $('#button_tambah_penyakit').attr('disabled', false);
@@ -1162,7 +1186,7 @@
             $('#tabel_penyakit').on('click', '#closetable_penyakit', function(e) {
                 $(this).closest('tr').remove();
                 numberRow_vaksin($("#tabel_penyakit"));
-                if($('#tabel_penyakit > tbody > tr').length <= 0){
+                if ($('#tabel_penyakit > tbody > tr').length <= 0) {
                     $('#button_tambah_penyakit').attr('disabled', true);
                     $('#tabel_penyakit tbody').append('<tr><td colspan="6">Data tidak tersedia</td></tr>');
                 }
@@ -1287,9 +1311,9 @@
         });
     </script>
     <script>
-
         $(function() {
             $('#tabel_berat_data > tbody').on('click', '#delete', function() {
+                var data_id = $(this).attr('data-id');
                 Swal.fire({
                         title: 'Hapus Data',
                         text: 'Yakin ingin menghapus data ini?',
@@ -1301,18 +1325,42 @@
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
-                            Swal.fire({
-                                title: 'Berhasil',
-                                text: 'Berhasil menghapus data',
-                                icon: 'success',
-                                showCloseButton: true
-                            });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            Swal.fire({
-                                title: 'Gagal',
-                                text: 'Gagal menghapus data',
-                                icon: 'error',
-                                showCloseButton: true
+                            $.ajax({
+                                url: '/kesehatan/bulanan/berat/delete/' + data_id,
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Hapus Data',
+                                            'success'
+                                        );
+                                        $('#tabel_berat_data').DataTable().ajax.reload();
+                                        $("#hapusmodal").modal('hide');
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'error'
+                                        );
+                                    } else {
+                                        swal.fire(
+                                            'Error',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'warning'
+                                        );
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    swal.fire(
+                                        'Error',
+                                        'Data telah digunakan dalam Transaksi Lain',
+                                        'warning'
+                                    );
+                                }
                             });
                         }
                     });
@@ -1372,6 +1420,7 @@
                 ]
             });
             $('#tabel_detail_data > tbody').on('click', '#delete', function() {
+                var data_id = $(this).attr('data-id');
                 Swal.fire({
                         title: 'Hapus Data',
                         text: 'Yakin ingin menghapus data ini?',
@@ -1383,18 +1432,42 @@
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
-                            Swal.fire({
-                                title: 'Berhasil',
-                                text: 'Berhasil menghapus data',
-                                icon: 'success',
-                                showCloseButton: true
-                            });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            Swal.fire({
-                                title: 'Gagal',
-                                text: 'Gagal menghapus data',
-                                icon: 'error',
-                                showCloseButton: true
+                            $.ajax({
+                                url: '/kesehatan/vaksin/delete/' + data_id,
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Hapus Data',
+                                            'success'
+                                        );
+                                        $('#tabel_detail_data').DataTable().ajax.reload();
+                                        $("#hapusmodal").modal('hide');
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'error'
+                                        );
+                                    } else {
+                                        swal.fire(
+                                            'Error',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'warning'
+                                        );
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    swal.fire(
+                                        'Error',
+                                        'Data telah digunakan dalam Transaksi Lain',
+                                        'warning'
+                                    );
+                                }
                             });
                         }
                     });
@@ -1437,6 +1510,7 @@
                 ],
             });
             $('#tabel_detail_penyakit_data > tbody').on('click', '#delete', function() {
+                var data_id = $(this).attr('data-id');
                 Swal.fire({
                         title: 'Hapus Data',
                         text: 'Yakin ingin menghapus data ini?',
@@ -1448,18 +1522,43 @@
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
-                            Swal.fire({
-                                title: 'Berhasil',
-                                text: 'Berhasil menghapus data',
-                                icon: 'success',
-                                showCloseButton: true
-                            });
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            Swal.fire({
-                                title: 'Gagal',
-                                text: 'Gagal menghapus data',
-                                icon: 'error',
-                                showCloseButton: true
+                            $.ajax({
+                                url: '/kesehatan/riwayat_penyakit/delete/' + data_id,
+                                type: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function(response) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Hapus Data',
+                                            'success'
+                                        );
+                                        $('#tabel_detail_penyakit_data').DataTable().ajax
+                                            .reload();
+                                        $("#hapusmodal").modal('hide');
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'error'
+                                        );
+                                    } else {
+                                        swal.fire(
+                                            'Error',
+                                            'Data telah digunakan dalam Transaksi Lain',
+                                            'warning'
+                                        );
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    swal.fire(
+                                        'Error',
+                                        'Data telah digunakan dalam Transaksi Lain',
+                                        'warning'
+                                    );
+                                }
                             });
                         }
                     });
@@ -1564,10 +1663,7 @@
                         data: 'jumlah_obat',
                         orderable: false,
                         searchable: false
-                    }, {
-                        data: 'aksi',
-                        visible: divisi_id == '28' ? true : false
-                    }
+                    },
 
                 ],
             });

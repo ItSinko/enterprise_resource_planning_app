@@ -29,35 +29,37 @@
             align-items: center !important;
         }
 
-        .bg-chart-light{
+        .bg-chart-light {
             background: rgba(192, 192, 192, 0.2);
         }
 
-        .bg-chart-orange{
+        .bg-chart-orange {
             background: rgb(236, 159, 5);
         }
 
-        .bg-chart-yellow{
+        .bg-chart-yellow {
             background: rgb(255, 221, 0);
         }
 
-        .bg-chart-green{
+        .bg-chart-green {
             background: rgb(11, 171, 100);
         }
 
-        .bg-chart-blue{
+        .bg-chart-blue {
             background: rgb(8, 126, 225);
         }
 
         ul#status {
             padding: 0;
         }
+
         ul#status li {
             /* float: left; */
-            display:inline;
+            display: inline;
             padding: 0;
             list-style-type: none;
-            margin: 0; /* To remove default bottom margin */
+            margin: 0;
+            /* To remove default bottom margin */
             /* margin: 10px; */
         }
 
@@ -197,9 +199,9 @@
         }
 
         .overflowcard {
-                max-height:
+            max-height:
                 480px;
-            }
+        }
 
         @media screen and (min-width: 1440px) {
             body {
@@ -260,7 +262,6 @@
                 text-align: left;
             }
         }
-
     </style>
 @stop
 
@@ -269,38 +270,46 @@
         <div class="container-fluid">
             <div class="col-12">
                 <div class="row">
-                    <div id="auth" class="hide">{{ Auth::user()->divisi->id }}</div>
+                    <div id="auth" class="hide">{{ Auth::user()->Karyawan->divisi_id }}</div>
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
                                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="semua-penjualan-tab" data-toggle="pill" href="#semua-penjualan" role="tab" aria-controls="semua-penjualan" aria-selected="true">Penjualan</a>
+                                        <a class="nav-link active" id="semua-penjualan-tab" data-toggle="pill"
+                                            href="#semua-penjualan" role="tab" aria-controls="semua-penjualan"
+                                            aria-selected="true">Penjualan</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="ekatalog-tab" data-toggle="pill" href="#ekatalog" role="tab" aria-controls="ekatalog" aria-selected="false">E-Catalogue</a>
+                                        <a class="nav-link" id="ekatalog-tab" data-toggle="pill" href="#ekatalog"
+                                            role="tab" aria-controls="ekatalog" aria-selected="false">E-Catalogue</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="spa-tab" data-toggle="pill" href="#spa" role="tab" aria-controls="spa" aria-selected="false">SPA</a>
+                                        <a class="nav-link" id="spa-tab" data-toggle="pill" href="#spa" role="tab"
+                                            aria-controls="spa" aria-selected="false">SPA</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="spb-tab" data-toggle="pill" href="#spb" role="tab" aria-controls="spb" aria-selected="false">SPB</a>
+                                        <a class="nav-link" id="spb-tab" data-toggle="pill" href="#spb" role="tab"
+                                            aria-controls="spb" aria-selected="false">SPB</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="pills-tabContent">
-                                    <div class="tab-pane fade show active" id="semua-penjualan" role="tabpanel" aria-labelledby="semua-penjualan-tab">
+                                    <div class="tab-pane fade show active" id="semua-penjualan" role="tabpanel"
+                                        aria-labelledby="semua-penjualan-tab">
                                         <div class="row">
                                             <div class="col-12">
-                                                @if(Auth::user()->divisi->id == "26")
-                                                <span class="float-right filter">
-                                                    <a href="{{route('penjualan.penjualan.create')}}"><button class="btn btn-outline-info">
-                                                            <i class="fas fa-plus"></i> Tambah
-                                                        </button>
-                                                    </a>
-                                                </span>
+                                                @if (Auth::user()->Karyawan->divisi_id == '26')
+                                                    <span class="float-right filter">
+                                                        <a href="{{ route('penjualan.penjualan.create') }}"><button
+                                                                class="btn btn-outline-info">
+                                                                <i class="fas fa-plus"></i> Tambah
+                                                            </button>
+                                                        </a>
+                                                    </span>
                                                 @endif
                                                 <span class="float-right filter">
-                                                    <button class="btn btn-outline-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button class="btn btn-outline-secondary" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
                                                         <i class="fas fa-filter"></i> Filter
                                                     </button>
                                                     <form id="filter_penjualan">
@@ -311,7 +320,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="ekatalog" name="jenis_penjualan[]" id="jenis1" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="ekatalog" name="jenis_penjualan[]"
+                                                                            id="jenis1" />
                                                                         <label class="form-check-label" for="jenis1">
                                                                             E-Catalogue
                                                                         </label>
@@ -319,7 +330,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="spa" name="jenis_penjualan[]" id="jenis2" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="spa" name="jenis_penjualan[]"
+                                                                            id="jenis2" />
                                                                         <label class="form-check-label" for="jenis2">
                                                                             SPA
                                                                         </label>
@@ -327,7 +340,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="spb" name="jenis_penjualan[]" id="jenis3" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="spb" name="jenis_penjualan[]"
+                                                                            id="jenis3" />
                                                                         <label class="form-check-label" for="jenis3">
                                                                             SPB
                                                                         </label>
@@ -338,7 +353,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="7" name="status_penjualan[]" id="status3" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="7" name="status_penjualan[]"
+                                                                            id="status3" />
                                                                         <label class="form-check-label" for="status3">
                                                                             Penjualan
                                                                         </label>
@@ -346,7 +363,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="9" name="status_penjualan[]" id="status4" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="9" name="status_penjualan[]"
+                                                                            id="status4" />
                                                                         <label class="form-check-label" for="status4">
                                                                             PO
                                                                         </label>
@@ -354,7 +373,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="6" name="status_penjualan[]" id="status5" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="6" name="status_penjualan[]"
+                                                                            id="status5" />
                                                                         <label class="form-check-label" for="status5">
                                                                             Gudang
                                                                         </label>
@@ -362,7 +383,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="8" name="status_penjualan[]" id="status6" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="8" name="status_penjualan[]"
+                                                                            id="status6" />
                                                                         <label class="form-check-label" for="status6">
                                                                             QC
                                                                         </label>
@@ -370,7 +393,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="13" name="status_penjualan[]" id="status7" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="13" name="status_penjualan[]"
+                                                                            id="status7" />
                                                                         <label class="form-check-label" for="status7">
                                                                             Terkirim Sebagian
                                                                         </label>
@@ -378,7 +403,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="11" name="status_penjualan[]" id="status8" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="11" name="status_penjualan[]"
+                                                                            id="status8" />
                                                                         <label class="form-check-label" for="status8">
                                                                             Kirim
                                                                         </label>
@@ -386,7 +413,8 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <span class="float-right">
-                                                                        <button class="btn btn-primary" id="filter_penjualan" type="submit">
+                                                                        <button class="btn btn-primary"
+                                                                            id="filter_penjualan" type="submit">
                                                                             Cari
                                                                         </button>
                                                                     </span>
@@ -400,7 +428,8 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover" id="penjualantable" style="width:100%">
+                                                    <table class="table table-hover" id="penjualantable"
+                                                        style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>No</th>
@@ -421,7 +450,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade show" id="ekatalog" role="tabpanel" aria-labelledby="ekatalog-tab">
+                                    <div class="tab-pane fade show" id="ekatalog" role="tabpanel"
+                                        aria-labelledby="ekatalog-tab">
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="float-right filter">
@@ -438,7 +468,8 @@
                                                                 <div class="form-group">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            value="sepakat" id="status1" name="status_ekatalog[]" />
+                                                                            value="sepakat" id="status1"
+                                                                            name="status_ekatalog[]" />
                                                                         <label class="form-check-label" for="status1">
                                                                             Sepakat
                                                                         </label>
@@ -457,7 +488,8 @@
                                                                 <div class="form-group">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            value="batal" id="status3" name="status_ekatalog[]" />
+                                                                            value="batal" id="status3"
+                                                                            name="status_ekatalog[]" />
                                                                         <label class="form-check-label" for="status3">
                                                                             Batal
                                                                         </label>
@@ -466,7 +498,8 @@
                                                                 <div class="form-group">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox"
-                                                                            value="draft" id="status4" name="status_ekatalog[]" />
+                                                                            value="draft" id="status4"
+                                                                            name="status_ekatalog[]" />
                                                                         <label class="form-check-label" for="status4">
                                                                             Draft
                                                                         </label>
@@ -489,7 +522,8 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="table-responsive">
-                                                    <table class="table table-hover" id="ekatalogtable" style="width:100%">
+                                                    <table class="table table-hover" id="ekatalogtable"
+                                                        style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>No</th>
@@ -512,7 +546,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade show" id="spa" role="tabpanel" aria-labelledby="spa-tab">
+                                    <div class="tab-pane fade show" id="spa" role="tabpanel"
+                                        aria-labelledby="spa-tab">
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="float-right filter">
@@ -528,8 +563,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="7"
-                                                                            id="status1" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="7" id="status1"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status1">
                                                                             Penjualan
                                                                         </label>
@@ -537,8 +573,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="9"
-                                                                            id="status4" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="9" id="status4"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status4">
                                                                             PO
                                                                         </label>
@@ -546,8 +583,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="6"
-                                                                            id="status5" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="6" id="status5"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status5">
                                                                             Gudang
                                                                         </label>
@@ -555,8 +593,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="8"
-                                                                            id="status6" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="8" id="status6"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status6">
                                                                             QC
                                                                         </label>
@@ -564,8 +603,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="13"
-                                                                            id="status7" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="13" id="status7"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status7">
                                                                             Terkirim Sebagian
                                                                         </label>
@@ -573,8 +613,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="11"
-                                                                            id="status8" name="status_spa[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="11" id="status8"
+                                                                            name="status_spa[]" />
                                                                         <label class="form-check-label" for="status8">
                                                                             Kirim
                                                                         </label>
@@ -616,7 +657,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade show" id="spb" role="tabpanel" aria-labelledby="spb-tab">
+                                    <div class="tab-pane fade show" id="spb" role="tabpanel"
+                                        aria-labelledby="spb-tab">
                                         <div class="row">
                                             <div class="col-12">
                                                 <span class="float-right filter">
@@ -632,8 +674,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="7"
-                                                                            id="status_spb1" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="7" id="status_spb1"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb1">
                                                                             Penjualan
                                                                         </label>
@@ -641,8 +684,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="9"
-                                                                            id="status_spb2" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="9" id="status_spb2"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb2">
                                                                             PO
                                                                         </label>
@@ -650,8 +694,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="6"
-                                                                            id="status_spb3" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="6" id="status_spb3"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb3">
                                                                             Gudang
                                                                         </label>
@@ -659,8 +704,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="8"
-                                                                            id="status_spb4" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="8" id="status_spb4"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb4">
                                                                             QC
                                                                         </label>
@@ -668,8 +714,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="13"
-                                                                            id="status_spb5" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="13" id="status_spb5"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb5">
                                                                             Terkirim Sebagian
                                                                         </label>
@@ -677,8 +724,9 @@
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" value="11"
-                                                                            id="status_spb6" name="status_spb[]" />
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            value="11" id="status_spb6"
+                                                                            name="status_spb[]" />
                                                                         <label class="form-check-label" for="status_spb6">
                                                                             Kirim
                                                                         </label>
@@ -796,36 +844,37 @@
 @stop
 @section('adminlte_js')
     <script>
-    $(function() {
-        document.querySelector('#spa-tab').addEventListener('click', spa_show);
-        document.querySelector('#spb-tab').addEventListener('click', spb_show);
-        document.querySelector('#ekatalog-tab').addEventListener('click', ekat_show);
+        $(function() {
+            document.querySelector('#spa-tab').addEventListener('click', spa_show);
+            document.querySelector('#spb-tab').addEventListener('click', spb_show);
+            document.querySelector('#ekatalog-tab').addEventListener('click', ekat_show);
 
-        p_show();
-        function tbldetailpesanan() {
-            $('#tabledetailpesan').DataTable({
-                "scrollX": false
-            });
-        }
-        var divisi_id = "{{ Auth::user()->divisi->id }}";
+            p_show();
 
-        function p_show(){
-            var penjualantable = $('#penjualantable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': "/api/penjualan/penjualan/data/semua/semua",
-                    "dataType": "json",
-                    'type': 'POST',
-                    "headers": {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
+            function tbldetailpesanan() {
+                $('#tabledetailpesan').DataTable({
+                    "scrollX": false
+                });
+            }
+            var divisi_id = "{{ Auth::user()->Karyawan->divisi_id }}";
+
+            function p_show() {
+                var penjualantable = $('#penjualantable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': "/api/penjualan/penjualan/data/semua/semua",
+                        "dataType": "json",
+                        'type': 'POST',
+                        "headers": {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        }
+                    },
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+                    },
+                    columns: [{
                         data: 'DT_RowIndex',
                         className: 'nowrap-text align-center',
                         orderable: false,
@@ -848,180 +897,178 @@
                         data: 'button',
                         orderable: false,
                         searchable: false
-                    },
-                ]
-            });
-        }
+                    }, ]
+                });
+            }
 
-        function ekat_show(){
-            var ekatalogtable = $('#ekatalogtable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/manager/penjualan/show_data/ekatalog/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [
-                    {
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function ekat_show() {
+                var ekatalogtable = $('#ekatalogtable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/manager/penjualan/show_data/ekatalog/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'no_urut',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'so',
-                    },
-                    {
-                        data: 'no_paket',
-                    },
-                    {
-                        data: 'nopo',
-                    },
-                    {
-                        data: 'tgl_buat',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'tgl_edit',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'tgl_kontrak',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer',
-                    },
-                    {
-                        data: 'status',
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    },
-                    // {
-                    //     data: 'instansi',
-                    // },
-                ],
-                // "columnDefs": [{
-                //     "visible": false,
-                //     "targets": [10]
-                // }],
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'no_urut',
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'no_paket',
+                        },
+                        {
+                            data: 'nopo',
+                        },
+                        {
+                            data: 'tgl_buat',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tgl_edit',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tgl_kontrak',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer',
+                        },
+                        {
+                            data: 'status',
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        },
+                        // {
+                        //     data: 'instansi',
+                        // },
+                    ],
+                    // "columnDefs": [{
+                    //     "visible": false,
+                    //     "targets": [10]
+                    // }],
 
-            });
-        }
+                });
+            }
 
-        function spa_show(){
-            var spatable = $('#spatable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/manager/penjualan/show_data/spa/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function spa_show() {
+                var spatable = $('#spatable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/manager/penjualan/show_data/spa/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'so',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'nopo'
-                    },
-                    {
-                        data: 'tglpo',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    }
-                ]
-            });
-        }
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'nopo'
+                        },
+                        {
+                            data: 'tglpo',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer'
+                        },
+                        {
+                            data: 'status'
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
+                });
+            }
 
-        function spb_show(){
-            var spbtable = $('#spbtable').DataTable({
-                destroy: true,
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    'url': '/manager/penjualan/show_data/spb/semua',
-                    "dataType": "json",
-                    'type': 'POST',
-                    'headers': {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                },
-                language: {
-                    processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
-                },
-                columns: [{
-                        data: 'DT_RowIndex',
-                        className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+            function spb_show() {
+                var spbtable = $('#spbtable').DataTable({
+                    destroy: true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        'url': '/manager/penjualan/show_data/spb/semua',
+                        "dataType": "json",
+                        'type': 'POST',
+                        'headers': {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
                     },
-                    {
-                        data: 'so',
+                    language: {
+                        processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                     },
-                    {
-                        data: 'nopo'
-                    },
-                    {
-                        data: 'tglpo',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama_customer'
-                    },
-                    {
-                        data: 'status'
-                    },
-                    {
-                        data: 'button',
-                        orderable: false,
-                        searchable: false
-                    }
-                ],
-            });
-        }
-    })
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            className: 'nowrap-text align-center',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'so',
+                        },
+                        {
+                            data: 'nopo'
+                        },
+                        {
+                            data: 'tglpo',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'nama_customer'
+                        },
+                        {
+                            data: 'status'
+                        },
+                        {
+                            data: 'button',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ],
+                });
+            }
+        })
     </script>
     <script>
         $(function() {
@@ -1037,13 +1084,13 @@
                     ],
                     datasets: [{
                         label: 'STATUS PESANAN',
-                        data: [100, 0, 0, 0,0],
+                        data: [100, 0, 0, 0, 0],
                         backgroundColor: [
-                        'rgba(192, 192, 192, 0.2)',
-                        'rgb(236, 159, 5)',
-                        'rgb(255, 221, 0)',
-                        'rgb(11, 171, 100)',
-                        'rgb(8, 126, 225)'
+                            'rgba(192, 192, 192, 0.2)',
+                            'rgb(236, 159, 5)',
+                            'rgb(255, 221, 0)',
+                            'rgb(11, 171, 100)',
+                            'rgb(8, 126, 225)'
                         ],
                         hoverOffset: 4
                     }]
@@ -1149,14 +1196,15 @@
                 var id = $(this).attr("data-id");
 
                 $.ajax({
-                    url: '/penjualan/penjualan/cancel/'+id+'/'+jenis,
+                    url: '/penjualan/penjualan/cancel/' + id + '/' + jenis,
                     beforeSend: function() {
                         $('#loader').show();
                     },
                     success: function(result) {
                         $('#detailmodal').modal("show");
                         $('#detail').html(result).show();
-                        $('#detailmodal').find(".modal-header").removeClass('bg-purple bg-orange bg-lightblue');
+                        $('#detailmodal').find(".modal-header").removeClass(
+                            'bg-purple bg-orange bg-lightblue');
                         $('#detailmodal').find(".modal-header").addClass('bg-dark');
                         $('#detailmodal').find(".modal-header > h4").text('Pesanan Batal');
                     },
@@ -1179,59 +1227,63 @@
                 var id = $(this).find('#id').val();
 
                 swal({
-                    title: "Batalkan Pesanan",
-                    text: "Apakah anda yakin ingin membatalkan pesanan?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Batalkan",
-                    cancelButtonText: "Kembali",
-                    closeOnConfirm: false,
-                    closeOnCancel: false
-                },
-                function(isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            url: '/api/penjualan/penjualan/cancel',
-                            type: 'POST',
-                            data: {'id': id, 'jenis': jenis, 'alasan': alasan},
-                            beforeSend: function() {
-                                $('#loader').show();
-                            },
-                            success: function(result) {
-                                if (response['data'] == "success") {
-                                    swal.fire(
-                                        'Berhasil',
-                                        'Berhasil melakukan Perubahan Pesanan',
-                                        'success'
-                                    );
-                                    $("#editmodal").modal('hide');
-                                    location.reload();
-                                } else if (response['data'] == "error") {
-                                    swal.fire(
-                                        'Gagal',
-                                        'Gagal melakukan Perubahan Pesanan',
-                                        'error'
-                                    );
-                                }
-                            },
-                            complete: function() {
-                                $('#loader').hide();
-                            },
-                            error: function(jqXHR, testStatus, error) {
-                                console.log(error);
-                                alert("Page " + href + " cannot open. Error:" + error);
-                                $('#loader').hide();
-                            },
-                            timeout: 8000
-                        })
-                    } else {
-                        swal("Cancelled", "Your imaginary file is safe :)", "error");
-                    }
-                });
+                        title: "Batalkan Pesanan",
+                        text: "Apakah anda yakin ingin membatalkan pesanan?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Batalkan",
+                        cancelButtonText: "Kembali",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                url: '/api/penjualan/penjualan/cancel',
+                                type: 'POST',
+                                data: {
+                                    'id': id,
+                                    'jenis': jenis,
+                                    'alasan': alasan
+                                },
+                                beforeSend: function() {
+                                    $('#loader').show();
+                                },
+                                success: function(result) {
+                                    if (response['data'] == "success") {
+                                        swal.fire(
+                                            'Berhasil',
+                                            'Berhasil melakukan Perubahan Pesanan',
+                                            'success'
+                                        );
+                                        $("#editmodal").modal('hide');
+                                        location.reload();
+                                    } else if (response['data'] == "error") {
+                                        swal.fire(
+                                            'Gagal',
+                                            'Gagal melakukan Perubahan Pesanan',
+                                            'error'
+                                        );
+                                    }
+                                },
+                                complete: function() {
+                                    $('#loader').hide();
+                                },
+                                error: function(jqXHR, testStatus, error) {
+                                    console.log(error);
+                                    alert("Page " + href + " cannot open. Error:" + error);
+                                    $('#loader').hide();
+                                },
+                                timeout: 8000
+                            })
+                        } else {
+                            swal("Cancelled", "Your imaginary file is safe :)", "error");
+                        }
+                    });
             });
 
             $(document).on('submit', '#form-pesanan-update', function(e) {
@@ -1644,7 +1696,8 @@
                     var x = ['semua'];
                 }
                 console.log(x);
-                $('#ekatalogtable').DataTable().ajax.url('/manager/penjualan/show_data/ekatalog/' + x).load();
+                $('#ekatalogtable').DataTable().ajax.url('/manager/penjualan/show_data/ekatalog/' + x)
+                .load();
                 return false;
             });
             $('#filter_spa').submit(function() {
@@ -1680,13 +1733,16 @@
                 return false;
             });
 
-            $(document).on('click', '#tabledetailpesan #lihatstok', function(){
+            $(document).on('click', '#tabledetailpesan #lihatstok', function() {
                 var id = $(this).attr('data-id');
                 var produk = $(this).attr('data-produk');
                 var array = [];
                 $.ajax({
                     url: '/api/get_stok_pesanan',
-                    data: {'id': id, 'jenis': produk},
+                    data: {
+                        'id': id,
+                        'jenis': produk
+                    },
                     type: 'GET',
                     dataType: 'json',
                     success: function(result) {
@@ -1695,20 +1751,31 @@
                         $('#count_qc').text(result.count_qc);
                         $('#count_log').text(result.count_log);
 
-                        if(produk == 'paket'){
+                        if (produk == 'paket') {
                             $('#nama_produk').text(result.penjualan_produk.nama);
-                            array = [Math.round((result.count_gudang / result.count_jumlah) * 100), Math.round((result.count_qc / result.count_jumlah) * 100), Math.round((result.count_log/ result.count_jumlah) * 100)];
+                            array = [Math.round((result.count_gudang / result.count_jumlah) *
+                                100), Math.round((result.count_qc / result
+                                .count_jumlah) * 100), Math.round((result.count_log /
+                                result.count_jumlah) * 100)];
                             $('#count_gudang').text(result.count_gudang);
-                        }else if(produk == 'variasi'){
-                            $('#nama_produk').text(result.gudang_barang_jadi.produk.nama +" "+ result.gudang_barang_jadi.nama);
-                            array = [Math.round((result.count_gudang / result.count_jumlah) * 100), Math.round((result.count_qc / result.count_jumlah) * 100), Math.round((result.count_log/ result.count_jumlah) * 100)];
+                        } else if (produk == 'variasi') {
+                            $('#nama_produk').text(result.gudang_barang_jadi.produk.nama + " " +
+                                result.gudang_barang_jadi.nama);
+                            array = [Math.round((result.count_gudang / result.count_jumlah) *
+                                100), Math.round((result.count_qc / result
+                                .count_jumlah) * 100), Math.round((result.count_log /
+                                result.count_jumlah) * 100)];
                             $('#count_gudang').text(result.count_gudang);
-                        }else{
+                        } else {
                             $('#nama_produk').text(result.sparepart.nama);
-                            array = [Math.round((result.jumlah / result.jumlah) * 100), Math.round((result.count_qc / result.jumlah) * 100), Math.round((result.count_log/ result.jumlah) * 100)];
+                            array = [Math.round((result.jumlah / result.jumlah) * 100), Math
+                                .round((result.count_qc / result.jumlah) * 100), Math.round(
+                                    (result.count_log / result.jumlah) * 100)
+                            ];
                             $('#count_gudang').text(result.jumlah);
                         }
-                        var chart = new ApexCharts(document.querySelector("#chartproduk"), options);
+                        var chart = new ApexCharts(document.querySelector("#chartproduk"),
+                            options);
                         chart.render();
                         chart.updateSeries(array);
                     },

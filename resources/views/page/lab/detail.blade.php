@@ -9,48 +9,10 @@
 @section('content')
     <style>
         .ui-autocomplete-input {
-        /* border: none; 
-        font-size: 14px;
-        width: 300px;
-        height: 24px;
-        margin-bottom: 5px;
-        padding-top: 2px;
-        border: 1px solid #DDD !important;
-        padding-top: 0px !important; */
         z-index: 1511;
-        /* position: relative; */
         }
-        /* .ui-menu .ui-menu-item a {
-        font-size: 12px;
-        } */
         .ui-autocomplete {
-        /* position: absolute;
-        top: 0;
-        left: 0; */
         z-index: 1510 !important;
-        /* float: left;
-        display: none;
-        min-width: 160px;
-        width: 160px;
-        padding: 4px 0;
-        margin: 2px 0 0 0;
-        list-style: none;
-        background-color: #ffffff;
-        border-color: #ccc;
-        border-color: rgba(0, 0, 0, 0.2);
-        border-style: solid;
-        border-width: 1px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        -webkit-background-clip: padding-box;
-        -moz-background-clip: padding;
-        background-clip: padding-box;
-        *border-right-width: 2px;
-        *border-bottom-width: 2px; */
         }
         .ui-menu-item > a.ui-corner-all {
             display: block;
@@ -151,6 +113,10 @@
                                         <tr>
                                             <th class="text-end">Serial Number</th>
                                             <td class="text-start">{{ $data->serial_number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-end">Tipe</th>
+                                            <td class="text-start">{{ $data->tipe }}</td>
                                         </tr>
                                         <tr>
                                             <th class="text-end">Tanggal Masuk</th>
@@ -775,13 +741,13 @@
                                     <div class="row">
                                         <div class="col-auto">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="status_peminjaman" id="konfirmasi_terima" value="15" checked="">
+                                                <input class="form-check-input" type="radio" name="status_peminjaman" id="konfirmasi_terima" value="15" {{ old('status_peminjaman') == null ? 'checked' : (old('status_peminjaman') == 15 ? 'checked' : '') }}>
                                                 <label class="form-check-label" for="konfirmasi_terima">Terima</label>
                                             </div>
                                         </div>
                                         <div class="col-auto">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="status_peminjaman" id="konfirmasi_tolak" value="18">
+                                                <input class="form-check-input" type="radio" name="status_peminjaman" id="konfirmasi_tolak" value="18" {{ old('status_peminjaman') == 18 ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="konfirmasi_tolak">Tolak</label>
                                             </div>
                                         </div>
@@ -795,7 +761,7 @@
                                     <div class="row">
                                         <div class="col-auto">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="kondisi_peminjaman" id="konfirmasi_ok" value="9" {{ old('kondisi_peminjaman') == 9 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="kondisi_peminjaman" id="konfirmasi_ok" value="9" {{ old('kondisi_peminjaman') == null ? 'checked' : (old('kondisi_peminjaman') == 9 ? 'checked' : '') }}>
                                                 <label class="form-check-label" for="konfirmasi_ok">OK</label>
                                             </div>
                                         </div>
@@ -957,7 +923,7 @@
                                     <div class="row">
                                         <div class="col-auto">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="kondisi_kembali" id="kondisiOK" value="9" {{ old('kondisi_kembali') == 9 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="kondisi_kembali" id="kondisiOK" value="9" {{ old('kondisi_kembali') == null ? 'checked' : (old('kondisi_kembali') == 9 ? 'checked' : '') }}>
                                                 <label class="form-check-label" for="kondisiOK">OK</label>
                                             </div>
                                         </div>
@@ -1207,7 +1173,7 @@
         $(function() {
             $.ajax({
                 type:'GET',
-                url:'{{ url("/api/inventory/get_data_autocomplete") }}',
+                url:'{{ url("/api/inventory/get_data_pj") }}',
                 success:function(data) {
                     autoComp(data);
                 }
@@ -1215,6 +1181,13 @@
         });
 
         function autoComp(data){
+            //hapus value jika ada yang null
+            for(let i = 0; i<data.length;i++){
+                if ( data[i] == null) {
+                    data.splice(i, 1);
+                }
+            }
+            console.log(data);
             $('#pj').autocomplete({
                 source: data,
                 autofocus: true,
@@ -1233,22 +1206,14 @@
         });
 
         // data tables riwayat peminjaman
-        $.ajax({
-            type:'GET',
-            url:'{{ url("/api/inventory/peminjaman_hist") }}'+'/'+"{{$id}}"+'/'+"{{auth()->user()->role}}"+'/'+"{{auth()->user()->id}}",
-            success:function(data) {
-                //console.log(data);
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-        });
-
         var tablePeminjaman = $('#tabelPinjam').DataTable({
-            processing: false,
+            processing: true,
             serverSide: false,
             destroy: false,
             ajax: "{{ url('/api/inventory/peminjaman_hist') }}"+'/'+"{{$id}}"+'/'+"{{auth()->user()->role}}"+'/'+"{{auth()->user()->id}}",
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'nama', name: 'nama'},
@@ -1261,26 +1226,18 @@
                 {data: 'tgl_kembali', name: 'tgl_kembali'},
                 {data: 'status_id', name: 'status'}
             ],
-            order:[[6, 'asc']],
+            order:[[0, 'desc']],
         });
 
         // data tabel riwayat perawatan
-        $.ajax({
-            type:'GET',
-            url:'{{ url("/api/inventory/perawatan_hist") }}'+'/'+"{{$id}}",
-            success:function(data) {
-                //console.log(data);
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-        });
-
         var tablePerawatan = $('#tabelPerawatan').DataTable({
-            processing: false,
+            processing: true,
             serverSide: false,
             destroy: false,
             ajax: "{{ url('/api/inventory/perawatan_hist') }}"+'/'+"{{$id}}",
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_perawatan', name: 'tgl_perawatan'},
@@ -1292,27 +1249,18 @@
                 {data: 'tindak_lanjut', name: 'tindak_lanjut'},
                 {data: 'keterangan', name: 'keterangan'},
             ],
-            order:[[2, 'asc']],
+            order:[[0, 'desc']],
         });
 
         // data tabel riwayat verifikasi
-        $.ajax({
-            type:'GET',
-            url:"{{url('/api/verifikasi/verifikasi_hist')}}"+'/'+"{{$id}}",
-            success:function(data) {
-                //console.log(data);
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-
-        });
-
         var tableVerifikasi = $('#tabelVerifikasi').DataTable({
-            processing: false,
+            processing: true,
             serverSide: false,
             destroy: false,
             ajax: "{{url('/api/verifikasi/verifikasi_hist')}}"+'/'+"{{$id}}",
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_perawatan', name: 'tanggal'},
@@ -1323,7 +1271,7 @@
                 {data: 'keterangan', name: 'keterangan'},
                 {data: 'tindak_lanjut', name: 'tindak_lanjut'},
             ],
-            order:[[2, 'asc']],
+            order:[[0, 'desc']],
         });
 
         function get_data_kalibrasi_perawatan(id, j, tbl){
@@ -1442,22 +1390,14 @@
         }
 
         // data riwayat tabel kalibrasi
-        $.ajax({
-            type:'GET',
-            url:"{{url('/api/kalibrasiperbaikan/maintenance_hist')}}"+'/'+'{{$id}}'+'/kalibrasi',
-            success:function(data) {
-                //console.log(data);
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-        });
-
         var tableKalibrasi = $('#tableKalibrasi').DataTable({
-            processing: false,
+            processing: true,
             serverSide: true,
             destroy: false,
             ajax: "{{url('/api/kalibrasiperbaikan/maintenance_hist/')}}"+'/'+"{{$id}}"+'/kalibrasi',
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_kirim', name: 'tgl_kirim'},
@@ -1468,7 +1408,7 @@
                 {data: 'status_id', name: 'status_id'},
                 {data: 'aksi', name: 'aksi'}
             ],
-            order:[[2, 'asc']],
+            order:[[0, 'desc']],
             columnDefs: [{
                 'targets': 3,
                 'render': function(data, type, full, meta){
@@ -1487,22 +1427,14 @@
         });
 
         // data riwayat tabel perbaikan
-        $.ajax({
-            type:'GET',
-            url:"{{url('/api/kalibrasiperbaikan/maintenance_hist')}}"+'/'+"{{$id}}"+'/perbaikan',
-            success:function(data) {
-                //console.log(data);
-            },
-            error: function (request, status, error) {
-                alert(request.responseText);
-            }
-        });
-
         var tablePerbaikan = $('#tablePerbaikan').DataTable({
-            processing: false,
+            processing: true,
             serverSide: true,
             destroy: false,
             ajax: "{{url('/api/kalibrasiperbaikan/maintenance_hist/')}}"+'/'+"{{$id}}"+'/perbaikan',
+            language: {
+                processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_kirim', name: 'tgl_kirim'},
@@ -1513,7 +1445,7 @@
                 {data: 'status_id', name: 'status_id'},
                 {data: 'aksi', name: 'aksi'}
             ],
-            order:[[2, 'asc']],
+            order:[[0, 'desc']],
             columnDefs: [{
                 'targets': 3,
                 'render': function(data, type, full, meta){
@@ -1566,7 +1498,7 @@
         @if(session()->has('perbSuccess'))
                 $('#tabRiwayat a[href="#perbaikan"]').tab('show');
         @endif
-        
+
         // tampilkan alert input data berhasil
         @if(session()->has('success'))
             Swal.fire({

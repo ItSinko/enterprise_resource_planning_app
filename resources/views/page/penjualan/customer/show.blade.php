@@ -10,10 +10,10 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    @if (Auth::user()->divisi_id == '26' || Auth::user()->divisi_id == '8')
+                    @if (Auth::user()->Karyawan->divisi_id == '26' || Auth::user()->Karyawan->divisi_id == '8')
                         <li class="breadcrumb-item"><a href="{{ route('penjualan.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Customer</li>
-                    @elseif(Auth::user()->divisi_id == '2')
+                    @elseif(Auth::user()->Karyawan->divisi_id == '2')
                         <li class="breadcrumb-item"><a href="{{ route('direksi.dashboard') }}">Beranda</a></li>
                         <li class="breadcrumb-item active">Customer</li>
                     @endif
@@ -151,7 +151,7 @@
                                                     </button>
                                                 </a>
                                             </span>
-                                            @if (Auth::user()->divisi->id == '26')
+                                            @if (Auth::user()->Karyawan->divisi_id == '26')
                                                 <span class="float-right filter">
                                                     <a href="{{ route('penjualan.customer.create') }}"><button
                                                             class="btn btn-outline-info">
@@ -310,7 +310,7 @@
                     $("#btnsimpan").attr('disabled', true);
                 }
             }
-            var divisi_id = "{{ Auth::user()->divisi_id }}";
+            var divisi_id = "{{ Auth::user()->Karyawan->divisi_id }}";
             $(document).on('submit', '#form-customer-update', function(e) {
                 e.preventDefault();
                 var action = $(this).attr('data-attr');

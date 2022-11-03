@@ -350,7 +350,7 @@ class KesehatanController extends Controller
                 return  $data->berat / (($data->karyawan->kesehatan_awal->tinggi / 100) * ($data->karyawan->kesehatan_awal->tinggi / 100));
             })
             ->addColumn('aksi', function ($data) {
-                return '<i class="fas fa-trash text-danger" id="delete"></i>';
+                return ' <button type="button" id="delete" class="btn btn-xs btn-danger m-1" data-id="' . $data->id . '"><i class="fas fa-trash"></i> Hapus</button>';
             })
             ->rawColumns(['aksi'])
             ->make(true);
@@ -942,15 +942,7 @@ class KesehatanController extends Controller
 
             })
             ->editColumn('keputusan', function ($data) {
-                $btn = '';
-                if ($data->keputusan == "Lanjut bekerja") {
-                    $btn = '<span class="badge green-text">';
-                } else {
-                    $btn = '<span class="badge red-text">';
-                }
-                $btn .= $data->keputusan . '</span>';
-
-                return $btn;
+                return $data->keputusan;
             })
             ->addColumn('button', function () {
 
@@ -995,7 +987,15 @@ class KesehatanController extends Controller
         $data = Detail_obat::with('obat')->where('karyawan_sakit_id', $id);
         return datatables()->of($data)
             ->addIndexColumn()
+            ->addColumn('aturan', function ($data) {
+                if ($data->obat) {
+                    return $data->obat->aturan;
+                }
+            })
+            ->addColumn('konsumsi', function ($data) {
 
+                return $data->konsumsi;
+            })
             ->addColumn('x', function ($data) {
                 return $data->obat->nama;
             })
@@ -1010,11 +1010,14 @@ class KesehatanController extends Controller
             ->addColumn('aksi', function ($data) {
                 return '<i class="fas fa-trash text-danger" id="delete" data-id="' . $data->id . '"></i>';
             })
+
             ->rawColumns(['aksi'])
             ->make(true);
     }
     public function karyawan_sakit_aksi_tambah(Request $request)
     {
+
+
         $this->validate(
             $request,
             [
@@ -1045,29 +1048,29 @@ class KesehatanController extends Controller
             // $obat = Obat::find($id)->decrement('stok', $jumlah);
 
             for ($i = 0; $i < count($request->obat); $i++) {
-                $obat = obat::find($request->obat[$i])->decrement('stok', $request->jumlah[$i]);
+                //   $obat = obat::find($request->obat[$i])->decrement('stok', $request->jumlah[$i]);
 
-                if ($request->dosis_obat_custom[$i] != NULL) {
+                if ($request->dosis_obat_custom_obat[$i] != null) {
                     $detail_obat = detail_obat::create([
                         'karyawan_sakit_id' => $karyawan_sakit->id,
                         'obat_id' => $request->obat[$i],
                         'jumlah' => $request->jumlah[$i],
-                        'aturan' => $request->aturan_obat[$i],
-                        'konsumsi' => $request->dosis_obat_custom[$i],
+                        'aturan' => '-',
+                        'konsumsi' =>  $request->dosis_obat_custom_obat[$i] . 'x' . $request->dosis_obat_custom_hari[$i],
                     ]);
                 } else {
                     $detail_obat = detail_obat::create([
                         'karyawan_sakit_id' => $karyawan_sakit->id,
                         'obat_id' => $request->obat[$i],
                         'jumlah' => $request->jumlah[$i],
-                        'aturan' => $request->aturan_obat[$i],
                         'konsumsi' => $request->dosis_obat[$i],
+                        'aturan' => '-',
                     ]);
                 }
             }
         }
 
-        if ($karyawan_sakit || $obat && $detail_obat) {
+        if ($karyawan_sakit || $detail_obat) {
             return redirect()->back()->with('success', 'Berhasil menambahkan data');
         } else {
             return redirect()->back()->with('error', 'Gagal menambahkan data');
@@ -1138,6 +1141,7 @@ class KesehatanController extends Controller
     }
     public function karyawan_masuk_aksi_tambah(Request $request)
     {
+
         $this->validate(
             $request,
             [
@@ -1183,23 +1187,23 @@ class KesehatanController extends Controller
         }
         if ($request->hasil_1 == 'Pengobatan') {
             for ($i = 0; $i < count($request->obat); $i++) {
-                $obat = obat::find($request->obat[$i])->decrement('stok', $request->jumlah[$i]);
+                //   $obat = obat::find($request->obat[$i])->decrement('stok', $request->jumlah[$i]);
 
-                if ($request->dosis_obat_custom[$i] != NULL) {
+                if ($request->dosis_obat_custom_obat[$i] != null) {
                     $detail_obat = detail_obat::create([
                         'karyawan_sakit_id' => $karyawan_sakit->id,
                         'obat_id' => $request->obat[$i],
                         'jumlah' => $request->jumlah[$i],
-                        'aturan' => $request->aturan_obat[$i],
-                        'konsumsi' => $request->dosis_obat_custom[$i],
+                        'aturan' => '-',
+                        'konsumsi' =>  $request->dosis_obat_custom_obat[$i] . 'x' . $request->dosis_obat_custom_hari[$i],
                     ]);
                 } else {
                     $detail_obat = detail_obat::create([
                         'karyawan_sakit_id' => $karyawan_sakit->id,
                         'obat_id' => $request->obat[$i],
                         'jumlah' => $request->jumlah[$i],
-                        'aturan' => $request->aturan_obat[$i],
                         'konsumsi' => $request->dosis_obat[$i],
+                        'aturan' => '-',
                     ]);
                 }
             }

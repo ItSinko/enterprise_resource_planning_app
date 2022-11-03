@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Concerns\ToArray;
+use Illuminate\Validation\ValidationException;
 
 class AlatujiController extends Controller
 {
@@ -218,7 +219,7 @@ class AlatujiController extends Controller
             ->select(
                 'as2.serial_number', 'as2.alatuji_id' ,'as2.tgl_masuk',
                 'as2.merk_id', 'as2.id_serial_number', 'as2.layout_id',
-                'as2.no_urut', 'a.desk_alatuji', 'a.klasifikasi_id')
+                'as2.no_urut', 'a.desk_alatuji', 'a.klasifikasi_id', 'as2.tipe')
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji a'),'a.id_alatuji','=','as2.alatuji_id')
             ->where('as2.id_serial_number', $id)->first();
 
@@ -244,6 +245,22 @@ class AlatujiController extends Controller
 
         //ambil data dokumen alatuji
         $doc_old = DB::table('erp_kalibrasi.alatuji')->select('manual_alatuji', 'sop_alatuji', 'gbr_alatuji')->where('id_alatuji', $request->id_alatuji)->first();
+        
+        // cek apakah nmor seri telah terdaftar
+        // jika data old = data new -> tidak keluar peringatan
+        // jika data old =/= data new -> cek serial number & update
+        $SN_old = AlatSN::where('id_serial_number', $request->id_serial_number)->first();
+        if($SN_old->serial_number != $request->serialNM){
+            //data old =/= new
+            $cek_sn = AlatSN::
+            where('alatuji_id', $request->id_alatuji)
+            ->where('merk_id', $request->merk)
+            ->where('serial_number', $request->serialNM)
+            ->count();
+            if($cek_sn >= 1){
+                throw ValidationException::withMessages(['serialNM' => 'Serial Number telah Terdaftar']);
+            }
+        }
 
         // update alatuji
         DB::table('erp_kalibrasi.alatuji')->where('id_alatuji', $request->id_alatuji)->update([
@@ -591,7 +608,7 @@ class AlatujiController extends Controller
                 DB::raw('concat(ml.ruang,"/",ml.rak) as lokasi'),
                 'a.nm_alatuji', 'a.desk_alatuji', 'a.kd_alatuji', 'as2.total_waktu',
                 'kls.nama_klasifikasi', 'supl.nama_merk', 'as2.kondisi_id',
-                'as2.serial_number', 'as2.tgl_masuk', 'ms.nama as kondisi',
+                'as2.serial_number', 'as2.tgl_masuk', 'ms.nama as kondisi', 'as2.tipe',
                 'as2.total_penggunaan', 'a.sop_alatuji', 'a.manual_alatuji', 'u.nama',
                 'as2.sert_kalibrasi', 'a.gbr_alatuji', 'as2.status_pinjam_id', 'as2.barcode'
             )
@@ -738,7 +755,10 @@ class AlatujiController extends Controller
             }
         }
         AlatSN::find($request->alatuji_konfirm_id)
-        ->update(['status_pinjam_id' => $x]);
+        ->update([
+            'status_pinjam_id' => $x,
+            'kondisi_id' => $x
+        ]);
 
         Peminjaman::where('id_peminjaman', $request->peminjaman_konfirm_id)
         ->update([
@@ -829,6 +849,7 @@ class AlatujiController extends Controller
             'total_penggunaan' => $total_penggunaan,
             'total_waktu' => $total_waktu,
             'status_pinjam_id' => $x,
+            'kondisi_id' => $x
         ]);
 
         // user log
@@ -856,12 +877,16 @@ class AlatujiController extends Controller
         $request->validate([
             'klasifikasi' => 'required',
             'satuan' => 'required',
-            'nama_alat' => 'required',
+            'nama_alat' => 'required|unique:erp_kalibrasi.alatuji,nm_alatuji',
             'fungsi_alat' => 'required',
-            'kode_alat' => 'required',
+            'kode_alat' => 'required|unique:erp_kalibrasi.alatuji,kd_alatuji',
         ],[
-            'required' => 'kolom :attribute harus di isi'
+            'required' => 'kolom :attribute harus di isi',
+            'unique' => ':attribute telah terdaftar'
         ]);
+
+        // cek jika data dari nama alat uji sudah ada pada database
+
 
         $manual = null;
         $sop = null;
@@ -941,6 +966,7 @@ class AlatujiController extends Controller
             'klasifikasi' => 'required',
             'nama' => 'required',
             'serial_number' => 'required',
+            'tipe' => 'required',
             'tanggal_masuk' => 'required',
             'kondisi' => 'required',
             'lokasi' => 'required',
@@ -971,6 +997,16 @@ class AlatujiController extends Controller
             $request->merk = DB::table('erp_kalibrasi.merk')->select('id_merk')->latest('created_at')->first()->id_merk;
         }
 
+        // cek apakah nmor seri telah terdaftar
+        $cek_sn = AlatSN::
+        where('alatuji_id', $request->nama)
+        ->where('merk_id', $request->merk)
+        ->where('serial_number', $request->serial_number)
+        ->count();
+        if($cek_sn >= 1){
+            throw ValidationException::withMessages(['serial_number' => 'Serial Number telah Terdaftar']);
+        }
+
         $sertif = null;
         if($request->has('sert_kalibrasi'))
         {
@@ -991,6 +1027,7 @@ class AlatujiController extends Controller
             'no_urut' => $nourut,
             'tgl_masuk' => $request->tanggal_masuk,
             'serial_number' => $request->serial_number,
+            'tipe' => $request->tipe,
             'layout_id' => $request->lokasi,
             'merk_id' => $request->merk,
             'kondisi_id' => $request->kondisi,
@@ -1253,18 +1290,32 @@ class AlatujiController extends Controller
         ->make(true);
     }
 
-    function get_data_autocomplete(){
+    function get_data_pj(){
         $data =
         DB::table(DB::raw('erp_kalibrasi.peminjaman p'))
         ->select('p.penanggung_jawab')
         ->groupBy('p.penanggung_jawab')
         ->get();
 
-        $test = $data->map(function($item, $key){
+        $d = $data->map(function($item, $key){
             return $item->penanggung_jawab;
         });
 
-        return $test;
+        return $d;
+    }
+
+    function get_data_tipe(){
+        $data =
+        DB::table(DB::raw('erp_kalibrasi.alatuji_sn p'))
+        ->select('p.tipe')
+        ->groupBy('p.tipe')
+        ->get();
+
+        $d = $data->map(function($item, $key){
+            return $item->tipe;
+        });
+
+        return $d;
     }
 
 }
