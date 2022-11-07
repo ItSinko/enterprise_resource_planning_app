@@ -76,6 +76,10 @@ Route::middleware('auth')->prefix('/ppic_direksi')->group(function () {
 Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
     Route::view('/{any?}', 'spa.manager_teknik.spa')->middleware('divisi:dirtek');
 });
+Route::middleware('auth')->prefix('/teknik')->group(function () {
+    Route::view('/{any?}', 'spa.teknik');
+});
+
 
 Route::group(['prefix' => '/gbj', 'middleware' => ['auth', 'divisi:gbj,mgrgdg,dirut']], function () {
     Route::view('/stok/{any?}', 'page.gbj.stok');
