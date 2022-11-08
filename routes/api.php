@@ -20,6 +20,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [App\Http\Controllers\ApiController::class, 'authenticate']);
+
+Route::prefix('/bom')->group(function () {
+    Route::get('/data', [App\Http\Controllers\TeknikController::class, 'get_data_bom']);
+    Route::get('/detail/{id}', [App\Http\Controllers\TeknikController::class, 'get_detail_bom']);
+});
+Route::prefix('/part')->group(function () {
+    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
+});
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return response()->json([
         'username' => $request->user()->karyawan->nama,

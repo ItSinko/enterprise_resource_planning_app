@@ -1709,4 +1709,25 @@ class MasterController extends Controller
             echo json_encode($data);
         }
     }
+
+    public function get_data_sparepart()
+    {
+        $sparepart = Sparepart::with(['jenis_part', 'satuan'])->get();
+        $data = array();
+
+        foreach ($sparepart as  $key_sparepart => $s) {
+            $data[$key_sparepart] = array(
+                'kode' => $s->kode,
+                'nama' => $s->nama,
+                'jenis' => $s->jenis_part->nama,
+                'deskripsi' => $s->deskripsi != '' ? $s->deskripsi : '-',
+                'satuan' => $s->satuan->nama,
+                'jumlah' => rand(10, 100),
+            );
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
 }
