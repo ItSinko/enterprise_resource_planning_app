@@ -227,6 +227,9 @@
                     this.currentPage--
                 }
             },
+            nowPage(page){
+                this.currentPage = page
+            },
         },
         computed: {
             filteredProducts() {
@@ -375,7 +378,7 @@
                                 @click="previousPage">Previous</a>
                             </li>
                             <li class="page-item" :class="paginate == currentPage ? 'active': ''" v-for="paginate in paginateProducts" :key="paginate">
-                                <a class="page-link">{{ paginate }}</a>
+                                <a class="page-link" @click="nowPage(paginate)">{{ paginate }}</a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
