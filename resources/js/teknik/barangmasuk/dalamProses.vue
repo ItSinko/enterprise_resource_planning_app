@@ -100,7 +100,7 @@
             </div>
         </div>
         <table class="table dalamProsesTable">
-            <thead>
+            <thead class="thead-light">
                 <tr>
                     <th>No PO</th>
                     <th>Divisi</th>
