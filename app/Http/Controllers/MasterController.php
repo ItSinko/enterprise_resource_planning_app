@@ -1725,6 +1725,7 @@ class MasterController extends Controller
 
         foreach ($sparepart as  $key_sparepart => $s) {
             $data[$key_sparepart] = array(
+                'id' => $s->id,
                 'gambar' => $s->gambar != '' ? $s->gambar : 'default.jpg',
                 'kode' => $s->kode,
                 'nama' => $s->nama,

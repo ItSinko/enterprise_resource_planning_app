@@ -1,46 +1,18 @@
 <script>
     import Header from '../components/header.vue'
     import UploadImages from "vue-upload-drop-images";
+    import axios from 'axios'
+        import mix from './mix'
     export default {
+        mixins: [mix],
         components: {
             Header,
             UploadImages
         },
-        mounted() {
-            $('.partTable').DataTable({
-                "destroy": true,
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": false,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
-        },
         data() {
             return {
                 searchpart: '',
-                parts: [{
-                    id: 1,
-                    image: 'https://picsum.photos/200/300',
-                    kode: 'PN-0001',
-                    name: 'IT',
-                    jenis: 'PT. ABC',
-                    deskripsi: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.',
-                    jumlah: '500000',
-                    satuan: 'pcs'
-                }, {
-                    id: 2,
-                    image: 'https://picsum.photos/200/300',
-                    kode: 'PN-0002',
-                    name: 'IT',
-                    jenis: 'PT. ABC',
-                    deskripsi: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.',
-                    jumlah: '200000',
-                    satuan: 'cm'
-                }],
-
+                parts: [],
                 // Modal Detail Part
                 tabsDetail: 'detail',
                 detailProdukPart: [{
@@ -92,7 +64,32 @@
                 }
             }
         },
+        created() {
+            this.init()
+        },
+        updated() {
+            this.tableParts()
+        },
         methods: {
+            async init(){
+                this.loading = true
+                await axios.get('/api/part/data').then(res => {
+                    this.parts = res.data.data
+                    this.loading = false
+                })
+            },
+            tableParts(){
+                $('.partTable').DataTable({
+                    "destroy": true,
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": false,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
+            },
             detailPart(idx) {
                 $('.modalDetailPart').modal('show');
                 $('.tableDetailPart').DataTable({
@@ -132,9 +129,13 @@
             handleImages(images) {
                 this.formUmum.image = images[0];
             },
-            editPart(idx) {
+            async editPart(id) {
                 $('.modalAddEdit').modal('show');
                 this.formsTitle = 'Edit Part';
+                await axios.get(`/api/part/edit/${id}`).then(res => {
+                    console.log(res.data)
+                })
+                console.log(id)
             },
             deletePart(idx) {
                 this.$swal({
@@ -177,6 +178,13 @@
                     $('.modalAddEdit').modal('hide');
                 })
             },
+            limitPagination(number) {
+                if (number > 5) {
+                    return '...'
+                } else {
+                    return number
+                }
+            },
             detailBOM() {
                 $('.modalDetailBOM').modal('show');
                 $('.tableDetailBOM').DataTable({
@@ -193,29 +201,39 @@
         },
         computed: {
             partsFiltered() {
-                return this.parts.filter(part => {
-                    return part.name.toLowerCase().includes(this.searchpart.toLowerCase()) ||
-                        part.jenis.toLowerCase().includes(this.searchpart.toLowerCase()) ||
-                        part.kode.toLowerCase().includes(this.searchpart.toLowerCase()) ||
-                        part.deskripsi.toLowerCase().includes(this.searchpart.toLowerCase()) ||
-                        part.jumlah.toLowerCase().includes(this.searchpart.toLowerCase()) ||
-                        part.satuan.toLowerCase().includes(this.searchpart.toLowerCase())
-                })
-            }
-        }
+                const dataIsNotNull = (data) => data !== null && data !== undefined && data !== '' ? data : '-'
+                    return this.parts.filter(part => {
+                        const search = this.searchpart.toLowerCase()
+                        const kode = dataIsNotNull(part.kode).toLowerCase()
+                        const nama = dataIsNotNull(part.nama).toLowerCase()
+                        const jenis = dataIsNotNull(part.jenis).toLowerCase()
+                        const deskripsi = dataIsNotNull(part.deskripsi).toLowerCase()
+                        const satuan = dataIsNotNull(part.satuan).toLowerCase()
+                        return kode.includes(search) || nama.includes(search) || jenis.includes(search) || deskripsi.includes(search) || satuan.includes(search)
+                    })
+            },
+            renderPaginate() {
+                return this.partsFiltered.slice(this.perPage * (this.currentPage - 1), this.perPage * this.currentPage)
+            },
+            paginateParts() {
+                return Math.ceil(this.partsFiltered.length / this.perPage)
+            },
+        },
     }
 
 </script>
 <template>
     <div>
         <Header :title="'Daftar Part'" :breadcumbs="breadcumbs"></Header>
-        <div class="card">
+        <div class="spinner-border" role="status" v-if="loading">
+            <span class="sr-only">Loading...</span>
+        </div>
+        <div class="card" v-else>
             <div class="card-body">
-                <div class="d-flex bd-highlight">
+                <div class="d-flex bd-highlight buttonTambah">
                     <div class="p-2 flex-grow-1 bd-highlight"><button @click="addPart" class="btn btn-primary"><i
-                                class="fas fa-plus"></i> Tambah Part</button></div>
-                    <div class="p-2 bd-highlight">
-                        <input type="text" placeholder="Cari..." v-model="searchpart" class="form-control"></div>
+                                class="fas fa-plus"></i> Tambah Part</button>
+                    </div>
                 </div>
                 <table class="table partTable">
                     <thead class="thead-light">
@@ -230,11 +248,13 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody v-if="partsFiltered.length > 0">
+                    <tbody>
                         <tr v-for="part in partsFiltered" :key="part.id">
-                            <td><img :src="part.image" alt="" width="50px"></td>
+                            <td>
+                                <img :src="`/storage/sparepart/${part.gambar}`" alt="" width="50px">
+                            </td>
                             <td>{{part.kode}}</td>
-                            <td>{{part.name}}</td>
+                            <td>{{part.nama}}</td>
                             <td>
                                 <div class="badge badge-info">{{part.jenis}}</div>
                             </td>
@@ -265,13 +285,29 @@
                             </td>
                         </tr>
                     </tbody>
-                    <tbody>
-                        <tr v-if="partsFiltered.length == 0">
-                            <td colspan="8" class="text-center">Data tidak ditemukan</td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
+            <!-- <div class="card-footer">
+                <div class="d-flex flex-row-reverse bd-highlight">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link"
+                                :disabled="currentPage == 1"
+                                @click="previousPage">Previous</a>
+                            </li>
+                            <li class="page-item" :class="paginate == currentPage ? 'active': ''" v-for="paginate in paginateParts" :key="paginate">
+                                <a class="page-link" @click="nowPage(paginate)">{{ paginate }}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                :disabled="currentPage == paginateParts-1 ? true : false"
+                                    @click="nextPage">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div> -->
         </div>
 
 
@@ -590,5 +626,12 @@
     .bg-card-secondary{
         background-color: #dce2e5;
         color: #536c7c;
+    }
+    .buttonTambah{
+        margin-bottom: -40px;
+        z-index: 1;
+    }
+    .dataTables_wrapper{
+        z-index: -1;
     }
 </style>
