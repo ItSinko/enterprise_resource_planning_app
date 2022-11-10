@@ -40,6 +40,9 @@ use App\Models\JalurEkspedisi;
 use App\Models\Sparepart;
 use App\Models\SparepartGudang;
 use App\Models\SystemLog;
+use App\Models\teknik\BillOfMaterial;
+use App\Models\teknik\DetailBillOfMaterial;
+use App\Models\teknik\JenisPart;
 use App\Models\UserLog;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -1717,6 +1720,7 @@ class MasterController extends Controller
 
         foreach ($sparepart as  $key_sparepart => $s) {
             $data[$key_sparepart] = array(
+                'gambar' => $s->gambar != '' ? $s->gambar : 'default.jpg',
                 'kode' => $s->kode,
                 'nama' => $s->nama,
                 'jenis' => $s->jenis_part->nama,
@@ -1729,5 +1733,161 @@ class MasterController extends Controller
         return response()->json([
             'data' => $data
         ]);
+    }
+    public function get_detail_sparepart($id)
+    {
+        $sparepart = Sparepart::find($id);
+        $dbom = DetailBillOfMaterial::where('part_id', $id)->get();
+        $data = array();
+
+
+        $data[] = array(
+            'header' => array(
+                'gambar' => $sparepart->gambar != '' ? $sparepart->gambar : 'default.jpg',
+                'kode' => $sparepart->kode,
+                'nama' => $sparepart->nama,
+                'jenis' => $sparepart->jenis_part->nama,
+                'jumlah' => rand(10, 100) .  ' ' . $sparepart->satuan->nama
+            ),
+            'detail' => array(
+                'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
+                'spesifikasi' => array(
+                    'dimensi' => $sparepart->dimensi,
+                    'bahan' => $sparepart->jenis_bahan->nama,
+                )
+            ),
+            // 'bom' => array(
+            //     'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
+            //     'spesifikasi' => $sparepart->spesifikasi != '' ? $sparepart->spesifikasi : '-',
+            // )
+        );
+        foreach ($dbom as $key_bom => $d) {
+            $data['bom'][$key_bom] =  array(
+                'id' => $d->id,
+                'produk' => $d->bom->produk->nama,
+                'versi' => $d->bom->nama,
+                'jumlah' => $d->jumlah
+            );
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+    public function edit_sparepart($id)
+    {
+        $sparepart = Sparepart::find($id);
+        $dbom = DetailBillOfMaterial::where('part_id', $id)->get();
+        $data = array();
+
+        $convert_panjang = explode('x', $sparepart->dimensi);
+        $convert_nama = explode('#', $sparepart->nama);
+
+
+
+        $data[] = array(
+            'formUmum' => array(
+                'jenis' => array(
+                    'jenis_id' => $sparepart->jenis_part->id,
+                    'jenis_nama' => $sparepart->jenis_part->nama
+                ),
+                'kode' => $sparepart->kode,
+                'nama' => $convert_nama[0],
+                'gambar' => $sparepart->gambar != '' ? $sparepart->gambar : 'default.jpg',
+
+            ),
+            'formSpecs' => array(
+                'spesifikasi' => array(
+                    'panjang' => isset($convert_panjang[0]) ? $convert_panjang[0] : '0',
+                    'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
+                    'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
+                ),
+                'bahan' => array(
+                    'bahan_id' => $sparepart->jenis_bahan->id,
+                    'bahan_nama' => $sparepart->jenis_bahan->nama
+                ),
+                'versi' => isset($convert_nama[1]) ? $convert_nama[1] : '',
+                'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
+                'fungsi' => $sparepart->fungsi != '' ? $sparepart->fungsi : '-',
+            ),
+        );
+        foreach ($dbom as $key_bom => $d) {
+            $data['bom'][$key_bom] =  array(
+                'id' => $d->id,
+                'produk' => $d->bom->produk->nama,
+                'versi' => $d->bom->nama,
+                'jumlah' => $d->jumlah
+            );
+        }
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+    public function store_sparepart(Request $request)
+    {
+        $validator = Validator::make($request->all(),  [
+            'formUmum.jenis' => 'required',
+            'formUmum.nama' => 'required',
+            'formUmum.kode' => 'required|unique:m_sparepart,kode',
+
+            'formSpecs.bahan' => 'required',
+            'formSpecs.satuan' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'gagal']);
+        } else {
+
+            $sparepart = Sparepart::create([
+                'kode' => $request->formUmum['kode'],
+                'nama' =>  $request->formSpecs['versi'] != '' ? $request->formUmum['nama'] . '#' . $request->formSpecs['versi'] : $request->formUmum['nama'],
+                'jenis_part_id' => $request->formUmum['jenis'],
+                'deskripsi' =>  $request->formSpecs['deskripsi'],
+                'dimensi' => $request->formSpecs['panjang'] != '' ? $request->formSpecs['panjang'] . 'x' . $request->formSpecs['lebar'] . 'x' . $request->formSpecs['tinggi'] : '-',
+                'gambar' => $request->formUmum['image'],
+                'fungsi' => $request->formSpecs['fungsi'],
+                'satuan_id' => $request->formSpecs['satuan'],
+                'bahan_id' => $request->formSpecs['bahan'],
+            ]);
+            // if ($request->hasFile('gambar')) {
+            //     $photo = $request->file('gambar')->store('images\sparepart');
+            // } else {
+            //     $photo = NULL;
+            // }
+
+            return response()->json(['status' => 'berhasil']);
+        }
+    }
+    public function update_sparepart(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(),  [
+            'formUmum.jenis' => 'required',
+            'formUmum.nama' => 'required',
+            'formUmum.kode' => 'required|unique:m_sparepart,kode,' . $id,
+
+            'formSpecs.bahan' => 'required',
+            'formSpecs.satuan' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'gagal']);
+        } else {
+
+            $sparepart = Sparepart::find($id);
+            $sparepart->kode = $request->formUmum['kode'];
+            $sparepart->nama =  $request->formSpecs['versi'] != '' ? $request->formUmum['nama'] . '#' . $request->formSpecs['versi'] : $request->formUmum['nama'];
+            $sparepart->jenis_part_id = $request->formUmum['jenis'];
+            $sparepart->deskripsi =  $request->formSpecs['deskripsi'];
+            $sparepart->dimensi = $request->formSpecs['panjang'] != '' ? $request->formSpecs['panjang'] . 'x' . $request->formSpecs['lebar'] . 'x' . $request->formSpecs['tinggi'] : '-';
+            $sparepart->gambar = $request->formUmum['image'];
+            $sparepart->fungsi = $request->formSpecs['fungsi'];
+            $sparepart->satuan_id = $request->formSpecs['satuan'];
+            $sparepart->bahan_id = $request->formSpecs['bahan'];
+            $sparepart->save();
+
+
+            return response()->json(['status' => 'berhasil']);
+        }
     }
 }

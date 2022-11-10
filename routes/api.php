@@ -27,6 +27,10 @@ Route::prefix('/bom')->group(function () {
 });
 Route::prefix('/part')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
+    Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_sparepart']);
+    Route::get('/detail/{id}', [App\Http\Controllers\MasterController::class, 'get_detail_sparepart']);
+    Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_sparepart']);
+    Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_sparepart']);
 });
 
 
