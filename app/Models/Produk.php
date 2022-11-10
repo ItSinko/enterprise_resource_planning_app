@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\teknik\BillOfMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,10 @@ class Produk extends Model
     protected $table = 'produk';
     protected $fillable = ['kelompok_produk_id', 'merk', 'tipe', 'nama', 'nama_coo', 'satuan', 'coo', 'no_akd', 'ket', 'status'];
 
+    function bom()
+    {
+        return $this->hasMany(BillOfMaterial::class);
+    }
     public function PenjualanProduk()
     {
         return $this->belongsToMany(PenjualanProduk::class, 'detail_penjualan_produk')

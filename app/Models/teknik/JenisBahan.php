@@ -1,23 +1,18 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\teknik;
 
-
-use App\Models\teknik\DetailBillOfMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Satuan extends Model
+class JenisBahan extends Model
 {
     use HasFactory;
     protected $connection = 'erp';
-    protected $table = 'm_satuan';
+    protected $table = 'jenis_bahan';
+
     protected $fillable = ['nama'];
 
-    function detail_bom()
-    {
-        return $this->hasMany(DetailBillOfMaterial::class);
-    }
     function sparepart()
     {
         return $this->hasMany(Sparepart::class);

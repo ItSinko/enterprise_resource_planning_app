@@ -583,47 +583,59 @@ return [
         //         ],
         //     ],
         // ],
+        // [
+        //     'text'    => 'Inventory',
+        //     'icon'    => 'fas fa-boxes',
+        //     'auth' => [14],
+        //     'submenu' => [
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Master Inventory',
+        //             'auth' => [14],
+        //             'url'  => '/inventory/divisi',
+        //         ],
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Inventory',
+        //             'url'  => '/inventory',
+        //         ],
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Permintaan Peminjaman',
+        //             'url'  => '/inventory/peminjaman',
+        //         ],
+        //     ],
+        // ],
         [
-            'text'    => 'Inventory',
+            'text'    => 'User',
             'icon'    => 'fas fa-boxes',
             'auth' => [14],
-            'submenu' => [
-                [
-                    'icon' => 'far fa-circle',
-                    'text' => 'Master Inventory',
-                    'auth' => [14],
-                    'url'  => '/inventory/divisi',
-                ],
-                [
-                    'icon' => 'far fa-circle',
-                    'text' => 'Inventory',
-                    'url'  => '/inventory',
-                ],
-                [
-                    'icon' => 'far fa-circle',
-                    'text' => 'Permintaan Peminjaman',
-                    'url'  => '/inventory/peminjaman',
-                ],
-            ],
+            'url'  => '/administrator/user',
         ],
-        [
-            'text'    => 'Peminjaman',
-            'icon'    => 'fas fa-boxes',
-            'auth' => [14],
-            'submenu' => [
-                [
-                    'icon' => 'far fa-circle',
-                    'text' => 'Alat',
-                    'url'  => '/peminjaman/alat',
-                ],
-                [
-                    'icon' => 'far fa-circle',
-                    'text' => 'Karyawan',
-                    'url'  => '/peminjaman/karyawan',
-                ],
+        // [
+        //     'text'    => 'Part',
+        //     'icon'    => 'fas fa-boxes',
+        //     'auth' => [14],
+        //     'url'  => '/administrator/part',
+        // ],
+        // [
+        //     'text'    => 'Peminjaman',
+        //     'icon'    => 'fas fa-boxes',
+        //     'auth' => [14],
+        //     'submenu' => [
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Alat',
+        //             'url'  => '/peminjaman/alat',
+        //         ],
+        //         [
+        //             'icon' => 'far fa-circle',
+        //             'text' => 'Karyawan',
+        //             'url'  => '/peminjaman/karyawan',
+        //         ],
 
-            ],
-        ],
+        //     ],
+        // ],
         // kesehatan (28)
         //Kesehatan
         [
@@ -1671,7 +1683,7 @@ return [
             'text' => 'Ubah Password',
             'icon' => 'fa-solid fa-gear',
             'url' => '/edit_pwd',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
         ],
     ],
 

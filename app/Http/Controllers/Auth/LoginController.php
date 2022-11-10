@@ -49,6 +49,14 @@ class LoginController extends Controller
         return 'username';
     }
 
+    protected function credentials(Request $request)
+    {
+        return [
+            'username'     => $request->username,
+            'password'  => $request->password,
+            'is_aktif' => '1'
+        ];
+    }
     //   protected function sendLoginResponse(Request $request)
     //  {
     // $user = User::where('username', $request->username)->firstOrFail();
@@ -94,6 +102,8 @@ class LoginController extends Controller
             return redirect('/lab/dashboard');
         } else if (auth()->user()->karyawan->divisi_id == 16 || auth()->user()->karyawan->divisi_id == 10) {
             return redirect('/mtc/air/masuk');
+        } else if (auth()->user()->karyawan->divisi_id == 14) {
+            return redirect('/administrator/dashboard');
         }
 
         return redirect('/home');

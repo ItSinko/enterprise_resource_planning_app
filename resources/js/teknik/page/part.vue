@@ -507,7 +507,7 @@
                                         <div class="card bg-card-danger">
                                             <div class="card-body">
                                                 <div class="card-title">Nama Produk</div>
-                                                <div class="card-text">{{ headerBOM.namaProduk }}</div>
+                                                <div class="card-text text-bold">{{ headerBOM.namaProduk }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -515,7 +515,7 @@
                                         <div class="card bg-card-success">
                                             <div class="card-body">
                                                 <div class="card-title">Nama BOM</div>
-                                                <div class="card-text">{{ headerBOM.namaBOM }}</div>
+                                                <div class="card-text text-bold">{{ headerBOM.namaBOM }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -525,7 +525,7 @@
                                         <div class="card bg-card-secondary">
                                             <div class="card-body">
                                                 <div class="card-title">Kode BOM</div>
-                                                <div class="card-text">{{ headerBOM.kodeBOM }}</div>
+                                                <div class="card-text text-bold">{{ headerBOM.kodeBOM }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -533,7 +533,7 @@
                                         <div class="card bg-card-danger">
                                             <div class="card-body">
                                                 <div class="card-title">Tahun Pembuatan</div>
-                                                <div class="card-text">{{ headerBOM.tahunBuat }}</div>
+                                                <div class="card-text text-bold">{{ headerBOM.tahunBuat }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -542,7 +542,7 @@
                                             <div class="card-body">
                                                 <div class="card-title">Status</div>
                                                 <div class="card-text">
-                                                    <span class="badge badge-alert">{{ headerBOM.status }}</span>
+                                                    <span class="badge badge-danger">{{ headerBOM.status }}</span>
                                                 </div>
                                             </div>
                                         </div>

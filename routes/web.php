@@ -45,9 +45,25 @@ Route::get("/test", function () {
     return view('test');
 });
 Route::view('/modul_dashboard/show', 'auth.dashboard');
-Route::group(['middleware' => 'auth', 'middleware' => ['auth', 'divisi:jual,kes,prd,dc,gbj,qc,log,gk,mtc,mgrgdg,dirut']], function () {
+Route::group(['middleware' => 'auth', 'middleware' => ['auth', 'divisi:jual,kes,prd,dc,gbj,qc,log,gk,mtc,mgrgdg,dirut,it']], function () {
     Route::view('/edit_pwd', 'page.setting.edit_pwd');
     Route::post('/edit_pwd', [App\Http\Controllers\Auth\ResetPasswordController::class, 'update_pwd'])->name('penjualan.produk.store');
+});
+Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function () {
+    Route::view('/dashboard', 'page.administrator.dashboard');
+    Route::group(['prefix' => 'user', 'middleware' => 'auth'], function () {
+        Route::view('/', 'page.administrator.user.show');
+        Route::post('/data', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_data_user']);
+        Route::post('/ubah_status', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_change_status_user'])->name('user.status');
+        Route::get('/ubah_data/{id}', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_data_user_modal']);
+        Route::get('/tambah', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_create_user_modal']);
+        Route::post('/store', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_store_user']);
+        Route::post('/update/{jenis}/{id}', [App\Http\Controllers\Administrator\AdministratorController::class, 'get_update_user']);
+        Route::post('/reset_pwd/{id}', [App\Http\Controllers\Administrator\AdministratorController::class, 'reset_pwd_user'])->name('user.resetpwd');
+    });
+    Route::group(['prefix' => 'part', 'middleware' => 'auth'], function () {
+        Route::view('/', 'page.administrator.part.show');
+    });
 });
 Route::group(['prefix' => 'ppic', 'middleware' => 'auth'], function () {
     Route::view('/{any?}', 'spa.ppic.spa')->middleware('divisi:ppic');

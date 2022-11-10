@@ -34,7 +34,7 @@ class RedirectIfAuthenticated
                     return redirect('/manager-teknik');
                 } else if ($request->user()->hasRole("23")) {
                     return redirect('/qc/dashboard');
-                } else if ($request->user()->hasRole("26") || $request->user()->hasRole("8") ) {
+                } else if ($request->user()->hasRole("26") || $request->user()->hasRole("8")) {
                     return redirect('/penjualan/dashboard');
                 } else if ($request->user()->hasRole("13")) {
                     return redirect('/gbj/dashboard');
@@ -54,6 +54,8 @@ class RedirectIfAuthenticated
                     return redirect('/mtc/air/masuk');
                 } else if ($request->user()->hasRole("22")) {
                     return redirect('/lab/dashboard');
+                } else if ($request->user()->hasRole("14")) {
+                    return redirect('/administrator/dashboard');
                 }
             }
         }

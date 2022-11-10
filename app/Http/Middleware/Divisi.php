@@ -25,7 +25,7 @@ class Divisi
             $d = ModelsDivisi::where('kode', $a)->first();
             $allow[] = $d->id;
         }
-        $role = strtolower(request()->user()->divisi_id);
+        $role = strtolower(request()->user()->Karyawan->divisi_id);
 
         if (in_array($role, $allow)) {
             return $next($request);
@@ -55,6 +55,8 @@ class Divisi
             return redirect('/penjualan/dashboard');
         } else if ($request->user()->hasRole("22")) {
             return redirect('/lab/dashboard');
+        } else if ($request->user()->hasRole("14")) {
+            return redirect('/administrator/dashboard');
         } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
             return redirect('/mtc/air/masuk');
         }
