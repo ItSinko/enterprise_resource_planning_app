@@ -483,6 +483,7 @@
         }
     });
     $(document).on('click', '.detail', function() {
+        console.log("test");
         var id = $(this).data('id');
         var time = $(this).data('tf');
         var rakit = $(this).data('rakit');
@@ -492,8 +493,7 @@
         $('div#bppb').text($(this).parent().prev().prev().prev().html());
         $('div#produk').text($(this).parent().prev().prev().html());
         $('div#jml').text($(this).parent().prev().html());
-
-        $('.scan-produk').DataTable({
+        var table_perakitan = $('.scan-produk').DataTable({
             destroy: true,
             "ordering":false,
             "autoWidth": false,

@@ -1197,13 +1197,13 @@
 @endsection
 
 @section('adminlte_js')
-    <script>
-        $(function() {
+<script>
+    $(function() {
             $('#jenis_paket').select2();
-            var nopaketdb = "{{ str_replace(['AK1-', 'FKS-'], '', $e->no_paket) }}";
+            var nopaketdb = "{{ str_replace( array('AK1-', 'FKS-'), '', $e->no_paket) }}";
             var nopaketubah = false;
-            var status_akn = '{{ $e->status }}';
-            var jum_produk = '{{ count($e->Pesanan->DetailPesanan) }}';
+            var status_akn = '{{$e->status}}';
+            var jum_produk = '{{count($e->Pesanan->DetailPesanan)}}';
             $(".os-content-arrange").remove();
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -1225,12 +1225,13 @@
             var produk_jumlah = false;
             var produk_harga = false;
 
-            function checkvalidasi() {
+            function checkvalidasi(){
 
                 $('#produktable').find('.penjualan_produk_id').each(function() {
                     if ($(this).val() != "") {
                         penjualan_produk_id = true;
-                    } else {
+                    }
+                    else {
                         penjualan_produk_id = false;
                         return false;
                     }
@@ -1239,7 +1240,8 @@
                 $('#produktable').find('.variasi').each(function() {
                     if ($(this).val() != "") {
                         variasi = true;
-                    } else {
+                    }
+                    else {
                         variasi = false;
                         return false;
                     }
@@ -1248,7 +1250,8 @@
                 $('#produktable').find('.produk_jumlah').each(function() {
                     if ($(this).val() != "") {
                         produk_jumlah = true;
-                    } else {
+                    }
+                    else {
                         produk_jumlah = false;
                         return false;
                     }
@@ -1257,7 +1260,8 @@
                 $('#produktable').find('.produk_harga').each(function() {
                     if ($(this).val() != "") {
                         produk_harga = true;
-                    } else {
+                    }
+                    else {
                         produk_harga = false;
                         return false;
                     }
@@ -1333,18 +1337,18 @@
             //     });
             // }
 
-            function perencanaan(customer_id, instansi) {
+            function perencanaan(customer_id, instansi){
                 $('#perencanaantable').DataTable({
                     searching: false,
                     destroy: true,
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        'url': '/api/penjualan/rencana/produk/' + customer_id + '/' + instansi + '/' + yyyy,
+                        'url': '/api/penjualan/rencana/produk/'+customer_id+'/'+instansi+'/'+yyyy,
                         'dataType': 'json',
                         'type': 'POST',
                         'headers': {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            'X-CSRF-TOKEN': '{{csrf_token()}}'
                         }
                     },
                     language: {
@@ -1370,7 +1374,7 @@
                         },
                         {
                             data: 'harga',
-                            render: $.fn.dataTable.render.number('.', ',', 0, 'Rp. '),
+                            render: $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ' ),
                             className: 'align-right nowrap-text'
                         },
                         {
@@ -1381,8 +1385,8 @@
                 });
             }
 
-            // getinstansi("{{ $e->customer_id }}");
-            perencanaan("{{ $e->customer_id }}", "{{ $e->instansi }}");
+            // getinstansi("{{$e->customer_id}}");
+            perencanaan("{{$e->customer_id}}", "{{$e->instansi}}");
 
             function loop() {
                 for (i = 0; i < 20; i++) {
@@ -1475,7 +1479,7 @@
                 }
             })
 
-            if ('{{ $e->customer_id }}' == 484) {
+            if ('{{$e->customer_id}}' == 484) {
                 var cust_id = 'belum';
                 $("#customer_id").attr('disabled', true);
                 $("#customer_id").empty().trigger('change');
@@ -1490,7 +1494,7 @@
             if (status_akn != 'sepakat') {
                 if (status_akn == 'draft' || status_akn == 'batal') {
 
-                    if (jum_produk <= 0) {
+                    if(jum_produk <= 0){
                         $("#dataproduk").addClass("hide");
                     }
                     $("#provinsi").attr('disabled', true);
@@ -1517,7 +1521,7 @@
                 checkvalidasi();
             });
 
-            $('input[name="status_akn"][value={{ $e->status }}]').attr('checked', 'checked');
+            $('input[name="status_akn"][value={{$e->status}}]').attr('checked', 'checked');
             $('input[name="namadistributor"][value=' + cust_id + ']').attr('checked', 'checked');
             $('#customer_id').on('keyup change', function() {
                 if ($(this).val() != "") {
@@ -1530,7 +1534,7 @@
             });
 
             $('input[type="radio"][name="status_akn"]').on('change', function() {
-                $('#isi_produk_input').addClass('hide');
+                 $('#isi_produk_input').addClass('hide');
 
                 if ($(this).val() != "") {
                     if ($(this).val() == "sepakat") {
@@ -1576,7 +1580,7 @@
                             $("#dataproduk").addClass("hide");
                             $('#isi_nopaket').prop("checked", false);
                         }
-                        if ($('input[type="checkbox"][name="isi_produk"]:checked').length <= 0) {
+                        if($('input[type="checkbox"][name="isi_produk"]:checked').length <= 0){
                             $("#dataproduk").addClass("hide");
                         }
                     } else if ($(this).val() == "negosiasi") {
@@ -1599,11 +1603,11 @@
                     }
                 } else {
                     $('#checkbox_nopaket').addClass('hide');
-                    $('#isi_nopaket').prop("checked", false);
-                    $('#no_paket').attr('readonly', false);
+                        $('#isi_nopaket').prop("checked", false);
+                        $('#no_paket').attr('readonly', false);
                     $("#msgstatus").text("Status Harus dipilih");
                     $("#status").addClass('is-invalid');
-                    if (nopaketubah == false) {
+                    if(nopaketubah == false){
                         $('#no_paket').val(nopaketdb);
                     }
                 }
@@ -1614,10 +1618,10 @@
             $('input[type="checkbox"][name="isi_nopaket"]').change(function() {
                 if ($('input[type="checkbox"][name="isi_nopaket"]:checked').length > 0) {
                     $('#no_paket').attr('readonly', false);
-                    if (nopaketubah == false) {
-                        $('#no_paket').val(nopaketdb);
-                    }
-                } else {
+                    if(nopaketubah == false){
+                            $('#no_paket').val(nopaketdb);
+                        }
+                }else{
                     $('#no_paket').attr('readonly', true);
                     $('#no_paket').val("");
                 }
@@ -1635,7 +1639,7 @@
                 }
                 checkvalidasi();
             });
-            $(document).on('keyup', '#no_paket', function() {
+            $(document).on('keyup', '#no_paket', function(){
                 nopaketubah = true;
             })
 
@@ -1684,7 +1688,7 @@
                 checkvalidasi();
             });
 
-            $('#pills-produk-tab').on('click', function() {
+            $('#pills-produk-tab').on('click', function(){
                 var cust = $('#customer_id').val();
                 var instansi = $('#instansi').val();
                 perencanaan(cust, instansi);
@@ -1791,8 +1795,7 @@
                 $('#produktable').find('tr .produk_subtotal').each(function() {
                     var subtotal = replaceAll($(this).val(), '.', '');
                     totalharga = parseInt(totalharga) + parseInt(subtotal);
-                    $("#totalhargaprd").text("Rp. " + totalharga.toString().replace(
-                        /(\d)(?=(\d{3})+(?!\d))/g, "$1."));
+                    $("#totalhargaprd").text("Rp. " + totalharga.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1."));
                 })
             }
 
@@ -1806,12 +1809,9 @@
                     var variasi = $(el).find('.variasi');
                     for (var k = 0; k < variasi.length; k++) {
                         $(el).find('select[name="variasi[' + j + '][' + k + ']"').select2();
-                        $(el).find('select[data-attr="variasi' + k + '"]').attr('name', 'variasi[' + j +
-                            '][' + k + ']');
-                        $(el).find('select[data-attr="variasi' + k + '"]').attr('id', 'variasi' + j + '' +
-                            k);
-                        $(el).find('span[data-attr="ketstok' + k + '"]').attr('name', 'ketstok[' + j +
-                            '][' + k + ']');
+                        $(el).find('select[data-attr="variasi' + k + '"]').attr('name', 'variasi[' + j + '][' + k + ']');
+                        $(el).find('select[data-attr="variasi' + k + '"]').attr('id', 'variasi' + j + '' + k);
+                        $(el).find('span[data-attr="ketstok' + k + '"]').attr('name', 'ketstok[' + j + '][' + k + ']');
                         $(el).find('span[data-attr="ketstok' + k + '"]').attr('id', 'ketstok' + j + '' + k);
                     }
                     $(el).find('.detail_produk').attr('id', 'detail_produk' + j);
@@ -1866,8 +1866,7 @@
                     subtotal.val(formatmoney((jumlah * parseInt(hargacvrt)) + parseInt(ongkircvrt)));
                     totalhargaprd();
                     for (var i = 0; i < variasi.length; i++) {
-                        var variasires = $('select[name="variasi[' + ppid + '][' + i + ']"]').select2(
-                            'data')[0];
+                        var variasires = $('select[name="variasi[' + ppid + '][' + i + ']"]').select2('data')[0];
                         var kebutuhan = jumlah * variasires.jumlah;
                         if (cek_stok(variasires.id) < kebutuhan) {
                             var jumlah_kekurangan = 0;
@@ -1877,8 +1876,7 @@
                                 jumlah_kekurangan = Math.abs(cek_stok(variasires.id) - kebutuhan);
                             }
                             $('select[name="variasi[' + ppid + '][' + i + ']"]').addClass('is-invalid');
-                            $('span[name="ketstok[' + ppid + '][' + i + ']"]').text('Jumlah Kurang ' +
-                                jumlah_kekurangan + ' dari Permintaan');
+                            $('span[name="ketstok[' + ppid + '][' + i + ']"]').text('Jumlah Kurang ' + jumlah_kekurangan + ' dari Permintaan');
                         } else if (cek_stok(variasires.id) >= kebutuhan) {
                             $('select[name="variasi[' + ppid + '][' + i + ']"]').removeClass('is-invalid');
                             $('span[name="ketstok[' + ppid + '][' + i + ']"]').text('');
@@ -1911,8 +1909,7 @@
                         jumlah_kekurangan = Math.abs(cek_stok(vals.id) - kebutuhan);
                     }
                     $('select[name="variasi[' + ppid + '][' + id + ']"]').addClass('is-invalid');
-                    $('span[name="ketstok[' + ppid + '][' + id + ']"]').text('Jumlah Kurang ' +
-                        jumlah_kekurangan + ' dari Permintaan');
+                    $('span[name="ketstok[' + ppid + '][' + id + ']"]').text('Jumlah Kurang ' + jumlah_kekurangan + ' dari Permintaan');
                 } else if (cek_stok(vals.id) >= kebutuhan) {
                     $('select[name="variasi[' + ppid + '][' + id + ']"]').removeClass('is-invalid');
                     $('span[name="ketstok[' + ppid + '][' + id + ']"]').text('');
@@ -2066,8 +2063,7 @@
                         dataType: 'json',
                         success: function(res) {
                             $('#produk_harga' + index).val(formatmoney(res[0].harga));
-                            $('#produk_subtotal' + index).val(formatmoney(res[0].harga * $(
-                                '#produk_jumlah' + index).val()));
+                            $('#produk_subtotal' + index).val(formatmoney(res[0].harga * $('#produk_jumlah' + index).val()));
                             $('#rencana_id' + index).val("");
                             totalhargaprd();
                             var tes = $('#detail_produk' + index);
@@ -2079,13 +2075,8 @@
                                 tes.append(`<div>`);
                                 tes.append(`<div class="card-body blue-bg">
                                             <h6>` + res[0].produk[x].nama + `</h6>
-                                            <select class="form-control variasi" name="variasi[` + index + `][` + x +
-                                    `]" id="variasi` + index + `` + x +
-                                    `" style="width:100%;" data-attr="variasi` + x +
-                                    `" data-id="` + x + `"></select>
-                                            <span class="invalid-feedback d-block ketstok" name="ketstok[` + index +
-                                    `][` + x + `]" id="ketstok` + index + `` + x +
-                                    `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
+                                            <select class="form-control variasi" name="variasi[` + index + `][` + x + `]" id="variasi` + index + `` + x + `" style="width:100%;" data-attr="variasi` + x + `" data-id="` + x + `"></select>
+                                            <span class="invalid-feedback d-block ketstok" name="ketstok[` + index + `][` + x + `]" id="ketstok` + index + `` + x + `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
                                         </div>`);
                                 for (var y = 0; y < res[0].produk[x].gudang_barang_jadi
                                     .length; y++) {
@@ -2108,27 +2099,16 @@
                                     placeholder: 'Pilih Variasi',
                                     data: data,
                                     templateResult: function(data) {
-                                        var $span = $(
-                                            `<div><span class="col-form-label">` +
-                                            data.text +
-                                            `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                            data.qt + `">` + data.qt +
-                                            `</span></div>`);
+                                        var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                         return $span;
                                     },
                                     templateSelection: function(data) {
-                                        var $span = $(
-                                            `<div><span class="col-form-label">` +
-                                            data.text +
-                                            `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                            data.qt + `">` + data.qt +
-                                            `</span></div>`);
+                                        var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                         return $span;
                                     }
                                 });
 
-                                $(`select[name="variasi[` + index + `][` + x + `]"]`).trigger(
-                                    "change");
+                                $(`select[name="variasi[` + index + `][` + x + `]"]`).trigger("change");
                                 tes.append(`</div>`)
                             }
                             tes.append(`</fieldset>`);
@@ -2141,17 +2121,17 @@
             function load_variasi() {
                 produk = [];
                 produk = <?php
-                $prd = [];
-                if (isset($e->Pesanan)) {
-                    $p = [];
-                    if (isset($e->Pesanan->DetailPesanan)) {
-                        echo json_encode($e->Pesanan->DetailPesanan);
-                    } else {
-                        echo json_encode($prd);
-                    }
-                } else {
-                    echo json_encode($prd);
-                } ?>;
+                            $prd = array();
+                            if (isset($e->Pesanan)) {
+                                $p = array();
+                                if (isset($e->Pesanan->DetailPesanan)) {
+                                    echo json_encode($e->Pesanan->DetailPesanan);
+                                } else {
+                                    echo json_encode($prd);
+                                }
+                            } else {
+                                echo json_encode($prd);
+                            } ?>;
                 if (produk.length > 0) {
                     for (var w = 0; w < produk.length; w++) {
                         $.ajax({
@@ -2171,8 +2151,8 @@
                                             nama_var = res[0].produk[x].nama;
                                         }
                                         data.push({
-                                            id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                            text: nama_var,
+                                            id: res[0].produk[x].gudang_barang_jadi[0].id,
+                                            text: res[0].produk[x].nama,
                                             jumlah: res[0].produk[x].pivot.jumlah,
                                             qt: cek_stok(res[0].produk[x].gudang_barang_jadi[y]
                                                 .id)
@@ -2183,21 +2163,11 @@
                                         placeholder: 'Pilih Variasi',
                                         data: data,
                                         templateResult: function(data) {
-                                            var $span = $(
-                                                `<div><span class="col-form-label">` +
-                                                data.text +
-                                                `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                                data.qt + `">` + data.qt +
-                                                `</span></div>`);
+                                            var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                             return $span;
                                         },
                                         templateSelection: function(data) {
-                                            var $span = $(
-                                                `<div><span class="col-form-label">` +
-                                                data.text +
-                                                `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                                data.qt + `">` + data.qt +
-                                                `</span></div>`);
+                                            var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                             return $span;
                                         }
                                     });
@@ -2242,8 +2212,7 @@
                 source: function(request, response) {
                     $.ajax({
                         dataType: 'json',
-                        url: '/api/customer/get_instansi/' + $('#customer_id').val() + '/' +
-                            yyyy,
+                        url: '/api/customer/get_instansi/' + $('#customer_id').val() + '/' + yyyy,
                         data: {
                             term: request.term
                         },
@@ -2324,14 +2293,13 @@
                 transferproduk(id, nama_produk, produk_id, jumlah, harga);
             });
 
-            function transferproduk(id, nama_produk, produk_id, jumlah, harga) {
+            function transferproduk(id, nama_produk, produk_id, jumlah, harga){
                 var data = `<tr>
                         <td></td>
                         <td>
                             <div class="form-group select_item">
                                 <select name="penjualan_produk_id[]" id="0" class="select2 form-control custom-select penjualan_produk_id @error('penjualan_produk_id') is-invalid @enderror" style="width:100%;">
-                                    <option value="` + produk_id + `">` + nama_produk +
-                    `</option>
+                                    <option value="`+produk_id+`">`+nama_produk+`</option>
                                 </select>
                                 <div class="detailjual" id="tes0">
                                 </div>
@@ -2341,9 +2309,7 @@
                         <td>
                             <div class="form-group d-flex justify-content-center">
                                 <div class="input-group">
-                                    <input type="number" class="form-control produk_jumlah" aria-label="produk_satuan" name="produk_jumlah[]" id="produk_jumlah0" value="` +
-                    jumlah +
-                    `" style="width:100%;">
+                                    <input type="number" class="form-control produk_jumlah" aria-label="produk_satuan" name="produk_jumlah[]" id="produk_jumlah0" value="`+jumlah+`" style="width:100%;">
 
                                 </div>
                                 <small id="produk_ketersediaan"></small>
@@ -2352,9 +2318,7 @@
                         <td>
                             <div class="form-group d-flex justify-content-center">
 
-                                <input type="text" class="form-control produk_harga" name="produk_harga[]" id="produk_harga0" value="` +
-                    formatmoney(harga) +
-                    `" placeholder="Masukkan Harga" style="width:100%;"/>
+                                <input type="text" class="form-control produk_harga" name="produk_harga[]" id="produk_harga0" value="`+formatmoney(harga)+`" placeholder="Masukkan Harga" style="width:100%;"/>
                             </div>
                         </td>
                         <td>
@@ -2365,13 +2329,10 @@
                         </td>
                         <td>
                             <div class="form-group d-flex justify-content-center">
-                                <input type="text" class="form-control produk_subtotal" name="produk_subtotal[]" id="produk_subtotal0" placeholder="Masukkan Subtotal" value="` +
-                    formatmoney(jumlah * parseInt(harga)) +
-                    `" style="width:100%;" readonly/>
+                                <input type="text" class="form-control produk_subtotal" name="produk_subtotal[]" id="produk_subtotal0" placeholder="Masukkan Subtotal" value="`+ formatmoney(jumlah * parseInt(harga)) + `" style="width:100%;" readonly/>
                             </div>
                         </td>
-                        <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly value="` +
-                    id + `"></td>
+                        <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly value="`+id+`"></td>
                         <td>
                             <a id="removerowproduk"><i class="fas fa-minus" style="color: red;"></i></a>
                         </td>
@@ -2403,12 +2364,8 @@
                             tes.append(`<div>`);
                             tes.append(`<div class="card-body blue-bg">
                                             <h6>` + res[0].produk[x].nama + `</h6>
-                                            <select class="form-control variasi" name="variasi[` + index + `][` + x +
-                                `]" style="width:100%;" id="variasi` + index + `` + x +
-                                `" data-attr="variasi` + x + `" data-id="` + x + `"></select>
-                                            <span class="invalid-feedback d-block ketstok" name="ketstok[` + index +
-                                `][` + x + `]" id="ketstok` + index + `` + x +
-                                `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
+                                            <select class="form-control variasi" name="variasi[` + index + `][` + x + `]" style="width:100%;" id="variasi` + index + `` + x + `" data-attr="variasi` + x + `" data-id="` + x + `"></select>
+                                            <span class="invalid-feedback d-block ketstok" name="ketstok[` + index + `][` + x + `]" id="ketstok` + index + `` + x + `" data-attr="ketstok` + x + `" data-id="` + x + `"></span>
                                         </div>`);
 
                             for (var y = 0; y < res[0].produk[x].gudang_barang_jadi.length; y++) {
@@ -2430,17 +2387,11 @@
                                 placeholder: 'Pilih Variasi',
                                 data: data,
                                 templateResult: function(data) {
-                                    var $span = $(`<div><span class="col-form-label">` +
-                                        data.text +
-                                        `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                        data.qt + `">` + data.qt + `</span></div>`);
+                                    var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                     return $span;
                                 },
                                 templateSelection: function(data) {
-                                    var $span = $(`<div><span class="col-form-label">` +
-                                        data.text +
-                                        `</span><span class="badge blue-text float-right col-form-label stok" data-id="` +
-                                        data.qt + `">` + data.qt + `</span></div>`);
+                                    var $span = $(`<div><span class="col-form-label">` + data.text + `</span><span class="badge blue-text float-right col-form-label stok" data-id="` + data.qt + `">` + data.qt + `</span></div>`);
                                     return $span;
                                 }
                             });
@@ -2453,6 +2404,6 @@
                     }
                 });
             }
-        });
-    </script>
+    });
+</script>
 @stop

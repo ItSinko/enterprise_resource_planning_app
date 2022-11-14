@@ -92,6 +92,10 @@ Route::middleware('auth')->prefix('/ppic_direksi')->group(function () {
 Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
     Route::view('/{any?}', 'spa.manager_teknik.spa')->middleware('divisi:dirtek');
 });
+Route::middleware('auth')->prefix('/teknik')->group(function () {
+    Route::view('/{any?}', 'spa.teknik');
+});
+
 
 Route::group(['prefix' => '/gbj', 'middleware' => ['auth', 'divisi:gbj,mgrgdg,dirut']], function () {
     Route::view('/stok/{any?}', 'page.gbj.stok');
@@ -197,6 +201,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
     });
 
     Route::group(['prefix' => '/penjualan'], function () {
+
         Route::group(['middleware' => ['divisi:dc,jual,asp,dirut,qc,log,ppic']], function () {
             Route::get('/detail/ekatalog/{id}', [App\Http\Controllers\PenjualanController::class, 'get_data_detail_ekatalog'])->name('penjualan.penjualan.detail.ekatalog');
             Route::get('/detail/ekatalog_ppic/{id}', [App\Http\Controllers\PenjualanController::class, 'get_data_detail_ekatalog_ppic']);
@@ -236,7 +241,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
         Route::view('/show', 'page.penjualan.so.show')->name('penjualan.so.show');
         Route::get('/create/{id}', [App\Http\Controllers\PenjualanController::class, 'view_so_ekatalog'])->name('penjualan.so.create');
         Route::put('/store/{id}', [App\Http\Controllers\PenjualanController::class, 'create_so_ekatalog'])->name('penjualan.so.ekatalog.create');
-        Route::view('/edit', 'page.penjualan.so.edit')->name('penjualan.so.edit');
+        Route::view('/edit/{id}/{jenis}', 'page.penjualan.edit_so')->name('penjualan.so.edit');
     });
 
     Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,qc,log,dc,asp,dirut']], function () {

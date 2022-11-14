@@ -102,6 +102,7 @@ Route::prefix('/customer')->group(function () {
 
 Route::prefix('/produk')->group(function () {
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);
+    Route::get('detail/{id}', [App\Http\Controllers\MasterController::class, 'detail_produk']);
     Route::post('create', [App\Http\Controllers\MasterController::class, 'create_produk']);
     Route::post('update', [App\Http\Controllers\MasterController::class, 'update_produk']);
     Route::delete('delete/{id}', [App\Http\Controllers\MasterController::class, 'delete_produk']);
@@ -124,6 +125,7 @@ Route::prefix('/penjualan_produk')->group(function () {
 });
 
 Route::prefix('/penjualan')->group(function () {
+    Route::get('/edit', [App\Http\Controllers\PenjualanController::class, 'get_data_edit_penjualan']);
     // Route::post('create', [App\Http\Controllers\PenjualanController::class, 'create_penjualan']);
     Route::post('/penjualan/data/{jenis}/{status}', [App\Http\Controllers\PenjualanController::class, 'penjualan_data']);
     Route::get('/ekatalog_data/{akn}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog_emindo']);

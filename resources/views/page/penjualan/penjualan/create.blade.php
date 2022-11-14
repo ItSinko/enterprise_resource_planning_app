@@ -825,6 +825,7 @@
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <div class="row justify-content-center hide" id="dataproduk">
                                     <div class="col-lg-11 col-md-12">
                                         <h4>Data Produk</h4>
@@ -940,6 +941,91 @@
                                                                 </tfoot>
                                                             </table>
                                                         </div>
+=======
+                            </div>
+                            <div class="row justify-content-center hide" id="dataproduk">
+                                <div class="col-lg-11 col-md-12">
+                                    <h4>Data Produk</h4>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="table-responsive justify-content-center">
+                                                        <table class="table" style="text-align: center;" id="produktable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th colspan="7">
+                                                                        <button type="button" class="btn btn-primary float-right" id="addrowproduk">
+                                                                            <i class="fas fa-plus"></i>
+                                                                            Produk
+                                                                        </button>
+                                                                    </th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th width="2%">No</th>
+                                                                    <th width="35%">Nama Paket</th>
+                                                                    <th width="10%">Jumlah</th>
+                                                                    <th width="6%">Stok Distributor</th>
+                                                                    <th width="15%">Harga</th>
+                                                                    <th width="15%">Ongkir</th>
+                                                                    <th width="15%">Subtotal</th>
+                                                                    <th hidden>ID_Rencana</th>
+                                                                    <th width="2%">Aksi</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>
+                                                                        <div class="form-group">
+                                                                            <select name="penjualan_produk_id[]" id="0" class="select2 form-control custom-select penjualan_produk_id @error('penjualan_produk_id') is-invalid @enderror" style="width:100%;">
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="detail_produk" id="detail_produk0">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-group d-flex justify-content-center">
+                                                                            <div class="input-group">
+                                                                                <input type="number" class="form-control produk_jumlah" aria-label="produk_satuan" name="produk_jumlah[]" id="produk_jumlah0" style="width:100%;">
+                                                                            </div>
+                                                                            <small id="produk_ketersediaan"></small>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-check col-form-label">
+                                                                            <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-group d-flex justify-content-center">
+                                                                            <input type="text" class="form-control produk_harga" name="produk_harga[]" id="produk_harga0" placeholder="Masukkan Harga" style="width:100%;" />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-group d-flex justify-content-center">
+                                                                            <input type="text" class="form-control produk_ongkir" name="produk_ongkir[]" id="produk_ongkir0" placeholder="Masukkan Ongkir" style="width:100%;" />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="form-group d-flex justify-content-center">
+                                                                            <input type="text" class="form-control produk_subtotal" name="produk_subtotal[]" id="produk_subtotal0" placeholder="Masukkan Subtotal" style="width:100%;" readonly />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly></td>
+                                                                    <td>
+                                                                        <a id="removerowproduk"><i class="fas fa-minus" style="color: red"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th colspan="5" style="text-align:right;">Total Harga</th>
+                                                                    <th id="totalhargaprd" class="align-right">Rp. 0</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+>>>>>>> della_v
                                                     </div>
                                                 </div>
                                             </div>
@@ -2001,6 +2087,7 @@
                 checkvalidasi();
             });
 
+<<<<<<< HEAD
             $('#deskripsi').on('keyup', function() {
                 if ($(this).val() != "") {
                     $("#msgdeskripsi").text("");
@@ -2010,6 +2097,63 @@
                     $("#msgdeskripsi").text("Deskripsi harus diisi");
                     $("#deskripsi").addClass('is-invalid');
                     $('#btntambah').attr("disabled", true);
+=======
+        $('#tanggal_do').on('keyup change', function() {
+            if ($(this).val() != "") {
+                $("#msgtanggal_do").text("");
+                $("#tanggal_do").removeClass('is-invalid');
+                checkvalidasinonakn();
+                // if ($("#no_po").val() != "" && $("#no_do").val() != "") {
+                //     $('#btntambah').removeAttr("disabled");
+                // } else {
+                //     $('#btntambah').attr("disabled", true);
+                // }
+            } else if ($(this).val() == "") {
+                $('#btntambah').attr("disabled", true);
+                $("#msgtanggal_do").text("Tanggal DO Harus diisi");
+                $("#tanggal_do").addClass('is-invalid');
+            }
+        });
+        $("#customer_id").attr('disabled', true);
+        $('.customer_id').select2({
+            placeholder: "Pilih Customer",
+            ajax: {
+                minimumResultsForSearch: 20,
+                dataType: 'json',
+                theme: "bootstrap",
+                delay: 250,
+                type: 'GET',
+                url: '/api/customer/select/',
+                data: function(params) {
+                    return {
+                        term: params.term
+                    }
+                },
+
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(obj) {
+                            return {
+                                id: obj.id,
+                                text: obj.nama
+                            };
+                        })
+                    };
+                },
+            }
+        }).change(function() {
+            var id = $(this).val();
+            // instansi_array.length = 0
+            $.ajax({
+                url: '/api/customer/select/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if(data[0] != undefined){
+                        $('#alamat').val(data[0].alamat);
+                        $('#telepon').val(data[0].telp);
+                    }
+>>>>>>> della_v
                 }
             });
 
@@ -2887,6 +3031,11 @@
                         </div>
                         <small id="produk_ketersediaan"></small>
                     </div>
+                </td>
+                <td>
+                <div class="form-check col-form-label">
+                    <input type="checkbox" class="form-check-input stok_dist" id="stok_dist" name="stok_dist[]" value="1">
+                </div>
                 </td>
                 <td>
                     <div class="form-group d-flex justify-content-center">

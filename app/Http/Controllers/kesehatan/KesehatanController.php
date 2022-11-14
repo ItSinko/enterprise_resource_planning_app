@@ -1493,6 +1493,7 @@ class KesehatanController extends Controller
             return redirect()->back()->with('error', 'Gagal menambahkan data');
         }
     }
+
     public function kesehatan_bulanan_gcu_detail()
     {
         $karyawan = Karyawan::orderBy('nama', 'ASC')
@@ -2119,7 +2120,6 @@ class KesehatanController extends Controller
         }
         return response()->json($data);
     }
-
 
     public function riwayat_penyakit_data(Request $request)
     {

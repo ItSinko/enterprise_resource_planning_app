@@ -28,6 +28,7 @@ use App\Models\SaveResponse;
 use App\Models\TFProduksi;
 use Carbon\Doctrine\CarbonType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Carbon;
 
@@ -2793,7 +2794,7 @@ class PenjualanController extends Controller
                 if ($divisi_id == "26") {
                     if (!empty($data->Pesanan->log_id)) {
                         if ($data->Pesanan->State->nama == "Penjualan") {
-                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
+                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
                                 <button class="dropdown-item" type="button" >
                                 <i class="fas fa-pencil-alt"></i>
                                 Edit
@@ -2845,7 +2846,7 @@ class PenjualanController extends Controller
                             }
                         }
                     } else if (empty($data->Pesanan->log_id)) {
-                        $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
+                        $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'ekatalog']) . '" data-id="' . $data->id . '">
                             <button class="dropdown-item" type="button" >
                             <i class="fas fa-pencil-alt"></i>
                             Edit
@@ -3096,7 +3097,7 @@ class PenjualanController extends Controller
                                 </a>';
                             }
                         } else {
-                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->id, 'jenis' => 'spa']) . '" data-id="' . $data->id . '">
+                            $return .= '<a href="' . route('penjualan.penjualan.edit_ekatalog', [$data->pesanan->id, 'jenis' => 'spa']) . '" data-id="' . $data->id . '">
                                 <button class="dropdown-item" type="button" >
                                 <i class="fas fa-pencil-alt"></i>
                                 Edit
@@ -7044,5 +7045,222 @@ class PenjualanController extends Controller
             'message' =>  'Berhasil',
             'data'    =>  $json_array
         ], 200);
+    }
+    public function get_data_edit_penjualan()
+    {
+
+        $pesanan = Pesanan::find(2460);
+
+        $data = array();
+
+        if (count($pesanan->DetailPesananDsb) > 0) {
+            foreach ($pesanan->detailpesanandsb as $key_detailpesanandsb => $detailpesanandsb) {
+                $data['produk_dsb'][$key_detailpesanandsb] = array(
+                    'id' => $detailpesanandsb->penjualan_produk_id,
+                    'produk' => $detailpesanandsb->PenjualanProduk->nama,
+                    'qty' => $detailpesanandsb->jumlah,
+                    'price' => $detailpesanandsb->harga,
+                    'shippingcharge' => $detailpesanandsb->ongkir,
+                    'subtotal' => ($detailpesanandsb->harga * $detailpesanandsb->jumlah) + $detailpesanandsb->ongkir,
+                    'detailproduk' => array(),
+                    'detailprodukvarian' => array()
+                );
+
+                for ($j = 0; $j < 1; $j++) {
+                    $data['produk_dsb'][$key_detailpesanandsb]['detailproduk'][0] = array(array(
+                        'nama' => $detailpesanandsb->PenjualanProduk->nama,
+                        'nama_alias' => $detailpesanandsb->PenjualanProduk->nama_alias,
+                        'harga' => $detailpesanandsb->PenjualanProduk->harga,
+                        'status' => $detailpesanandsb->PenjualanProduk->status,
+                        'created_at' => $detailpesanandsb->PenjualanProduk->created_at,
+                        'updated_at' => $detailpesanandsb->PenjualanProduk->updated_at,
+                    ));
+                }
+
+
+                foreach ($detailpesanandsb->PenjualanProduk->Produk as $key_produk => $produk) {
+
+                    $data['produk_dsb'][$key_detailpesanandsb]['detailproduk'][0]['produk_dsb'][$key_produk] = array(
+                        'id' => $produk->id,
+                        'produk_id' =>  $produk->produk_id,
+                        'kelompok_produk_id' => $produk->kelompok_produk_id,
+                        'merk' =>  $produk->merk,
+                        'nama' =>  $produk->nama,
+                        'nama_coo' =>  $produk->nama_coo,
+                        'coo' =>  $produk->coo,
+                        'no_akd' =>  $produk->no_akd,
+                        'ket' => $produk->ket,
+                        'status' => $produk->status,
+                        'created_at' => $produk->created_at,
+                        'updated_at' => $produk->updated_at,
+                        'pivot' => $produk->pivot,
+                    );
+
+                    foreach ($produk->GudangBarangJadi as $key_v => $v) {
+                        $data['produk_dsb'][$key_detailpesanandsb]['detailproduk'][0]['produk_dsb'][$key_produk]['gudang_barang_jadi'][$key_v] = array(
+                            'id' => $v->id,
+                            'produk_id' => $v->produk_id,
+                            'nama' => $v->nama,
+                            'deskripsi' => $v->deskripsi,
+                            'stok' => $v->stok(),
+                            'stok_siap' => $v->stok_siap,
+                            'satuan_id' => $v->satuan_id,
+                            'gambar' => $v->gambar,
+                            'dim_p' => $v->dim_p,
+                            'dim_l' => $v->dim_l,
+                            'dim_t' => $v->dim_t,
+                            'status' => $v->status,
+                            'created_by' => $v->created_by,
+                            'updated_by' => $v->updated_by,
+                            'created_at' => $v->created_at,
+                            'updated_at' => $v->updated_at,
+                        );
+                    }
+                }
+
+                foreach ($detailpesanandsb->DetailPesananProdukdsb as $key_detailpesananprodukdsb => $detailpesananprodukdsb) {
+                    if ($detailpesananprodukdsb->GudangBarangJadi->nama != '') {
+                        $variasi = $detailpesananprodukdsb->GudangBarangJadi->nama;
+                    } else {
+                        $variasi = $detailpesananprodukdsb->GudangBarangJadi->Produk->nama;
+                    }
+                    $data['produk_dsb'][$key_detailpesanandsb]['detailprodukvarian'][$key_detailpesananprodukdsb] = array(
+                        'namaprd' => $detailpesananprodukdsb->GudangBarangJadi->Produk->nama,
+                        'id' => $detailpesananprodukdsb->GudangBarangJadi->id,
+                        'nama' => $variasi,
+                        'label' => $variasi . ' (' . $detailpesananprodukdsb->GudangBarangJadi->stok() . ')',
+                        'value' => $detailpesananprodukdsb->GudangBarangJadi->id,
+                        'stok' => $detailpesananprodukdsb->GudangBarangJadi->stok(),
+                    );
+                }
+            }
+        }
+
+        if (count($pesanan->DetailPesanan) > 0) {
+            foreach ($pesanan->detailpesanan as $key_detailpesanan => $detailpesanan) {
+                $data['produk'][$key_detailpesanan] = array(
+                    'id' => $detailpesanan->penjualan_produk_id,
+                    'produk' => $detailpesanan->PenjualanProduk->nama,
+                    'qty' => $detailpesanan->jumlah,
+                    'price' => $detailpesanan->harga,
+                    'shippingcharge' => $detailpesanan->ongkir,
+                    'subtotal' => ($detailpesanan->harga * $detailpesanan->jumlah) + $detailpesanan->ongkir,
+                    'detailproduk' => array(),
+                    'detailprodukvarian' => array()
+                );
+
+                for ($j = 0; $j < 1; $j++) {
+                    $data['produk'][$key_detailpesanan]['detailproduk'][0] = array(array(
+                        'nama' => $detailpesanan->PenjualanProduk->nama,
+                        'nama_alias' => $detailpesanan->PenjualanProduk->nama_alias,
+                        'harga' => $detailpesanan->PenjualanProduk->harga,
+                        'status' => $detailpesanan->PenjualanProduk->status,
+                        'created_at' => $detailpesanan->PenjualanProduk->created_at,
+                        'updated_at' => $detailpesanan->PenjualanProduk->updated_at,
+                    ));
+                }
+
+                foreach ($detailpesanan->PenjualanProduk->Produk as $key_produk => $produk) {
+
+                    $data['produk'][$key_detailpesanan]['detailproduk'][0]['produk'][$key_produk] = array(
+                        'id' => $produk->id,
+                        'produk_id' =>  $produk->produk_id,
+                        'kelompok_produk_id' => $produk->kelompok_produk_id,
+                        'merk' =>  $produk->merk,
+                        'nama' =>  $produk->nama,
+                        'nama_coo' =>  $produk->nama_coo,
+                        'coo' =>  $produk->coo,
+                        'no_akd' =>  $produk->no_akd,
+                        'ket' => $produk->ket,
+                        'status' => $produk->status,
+                        'created_at' => $produk->created_at,
+                        'updated_at' => $produk->updated_at,
+                        'pivot' => $produk->pivot,
+                    );
+
+                    foreach ($produk->GudangBarangJadi as $key_v => $v) {
+                        $data['produk'][$key_detailpesanan]['detailproduk'][0]['produk'][$key_produk]['gudang_barang_jadi'][$key_v] = array(
+                            'id' => $v->id,
+                            'produk_id' => $v->produk_id,
+                            'nama' => $v->nama,
+                            'deskripsi' => $v->deskripsi,
+                            'stok' => $v->stok(),
+                            'stok_siap' => $v->stok_siap,
+                            'satuan_id' => $v->satuan_id,
+                            'gambar' => $v->gambar,
+                            'dim_p' => $v->dim_p,
+                            'dim_l' => $v->dim_l,
+                            'dim_t' => $v->dim_t,
+                            'status' => $v->status,
+                            'created_by' => $v->created_by,
+                            'updated_by' => $v->updated_by,
+                            'created_at' => $v->created_at,
+                            'updated_at' => $v->updated_at,
+                        );
+                    }
+                }
+
+                foreach ($detailpesanan->DetailPesananProduk as $key_detailpesananproduk => $detailpesananproduk) {
+                    if ($detailpesananproduk->GudangBarangJadi->nama != '') {
+                        $variasi = $detailpesananproduk->GudangBarangJadi->nama;
+                    } else {
+                        $variasi = $detailpesananproduk->GudangBarangJadi->Produk->nama;
+                    }
+                    $data['produk'][$key_detailpesanan]['detailprodukvarian'][$key_detailpesananproduk] = array(
+                        'namaprd' => $detailpesananproduk->GudangBarangJadi->Produk->nama,
+                        'id' => $detailpesananproduk->GudangBarangJadi->id,
+                        'nama' => $variasi,
+                        'label' => $variasi . ' (' . $detailpesananproduk->GudangBarangJadi->stok() . ')',
+                        'value' => $detailpesananproduk->GudangBarangJadi->id,
+                        'stok' => $detailpesananproduk->GudangBarangJadi->stok(),
+                    );
+                }
+            }
+        }
+
+
+        $form['distributor'] = array(
+            'id' => $pesanan->Ekatalog->Customer->id,
+            'nama' => $pesanan->Ekatalog->Customer->nama,
+            'alamat' => $pesanan->Ekatalog->Customer->alamat,
+            'telp' => $pesanan->Ekatalog->Customer->telp,
+            'status' => $pesanan->Ekatalog->Customer->id == 484 ? 'Belum Diketahui' : 'Sudah Diketahui',
+        );
+        $form['no_urut'] = $pesanan->Ekatalog->no_urut;
+        $form['status'] = $pesanan->Ekatalog->status;
+        $form['tgl_buat'] = $pesanan->Ekatalog->tgl_buat;
+        $form['tgl_edit'] = $pesanan->Ekatalog->tgl_edit;
+        $form['tgl_delivery'] = $pesanan->Ekatalog->tgl_kontrak;
+        $form['instansi'] = $pesanan->Ekatalog->instansi;
+        $form['satuan'] = $pesanan->Ekatalog->satuan;
+        $form['alamat'] = $pesanan->Ekatalog->alamat;
+        $form['provinsi'] = array(
+            'value' =>  $pesanan->Ekatalog->Provinsi != '' ? $pesanan->Ekatalog->Provinsi->id : '-',
+            'label' => $pesanan->Ekatalog->Provinsi != '' ? $pesanan->Ekatalog->Provinsi->nama : '-',
+        );
+        $form['deskripsi'] = $pesanan->Ekatalog->deskripsi;
+        $form['ket'] = $pesanan->Ekatalog->ket;
+
+        return response()->json([
+            'header' => array(
+                'instansi' => $pesanan->Ekatalog->instansi,
+                'alamat_instansi' => $pesanan->Ekatalog->alamat,
+                'satuan' => $pesanan->Ekatalog->satuan,
+                'customer' => $pesanan->Ekatalog->Customer->nama,
+                'alamat_customer' => $pesanan->Ekatalog->Customer->alamat,
+                'provinsi' =>  $pesanan->Ekatalog->Provinsi != '' ? $pesanan->Ekatalog->Provinsi->nama : '-',
+                'so' =>  $pesanan->so  != '' ? $pesanan->so : '-',
+                'no_paket' => $pesanan->Ekatalog->no_paket,
+                'tgl_order' => $pesanan->Ekatalog->tgl_buat ? $pesanan->Ekatalog->tgl_buat : '-',
+                'tgl_kontrak' => $pesanan->Ekatalog->tgl_kontrak ? $pesanan->Ekatalog->tgl_kontrak : '-',
+                'status' => $pesanan->Ekatalog->status,
+                'no_po' => $pesanan->Ekatalog->no_po  != '' ?  $pesanan->Ekatalog->no_po : '-',
+                'tgl_po' => $pesanan->Ekatalog->tgl_po  != '' ?  $pesanan->Ekatalog->tgl_po : '-',
+                'no_do' => $pesanan->Ekatalog->no_do  != '' ?  $pesanan->Ekatalog->no_do : '-',
+                'tgl_do' => $pesanan->Ekatalog->tgl_do != '' ?  $pesanan->Ekatalog->tgl_do : '-',
+            ),
+            'form' => $form,
+            'data' => $data,
+        ]);
     }
 }

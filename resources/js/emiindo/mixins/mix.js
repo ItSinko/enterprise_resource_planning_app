@@ -1,3 +1,4 @@
+import moment from "moment";
 export default {
     methods: {
         tgl_format(tgl) {
@@ -59,5 +60,34 @@ export default {
                 return true;
             }
         },
+        moment(date) {
+            return moment(date).format("YYYY-MM-DD");
+        },
+        status(status){
+            switch (status) {
+                case 'sepakat':
+                    return '<span class="badge green-text">Sepakat</span>'
+                case 'negosiasi':
+                    return '<span class="badge warning-text">Negosiasi</span>'
+                case 'batal':
+                    return '<span class="badge red-text">Batal</span>'
+                default:
+                    break;
+            }
+        },
     },
+    computed: {
+        datemax() {
+            let date = new Date();
+            return moment(date).format("YYYY-MM-DD");
+        },
+        selectProvinsi(){
+            return this.$store.state.provinsi.map((item) => {
+                return {
+                    value: item.id,
+                    label: item.nama
+                }
+            });
+        },
+    }
 }

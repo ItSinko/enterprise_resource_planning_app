@@ -1718,61 +1718,6 @@ class PpicController extends Controller
     }
     public function get_detail_master_pengiriman($id)
     {
-        // $datas = Pesanan::whereHas('DetailPesanan.DetailPesananProduk.GudangBarangJadi', function ($q) use ($id) {
-        //     $q->where('id', $id);
-        // })->has('DetailPesanan.DetailPesananProduk.NoseriDetailPesanan')->whereNotIn('log_id', ['7', '10'])->get();
-
-        // $arrayid = array();
-        // foreach ($datas as $i) {
-        //     if ($this->getJumlahCekPesanan($id, $i->id) > $this->getJumlahKirimPesanan($id, $i->id)) {
-        //         $arrayid[] = $i->id;
-        //     }
-        // }
-
-        // $prd = Produk::whereHas('GudangBarangJadi', function ($q) use ($id) {
-        //     $q->where('id', $id);
-        // })->first();
-
-        // $data = Pesanan::whereIn('id', $arrayid)->get();
-
-        // $data = Pesanan::whereIn('id', function($q) use($id){
-        //     $q->select('pesanan.id')
-        //       ->from('pesanan')
-        //       ->leftJoin('detail_pesanan', 'detail_pesanan.pesanan_id', '=', 'pesanan.id')
-        //       ->leftJoin('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-        //       ->leftjoin('noseri_detail_pesanan', 'noseri_detail_pesanan.detail_pesanan_produk_id', '=', 'detail_pesanan_produk.id')
-        //       ->whereNotIn('pesanan.log_id', ['7','10'])
-        //       ->where('detail_pesanan_produk.gudang_barang_jadi_id', '=', $id)
-        //       ->groupBy('pesanan.id')
-        //       ->havingRaw('count(noseri_detail_pesanan.id) > 0');
-        // })
-        // ->addSelect(['count_pesanan' => function($q) use($id){
-        //     $q->selectRaw('count(noseri_detail_pesanan.id)')
-        //     ->from('noseri_detail_pesanan')
-        //     ->join('detail_pesanan_produk', 'detail_pesanan_produk.id', '=', 'noseri_detail_pesanan.detail_pesanan_produk_id')
-        //     ->join('detail_pesanan', 'detail_pesanan.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
-        //     ->where('detail_pesanan_produk.gudang_barang_jadi_id', $id)
-        //     ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
-        //     ->limit(1);
-        // }, 'count_pengiriman' => function($q) use($id){
-        //     $q->selectRaw('count(noseri_logistik.id)')
-        //     ->from('noseri_logistik')
-        //     ->join('noseri_detail_pesanan', 'noseri_detail_pesanan.id', '=', 'noseri_logistik.noseri_detail_pesanan_id')
-        //     ->join('detail_pesanan_produk', 'detail_pesanan_produk.id', '=', 'noseri_detail_pesanan.detail_pesanan_produk_id')
-        //     ->join('detail_pesanan', 'detail_pesanan.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
-        //     ->where('detail_pesanan_produk.gudang_barang_jadi_id', $id)
-        //     ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
-        //     ->limit(1);
-        // },
-        // 'tgl_kontrak_custom' => function($q){
-        //     $q->selectRaw('IF(provinsi.status = "2", SUBDATE(ekatalog.tgl_kontrak, INTERVAL 14 DAY), SUBDATE(ekatalog.tgl_kontrak, INTERVAL 21 DAY))')
-        //     ->from('ekatalog')
-        //     ->join('provinsi', 'provinsi.id', '=', 'ekatalog.provinsi_id')
-        //     ->whereColumn('ekatalog.pesanan_id', 'pesanan.id')
-        //     ->limit(1);
-        // }
-        // ])->with(['Ekatalog.Customer', 'Spa.Customer', 'Spb.Customer'])->havingRaw('count_pesanan > count_pengiriman')->get();
-
         $data = Pesanan::addSelect([
             'count_pesanan' => function ($q) use ($id) {
                 $q->selectRaw('count(noseri_detail_pesanan.id)')
@@ -1876,34 +1821,10 @@ class PpicController extends Controller
                 return $data->count_pesanan;
             })
             ->addColumn('jumlah_selesai_kirim', function ($data) use ($id) {
-                // $ids = $data->id;
-                // $c = NoseriDetailLogistik::whereHas('DetailLogistik.DetailPesananProduk', function ($q) use ($id) {
-                //     $q->where('gudang_barang_jadi_id', $id);
-                // })->whereHas('DetailLogistik.DetailPesananProduk.DetailPesanan', function ($q) use ($ids) {
-                //     $q->where('pesanan_id', $ids);
-                // })->count();
                 return $data->count_pengiriman;
             })
             ->addColumn('jumlah_belum_kirim', function ($data) use ($id) {
-                // $ids = $data->id;
-                // $res = DetailPesanan::where('pesanan_id', $ids)->get();
-                // $jumlahpesanan = 0;
-                // foreach ($res as $a) {
-                //     foreach ($a->PenjualanProduk->Produk as $b) {
-                //         if ($b->id == $prd->id) {
-                //             $jumlahpesanan = $jumlahpesanan + ($a->jumlah * $b->pivot->jumlah);
-                //         }
-                //     }
-                // }
-
-                // $c = NoseriDetailLogistik::whereHas('DetailLogistik.DetailPesananProduk', function ($q) use ($id) {
-                //     $q->where('gudang_barang_jadi_id', $id);
-                // })->whereHas('DetailLogistik.DetailPesananProduk.DetailPesanan', function ($q) use ($ids) {
-                //     $q->where('pesanan_id', $ids);
-                // })->count();
-
                 $jumlahpesan = $data->count_pesanan - $data->count_pengiriman;
-
                 return $jumlahpesan;
             })
             ->addColumn('tgl_delivery', function ($data) {
