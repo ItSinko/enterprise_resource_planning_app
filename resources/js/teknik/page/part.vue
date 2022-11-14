@@ -30,6 +30,9 @@
                 ],
 
                 // Modal Tambah & Edit Part
+                jenisPart: [],
+                bahanPart: [],
+                satuanPart: [],
                 formsTitle: '',
                 formUmum: {
                     jenis: null,
@@ -43,6 +46,7 @@
                     tinggi: null,
                     bahan: null,
                     versi: null,
+                    satuan: null,
                     fungsi: null,
                     deskripsi: null,
                 },
@@ -92,6 +96,18 @@
                 await axios.get('/api/part/data').then(res => {
                     this.parts = res.data.data
                     this.loading = false
+                })
+
+                await axios.get('/api/jenis_part/selectdata').then(res => {
+                    this.jenisPart = res.data.data
+                })
+
+                await axios.get('/api/jenis_bahan/selectdata').then(res => {
+                    this.bahanPart = res.data.data
+                })
+
+                await axios.get('/api/jenis_satuan/selectdata').then(res => {
+                    this.satuanPart = res.data.data
                 })
             },
             tableParts(){
@@ -190,14 +206,15 @@
             simpan() {
                 let data = new FormData()
                     data.append('image', this.formUmum.image);
-                    data.append('jenis', this.formUmum.jenis);
+                    data.append('jenis', this.formUmum.jenis.value);
                     data.append('kode', this.formUmum.kode);
                     data.append('nama', this.formUmum.nama);
                     data.append('panjang', this.formSpecs.panjang);
                     data.append('lebar', this.formSpecs.lebar);
                     data.append('tinggi', this.formSpecs.tinggi);
-                    data.append('bahan', this.formSpecs.bahan);
+                    data.append('bahan', this.formSpecs.bahan.value);
                     data.append('versi', this.formSpecs.versi);
+                    data.append('satuan', this.formSpecs.satuan.value);
                     data.append('fungsi', this.formSpecs.fungsi);
                     data.append('deskripsi', this.formSpecs.deskripsi);
                 this.$swal({
@@ -228,6 +245,8 @@
                             )
                             this.formUmum = this.defaultformUmum
                             this.formSpecs = this.defaultformSpecs
+                            this.init()
+                            $('.modalAddEdit').modal('hide');
                         })
                     }else{
                         let id = this.formUmum.id
@@ -239,8 +258,9 @@
                             console.log(res.data)
                             this.formUmum = this.defaultformUmum
                             this.formSpecs = this.defaultformSpecs
+                            this.init()
+                            $('.modalAddEdit').modal('hide');
                         })
-                        
                     }   
                 })
             },
@@ -523,13 +543,7 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label for="">Jenis</label>
-                                                    <select class="form-control" v-model="formUmum.jenis">
-                                                        <option value="Screw">Screw</option>
-                                                        <option value="Bolt">Bolt</option>
-                                                        <option value="Nut">Nut</option>
-                                                        <option value="Washer">Washer</option>
-                                                        <option value="Other">Other</option>
-                                                    </select>
+                                                    <v-select :options="jenisPart" v-model="formUmum.jenis"></v-select>
                                                 </div>
 
                                                 <div class="form-group">
@@ -590,11 +604,15 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">Bahan</label>
-                                                    <select class="form-control" v-model="formSpecs.bahan"></select>
+                                                    <v-select v-model="formSpecs.bahan" :options="bahanPart"></v-select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="">Versi</label>
                                                     <input type="text" v-model="formSpecs.versi" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Satuan</label>
+                                                    <v-select v-model="formSpecs.satuan" :options="satuanPart"></v-select>
                                                 </div>
                                             </div>
                                             <div class="col-1"></div>
@@ -726,12 +744,5 @@
     .bg-card-secondary{
         background-color: #dce2e5;
         color: #536c7c;
-    }
-    /* .buttonTambah{
-        margin-bottom: -40px;
-        z-index: 1;
-    } */
-    .dataTables_wrapper{
-        z-index: -1;
     }
 </style>

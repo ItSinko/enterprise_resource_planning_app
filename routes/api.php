@@ -38,6 +38,9 @@ Route::prefix('/jenis_part')->group(function () {
 Route::prefix('/jenis_bahan')->group(function () {
     Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_bahan']);
 });
+Route::prefix('/jenis_satuan')->group(function () {
+    Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_satuan']);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return response()->json([

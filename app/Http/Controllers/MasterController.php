@@ -37,6 +37,7 @@ use Illuminate\Support\Arr;
 use App\Models\GudangKarantinaDetail;
 use App\Models\GudangKarantinaNoseri;
 use App\Models\JalurEkspedisi;
+use App\Models\Satuan;
 use App\Models\Sparepart;
 use App\Models\SparepartGudang;
 use App\Models\SystemLog;
@@ -1795,8 +1796,8 @@ class MasterController extends Controller
         $data[] = array(
             'formUmum' => array(
                 'jenis' => array(
-                    'jenis_id' => $sparepart->jenis_part->id,
-                    'jenis_nama' => $sparepart->jenis_part->nama
+                    'value' => $sparepart->jenis_part->id,
+                    'label' => $sparepart->jenis_part->nama
                 ),
                 'kode' => $sparepart->kode,
                 'nama' => $convert_nama[0],
@@ -1808,8 +1809,12 @@ class MasterController extends Controller
                 'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
                 'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
                 'bahan' => array(
-                    'bahan_id' => $sparepart->jenis_bahan->id,
-                    'bahan_nama' => $sparepart->jenis_bahan->nama
+                    'value' => $sparepart->jenis_bahan->id,
+                    'label' => $sparepart->jenis_bahan->nama
+                ),
+                'satuan' => array(
+                    'value' => $sparepart->satuan->id,
+                    'label' => $sparepart->satuan->nama
                 ),
                 'versi' => isset($convert_nama[1]) ? $convert_nama[1] : '',
                 'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
@@ -1868,7 +1873,6 @@ class MasterController extends Controller
     }
     public function update_sparepart(Request $request, $id)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
@@ -1952,8 +1956,8 @@ class MasterController extends Controller
         $data = array();
         foreach ($jenispart as $keyjp => $jp) {
             $data[$keyjp] = array(
-                'id' => $jp->id,
-                'nama' => $jp->nama,
+                'value' => $jp->id,
+                'label' => $jp->nama,
             );
         }
 
@@ -1965,8 +1969,21 @@ class MasterController extends Controller
         $data = array();
         foreach ($jenisbahan as $keyjp => $jp) {
             $data[$keyjp] = array(
-                'id' => $jp->id,
-                'nama' => $jp->nama,
+                'value' => $jp->id,
+                'label' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function selectdata_satuan(){
+        $jenissatuan = Satuan::all();
+        $data = array();
+        foreach ($jenissatuan as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'value' => $jp->id,
+                'label' => $jp->nama,
             );
         }
 
