@@ -84,7 +84,7 @@
             this.init()
         },
         updated() {
-            this.tableParts()
+            // this.tableParts()
         },
         methods: {
             async init(){
@@ -244,13 +244,6 @@
                     }   
                 })
             },
-            limitPagination(number) {
-                if (number > 5) {
-                    return '...'
-                } else {
-                    return number
-                }
-            },
             detailBOM() {
                 $('.modalDetailBOM').modal('show');
                 $('.tableDetailBOM').DataTable({
@@ -281,9 +274,31 @@
             renderPaginate() {
                 return this.partsFiltered.slice(this.perPage * (this.currentPage - 1), this.perPage * this.currentPage)
             },
-            paginateParts() {
-                return Math.ceil(this.partsFiltered.length / this.perPage)
-            },
+            pages() {
+                let totalPages = Math.ceil(this.partsFiltered.length / this.perPage)
+
+                let pages = []
+
+                const totalPageNumber = this.currentPage + 4
+                const firstPageNumber = 1
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    if(i <= totalPageNumber && pages.length < 5){
+                        pages.push(i)
+                    }else{
+                        pages.push('...')
+                        pages.push(totalPages)
+                        break
+                    }
+                }
+                if(this.currentPage > 5 && this.currentPage < totalPages){
+                    pages = [1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', totalPages]
+                }else if(this.currentPage > 5 && this.currentPage == totalPages){
+                    pages = [1, '...', this.currentPage - 1, this.currentPage]
+                }
+
+                return pages
+            }
         },
     }
 
@@ -300,6 +315,11 @@
                     <div class="p-2 flex-grow-1 bd-highlight"><button @click="addPart" class="btn btn-primary"><i
                                 class="fas fa-plus"></i> Tambah Part</button>
                     </div>
+                    <div class="p-2 bd-highlight">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" placeholder="Cari Part" v-model="searchpart">
+                        </div>
+                    </div>
                 </div>
                 <table class="table partTable">
                     <thead class="thead-light">
@@ -314,8 +334,8 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="part in partsFiltered" :key="part.id">
+                    <tbody v-if="renderPaginate.length > 0">
+                        <tr v-for="part in renderPaginate" :key="part.id">
                             <td>
                                 <img :src="`/storage/sparepart/${part.gambar}`" alt="" width="50px">
                             </td>
@@ -351,9 +371,14 @@
                             </td>
                         </tr>
                     </tbody>
+                    <tbody v-else>
+                        <tr>
+                            <td colspan="8" class="text-center">Tidak ada data</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <!-- <div class="card-footer">
+            <div class="card-footer">
                 <div class="d-flex flex-row-reverse bd-highlight">
                     <nav aria-label="...">
                         <ul class="pagination">
@@ -362,18 +387,18 @@
                                 :disabled="currentPage == 1"
                                 @click="previousPage">Previous</a>
                             </li>
-                            <li class="page-item" :class="paginate == currentPage ? 'active': ''" v-for="paginate in paginateParts" :key="paginate">
+                            <li class="page-item" :class="paginate == currentPage ? 'active': ''" v-for="paginate in pages" :key="paginate">
                                 <a class="page-link" @click="nowPage(paginate)">{{ paginate }}</a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
-                                :disabled="currentPage == paginateParts-1 ? true : false"
+                                :disabled="currentPage == pages[pages.length - 1]"
                                     @click="nextPage">Next</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
-            </div> -->
+            </div>
         </div>
 
 
@@ -702,10 +727,10 @@
         background-color: #dce2e5;
         color: #536c7c;
     }
-    .buttonTambah{
+    /* .buttonTambah{
         margin-bottom: -40px;
         z-index: 1;
-    }
+    } */
     .dataTables_wrapper{
         z-index: -1;
     }
