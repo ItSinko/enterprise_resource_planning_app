@@ -46,6 +46,21 @@
                     fungsi: null,
                     deskripsi: null,
                 },
+                defaultformUmum: {
+                    jenis: null,
+                    kode: null,
+                    nama: null,
+                    image: null,
+                },
+                defaultformSpecs: {
+                    panjang: null,
+                    lebar: null,
+                    tinggi: null,
+                    bahan: null,
+                    versi: null,
+                    fungsi: null,
+                    deskripsi: null,
+                },
                 breadcumbs: [{
                     name: 'Beranda',
                     link: '#'
@@ -61,7 +76,8 @@
                     kodeBOM: 'BOM-001',
                     tahunBuat: '2021',
                     status: 'Aktif',
-                }
+                },
+                loadingImages: false,
             }
         },
         created() {
@@ -127,15 +143,24 @@
                 this.formsTitle = 'Tambah Part';
             },
             handleImages(images) {
-                this.formUmum.image = images[0];
+                this.formUmum.image = images[0]
+                console.log("images", images);
             },
             async editPart(id) {
                 $('.modalAddEdit').modal('show');
                 this.formsTitle = 'Edit Part';
                 await axios.get(`/api/part/edit/${id}`).then(res => {
-                    console.log(res.data)
+                    // this.formUmum = JSON.parse(res.data.data[0].formUmum)
+                    // this.formSpecs = JSON.parse(res.data.data[0].formSpecs)
+                    this.formUmum = res.data.data[0].formUmum
+                    this.formSpecs = res.data.data[0].formSpecs
+                    this.formUmum.id = id
+                    
+                    let windowLocation = window.location.href
+                    let windowLocationSplit = windowLocation.split('/')
+                    let url = `${windowLocationSplit[0]}//${windowLocationSplit[2]}/storage/sparepart/${res.data.data[0].formUmum.image}`
+                    this.formUmum.imageEdit = url
                 })
-                console.log(id)
             },
             deletePart(idx) {
                 this.$swal({
@@ -157,7 +182,24 @@
                     }
                 })
             },
+            deleteImage() {
+                this.loadingImages = true
+                delete this.formUmum.imageEdit
+                this.loadingImages = false
+            },
             simpan() {
+                let data = new FormData()
+                    data.append('image', this.formUmum.image);
+                    data.append('jenis', this.formUmum.jenis);
+                    data.append('kode', this.formUmum.kode);
+                    data.append('nama', this.formUmum.nama);
+                    data.append('panjang', this.formSpecs.panjang);
+                    data.append('lebar', this.formSpecs.lebar);
+                    data.append('tinggi', this.formSpecs.tinggi);
+                    data.append('bahan', this.formSpecs.bahan);
+                    data.append('versi', this.formSpecs.versi);
+                    data.append('fungsi', this.formSpecs.fungsi);
+                    data.append('deskripsi', this.formSpecs.deskripsi);
                 this.$swal({
                     title: 'Simpan Part',
                     text: "Apakah anda yakin ingin menyimpan part ini?",
@@ -168,14 +210,38 @@
                     confirmButtonText: 'Ya',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.$swal(
-                            'Tersimpan!',
-                            'Data berhasil disimpan.',
-                            'success'
-                        )
-                    }
-                    $('.modalAddEdit').modal('hide');
+                    // let data = {
+                    //     formUmum: this.formUmum,
+                    //     formSpecs: this.formSpecs
+                    // }
+                    if(this.formsTitle == 'Tambah Part'){
+                        axios.post('/api/part/store',data, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            this.$swal(
+                                'Berhasil!',
+                                'Data berhasil disimpan.',
+                                'success'
+                            )
+                            this.formUmum = this.defaultformUmum
+                            this.formSpecs = this.defaultformSpecs
+                        })
+                    }else{
+                        let id = this.formUmum.id
+                        axios.post(`/api/part/update/${id}`,data, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            this.formUmum = this.defaultformUmum
+                            this.formSpecs = this.defaultformSpecs
+                        })
+                        
+                    }   
                 })
             },
             limitPagination(number) {
@@ -453,11 +519,20 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col">
-                                                <UploadImages @changed="handleImages" :max="1"
+                                            <div class="col" v-if="!loadingImages">
+                                                <div class="card" style="width: 18rem" v-if="formUmum.imageEdit != null && formUmum.imageEdit != undefined">
+                                                    <img :src="formUmum.imageEdit">
+                                                    <div class="card-img-overlay">
+                                                            <button class="btn btn-sm btn-danger" @click="deleteImage">
+                                                                <i class="fas fa-trash" aria-hidden="true"></i>
+                                                            </button>
+                                                    </div>
+                                                </div>
+                                                <UploadImages @changed="handleImages" :max="1" :images="formUmum.image" v-else
                                                     maxError="Maksimal 1 gambar"
                                                     uploadMsg="Silahkan Upload Gambar Part Disini"
                                                     clearAll="Hapus semua gambar" />
+                
                                             </div>
 
                                         </div>
