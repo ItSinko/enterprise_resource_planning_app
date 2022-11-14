@@ -32,7 +32,12 @@ Route::prefix('/part')->group(function () {
     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_sparepart']);
     Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_sparepart']);
 });
-
+Route::prefix('/jenis_part')->group(function () {
+    Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_jenis']);
+});
+Route::prefix('/jenis_bahan')->group(function () {
+    Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_bahan']);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return response()->json([

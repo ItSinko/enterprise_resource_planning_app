@@ -42,6 +42,7 @@ use App\Models\SparepartGudang;
 use App\Models\SystemLog;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
+use App\Models\teknik\JenisBahan;
 use App\Models\teknik\JenisPart;
 use App\Models\UserLog;
 use Illuminate\Support\Facades\DB;
@@ -964,8 +965,13 @@ class MasterController extends Controller
                 'status' => $request->jenis_paket
             ]);
 
+            // for ($i = 0; $i < count($request->produk_id); $i++) {
+            //     array_push($sync_data, ['produk_id' => $request->produk_id[$i], 'jumlah' => $request->jumlah[$i]]);
+            // }
+
+
             for ($i = 0; $i < count($request->produk_id); $i++) {
-                array_push($sync_data, ['produk_id' => $request->produk_id[$i], 'jumlah' => $request->jumlah[$i]]);
+                $PenjualanProduk->Produk()->attach($request->produk_id[$i], ['jumlah' => $request->jumlah[$i]]);
             }
 
             $bool = true;
@@ -1720,6 +1726,7 @@ class MasterController extends Controller
 
         foreach ($sparepart as  $key_sparepart => $s) {
             $data[$key_sparepart] = array(
+                'id' => $s->id,
                 'gambar' => $s->gambar != '' ? $s->gambar : 'default.jpg',
                 'kode' => $s->kode,
                 'nama' => $s->nama,
@@ -1793,15 +1800,13 @@ class MasterController extends Controller
                 ),
                 'kode' => $sparepart->kode,
                 'nama' => $convert_nama[0],
-                'gambar' => $sparepart->gambar != '' ? $sparepart->gambar : 'default.jpg',
+                'image' => $sparepart->gambar != '' ? $sparepart->gambar : 'default.jpg',
 
             ),
             'formSpecs' => array(
-                'spesifikasi' => array(
-                    'panjang' => isset($convert_panjang[0]) ? $convert_panjang[0] : '0',
-                    'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
-                    'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
-                ),
+                'panjang' => isset($convert_panjang[0]) ? $convert_panjang[0] : '0',
+                'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
+                'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
                 'bahan' => array(
                     'bahan_id' => $sparepart->jenis_bahan->id,
                     'bahan_nama' => $sparepart->jenis_bahan->nama
@@ -1827,28 +1832,30 @@ class MasterController extends Controller
     public function store_sparepart(Request $request)
     {
         $validator = Validator::make($request->all(),  [
-            'formUmum.jenis' => 'required',
-            'formUmum.nama' => 'required',
-            'formUmum.kode' => 'required|unique:m_sparepart,kode',
+            'jenis' => 'required',
+            'nama' => 'required',
+            'kode' => 'required|unique:m_sparepart,kode',
 
-            'formSpecs.bahan' => 'required',
-            'formSpecs.satuan' => 'required',
+            'bahan' => 'required',
+            'satuan' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['status' => 'gagal']);
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()
+            ]);
         } else {
-
             $sparepart = Sparepart::create([
-                'kode' => $request->formUmum['kode'],
-                'nama' =>  $request->formSpecs['versi'] != '' ? $request->formUmum['nama'] . '#' . $request->formSpecs['versi'] : $request->formUmum['nama'],
-                'jenis_part_id' => $request->formUmum['jenis'],
-                'deskripsi' =>  $request->formSpecs['deskripsi'],
-                'dimensi' => $request->formSpecs['panjang'] != '' ? $request->formSpecs['panjang'] . 'x' . $request->formSpecs['lebar'] . 'x' . $request->formSpecs['tinggi'] : '-',
-                'gambar' => $request->formUmum['image'],
-                'fungsi' => $request->formSpecs['fungsi'],
-                'satuan_id' => $request->formSpecs['satuan'],
-                'bahan_id' => $request->formSpecs['bahan'],
+                'kode' => $request->kode,
+                'nama' =>  $request->versi != '' ? $request->nama . '#' . $request->versi : $request->nama,
+                'jenis_part_id' => $request->jenis,
+                'deskripsi' =>  $request->deskripsi,
+                'dimensi' => $request->panjang != '' ? $request->panjang . 'x' . $request->lebar . 'x' . $request->tinggi : '-',
+                'gambar' => $request->image,
+                'fungsi' => $request->fungsi,
+                'satuan_id' => $request->satuan,
+                'bahan_id' => $request->bahan,
             ]);
             // if ($request->hasFile('gambar')) {
             //     $photo = $request->file('gambar')->store('images\sparepart');
@@ -1861,13 +1868,14 @@ class MasterController extends Controller
     }
     public function update_sparepart(Request $request, $id)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(),  [
-            'formUmum.jenis' => 'required',
-            'formUmum.nama' => 'required',
-            'formUmum.kode' => 'required|unique:m_sparepart,kode,' . $id,
+            'jenis' => 'required',
+            'nama' => 'required',
+            'kode' => 'required|unique:m_sparepart,kode,' . $id,
 
-            'formSpecs.bahan' => 'required',
-            'formSpecs.satuan' => 'required',
+            'bahan' => 'required',
+            'satuan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -1934,6 +1942,33 @@ class MasterController extends Controller
         }
 
 
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function selectdata_jenis()
+    {
+        $jenispart = JenisPart::all();
+        $data = array();
+        foreach ($jenispart as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'id' => $jp->id,
+                'nama' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+    public function selectdata_bahan()
+    {
+        $jenisbahan = JenisBahan::all();
+        $data = array();
+        foreach ($jenisbahan as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'id' => $jp->id,
+                'nama' => $jp->nama,
+            );
+        }
 
         return response()->json(['data' => $data]);
     }

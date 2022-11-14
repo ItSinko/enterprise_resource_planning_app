@@ -574,20 +574,17 @@
                     {
                         data: 'divisi',
                         className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+
                     },
                     {
                         data: 'username',
                         className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+
                     },
                     {
                         data: 'nama',
                         className: 'nowrap-text align-center',
-                        orderable: false,
-                        searchable: false
+
                     }, {
                         data: 'email',
                         className: 'nowrap-text align-center',

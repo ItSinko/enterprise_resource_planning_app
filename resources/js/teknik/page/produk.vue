@@ -1,7 +1,9 @@
 <script>
     import Header from '../components/header.vue'
     import DataTable from 'vue2-datatable-component'
+    import mix from './mix'
     export default {
+        mixins: [mix],
         components: {
             Header,
             DataTable
@@ -18,8 +20,7 @@
                     }
                 ],
                 search: '',
-                currentPage: 1,
-                perPage: 3,
+
                 products: [
                     {
                         'kode': 'PRD-001',
@@ -217,19 +218,7 @@
             deleteProduk(id) {
                 alert('delete')
             },
-            nextPage(){
-                if(this.currentPage < this.paginateProducts){
-                    this.currentPage++
-                }
-            },
-            previousPage(){
-                if(this.currentPage != 1){
-                    this.currentPage--
-                }
-            },
-            nowPage(page){
-                this.currentPage = page
-            },
+
         },
         computed: {
             filteredProducts() {

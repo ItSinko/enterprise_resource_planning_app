@@ -606,15 +606,32 @@
                         data: 'keterangan'
                     },
                     {
-                        data: 'button',
-                        render: function(data, type, row){
-                            var btn = '<div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
-                            <button type="button" id="riwayat"  class="btn btn-sm btn-outline-primary btn-sm m-1"><i class="fas fa-eye"></i> Riwayat Pakai</button>
-                            <button type="button" id="edit" class="btn btn-sm btn-warning btn-sm m-1"><i class="fas fa-edit"></i> Ubah</button>
-                            <button type="button" id="delete" class="btn btn-sm btn-danger btn-sm m-1" data-id="' . $data->id . '"><i class="fas fa-trash"></i> Hapus</button>
-                            </div>';
-                        }
-                    }
+                        data: 'button'
+                    },
+                    // {
+                    //     data: 'button',
+                    //     render: function(data, type, row) {
+                    //         var btn =
+                    //             `<div class="btn-toolbar d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups"> <
+                //             button type = "button"
+                //         id = "riwayat"
+                //         class = "btn btn-sm btn-outline-primary btn-sm m-1" > < i class =
+                //             "fas fa-eye" > < /i> Riwayat Pakai</button >
+                //             <
+                //             button type = "button"
+                //         id = "edit"
+                //         class = "btn btn-sm btn-warning btn-sm m-1" > < i class =
+                //             "fas fa-edit" > < /i> Ubah</button >
+                //             <
+                //             button type = "button"
+                //         id= "delete"
+                //         class = "btn btn-sm btn-danger btn-sm m-1"
+                //         data-id = "' . $data->id . '" > < i class = "fas fa-trash" > <
+                //             /i> Hapus</button >
+                //             <
+                //             /div>`;
+                    //     }
+                    // }
                 ]
             });
 
