@@ -32,7 +32,12 @@ Route::prefix('/part')->group(function () {
     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_sparepart']);
     Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_sparepart']);
 });
-
+Route::prefix('/jenis_part')->group(function () {
+    Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_jenis']);
+});
+Route::prefix('/jenis_bahan')->group(function () {
+    Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_bahan']);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return response()->json([
@@ -102,6 +107,7 @@ Route::prefix('/customer')->group(function () {
 
 Route::prefix('/produk')->group(function () {
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);
+    Route::get('detail/{id}', [App\Http\Controllers\MasterController::class, 'detail_produk']);
     Route::post('create', [App\Http\Controllers\MasterController::class, 'create_produk']);
     Route::post('update', [App\Http\Controllers\MasterController::class, 'update_produk']);
     Route::delete('delete/{id}', [App\Http\Controllers\MasterController::class, 'delete_produk']);

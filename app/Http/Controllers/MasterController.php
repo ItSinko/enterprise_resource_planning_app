@@ -42,6 +42,7 @@ use App\Models\SparepartGudang;
 use App\Models\SystemLog;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
+use App\Models\teknik\JenisBahan;
 use App\Models\teknik\JenisPart;
 use App\Models\UserLog;
 use Illuminate\Support\Facades\DB;
@@ -1896,5 +1897,79 @@ class MasterController extends Controller
 
             return response()->json(['status' => 'berhasil']);
         }
+    }
+    public function detail_produk($id)
+    {
+        $produk = Produk::find($id);
+        $bom = BillOfMaterial::where('produk_id', $id)->get();
+        $data = array();
+
+        $data[] = array(
+            'header' => array(
+                'nama' => $produk->nama,
+                'kode' => $produk->product->kode,
+                'jenis' => $produk->product->nama,
+                'kategori' => $produk->Kelompokproduk->nama,
+                'akd' => $produk->no_akd
+            ),
+            'detail' => array(
+                'deskripsi' => $produk->deskripsi,
+                'spesifikasi' => array(
+                    'dimensi' => $produk->dimensi,
+                    'bahan' => $produk->jenis_bahan->nama,
+                    'fungsi' => $produk->jenis_bahan->fungsi,
+                    'versi' => $produk->jenis_bahan->versi,
+                ),
+                'bom' => array()
+            )
+        );
+
+        foreach ($bom as $key_bom => $b) {
+            $data[0]['detail']['bom'][$key_bom] = array(
+                'id' => $b->id,
+                'kode' => $b->kode,
+                'nama' => $b->nama,
+                'tahun' => $b->created_at->format("Y"),
+                'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
+            );
+        }
+
+        foreach ($produk->file_produk as $key_p => $f) {
+            $data[0]['file'][$key_p] = array(
+                'id' => $f->id,
+                'path' => $f->path
+            );
+        }
+
+
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function selectdata_jenis()
+    {
+        $jenispart = JenisPart::all();
+        $data = array();
+        foreach ($jenispart as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'id' => $jp->id,
+                'nama' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+    public function selectdata_bahan()
+    {
+        $jenisbahan = JenisBahan::all();
+        $data = array();
+        foreach ($jenisbahan as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'id' => $jp->id,
+                'nama' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
     }
 }

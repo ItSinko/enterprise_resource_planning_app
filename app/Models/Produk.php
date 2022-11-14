@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\teknik\BillOfMaterial;
+use App\Models\teknik\JenisBahan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,5 +40,15 @@ class Produk extends Model
     function product()
     {
         return $this->belongsTo(Mproduk::class, 'produk_id');
+    }
+
+    function jenis_bahan()
+    {
+        return $this->belongsTo(JenisBahan::class, 'bahan_id');
+    }
+
+    function file_produk()
+    {
+        return $this->hasMany(FileProduk::class);
     }
 }
