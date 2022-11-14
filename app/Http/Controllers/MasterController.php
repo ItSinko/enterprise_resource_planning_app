@@ -1769,6 +1769,8 @@ class MasterController extends Controller
             //     'spesifikasi' => $sparepart->spesifikasi != '' ? $sparepart->spesifikasi : '-',
             // )
         );
+
+        if(count($dbom) > 0){
         foreach ($dbom as $key_bom => $d) {
             $data['bom'][$key_bom] =  array(
                 'id' => $d->id,
@@ -1776,6 +1778,9 @@ class MasterController extends Controller
                 'versi' => $d->bom->nama,
                 'jumlah' => $d->jumlah
             );
+        }
+        }else{
+            $data['bom'] = array(); 
         }
 
         return response()->json([

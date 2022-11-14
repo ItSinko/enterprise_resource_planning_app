@@ -13,21 +13,12 @@
             return {
                 searchpart: '',
                 parts: [],
+                modalDetail: false,
                 // Modal Detail Part
                 tabsDetail: 'detail',
-                detailProdukPart: [{
-                        id: 1,
-                        name: 'IT',
-                        versi: 'Vr 1.1',
-                        jumlah: '14',
-                    },
-                    {
-                        id: 2,
-                        name: 'IT',
-                        versi: 'Vr 1.2',
-                        jumlah: '14',
-                    }
-                ],
+                headersDetail: null,
+                partDetail: null,
+                detailProdukPart: [],
 
                 // Modal Tambah & Edit Part
                 jenisPart: [],
@@ -122,18 +113,28 @@
                     "responsive": true,
                 });
             },
-            detailPart(idx) {
-                $('.modalDetailPart').modal('show');
-                $('.tableDetailPart').DataTable({
-                    "destroy": true,
-                    "paging": true,
-                    "lengthChange": false,
-                    "searching": true,
-                    "ordering": false,
-                    "info": true,
-                    "autoWidth": false,
-                    "responsive": true,
-                });
+            async detailPart(id) {
+                await axios.get('/api/part/detail/' + id).then(res => {
+                    this.headersDetail = res.data.data[0].header
+                    this.partDetail = res.data.data[0].detail
+                    this.detailProdukPart = res.data.data['bom']
+                    this.modalDetail = true
+                })
+                    setTimeout(() => {
+                        let table = $('.tableDetailPart').DataTable({
+                            "destroy": true,
+                            "paging": true,
+                            "lengthChange": false,
+                            "searching": true,
+                            "ordering": false,
+                            "info": true,
+                            "autoWidth": false,
+                            "responsive": true,
+                        });
+                        $('.modalDetailPart').modal('show');
+
+                    }, 500);
+
             },
             textEllipsis(text, length) {
                 if (text.length > length) {
@@ -294,31 +295,6 @@
             renderPaginate() {
                 return this.partsFiltered.slice(this.perPage * (this.currentPage - 1), this.perPage * this.currentPage)
             },
-            pages() {
-                let totalPages = Math.ceil(this.partsFiltered.length / this.perPage)
-
-                let pages = []
-
-                const totalPageNumber = this.currentPage + 4
-                const firstPageNumber = 1
-                
-                for (let i = 1; i <= totalPages; i++) {
-                    if(i <= totalPageNumber && pages.length < 5){
-                        pages.push(i)
-                    }else{
-                        pages.push('...')
-                        pages.push(totalPages)
-                        break
-                    }
-                }
-                if(this.currentPage > 5 && this.currentPage < totalPages){
-                    pages = [1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', totalPages]
-                }else if(this.currentPage > 5 && this.currentPage == totalPages){
-                    pages = [1, '...', this.currentPage - 1, this.currentPage]
-                }
-
-                return pages
-            }
         },
     }
 
@@ -423,7 +399,7 @@
 
 
         <!-- Detail Part -->
-        <div class="modal modalDetailPart" tabindex="-1">
+        <div class="modal modalDetailPart" v-if="modalDetail">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -437,21 +413,21 @@
                             <div class="row">
                                 <div class="col-4">
                                     <div class="text-center pb-5">
-                                        <img src="https://picsum.photos/200/300" max-width="300">
+                                        <img :src="`/storage/sparepart/${headersDetail.gambar}`" max-width="300">
                                     </div>
                                 </div>
                                 <div class="col-8">
-                                    <h1 class="display-4 text-bold">Nama Part</h1>
-                                    <p class="text-bold">SPC567</p>
+                                    <h1 class="display-4 text-bold">{{ headersDetail.nama }}</h1>
+                                    <p class="text-bold">{{ headersDetail.kode }}</p>
 
                                     <div class="mt-1">
                                         <p>Jenis</p>
-                                        <div class="btn btn-outline-secondary mt-n2">Screw</div>
+                                        <div class="btn btn-outline-secondary mt-n2">{{ headersDetail.jenis }}</div>
                                     </div>
 
                                     <div class="mt-2">
                                         <p>Jumlah</p>
-                                        <p class="text-bold mt-n2">5000 pcs</p>
+                                        <p class="text-bold mt-n2">{{ headersDetail.jumlah }} pcs</p>
                                     </div>
                                 </div>
                             </div>
@@ -475,17 +451,17 @@
                                     <div class="card bg-secondary mt-2">
                                         <div class="card-body">
                                             <h4 class="card-title">Deskripsi</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing
-                                                elit. Hic earum quis, facilis ea, tempore non distinctio maxime
-                                                consequatur impedit dolore aliquid voluptatem neque repellat, accusamus
-                                                aut perspiciatis praesentium a. Veniam?</p>
+                                            <p class="card-text">{{ partDetail.deskripsi }}</p>
                                         </div>
                                     </div>
 
                                     <div class="card bg-secondary mt-2">
                                         <div class="card-body">
                                             <h4 class="card-title">Spesifikasi</h4>
-                                            <p class="card-text"></p>
+                                            <p class="card-text">Bahan</p>
+                                            <p class="card-text">{{ partDetail.spesifikasi.bahan }}</p>
+                                            <p class="card-text">Dimensi</p>
+                                            <p class="card-text">{{ partDetail.spesifikasi.dimensi }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -504,7 +480,7 @@
                                         <tbody>
                                             <tr v-for="(detail, key) in detailProdukPart" :key="`${detail.id}detail`">
                                                 <td>{{ key + 1 }}</td>
-                                                <td>{{ detail.name }}</td>
+                                                <td>{{ detail.produk }}</td>
                                                 <td>{{ detail.versi }}</td>
                                                 <td>{{ numberFormat(detail.jumlah) }}</td>
                                                 <td>
