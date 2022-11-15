@@ -41,21 +41,6 @@
                     fungsi: null,
                     deskripsi: null,
                 },
-                defaultformUmum: {
-                    jenis: null,
-                    kode: null,
-                    nama: null,
-                    image: null,
-                },
-                defaultformSpecs: {
-                    panjang: null,
-                    lebar: null,
-                    tinggi: null,
-                    bahan: null,
-                    versi: null,
-                    fungsi: null,
-                    deskripsi: null,
-                },
                 breadcumbs: [{
                     name: 'Beranda',
                     link: '#'
@@ -158,8 +143,23 @@
             },
             addPart() {
                 this.formsTitle = 'Tambah Part';
-                this.formUmum = this.defaultformUmum
-                this.formSpecs = this.defaultformSpecs
+                this.loadingImages = true
+                this.formUmum = {
+                    jenis: null,
+                    kode: null,
+                    nama: null,
+                    image: null,
+                }
+                this.formSpecs = {
+                    panjang: null,
+                    lebar: null,
+                    tinggi: null,
+                    bahan: null,
+                    versi: null,
+                    fungsi: null,
+                    deskripsi: null,
+                }
+                this.loadingImages = false
                 setTimeout(() => {
                 $('.modalAddEdit').modal('show');
                 }, 100);
@@ -169,8 +169,21 @@
                 console.log("images", images);
             },
             async editPart(id) {
-                this.formUmum = this.defaultformUmum
-                this.formSpecs = this.defaultformSpecs
+                this.formUmum = {
+                    jenis: null,
+                    kode: null,
+                    nama: null,
+                    image: null,
+                }
+                this.formSpecs = {
+                    panjang: null,
+                    lebar: null,
+                    tinggi: null,
+                    bahan: null,
+                    versi: null,
+                    fungsi: null,
+                    deskripsi: null,
+                }
                 this.formsTitle = 'Edit Part';
                 await axios.get(`/api/part/edit/${id}`).then(res => {
                     // this.formUmum = JSON.parse(res.data.data[0].formUmum)
@@ -214,7 +227,16 @@
                 this.loadingImages = false
             },
             simpan() {
-                let data = new FormData()
+                const formNotValid = Object.values(this.formUmum).some(value => value === null || value === '') && Object.values(this.formSpecs).some(value => value === null || value === '')
+
+                if (formNotValid) {
+                    this.$swal({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Form tidak boleh ada yang kosong!',
+                    })
+                } else {
+                                    let data = new FormData()
                     data.append('image', this.formUmum.image);
                     data.append('jenis', this.formUmum.jenis.value);
                     data.append('kode', this.formUmum.kode);
@@ -227,7 +249,7 @@
                     data.append('satuan', this.formSpecs.satuan.value);
                     data.append('fungsi', this.formSpecs.fungsi);
                     data.append('deskripsi', this.formSpecs.deskripsi);
-                this.$swal({
+                    this.$swal({
                     title: 'Simpan Part',
                     text: "Apakah anda yakin ingin menyimpan part ini?",
                     icon: 'warning',
@@ -237,10 +259,6 @@
                     confirmButtonText: 'Ya',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
-                    // let data = {
-                    //     formUmum: this.formUmum,
-                    //     formSpecs: this.formSpecs
-                    // }
                     if(this.formsTitle == 'Tambah Part'){
                         axios.post('/api/part/store',data, {
                             headers: {
@@ -253,9 +271,8 @@
                                 'Data berhasil disimpan.',
                                 'success'
                             )
-                            this.formUmum = this.defaultformUmum
-                            this.formSpecs = this.defaultformSpecs
                             this.init()
+                            window.location.reload()
                             $('.modalAddEdit').modal('hide');
                         })
                     }else{
@@ -266,13 +283,13 @@
                             }
                         }).then(res => {
                             console.log(res.data)
-                            this.formUmum = this.defaultformUmum
-                            this.formSpecs = this.defaultformSpecs
                             this.init()
+                            window.location.reload()
                             $('.modalAddEdit').modal('hide');
                         })
                     }   
                 })
+                }
             },
             detailBOM() {
                 $('.modalDetailBOM').modal('show');
