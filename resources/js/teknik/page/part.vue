@@ -114,6 +114,7 @@
                 });
             },
             async detailPart(id) {
+                this.modalDetail = false
                 await axios.get('/api/part/detail/' + id).then(res => {
                     this.headersDetail = res.data.data[0].header
                     this.partDetail = res.data.data[0].detail
@@ -467,7 +468,7 @@
                                 </div>
                                 <div class="tab-pane fade" id="pills-bom" role="tabpanel"
                                     aria-labelledby="pills-bom-tab">
-                                    <table class="table tableDetailPart mt-2">
+                                    <table class="table tableDetailPart mt-2" v-if="modalDetail">
                                         <thead class="thead-light">
                                             <tr>
                                                 <th>No</th>
