@@ -1,6 +1,6 @@
 <script>
 import Header from "../components/header.vue";
-import UploadImages from "vue-upload-drop-images";
+import UploadImages from "../components/upload-images.vue";
 import axios from "axios";
 import mix from "./mix";
 export default {
