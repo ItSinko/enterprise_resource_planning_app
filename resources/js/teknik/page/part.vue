@@ -157,15 +157,20 @@
                 }
             },
             addPart() {
-                $('.modalAddEdit').modal('show');
                 this.formsTitle = 'Tambah Part';
+                this.formUmum = this.defaultformUmum
+                this.formSpecs = this.defaultformSpecs
+                setTimeout(() => {
+                $('.modalAddEdit').modal('show');
+                }, 100);
             },
             handleImages(images) {
                 this.formUmum.image = images[0]
                 console.log("images", images);
             },
             async editPart(id) {
-                $('.modalAddEdit').modal('show');
+                this.formUmum = this.defaultformUmum
+                this.formSpecs = this.defaultformSpecs
                 this.formsTitle = 'Edit Part';
                 await axios.get(`/api/part/edit/${id}`).then(res => {
                     // this.formUmum = JSON.parse(res.data.data[0].formUmum)
@@ -179,8 +184,11 @@
                     let url = `${windowLocationSplit[0]}//${windowLocationSplit[2]}/storage/sparepart/${res.data.data[0].formUmum.image}`
                     this.formUmum.imageEdit = url
                 })
+                setTimeout(() => {
+                $('.modalAddEdit').modal('show');
+                }, 100);
             },
-            deletePart(idx) {
+            deletePart(id) {
                 this.$swal({
                     title: 'Hapus Part',
                     text: "Apakah anda yakin ingin menghapus part ini?",
