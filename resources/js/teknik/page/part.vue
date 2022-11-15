@@ -227,7 +227,12 @@
                 this.loadingImages = false
             },
             simpan() {
-                const formNotValid = Object.values(this.formUmum).some(value => value === null || value === '') && Object.values(this.formSpecs).some(value => value === null || value === '')
+                const formNotValid = 
+                    this.formUmum.jenis == null &&
+                    this.formUmum.kode == null &&
+                    this.formUmum.nama == null &&
+                    this.formSpecs.bahan == null &&
+                    this.formSpecs.satuan == null
 
                 if (formNotValid) {
                     this.$swal({
@@ -236,7 +241,7 @@
                         text: 'Form tidak boleh ada yang kosong!',
                     })
                 } else {
-                                    let data = new FormData()
+                    let data = new FormData()
                     data.append('image', this.formUmum.image);
                     data.append('jenis', this.formUmum.jenis.value);
                     data.append('kode', this.formUmum.kode);
