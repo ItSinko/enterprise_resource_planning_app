@@ -46,6 +46,7 @@ use App\Models\teknik\DetailBillOfMaterial;
 use App\Models\teknik\JenisBahan;
 use App\Models\teknik\JenisPart;
 use App\Models\UserLog;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1793,7 +1794,12 @@ class MasterController extends Controller
         $dbom = DetailBillOfMaterial::where('part_id', $id)->get();
         $data = array();
 
-        $convert_panjang = explode('x', $sparepart->dimensi);
+        if ($sparepart->dimensi != '') {
+            $convert_panjang = explode('x', $sparepart->dimensi);
+        } else {
+            $convert_panjang = explode('x', '0x0x0');
+        }
+
         $convert_nama = explode('#', $sparepart->nama);
 
 
@@ -1888,7 +1894,6 @@ class MasterController extends Controller
             'jenis' => 'required',
             'nama' => 'required',
             'kode' => 'required|unique:m_sparepart,kode,' . $id,
-
             'bahan' => 'required',
             'satuan' => 'required',
         ]);
@@ -1897,31 +1902,45 @@ class MasterController extends Controller
             return response()->json(['status' => 'gagal']);
         } else {
 
-            dd($request->hasFile('image'));
+
+
             if ($request->hasFile('image')) {
                 $name = md5($request->file('image')->getClientOriginalName());
                 $guessExtension = $request->file('image')->guessExtension();
                 $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
             }
-
-            // $p = $request->panjang != NULL ? $request->panjang : 0;
-            // $l = $request->lebar != NULL ? $request->lebar : 0;
-            // $t = $request->tinggi != NULL ? $request->tinggi : 0;
+            $p = $request->panjang != NULL ? $request->panjang : 0;
+            $l = $request->lebar != NULL ? $request->lebar : 0;
+            $t = $request->tinggi != NULL ? $request->tinggi : 0;
 
             $sparepart = Sparepart::find($id);
-            $sparepart->kode = $request->formUmum['kode'];
-            $sparepart->nama =   $request->formUmum['nama'];
-            $sparepart->jenis_part_id = $request->formUmum['jenis'];
-            $sparepart->deskripsi =  $request->formSpecs['deskripsi'];
-            $sparepart->dimensi = $request->formSpecs['panjang'] != '' ? $request->formSpecs['panjang'] . 'x' . $request->formSpecs['lebar'] . 'x' . $request->formSpecs['tinggi'] : '-';
-            $sparepart->gambar = $request->formUmum['image'];
-            $sparepart->fungsi = $request->formSpecs['fungsi'];
-            $sparepart->satuan_id = $request->formSpecs['satuan'];
-            $sparepart->bahan_id = $request->formSpecs['bahan'];
+            $sparepart->kode = $request->kode;
+            $sparepart->nama =   $request->nama;
+            $sparepart->jenis_part_id = $request->jenis;
+            $sparepart->deskripsi =  $request->deskripsi;
+            $sparepart->dimensi = $p . 'x' . $l . 'x' . $t;
+            $sparepart->gambar =  $request->hasFile('image') ? $name . '.' . $guessExtension : NULL;
+            $sparepart->fungsi = $request->fungsi;
+            $sparepart->satuan_id = $request->satuan;
+            $sparepart->bahan_id = $request->bahan;
+            $sparepart->versi = $request->versi;
             $sparepart->save();
 
 
             return response()->json(['status' => 'berhasil']);
+        }
+    }
+
+    public function delete_sparepart($id)
+    {
+
+
+        try {
+            $sparepart = Sparepart::where('id', $id)->delete();
+
+            return response()->json(['status' => 'berhasil']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'gagal']);
         }
     }
     public function detail_produk($id)

@@ -31,6 +31,7 @@ Route::prefix('/part')->group(function () {
     Route::get('/detail/{id}', [App\Http\Controllers\MasterController::class, 'get_detail_sparepart']);
     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_sparepart']);
     Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_sparepart']);
+    Route::post('/delete/{id}', [App\Http\Controllers\MasterController::class, 'delete_sparepart']);
 });
 Route::prefix('/jenis_part')->group(function () {
     Route::get('/selectdata', [App\Http\Controllers\MasterController::class, 'selectdata_jenis']);

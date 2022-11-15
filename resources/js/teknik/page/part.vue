@@ -227,6 +227,7 @@ export default {
     deleteImage() {
       this.loadingImages = true;
       delete this.formUmum.imageEdit;
+      this.formUmum.image = null;
       this.loadingImages = false;
     },
     simpan() {
