@@ -192,10 +192,12 @@
                     this.formSpecs = res.data.data[0].formSpecs
                     this.formUmum.id = id
                     
-                    let windowLocation = window.location.href
-                    let windowLocationSplit = windowLocation.split('/')
-                    let url = `${windowLocationSplit[0]}//${windowLocationSplit[2]}/storage/sparepart/${res.data.data[0].formUmum.image}`
-                    this.formUmum.imageEdit = url
+                    if(this.formUmum.image){
+                        let windowLocation = window.location.href
+                        let windowLocationSplit = windowLocation.split('/')
+                        let url = `${windowLocationSplit[0]}//${windowLocationSplit[2]}/storage/sparepart/${res.data.data[0].formUmum.image}`
+                        this.formUmum.imageEdit = url
+                    }
                 })
                 setTimeout(() => {
                 $('.modalAddEdit').modal('show');
