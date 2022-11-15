@@ -1770,17 +1770,17 @@ class MasterController extends Controller
             // )
         );
 
-        if(count($dbom) > 0){
-        foreach ($dbom as $key_bom => $d) {
-            $data['bom'][$key_bom] =  array(
-                'id' => $d->id,
-                'produk' => $d->bom->produk->nama,
-                'versi' => $d->bom->nama,
-                'jumlah' => $d->jumlah
-            );
-        }
-        }else{
-            $data['bom'] = array(); 
+        if (count($dbom) > 0) {
+            foreach ($dbom as $key_bom => $d) {
+                $data['bom'][$key_bom] =  array(
+                    'id' => $d->id,
+                    'produk' => $d->bom->produk->nama,
+                    'versi' => $d->bom->nama,
+                    'jumlah' => $d->jumlah
+                );
+            }
+        } else {
+            $data['bom'] = array();
         }
 
         return response()->json([
@@ -1806,7 +1806,7 @@ class MasterController extends Controller
                 ),
                 'kode' => $sparepart->kode,
                 'nama' => $convert_nama[0],
-                'image' => $sparepart->gambar != '' ? $sparepart->gambar : 'default.jpg',
+                'image' => $sparepart->gambar
 
             ),
             'formSpecs' => array(
@@ -1821,7 +1821,7 @@ class MasterController extends Controller
                     'value' => $sparepart->satuan->id,
                     'label' => $sparepart->satuan->nama
                 ),
-                'versi' => isset($convert_nama[1]) ? $convert_nama[1] : '',
+                'versi' => $sparepart->versi,
                 'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
                 'fungsi' => $sparepart->fungsi != '' ? $sparepart->fungsi : '-',
             ),
@@ -1845,33 +1845,39 @@ class MasterController extends Controller
             'jenis' => 'required',
             'nama' => 'required',
             'kode' => 'required|unique:m_sparepart,kode',
-
             'bahan' => 'required',
             'satuan' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 'error',
                 'message' => $validator->errors()
             ]);
         } else {
+
+            if ($request->hasFile('image')) {
+                $name = md5($request->file('image')->getClientOriginalName());
+                $guessExtension = $request->file('image')->guessExtension();
+                $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+            }
+
+            $p = $request->panjang != NULL ? $request->panjang : 0;
+            $l = $request->lebar != NULL ? $request->lebar : 0;
+            $t = $request->tinggi != NULL ? $request->tinggi : 0;
+
             $sparepart = Sparepart::create([
                 'kode' => $request->kode,
-                'nama' =>  $request->versi != '' ? $request->nama . '#' . $request->versi : $request->nama,
+                'nama' =>   $request->nama,
                 'jenis_part_id' => $request->jenis,
                 'deskripsi' =>  $request->deskripsi,
-                'dimensi' => $request->panjang != '' ? $request->panjang . 'x' . $request->lebar . 'x' . $request->tinggi : '-',
-                'gambar' => $request->image,
+                'dimensi' => $p . 'x' . $l . 'x' . $t,
+                'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
                 'fungsi' => $request->fungsi,
                 'satuan_id' => $request->satuan,
                 'bahan_id' => $request->bahan,
+                'versi' => $request->versi,
             ]);
-            // if ($request->hasFile('gambar')) {
-            //     $photo = $request->file('gambar')->store('images\sparepart');
-            // } else {
-            //     $photo = NULL;
-            // }
+
 
             return response()->json(['status' => 'berhasil']);
         }
@@ -1891,9 +1897,20 @@ class MasterController extends Controller
             return response()->json(['status' => 'gagal']);
         } else {
 
+            dd($request->hasFile('image'));
+            if ($request->hasFile('image')) {
+                $name = md5($request->file('image')->getClientOriginalName());
+                $guessExtension = $request->file('image')->guessExtension();
+                $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+            }
+
+            // $p = $request->panjang != NULL ? $request->panjang : 0;
+            // $l = $request->lebar != NULL ? $request->lebar : 0;
+            // $t = $request->tinggi != NULL ? $request->tinggi : 0;
+
             $sparepart = Sparepart::find($id);
             $sparepart->kode = $request->formUmum['kode'];
-            $sparepart->nama =  $request->formSpecs['versi'] != '' ? $request->formUmum['nama'] . '#' . $request->formSpecs['versi'] : $request->formUmum['nama'];
+            $sparepart->nama =   $request->formUmum['nama'];
             $sparepart->jenis_part_id = $request->formUmum['jenis'];
             $sparepart->deskripsi =  $request->formSpecs['deskripsi'];
             $sparepart->dimensi = $request->formSpecs['panjang'] != '' ? $request->formSpecs['panjang'] . 'x' . $request->formSpecs['lebar'] . 'x' . $request->formSpecs['tinggi'] : '-';
@@ -1982,7 +1999,8 @@ class MasterController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    public function selectdata_satuan(){
+    public function selectdata_satuan()
+    {
         $jenissatuan = Satuan::all();
         $data = array();
         foreach ($jenissatuan as $keyjp => $jp) {
