@@ -2,6 +2,7 @@ import VueRouter from "vue-router";
 
 import Part from "./page/part.vue";
 import Produk from "./page/produk.vue";
+import ProdukTambah from "./subproduk/tambahEdit.vue";
 import BarangMasuk from "./page/barangMasuk.vue";
 import PurchaseOrder from "./page/purchaseOrder.vue";
 
@@ -21,6 +22,29 @@ const routes = [
     {
         path: "/teknik/purchaseOrder",
         component: PurchaseOrder
+    },
+    {
+        path: "/teknik/produk/tambah",
+        component: ProdukTambah,
+    },
+    {
+        path: "/teknik/produk/edit/:id",
+        component: ProdukTambah,
+        props: { 
+            judul: "Edit Produk",
+            breadcumbs: [
+                {
+                    name: 'Teknik',
+                    link: '/teknik'
+                }, {
+                    name: 'Daftar Produk',
+                    link: '/teknik/produk'
+                }, {
+                    name: 'Edit',
+                    link: '/teknik/produk/edit/:id'
+                }
+            ],
+        }
     }
 ];
 

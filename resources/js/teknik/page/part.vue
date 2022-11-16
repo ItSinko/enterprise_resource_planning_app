@@ -771,7 +771,7 @@ export default {
                         </div>
                         <div class="form-group">
                           <label for="">Bahan</label>
-                          <v-select
+                          <v-select multiple
                             v-model="formSpecs.bahan"
                             :options="bahanPart"
                           ></v-select>
