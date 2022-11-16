@@ -1,15 +1,14 @@
 <script>
     import Header from '../components/header.vue'
-    import UploadImages from "vue-upload-drop-images";
-    import Dropzone from "vue2-dropzone";
-    import "vue2-dropzone/dist/vue2Dropzone.min.css";
+    import UploadImages from "../components/upload-images.vue";
+    import UploadFiles from "../components/upload-files.vue";
     import mix from './mixproduk'
     export default {
         mixins: [mix],
         components: {
             Header,
             UploadImages,
-            Dropzone,
+            UploadFiles,
         },
         data() {
             return {
@@ -61,67 +60,13 @@
                     noizin: null,
                     tkdn: null,
                     expired: null,
-                },
-
-                formUmumDefault: {
-                    jenis: null,
-                    kode: null,
-                    nama: null,
-                    image: null,
-                },
-                formSpecsDefault: {
-                    panjang: null,
-                    lebar: null,
-                    tinggi: null,
-                    bahan: null,
-                    versi: null,
-                    satuan: null,
-                    fungsi: null,
-                    deskripsi: null,
-                },
-                formEkatalogDefault: {
-                    tipe: null,
-                    merk: null,
-                    noproduk: null,
-                    satuan: null,
-                    perusahaan: null,
-                    jenis: null,
-                    kode: null,
-                    noizin: null,
-                    tkdn: null,
-                    expired: null,
                     lampiran: []
                 },
-
-                dropzoneOptions: {
-        // The Url Where Dropped or Selected files will be sent
-        url: `https://httpbin.org/post`,
-        // File Size allowed in MB
-        maxFilesize: 102400000,
-        // Authentication Headers like Access_Token of your application
-        headers: {
-          Authorization: `Access Token`
-        },
-        // The way you want to receive the files in the server
-        paramName: function(n) {
-          return "file[]";
-        },
-        dictDefaultMessage: "Upload Files Here xD",
-        includeStyling: false,
-        previewsContainer: false,
-        thumbnailWidth: 250,
-        thumbnailHeight: 140,
-        uploadMultiple: true,
-        parallelUploads: 20
-      },
             }
         },
         methods: {
             tambahProduk() {
                 this.modalTitle = 'Tambah Produk'
-                this.formUmum = this.formUmumDefault
-                this.formSpecs = this.formSpecsDefault
-                this.formEkatalog = this.formEkatalogDefault
                 setTimeout(() => {
                     $('.modalAddEdit').modal('show')
                 }, 100)
@@ -138,45 +83,10 @@
             handleImages(images) {
                 this.formUmum.image = images[0]
             },
-
-                fileAdded(file) {
-      console.log("File Dropped => ", file);
-      // Construct your file object to render in the UI
-      let attachment = {};
-      attachment._id = file.upload.uuid;
-      attachment.title = file.name;
-      attachment.type = "file";
-      attachment.extension = "." + file.type.split("/")[1];
-      attachment.user = JSON.parse(localStorage.getItem("user"));
-      attachment.content = "File Upload by Select or Drop";
-      attachment.thumb = file.dataURL;
-      attachment.thumb_list = file.dataURL;
-      attachment.isLoading = true;
-      attachment.progress = null;
-      attachment.size = file.size;
-      this.tempAttachments = [...this.tempAttachments, attachment];
-    },
-    // a middle layer function where you can change the XHR request properties
-    sendingFiles(files, xhr, formData) {
-      console.log(
-        "if you want to change the upload time or add data to the formData you can do it here."
-      );
-      console.log("Files sending", files);
-    },
-    // function where we get the upload progress
-    uploadProgress(file, progress, bytesSent) {
-      console.log("File Upload Progress", progress);
-      this.tempAttachments.map(attachment => {
-        if (attachment.title === file.name) {
-          attachment.progress = `${Math.floor(progress)}`;
-        }
-      });
-    },
-    // called on successful upload of a file
-    success(file, response) {
-      console.log("File uploaded successfully");
-      console.log("Response is ->", response);
-    }
+            uploadEkatalog(files) {
+                console.log(files)
+                this.formEkatalog.lampiran = files
+            },
         },
         mounted() {},
     }
@@ -443,18 +353,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12">
-                                                <dropzone
-                                                      ref="myVueDropzone"
-                                                        :include-styling="false"
-                                                        :useCustomSlot="true"
-                                                        id="dropzone"
-                                                        @vdropzone-upload-progress="uploadProgress"
-                                                        :options="dropzoneOptions"
-                                                        @vdropzone-file-added="fileAdded"
-                                                        @vdropzone-sending-multiple="sendingFiles"
-                                                        @vdropzone-success-multiple="success"
-                                                
-                                                ></dropzone>
+                                                <upload-files @changed="uploadEkatalog" :file="formEkatalog.lampiran" :multiple="true"></upload-files>
                                             </div>
                                         </div>
                                     </div>
