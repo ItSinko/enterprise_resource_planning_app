@@ -265,6 +265,7 @@ class MasterController extends Controller
     public function get_data_teknik_produk()
     {
         $data = array();
+
         $produk = Produk::all();
         foreach ($produk as $key_p => $p) {
             $data[$key_p] = array(
