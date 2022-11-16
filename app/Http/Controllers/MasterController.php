@@ -277,6 +277,7 @@ class MasterController extends Controller
                 'nama' => $p->nama,
                 'deskripsi' => $p->deskripsi,
                 'jumlah' => rand(10, 100),
+                'satuan' => $p->satuan->nama,
 
             );
         }

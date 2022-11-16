@@ -22,4 +22,8 @@ class Satuan extends Model
     {
         return $this->hasMany(Sparepart::class);
     }
+    function produk()
+    {
+        return $this->hasMany(Produk::class);
+    }
 }
