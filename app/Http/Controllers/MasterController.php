@@ -1866,6 +1866,7 @@ class MasterController extends Controller
     }
     public function store_sparepart(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',

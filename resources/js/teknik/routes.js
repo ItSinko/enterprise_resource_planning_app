@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Part from "./page/part.vue";
 import Produk from "./page/produk.vue";
 import ProdukTambah from "./subproduk/tambahEdit.vue";
+import ProdukDetail from "./subproduk/detail.vue";
 import BarangMasuk from "./page/barangMasuk.vue";
 import PurchaseOrder from "./page/purchaseOrder.vue";
 
@@ -41,10 +42,14 @@ const routes = [
                     link: '/teknik/produk'
                 }, {
                     name: 'Edit',
-                    link: '/teknik/produk/edit/:id'
+                    link: '/teknik/produk/edit'
                 }
             ],
         }
+    },
+    {
+        path: "/teknik/produk/detail/:id",
+        component: ProdukDetail,
     }
 ];
 

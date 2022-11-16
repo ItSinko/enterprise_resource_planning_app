@@ -35,14 +35,8 @@
             tambahProduk() {
                 this.$router.push('/teknik/produk/tambah')
             },
-            async detailProduk(id) {
-                try {
-                    await axios.get('/api/produk/teknik/detail/' + id).then(res => {
-                        console.log(res.data.data)
-                    })
-                } catch (error) {
-                    console.log(error)
-                }
+            detailProduk(id) {
+                this.$router.push(`/teknik/produk/detail/${id}`)    
             },
             editProduk(id) {
                 this.$router.push('/teknik/produk/edit/' + id)
@@ -50,13 +44,7 @@
             deleteProduk(id) {
                 alert('delete')
             },
-            handleImages(images) {
-                this.formUmum.image = images[0]
-            },
-            uploadEkatalog(files) {
-                console.log(files)
-                this.formEkatalog.lampiran = files
-            },
+            
         },
         mounted() {
             this.init()
@@ -167,58 +155,5 @@
             </div>
         </div>
 
-        <!-- Modal Add & Edit-->
-        <div class="modal fade modalAddEdit" id="" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-            aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ modalTitle }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Detail -->
-        <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Detail Produk</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="text-center pb-5">
-                                        <img :src="`/storage/produk/default.jpg`" alt="" width="300">
-                                    </div>
-                                </div>
-                                <div class="col-8">
-                                    <h1 class="display-4 text-bold"></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
