@@ -262,6 +262,53 @@ class MasterController extends Controller
     {
         return datatables()->of(Produk::with('KelompokProduk'))->toJson();
     }
+
+    public function store_produk_teknik(Request $request)
+    {
+
+
+        // $validator = Validator::make($request->all(),  [
+        //     'jenis' => 'required',
+        //     'nama' => 'required',
+        //     'kode' => 'required|unique:m_sparepart,kode',
+        //     'bahan' => 'required',
+        //     'satuan' => 'required',
+        // ]);
+
+        //  if ($validator->fails()) {
+        // return response()->json([
+        //     'message' => $validator->errors()
+        // ]);
+        // } else {
+
+        if ($request->hasFile('image')) {
+            $name = md5($request->file('image')->getClientOriginalName());
+            $guessExtension = $request->file('image')->guessExtension();
+            $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+        }
+
+        $p = $request->panjang != NULL ? $request->panjang : 0;
+        $l = $request->lebar != NULL ? $request->lebar : 0;
+        $t = $request->tinggi != NULL ? $request->tinggi : 0;
+
+        $sparepart = Sparepart::create([
+            'kode' => $request->kode,
+            'nama' =>   $request->nama,
+            'jenis_part_id' => $request->jenis,
+            'deskripsi' =>  $request->deskripsi,
+            'dimensi' => $p . 'x' . $l . 'x' . $t,
+            'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
+            'fungsi' => $request->fungsi,
+            'satuan_id' => $request->satuan,
+
+            'versi' => $request->versi,
+        ]);
+
+
+        return response()->json(['status' => 'berhasil']);
+        //}
+    }
+
     public function get_data_teknik_produk()
     {
         $data = array();
@@ -273,7 +320,7 @@ class MasterController extends Controller
                 'kategori' => $p->KelompokProduk->nama,
                 'jenis' => $p->product->nama,
                 'kode' => $p->kode,
-                    'nama' => $p->nama,
+                'nama' => $p->nama,
                 'deskripsi' => $p->deskripsi,
                 'jumlah' => rand(10, 100),
                 'satuan' => $p->satuan->nama,
@@ -1782,14 +1829,23 @@ class MasterController extends Controller
                 'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
                 'spesifikasi' => array(
                     'dimensi' => $sparepart->dimensi,
-                    'bahan' => $sparepart->jenis_bahan->nama,
+                    'bahan' => array(),
                 )
             ),
-            // 'bom' => array(
-            //     'deskripsi' => $sparepart->deskripsi != '' ? $sparepart->deskripsi : '-',
-            //     'spesifikasi' => $sparepart->spesifikasi != '' ? $sparepart->spesifikasi : '-',
-            // )
+
         );
+
+        if (count($sparepart->jenis_bahan) > 0) {
+
+            foreach ($sparepart->jenis_bahan as $key_jb => $s) {
+                $data[0]['detail']['spesifikasi']['bahan'][$key_jb] = array(
+                    'id' => $s->id,
+                    'nama' => $s->nama
+                );
+            }
+        } else {
+            $data[0]['detail']['spesifikasi']['bahan'] = array();
+        }
 
         if (count($dbom) > 0) {
             foreach ($dbom as $key_bom => $d) {
@@ -1867,11 +1923,12 @@ class MasterController extends Controller
     }
     public function store_sparepart(Request $request)
     {
+        dd($request);
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
             'kode' => 'required|unique:m_sparepart,kode',
-            'bahan' => 'required',
+            'bahan.*' => 'required',
             'satuan' => 'required',
         ]);
 
@@ -1900,7 +1957,6 @@ class MasterController extends Controller
                 'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
                 'fungsi' => $request->fungsi,
                 'satuan_id' => $request->satuan,
-                'bahan_id' => $request->bahan,
                 'versi' => $request->versi,
             ]);
 
@@ -1910,7 +1966,7 @@ class MasterController extends Controller
     }
     public function update_sparepart(Request $request, $id)
     {
-
+        dd($request);
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
@@ -1988,7 +2044,7 @@ class MasterController extends Controller
                 'deskripsi' => $produk->deskripsi,
                 'spesifikasi' => array(
                     'dimensi' => $produk->dimensi,
-                    'bahan' => $produk->jenis_bahan->nama,
+
                     'fungsi' => $produk->jenis_bahan->fungsi,
                     'versi' => $produk->jenis_bahan->versi,
                 ),

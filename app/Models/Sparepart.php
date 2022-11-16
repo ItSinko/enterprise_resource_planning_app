@@ -13,7 +13,7 @@ class Sparepart extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'm_sparepart';
-    protected $fillable = ['kode', 'nama', 'jenis_part_id', 'deskripsi', 'dimensi', 'bahan_id', 'gambar', 'fungsi', 'satuan_id', 'versi'];
+    protected $fillable = ['kode', 'nama', 'jenis_part_id', 'deskripsi', 'dimensi',  'gambar', 'fungsi', 'satuan_id', 'versi'];
 
     function kategori()
     {
@@ -38,6 +38,6 @@ class Sparepart extends Model
     }
     function jenis_bahan()
     {
-        return $this->belongsTo(JenisBahan::class, 'bahan_id');
+        return $this->belongsToMany(JenisBahan::class, 'm_sparepart_bahan');
     }
 }
