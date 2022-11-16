@@ -1,6 +1,7 @@
 <script>
 import Header from "../components/header.vue";
 import UploadImages from "../components/upload-images.vue";
+import UploadFiles from "../components/upload-files.vue";
 import axios from "axios";
 import mix from "./mix";
 export default {
@@ -8,6 +9,7 @@ export default {
   components: {
     Header,
     UploadImages,
+    UploadFiles,
   },
   data() {
     return {
