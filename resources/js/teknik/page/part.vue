@@ -599,7 +599,7 @@ export default {
                       <h4 class="card-title">Spesifikasi</h4>
                       <p class="card-text">Bahan</p>
                       <p class="card-text" v-for="(bahan, idx) in partDetail.spesifikasi.bahan" :key="`bahan${idx}`">
-                        <span>{{ bahan }}</span>
+                        <span>{{ bahan.nama }}</span>
                       </p>
                       <p class="card-text">Dimensi</p>
                       <p class="card-text">
