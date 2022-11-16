@@ -1,6 +1,6 @@
 <script>
 import Header from "../components/header.vue";
-import UploadImages from "vue-upload-drop-images";
+import UploadImages from "../components/upload-images.vue";
 import axios from "axios";
 import mix from "./mix";
 export default {
@@ -220,7 +220,14 @@ export default {
         cancelButtonText: "Batal",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$swal("Terhapus!", "Data berhasil dihapus.", "success");
+          axios.post(`/api/part/delete/${id}`).then((res) => {
+            if (res.data.status === "berhasil") {
+              this.$swal("Berhasil", "Part berhasil dihapus", "success");
+              this.init();
+            } else {
+              this.$swal("Gagal", "Part gagal dihapus", "error");
+            }
+          });
         }
       });
     },
