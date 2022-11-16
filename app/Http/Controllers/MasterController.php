@@ -262,6 +262,25 @@ class MasterController extends Controller
     {
         return datatables()->of(Produk::with('KelompokProduk'))->toJson();
     }
+    public function get_data_teknik_produk()
+    {
+        $data = array();
+        $produk = Produk::all();
+        foreach ($produk as $key_p => $p) {
+            $data[$key_p] = array(
+                'id' => $p->id,
+                'jenis' => $p->KelompokProduk->nama,
+                'kategori' => $p->product->nama,
+                'kode' => $p->kode,
+                'gambar' => $p->gambar,
+                'nama' => $p->nama,
+                'deskripsi' => $p->deskripsi,
+                'jumlah' => rand(10, 100),
+
+            );
+        }
+        return response()->json(['data' => $data]);
+    }
     public function get_data_customer($divisi_id, $value)
     {
         $divisi = $divisi_id;
@@ -1890,6 +1909,7 @@ class MasterController extends Controller
     }
     public function update_sparepart(Request $request, $id)
     {
+
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
@@ -1908,7 +1928,15 @@ class MasterController extends Controller
                 $name = md5($request->file('image')->getClientOriginalName());
                 $guessExtension = $request->file('image')->guessExtension();
                 $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+                $file = $name . '.' . $guessExtension;
+            } else {
+                if ($request->image != "null") {
+                    $file = $request->image;
+                } else {
+                    $file = NULL;
+                }
             }
+
             $p = $request->panjang != NULL ? $request->panjang : 0;
             $l = $request->lebar != NULL ? $request->lebar : 0;
             $t = $request->tinggi != NULL ? $request->tinggi : 0;
@@ -1919,7 +1947,7 @@ class MasterController extends Controller
             $sparepart->jenis_part_id = $request->jenis;
             $sparepart->deskripsi =  $request->deskripsi;
             $sparepart->dimensi = $p . 'x' . $l . 'x' . $t;
-            $sparepart->gambar =  $request->hasFile('image') ? $name . '.' . $guessExtension : NULL;
+            $sparepart->gambar =  $file;
             $sparepart->fungsi = $request->fungsi;
             $sparepart->satuan_id = $request->satuan;
             $sparepart->bahan_id = $request->bahan;
@@ -1933,8 +1961,6 @@ class MasterController extends Controller
 
     public function delete_sparepart($id)
     {
-
-
         try {
             $sparepart = Sparepart::where('id', $id)->delete();
 
