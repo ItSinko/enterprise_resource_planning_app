@@ -598,9 +598,13 @@ export default {
                     <div class="card-body">
                       <h4 class="card-title">Spesifikasi</h4>
                       <p class="card-text">Bahan</p>
-                      <p class="card-text" v-for="(bahan, idx) in partDetail.spesifikasi.bahan" :key="`bahan${idx}`">
-                        <span>{{ bahan.nama }}</span>
-                      </p>
+                      <span
+                        class="badge badge-warning ml-1"
+                        v-for="(bahan, idx) in partDetail.spesifikasi.bahan"
+                        :key="`bahan${idx}`"
+                      >
+                        {{ bahan.nama }} </span
+                      >&nbsp;&nbsp;
                       <p class="card-text">Dimensi</p>
                       <p class="card-text">
                         {{ partDetail.spesifikasi.dimensi }}
@@ -774,7 +778,8 @@ export default {
                         </div>
                         <div class="form-group">
                           <label for="">Bahan</label>
-                          <v-select multiple
+                          <v-select
+                            multiple
                             v-model="formSpecs.bahan"
                             :options="bahanPart"
                           ></v-select>

@@ -44,7 +44,7 @@ class Produk extends Model
 
     function jenis_bahan()
     {
-        return $this->belongsTo(JenisBahan::class, 'bahan_id');
+        return $this->belongsToMany(JenisBahan::class, 'produk_bahan');
     }
 
     function file_produk()

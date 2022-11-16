@@ -18,11 +18,11 @@ class JenisBahan extends Model
 
     function produk()
     {
-        return $this->hasMany(Produk::class);
+        return $this->belongsToMany(Produk::class, 'produk_bahan');
     }
 
     function sparepart()
     {
-        return $this->belongsToMany(Sparepart::class, 'm_sparepart_bahan', 'm_sparepart_id', 'jenis_bahan_id');
+        return $this->belongsToMany(Sparepart::class, 'm_sparepart_bahan');
     }
 }

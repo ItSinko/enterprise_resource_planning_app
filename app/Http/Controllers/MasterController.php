@@ -1895,10 +1895,7 @@ class MasterController extends Controller
                 'panjang' => isset($convert_panjang[0]) ? $convert_panjang[0] : '0',
                 'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
                 'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
-                'bahan' => array(
-                    'value' => $sparepart->jenis_bahan->id,
-                    'label' => $sparepart->jenis_bahan->nama
-                ),
+                'bahan' => array(),
                 'satuan' => array(
                     'value' => $sparepart->satuan->id,
                     'label' => $sparepart->satuan->nama
@@ -1908,6 +1905,19 @@ class MasterController extends Controller
                 'fungsi' => $sparepart->fungsi != '' ? $sparepart->fungsi : '-',
             ),
         );
+
+        if (count($sparepart->jenis_bahan) > 0) {
+
+            foreach ($sparepart->jenis_bahan as $key_jb => $s) {
+                $data[0]['formSpecs']['bahan'][$key_jb] = array(
+                    'value' => $s->id,
+                    'label' => $s->nama
+                );
+            }
+        } else {
+            $data[0]['formSpecs']['bahan'] = array();
+        }
+
         foreach ($dbom as $key_bom => $d) {
             $data['bom'][$key_bom] =  array(
                 'id' => $d->id,
@@ -1971,12 +1981,11 @@ class MasterController extends Controller
     }
     public function update_sparepart(Request $request, $id)
     {
-        dd($request);
+
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
             'kode' => 'required|unique:m_sparepart,kode,' . $id,
-            'bahan' => 'required',
             'satuan' => 'required',
         ]);
 
@@ -2017,6 +2026,12 @@ class MasterController extends Controller
             $sparepart->save();
 
 
+            $part_array = [];
+            for ($i = 0; $i < count($request->bahan); $i++) {
+                $part_array[] = $request->bahan[$i];
+            }
+            $sparepart->jenis_bahan()->sync($part_array);
+
             return response()->json(['status' => 'berhasil']);
         }
     }
@@ -2049,13 +2064,25 @@ class MasterController extends Controller
                 'deskripsi' => $produk->deskripsi,
                 'spesifikasi' => array(
                     'dimensi' => $produk->dimensi,
-
-                    'fungsi' => $produk->jenis_bahan->fungsi,
-                    'versi' => $produk->jenis_bahan->versi,
+                    'bahan' => array(),
+                    'fungsi' => $produk->fungsi,
+                    'versi' => $produk->versi,
                 ),
                 'bom' => array()
             )
         );
+
+        if (count($produk->jenis_bahan) > 0) {
+
+            foreach ($produk->jenis_bahan as $key_jb => $s) {
+                $data[0]['detail']['bahan'][$key_jb] = array(
+                    'value' => $s->id,
+                    'label' => $s->nama
+                );
+            }
+        } else {
+            $data[0]['detail']['bahan'] = array();
+        }
 
         foreach ($bom as $key_bom => $b) {
             $data[0]['detail']['bom'][$key_bom] = array(
@@ -2102,6 +2129,7 @@ class MasterController extends Controller
                 'label' => $jp->nama,
             );
         }
+
 
         return response()->json(['data' => $data]);
     }
