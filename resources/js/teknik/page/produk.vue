@@ -3,6 +3,7 @@
     import UploadImages from "../components/upload-images.vue";
     import UploadFiles from "../components/upload-files.vue";
     import mix from './mixproduk'
+    import axios from 'axios'
     export default {
         mixins: [mix],
         components: {
@@ -62,17 +63,31 @@
                     expired: null,
                     lampiran: []
                 },
+
+                // Modal Detail
+
             }
         },
         methods: {
+            async init(){
+                await axios.get('/api/produk/teknik/data').then(res => {
+                    this.products = res.data.data
+                })
+            },
             tambahProduk() {
                 this.modalTitle = 'Tambah Produk'
                 setTimeout(() => {
                     $('.modalAddEdit').modal('show')
                 }, 100)
             },
-            detailProduk(id) {
-                alert(id)
+            async detailProduk(id) {
+                try {
+                    await axios.get('/api/produk/teknik/detail/' + id).then(res => {
+                        console.log(res.data.data)
+                    })
+                } catch (error) {
+                    console.log(error)
+                }
             },
             editProduk(id) {
                 alert('edit')
@@ -88,7 +103,9 @@
                 this.formEkatalog.lampiran = files
             },
         },
-        mounted() {},
+        mounted() {
+            this.init()
+        },
     }
 
 </script>
@@ -144,18 +161,18 @@
                                                 x-placement="bottom-start"
                                                 style="position: absolute; transform: translate3d(-117px, 30px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                 <button class="dropdown-item" type="button"
-                                                    @click="detailProduk(part.id)">
+                                                    @click="detailProduk(produk.id)">
                                                     <i class="fas fa-eye"></i>
                                                     Detail
                                                 </button>
 
-                                                <button @click="editProduk(part.id)" class="dropdown-item"
+                                                <button @click="editProduk(produk.id)" class="dropdown-item"
                                                     type="button">
                                                     <i class="fas fa-pencil-alt"></i>
                                                     Edit
                                                 </button>
 
-                                                <button @click="deleteProduk(part.id)" class="dropdown-item"
+                                                <button @click="deleteProduk(produk.id)" class="dropdown-item"
                                                     type="button">
                                                     <i class="far fa-trash-alt"></i>
                                                     Hapus

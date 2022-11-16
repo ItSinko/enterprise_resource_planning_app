@@ -270,11 +270,10 @@ class MasterController extends Controller
         foreach ($produk as $key_p => $p) {
             $data[$key_p] = array(
                 'id' => $p->id,
-                'jenis' => $p->KelompokProduk->nama,
-                'kategori' => $p->product->nama,
+                'kategori' => $p->KelompokProduk->nama,
+                'jenis' => $p->product->nama,
                 'kode' => $p->kode,
-                'gambar' => $p->gambar,
-                'nama' => $p->nama,
+                    'nama' => $p->nama,
                 'deskripsi' => $p->deskripsi,
                 'jumlah' => rand(10, 100),
 

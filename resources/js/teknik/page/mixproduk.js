@@ -32,15 +32,27 @@ export default {
     },
     computed: {
         filteredProducts() {
+            const dataIsNotNull = (data) =>
+                data !== null && data !== undefined && data !== "" ? data : "";
             return this.products.filter((product) => {
-                return product.nama.toLowerCase().includes(this.search.toLowerCase())
-                || product.kode.toLowerCase().includes(this.search.toLowerCase())
-                || product.deskripsi.toLowerCase().includes(this.search.toLowerCase())
-                || product.jumlah.toLowerCase().includes(this.search.toLowerCase())
-                || product.satuan.toLowerCase().includes(this.search.toLowerCase())
-                || product.kategori.toLowerCase().includes(this.search.toLowerCase())
-                || product.jenis.toLowerCase().includes(this.search.toLowerCase())
-            })
+                const search = this.search.toLowerCase();
+                const nama = dataIsNotNull(product.nama).toLowerCase();
+                const kode = dataIsNotNull(product.kode).toLowerCase();
+                const kategori = dataIsNotNull(product.kategori).toLowerCase();
+                const jenis = dataIsNotNull(product.jenis).toLowerCase();
+                const deskripsi = dataIsNotNull(product.deskripsi).toLowerCase();
+                const jumlah = dataIsNotNull(product.jumlah).toString().toLowerCase();
+
+                return (
+                    nama.includes(search)  ||
+                    kode.includes(search) ||
+                    kategori.includes(search) ||
+                    jenis.includes(search) ||
+                    deskripsi.includes(search) ||
+                    jumlah.includes(search)
+                )
+            });
+
         },
         renderPaginate() {
             return this.filteredProducts.slice(this.perPage * (this.currentPage - 1), this.perPage * this.currentPage)
