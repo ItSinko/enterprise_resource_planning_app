@@ -1923,7 +1923,7 @@ class MasterController extends Controller
     }
     public function store_sparepart(Request $request)
     {
-        dd($request);
+
         $validator = Validator::make($request->all(),  [
             'jenis' => 'required',
             'nama' => 'required',
@@ -1937,6 +1937,7 @@ class MasterController extends Controller
                 'message' => $validator->errors()
             ]);
         } else {
+
 
             if ($request->hasFile('image')) {
                 $name = md5($request->file('image')->getClientOriginalName());
@@ -1959,6 +1960,10 @@ class MasterController extends Controller
                 'satuan_id' => $request->satuan,
                 'versi' => $request->versi,
             ]);
+
+            for ($i = 0; $i < count($request->bahan); $i++) {
+                $sparepart->jenis_bahan()->attach($request->bahan[$i]);
+            }
 
 
             return response()->json(['status' => 'berhasil']);

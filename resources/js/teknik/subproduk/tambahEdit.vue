@@ -65,6 +65,21 @@
                 },
             }
         },
+        methods: {
+                        handleImages(images) {
+                this.formUmum.image = images[0]
+            },
+            uploadEkatalog(files) {
+                console.log(files)
+                this.formEkatalog.lampiran = files
+            },
+            cancel(){
+                this.$router.push('/teknik/produk')
+            },
+            save(){
+                
+            }
+        }
     }
 
 </script>
@@ -215,6 +230,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="d-flex bd-highlight mb-3">
+            <div class="p-2 bd-highlight">
+                <button class="btn btn-danger" @click="cancel">Batal</button>
+            </div>
+            <div class="ml-auto p-2 bd-highlight">
+                <button class="btn btn-primary" @click="save">Simpan</button>
             </div>
         </div>
     </div>

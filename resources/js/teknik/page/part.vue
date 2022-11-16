@@ -37,7 +37,7 @@ export default {
         panjang: null,
         lebar: null,
         tinggi: null,
-        bahan: null,
+        bahan: [],
         versi: null,
         satuan: null,
         fungsi: null,
@@ -161,7 +161,7 @@ export default {
         panjang: null,
         lebar: null,
         tinggi: null,
-        bahan: null,
+        bahan: [],
         versi: null,
         fungsi: null,
         deskripsi: null,
@@ -186,7 +186,7 @@ export default {
         panjang: null,
         lebar: null,
         tinggi: null,
-        bahan: null,
+        bahan: [],
         versi: null,
         fungsi: null,
         deskripsi: null,
@@ -241,13 +241,14 @@ export default {
     },
     simpan() {
       const formNotValid =
-        this.formUmum.jenis == null &&
-        this.formUmum.kode == null &&
-        this.formUmum.nama == null &&
-        this.formSpecs.bahan == null &&
-        this.formSpecs.satuan == null;
+        this.formUmum.jenis != null &&
+        this.formUmum.kode != null &&
+        this.formUmum.nama != null &&
+        this.formSpecs.bahan.length > 0 &&
+        this.formSpecs.satuan != null;
 
-      if (formNotValid) {
+      console.log("formNotValid", formNotValid);
+      if (!formNotValid) {
         this.$swal({
           icon: "error",
           title: "Oops...",
@@ -262,7 +263,9 @@ export default {
         data.append("panjang", this.formSpecs.panjang);
         data.append("lebar", this.formSpecs.lebar);
         data.append("tinggi", this.formSpecs.tinggi);
-        data.append("bahan", this.formSpecs.bahan.value);
+        for (let i = 0; i < this.formSpecs.bahan.length; i++) {
+          data.append("bahan[]", this.formSpecs.bahan[i].value);
+        }
         data.append("versi", this.formSpecs.versi);
         data.append("satuan", this.formSpecs.satuan.value);
         data.append("fungsi", this.formSpecs.fungsi);
