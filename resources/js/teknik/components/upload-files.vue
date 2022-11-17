@@ -136,7 +136,9 @@ export default {
       <button type="button" class="clearButton" @click="reset">
         {{ clearAll ? clearAll : "clear All" }}
       </button>
-      <div class="imageHolder" v-for="(img, i) in Imgs" :key="i">
+      <div class="row">
+        <div class="col-3" v-for="(img, i) in Imgs" :key="i">
+                <div class="imageHolder">
         <span>{{ files[i].name }}</span>
         <span class="delete" style="color: white" @click="deleteImg(--i)">
           <svg
@@ -156,6 +158,9 @@ export default {
         </span>
         <div class="plus" @click="append" v-if="++i == Imgs.length">+</div>
       </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>

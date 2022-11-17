@@ -34,11 +34,13 @@
             return {
                 loadingImages: false,
                 jenisProduk: [],
+                kategoriProduk: [],
                 bahanProduk: [],
                 merkProduk: [],
                 satuanProduk: [],
                 formUmum: {
                     jenis: null,
+                    kategori: null,
                     kode: null,
                     nama: null,
                     image: null,
@@ -72,8 +74,12 @@
         },
         methods: {
             async init() {
-                await axios.get("/api/jenis_part/selectdata").then((res) => {
+                await axios.get("/api/produk/selectkelompok").then((res) => {
                     this.jenisProduk = res.data.data;
+                });
+
+                await axios.get("/api/produk/selectkategori").then((res) => {
+                    this.kategoriProduk = res.data.data;
                 });
 
                 await axios.get("/api/jenis_bahan/selectdata").then((res) => {
@@ -97,6 +103,7 @@
             async save() {
                 let data = new FormData();
                 data.append('jenis', this.formUmum.jenis.value);
+                data.append('kategori', this.formUmum.kategori.value);
                 data.append('kode', this.formUmum.kode);
                 data.append('nama', this.formUmum.nama);
                 data.append('image', this.formUmum.image);
@@ -144,19 +151,25 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="">Jenis</label>
+                                <label for="">Jenis Produk</label>
                                 <v-select :options="jenisProduk" v-model="formUmum.jenis">
                                 </v-select>
                             </div>
 
                             <div class="form-group">
-                                <label for="">Kode Part</label>
+                                <label for="">Kategori Produk</label>
+                                <v-select :options="kategoriProduk" v-model="formUmum.kategori">
+                                </v-select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Kode Produk</label>
                                 <input type="text" class="form-control" v-model="formUmum.kode">
                             </div>
 
                             <div class="form-group">
-                                <label for="">Nama Part</label>
-                                <textarea class="form-control" cols="5" rows="5" v-model="formUmum.nama"></textarea>
+                                <label for="">Nama Produk</label>
+                                <textarea class="form-control" cols="2" rows="2" v-model="formUmum.nama"></textarea>
                             </div>
                         </div>
 
