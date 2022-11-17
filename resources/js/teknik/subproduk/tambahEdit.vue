@@ -69,7 +69,7 @@
             this.init()
         },
         methods: {
-            async init(){
+            async init() {
                 await axios.get("/api/jenis_part/selectdata").then((res) => {
                     this.jenisProduk = res.data.data;
                 });
@@ -89,12 +89,58 @@
                 console.log(files)
                 this.formEkatalog.lampiran = files
             },
-            cancel(){
+            cancel() {
                 this.$router.push('/teknik/produk')
             },
-            save(){
-                console.log('save')
-            }
+            async save() {
+                let data = new FormData();
+                data.append('jenis', this.formUmum.jenis.value);
+                data.append('kode', this.formUmum.kode);
+                data.append('nama', this.formUmum.nama);
+                data.append('image', this.formUmum.image);
+                data.append('panjang', this.formSpecs.panjang);
+                data.append('lebar', this.formSpecs.lebar);
+                data.append('tinggi', this.formSpecs.tinggi);
+                for (let i = 0; i < this.formSpecs.bahan.length; i++) {
+                    data.append('bahan[]', this.formSpecs.bahan[i].value);
+                }
+                data.append('versi', this.formSpecs.versi);
+                data.append('fungsi', this.formSpecs.fungsi);
+                data.append('deskripsi', this.formSpecs.deskripsi);
+                data.append('tipe', this.formEkatalog.tipe);
+                data.append('merk', this.formEkatalog.merk);
+                data.append('noproduk', this.formEkatalog.noproduk);
+                data.append('satuan', this.formEkatalog.satuan.value);
+                data.append('perusahaan', this.formEkatalog.perusahaan);
+                data.append('jenisekat', this.formEkatalog.jenis);
+                data.append('kodeekat', this.formEkatalog.kode);
+                data.append('noizin', this.formEkatalog.noizin);
+                data.append('tkdn', this.formEkatalog.tkdn);
+                data.append('expired', this.formEkatalog.expired);
+                for (let i = 0; i < this.formEkatalog.lampiran.length; i++) {
+                    data.append('lampiran[]', this.formEkatalog.lampiran[i]);
+                }
+                if (Object.keys(this.$route.params).length > 0) {
+                    // this.update()
+                } else {
+                    await axios.post("/api/produk/teknik/store", data).then((res) => {
+                        console.log(res)
+                    });
+                }
+            },
+            isNumber(evt) {
+                evt = evt ? evt : window.event;
+                var charCode = evt.which ? evt.which : evt.keyCode;
+                if (
+                    charCode > 31 &&
+                    (charCode < 48 || charCode > 57) &&
+                    charCode !== 46
+                ) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
         }
     }
 
