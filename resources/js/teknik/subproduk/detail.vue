@@ -1,7 +1,9 @@
 <script>
     import Header from '../components/header.vue'
     import axios from 'axios'
+    import mix from './mix'
     export default {
+        mixins: [mix],
         components: {
             Header
         },
@@ -371,7 +373,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-center">
-                                                        <input type="number" class="form-control col-3" v-model="part.jumlah">
+                                                        <input type="number" class="form-control col-3" @keypress="isNumber" v-model="part.jumlah">
                                                         </div>
                                                     </td>
                                                     <td>

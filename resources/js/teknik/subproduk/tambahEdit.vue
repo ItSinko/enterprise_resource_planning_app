@@ -3,7 +3,9 @@
     import UploadImages from "../components/upload-images.vue";
     import UploadFiles from "../components/upload-files.vue";
     import axios from 'axios'
+    import mix from './mix'
     export default {
+        mixins: [mix],
         props: {
             breadcumbs: {
                 type: Array,
@@ -126,19 +128,6 @@
                     await axios.post("/api/produk/teknik/store", data).then((res) => {
                         console.log(res)
                     });
-                }
-            },
-            isNumber(evt) {
-                evt = evt ? evt : window.event;
-                var charCode = evt.which ? evt.which : evt.keyCode;
-                if (
-                    charCode > 31 &&
-                    (charCode < 48 || charCode > 57) &&
-                    charCode !== 46
-                ) {
-                    evt.preventDefault();
-                } else {
-                    return true;
                 }
             },
         }
