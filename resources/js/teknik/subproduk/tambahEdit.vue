@@ -249,8 +249,7 @@
                                     type="text" class="form-control">
                             </div>
                             <div class="form-group"><label for="">Merk</label>
-                                <v-select v-model="formEkatalog.merk" :options="merkProduk">
-                                </v-select>
+                                <input type="text" class="form-control" v-model="formEkatalog.merk">
                             </div>
                             <div class="form-group"><label for="">No Produk Penyedia</label><input
                                     v-model="formEkatalog.noproduk" type="text" class="form-control"></div>
