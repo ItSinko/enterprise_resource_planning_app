@@ -257,6 +257,9 @@
                                 <v-select :options="satuanProduk" v-model="formEkatalog.satuan">
                                 </v-select>
                             </div>
+                            <div class="form-group"><label for="">Nama Perusahaan</label>
+                                <input type="text" class="form-control" v-model="formEkatalog.perusahaan">
+                            </div>
                         </div>
                         <div class="col-6 pl-5">
                             <label for="">Jenis Produk
