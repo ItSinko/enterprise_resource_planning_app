@@ -31,6 +31,7 @@ use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
 use App\Models\Ekspedisi;
+use App\Models\FileProduk;
 use App\Models\Logistik;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Arr;
@@ -266,6 +267,7 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
+        //dd($request);
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:produk,kode',
             'nama' => 'required|unique:produk,nama',
@@ -280,18 +282,12 @@ class MasterController extends Controller
         } else {
 
             if ($request->hasFile('image')) {
-                $name = md5($request->file('image')->getClientOriginalName());
-                $guessExtension = $request->file('image')->guessExtension();
-                $request->file('image')->storeAs('public\produk', $name . '.' . $guessExtension);
+                $name_image = md5($request->file('image')->getClientOriginalName());
+                $guessExtension_image = $request->file('image')->guessExtension();
+                $request->file('image')->storeAs('public\produk', $name_image . '.' . $guessExtension_image);
             }
 
-            // if ($request->hasFile('lampiran')) {
-            //     foreach ($request->file('lampiran') as $lampiran) {
-            //         $name = md5($lampiran->getClientOriginalName());
-            //         $guessExtension = $lampiran->guessExtension();
-            //         $lampiran->storeAs('public\produk', $name . '.' . $guessExtension);
-            //     }
-            // }
+
 
             $p = $request->panjang != NULL ? $request->panjang : 0;
             $l = $request->lebar != NULL ? $request->lebar : 0;
@@ -301,7 +297,7 @@ class MasterController extends Controller
                 'kelompok_produk_id' => $request->jenis,
                 'kode' => $request->kode,
                 'nama' => $request->nama,
-                'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
+                'gambar' => $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL,
                 'dimensi' => $p . 'x' . $l . 'x' . $t,
                 'satuan_id' => $request->satuan,
                 'versi' => $request->versi,
@@ -317,6 +313,19 @@ class MasterController extends Controller
                 'nilai_tkdn' => $request->tkdn,
                 'masa_berlaku' => $request->expired
             ]);
+
+            if ($request->hasFile('lampiran')) {
+                foreach ($request->file('lampiran') as $lampiran) {
+                    $name_file = md5($lampiran->getClientOriginalName());
+                    $guessExtension_file = $lampiran->guessExtension();
+                    $lampiran->storeAs('public\lampiran_produk', $name_file . '.' . $guessExtension_file);
+
+                    $file = FileProduk::create([
+                        'produk_id' => $produk->id,
+                        'nama' => $name_file . '.' . $guessExtension_file
+                    ]);
+                }
+            }
 
             for ($i = 0; $i < count($request->bahan); $i++) {
                 $produk->jenis_bahan()->attach($request->bahan[$i]);
@@ -2126,7 +2135,7 @@ class MasterController extends Controller
         foreach ($produk->file_produk as $key_p => $f) {
             $data[0]['file'][$key_p] = array(
                 'id' => $f->id,
-                'path' => $f->path
+                'path' => $f->nama
             );
         }
 
