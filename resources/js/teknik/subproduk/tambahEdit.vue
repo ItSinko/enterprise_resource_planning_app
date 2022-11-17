@@ -249,14 +249,16 @@
                                     type="text" class="form-control">
                             </div>
                             <div class="form-group"><label for="">Merk</label>
-                                <v-select v-model="formEkatalog.merk" :options="merkProduk">
-                                </v-select>
+                                <input type="text" class="form-control" v-model="formEkatalog.merk">
                             </div>
                             <div class="form-group"><label for="">No Produk Penyedia</label><input
                                     v-model="formEkatalog.noproduk" type="text" class="form-control"></div>
                             <div class="form-group"><label for="">Satuan</label>
                                 <v-select :options="satuanProduk" v-model="formEkatalog.satuan">
                                 </v-select>
+                            </div>
+                            <div class="form-group"><label for="">Nama Perusahaan</label>
+                                <input type="text" class="form-control" v-model="formEkatalog.perusahaan">
                             </div>
                         </div>
                         <div class="col-6 pl-5">

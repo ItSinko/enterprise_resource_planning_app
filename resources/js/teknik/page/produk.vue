@@ -24,12 +24,14 @@
                 ],
                 search: '',
                 products: [],
+                loading: true,
             }
         },
         methods: {
             async init(){
                 await axios.get('/api/produk/teknik/data').then(res => {
                     this.products = res.data.data
+                    this.loading = false
                 })
             },
             tambahProduk() {
@@ -43,7 +45,22 @@
                 this.$router.push('/teknik/produk/edit/' + id)
             },
             deleteProduk(id) {
-                alert('delete')
+                this.$swal({
+                    title: 'Hapus Produk',
+                    text: "Apakah anda yakin ingin menghapus produk ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // axios.delete('/api/produk/teknik/delete/' + id).then(res => {
+                            this.$swal('Berhasil!', 'Data berhasil di hapus', 'success')
+                        //     this.init()
+                        // })
+                    }
+                })
             },
             
         },
@@ -56,7 +73,12 @@
 <template>
     <div>
         <Header title="Daftar Produk" :breadcumbs="breadcumbs" />
-        <div class="card">
+            <div class="d-flex justify-content-center" v-if="loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        <div class="card" v-else>
             <div class="card-body">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">
