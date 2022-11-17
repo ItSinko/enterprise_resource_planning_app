@@ -37,6 +37,7 @@ use Illuminate\Support\Arr;
 use App\Models\GudangKarantinaDetail;
 use App\Models\GudangKarantinaNoseri;
 use App\Models\JalurEkspedisi;
+use App\Models\Mproduk;
 use App\Models\Satuan;
 use App\Models\Sparepart;
 use App\Models\SparepartGudang;
@@ -265,13 +266,9 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
-
-        dd($request->all());
-
-
         $validator = Validator::make($request->all(),  [
-            'formUmum.kode' => 'required|unique:produk,kode',
-            'formUmum.nama' => 'required|unique:produk,nama',
+            'kode' => 'required|unique:produk,kode',
+            'nama' => 'required|unique:produk,nama',
             // 'bahan' => 'required',
             // 'satuan' => 'required',
         ]);
@@ -285,40 +282,40 @@ class MasterController extends Controller
             if ($request->hasFile('image')) {
                 $name = md5($request->file('image')->getClientOriginalName());
                 $guessExtension = $request->file('image')->guessExtension();
-                $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+                $request->file('image')->storeAs('public\produk', $name . '.' . $guessExtension);
             }
 
-            if ($request->hasFile('lampiran')) {
-                foreach ($request->file('lampiran') as $lampiran) {
-                    $name = md5($lampiran->getClientOriginalName());
-                    $guessExtension = $lampiran->guessExtension();
-                    $lampiran->storeAs('public\produk', $name . '.' . $guessExtension);
-                }
-            }
+            // if ($request->hasFile('lampiran')) {
+            //     foreach ($request->file('lampiran') as $lampiran) {
+            //         $name = md5($lampiran->getClientOriginalName());
+            //         $guessExtension = $lampiran->guessExtension();
+            //         $lampiran->storeAs('public\produk', $name . '.' . $guessExtension);
+            //     }
+            // }
 
-            $p = $request->formSpecs['panjang'] != NULL ? $request->formSpecs['panjang'] : 0;
-            $l = $request->formSpecs['lebar'] != NULL ? $request->formSpecs['lebar'] : 0;
-            $t = $request->formSpecs['tinggi'] != NULL ? $request->formSpecs['tinggi'] : 0;
+            $p = $request->panjang != NULL ? $request->panjang : 0;
+            $l = $request->lebar != NULL ? $request->lebar : 0;
+            $t = $request->tinggi != NULL ? $request->tinggi : 0;
 
             $produk = Produk::create([
-                'kelompok_produk_id' => $request->formUmum['jenis'],
-                'kode' => $request->formUmum['kode'],
-                'nama' => $request->formUmum['nama'],
+                'kelompok_produk_id' => $request->jenis,
+                'kode' => $request->kode,
+                'nama' => $request->nama,
                 'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
                 'dimensi' => $p . 'x' . $l . 'x' . $t,
-                'satuan_id' => $request->formEkatalog['satuan'],
-                'versi' => $request->formSpecs['versi'],
-                'fungsi' => $request->formSpecs['fungsi'],
-                'deskripsi' => $request->formSpecs['deskripsi'],
-                'tipe' => $request->formEkatalog['tipe'],
-                'merk' => $request->formEkatalog['merk'],
-                'no_produk_penyedia' => $request->formEkatalog['noproduk'],
-                'nama_perusahaan' => $request->formEkatalog['perusahaan'],
-                'jenis_produk_ekat' => $request->formEkatalog['jenis'],
-                'kode_kbki' => $request->formEkatalog['kode'],
-                'no_ijin_edar' => $request->formEkatalog['noizin'],
-                'nilai_tkdn' => $request->formEkatalog['tkdn'],
-                'masa_berlaku' => $request->formEkatalog['expired']
+                'satuan_id' => $request->satuan,
+                'versi' => $request->versi,
+                'fungsi' => $request->fungsi,
+                'deskripsi' => $request->deskripsi,
+                'tipe' => $request->tipe,
+                'merk' => $request->merk,
+                'no_produk_penyedia' => $request->noproduk,
+                'nama_perusahaan' => $request->perusahaan,
+                'jenis_produk_ekat' => $request->jenisekat,
+                'kode_kbki' => $request->kodeekat,
+                'no_ijin_edar' => $request->noizin,
+                'nilai_tkdn' => $request->tkdn,
+                'masa_berlaku' => $request->expired
             ]);
 
             for ($i = 0; $i < count($request->bahan); $i++) {
@@ -2171,6 +2168,32 @@ class MasterController extends Controller
         $jenissatuan = Satuan::all();
         $data = array();
         foreach ($jenissatuan as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'value' => $jp->id,
+                'label' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+    public function selectdata_kelompokprd()
+    {
+        $kelompok = KelompokProduk::all();
+        $data = array();
+        foreach ($kelompok as $keyjp => $jp) {
+            $data[$keyjp] = array(
+                'value' => $jp->id,
+                'label' => $jp->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+    public function selectdata_kategoriprd()
+    {
+        $kategori = Mproduk::all();
+        $data = array();
+        foreach ($kategori as $keyjp => $jp) {
             $data[$keyjp] = array(
                 'value' => $jp->id,
                 'label' => $jp->nama,
