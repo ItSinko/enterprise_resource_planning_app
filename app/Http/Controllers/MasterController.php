@@ -295,6 +295,7 @@ class MasterController extends Controller
 
             $produk = Produk::create([
                 'kelompok_produk_id' => $request->jenis,
+                'produk_id' => $request->kategori,
                 'kode' => $request->kode,
                 'nama' => $request->nama,
                 'gambar' => $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL,
@@ -1961,6 +1962,7 @@ class MasterController extends Controller
             foreach ($dbom as $key_bom => $d) {
                 $data['bom'][$key_bom] =  array(
                     'id' => $d->id,
+                    'bom_id' => $d->bom->id,
                     'produk' => $d->bom->produk->nama,
                     'versi' => $d->bom->nama,
                     'jumlah' => $d->jumlah
@@ -2197,13 +2199,13 @@ class MasterController extends Controller
         if (count($produk->jenis_bahan) > 0) {
 
             foreach ($produk->jenis_bahan as $key_jb => $s) {
-                $data[0]['detail']['bahan'][$key_jb] = array(
+                $data[0]['detail']['spesifikasi']['bahan'][$key_jb] = array(
                     'value' => $s->id,
                     'label' => $s->nama
                 );
             }
         } else {
-            $data[0]['detail']['bahan'] = array();
+            $data[0]['detail']['spesifikasi']['bahan'] = array();
         }
 
         foreach ($bom as $key_bom => $b) {

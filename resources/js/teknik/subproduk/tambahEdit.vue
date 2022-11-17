@@ -183,7 +183,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <UploadImages @changed="handleImages" :max="1" :images="formUmum.image" v-else
+                            <UploadImages @changed="handleImages" :max="1" v-else
                                 maxError="Maksimal 1 gambar" uploadMsg="Silahkan Upload Gambar Part Disini"
                                 clearAll="Hapus semua gambar" />
                         </div>
@@ -291,7 +291,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <upload-files @changed="uploadEkatalog" :file="formEkatalog.lampiran" :multiple="true">
+                            <upload-files @changed="uploadEkatalog" :multiple="true">
                             </upload-files>
                         </div>
                     </div>

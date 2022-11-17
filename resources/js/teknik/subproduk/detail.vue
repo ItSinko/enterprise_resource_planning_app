@@ -91,6 +91,15 @@
                 }
             },
 
+            status(status){
+                switch (status) {
+                    case 'Aktif':
+                        return `<span class="badge badge-success">${status}</span>`
+                    default:
+                        return `<span class="badge badge-danger">${status}</span>`
+                }
+            },
+
             onSearch(query) {
             this.search = query
             this.offset = 0
@@ -226,7 +235,7 @@
                                                         <td class="text-bold">
                                                             <span v-for="(bahan, id) in detail.spesifikasi.bahan"
                                                                 :key="id">
-                                                                {{ bahan }} <span
+                                                                {{ bahan.label }} <span
                                                                     v-if="id < detail.spesifikasi.bahan.length - 1">,</span>
                                                             </span>
                                                         </td>
@@ -251,7 +260,7 @@
                                                 </button>
                                             </div>
                                             <p class="card-text">
-                                                <table class="table tableBOM" v-if="!loading">
+                                                <table class="table tableBOM text-center" v-if="!loading">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>No</th>
@@ -264,12 +273,25 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr v-for="(detail, key) in detail.bom" :key="key">
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td>{{ key+1 }}</td>
+                                                            <td>{{ detail.kode }}</td>
+                                                            <td>{{ detail.nama }}</td>
+                                                            <td>{{ detail.tahun }}</td>
+                                                            <td v-html="status(detail.status)"></td>
+                                                            <td>
+                                                                <button class="btn btn-info btn-sm" @click="detail(detail.id)">
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                                    Detail
+                                                                </button>
+                                                                <button class="btn btn-info btn-sm" @click="editBOM(detail.id)">
+                                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                                    Edit
+                                                                </button>
+                                                                <button class="btn btn-danger btn-sm" @click="deleteBOM(detail.id)">
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                                    Hapus
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
