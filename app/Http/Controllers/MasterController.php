@@ -2062,6 +2062,18 @@ class MasterController extends Controller
             ),
             'detail' => array(
                 'deskripsi' => $produk->deskripsi,
+                'informasi_ekatalog' => array(
+                    'tipe' => $produk->tipe,
+                    'no_produk_penyedia' => $produk->no_produk_penyedia,
+                    'merk' => $produk->merk,
+                    'kode_kbki' => $produk->kode_kbki,
+                    'no_ijin_edar' => $produk->no_ijin_edar,
+                    'nilai_tkdn' => $produk->nilai_tkdn,
+                    'satuan' => $produk->Satuan->nama,
+                    'nama_perusahaan' => $produk->nama_perusahaan,
+                    'jenis_produk_ekat' => $produk->jenis_produk_ekat,
+                    'masa_berlaku' => $produk->masa_berlaku,
+                ),
                 'spesifikasi' => array(
                     'dimensi' => $produk->dimensi,
                     'bahan' => array(),
