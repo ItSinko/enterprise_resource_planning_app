@@ -11,7 +11,31 @@ class Produk extends Model
 {
     protected $connection = 'erp';
     protected $table = 'produk';
-    protected $fillable = ['kelompok_produk_id', 'merk', 'tipe', 'nama', 'nama_coo', 'satuan', 'coo', 'no_akd', 'ket', 'status'];
+    protected $fillable = [
+        'kelompok_produk_id',
+        'kode',
+        'merk',
+        'tipe',
+        'nama',
+        'nama_coo',
+        'coo',
+        'no_akd',
+        'ket',
+        'status',
+        'gambar',
+        'dimensi',
+        'satuan_id',
+        'versi',
+        'fungsi',
+        'deskripsi',
+        'no_produk_penyedia',
+        'nama_perusahaan',
+        'jenis_produk_ekat',
+        'kode_kbki',
+        'no_ijin_edar',
+        'nilai_tkdn',
+        'masa_berlaku'
+    ];
 
     function bom()
     {
