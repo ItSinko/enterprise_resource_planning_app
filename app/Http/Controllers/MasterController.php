@@ -335,6 +335,90 @@ class MasterController extends Controller
         }
     }
 
+    public function update_produk_teknik(Request $request, $id)
+    {
+        //dd($request);
+        $validator = Validator::make($request->all(),  [
+            'kode' => 'required|unique:m_sparepart,kode,' . $id,
+            'nama' => 'required|unique:produk,nama' . $id,
+            // 'bahan' => 'required',
+            // 'satuan' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ]);
+        } else {
+
+            if ($request->hasFile('image')) {
+                $name_image = md5($request->file('image')->getClientOriginalName());
+                $guessExtension_image = $request->file('image')->guessExtension();
+                $request->file('image')->storeAs('public\produk', $name_image . '.' . $guessExtension_image);
+                $file_image = $name_image . '.' . $guessExtension_image;
+            } else {
+                if ($request->image != "null") {
+                    $file = $request->image;
+                } else {
+                    $file = NULL;
+                }
+            }
+
+
+
+            $p = $request->panjang != NULL ? $request->panjang : 0;
+            $l = $request->lebar != NULL ? $request->lebar : 0;
+            $t = $request->tinggi != NULL ? $request->tinggi : 0;
+
+            $produk = Produk::find($id);
+            $produk->kelompok_produk_id = $request->jenis;
+            $produk->kode = $request->kode;
+            $produk->nama = $request->nama;
+            $produk->gambar = $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL;
+            $produk->dimensi = $p . 'x' . $l . 'x' . $t;
+            $produk->satuan_id = $request->satuan;
+            $produk->versi = $request->versi;
+            $produk->fungsi = $request->fungsi;
+            $produk->deskripsi = $request->deskripsi;
+            $produk->tipe = $request->tipe;
+            $produk->merk = $request->merk;
+            $produk->no_produk_penyedia = $request->noproduk;
+            $produk->nama_perusahaan = $request->perusahaan;
+            $produk->jenis_produk_ekat = $request->jenisekat;
+            $produk->kode_kbki = $request->kodeekat;
+            $produk->no_ijin_edar = $request->noizin;
+            $produk->nilai_tkdn = $request->tkdn;
+            $produk->masa_berlaku = $request->expired;
+
+
+            // if ($request->hasFile('lampiran')) {
+            //     foreach ($request->file('lampiran') as $lampiran) {
+            //         $name_file = md5($lampiran->getClientOriginalName());
+            //         $guessExtension_file = $lampiran->guessExtension();
+            //         $lampiran->storeAs('public\lampiran_produk', $name_file . '.' . $guessExtension_file);
+
+            //         $file = FileProduk::create([
+            //             'produk_id' => $produk->id,
+            //             'nama' => $name_file . '.' . $guessExtension_file
+            //         ]);
+            //     }
+            // }
+
+            for ($i = 0; $i < count($request->bahan); $i++) {
+                $produk->jenis_bahan()->attach($request->bahan[$i]);
+            }
+
+            $produk_array = [];
+            for ($i = 0; $i < count($request->bahan); $i++) {
+                $produk_array[] = $request->bahan[$i];
+            }
+            $produk->jenis_bahan()->sync($produk_array);
+
+
+            return response()->json(['status' => 'berhasil']);
+        }
+    }
+
     public function get_data_teknik_produk()
     {
         $data = array();
