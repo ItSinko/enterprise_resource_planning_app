@@ -2,6 +2,7 @@
     import Header from '../components/header.vue'
     import UploadImages from "../components/upload-images.vue";
     import UploadFiles from "../components/upload-files.vue";
+    import axios from 'axios'
     export default {
         props: {
             breadcumbs: {
@@ -44,9 +45,8 @@
                     panjang: null,
                     lebar: null,
                     tinggi: null,
-                    bahan: null,
+                    bahan: [],
                     versi: null,
-                    satuan: null,
                     fungsi: null,
                     deskripsi: null,
                 },
@@ -65,8 +65,24 @@
                 },
             }
         },
+        created() {
+            this.init()
+        },
         methods: {
-                        handleImages(images) {
+            async init(){
+                await axios.get("/api/jenis_part/selectdata").then((res) => {
+                    this.jenisProduk = res.data.data;
+                });
+
+                await axios.get("/api/jenis_bahan/selectdata").then((res) => {
+                    this.bahanProduk = res.data.data;
+                });
+
+                await axios.get("/api/jenis_satuan/selectdata").then((res) => {
+                    this.satuanProduk = res.data.data;
+                });
+            },
+            handleImages(images) {
                 this.formUmum.image = images[0]
             },
             uploadEkatalog(files) {
@@ -77,7 +93,7 @@
                 this.$router.push('/teknik/produk')
             },
             save(){
-                
+                console.log('save')
             }
         }
     }

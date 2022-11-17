@@ -599,12 +599,14 @@ export default {
                       <h4 class="card-title">Spesifikasi</h4>
                       <p class="card-text">Bahan</p>
                       <span
-                        class="badge badge-warning ml-1"
                         v-for="(bahan, idx) in partDetail.spesifikasi.bahan"
                         :key="`bahan${idx}`"
                       >
-                        {{ bahan.nama }} </span
-                      >&nbsp;&nbsp;
+                        {{ bahan.nama }} 
+                        <span v-if="idx < partDetail.spesifikasi.bahan.length - 1"
+                          >,</span>
+                      </span
+                      >
                       <p class="card-text">Dimensi</p>
                       <p class="card-text">
                         {{ partDetail.spesifikasi.dimensi }}
