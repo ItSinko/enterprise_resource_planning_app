@@ -110,10 +110,13 @@ Route::prefix('/customer')->group(function () {
 });
 
 Route::prefix('/produk')->group(function () {
+    Route::get('selectkelompok', [App\Http\Controllers\MasterController::class, 'selectdata_kelompokprd']);
+    Route::get('selectkategori', [App\Http\Controllers\MasterController::class, 'selectdata_kategoriprd']);
     Route::prefix('/teknik')->group(function () {
         Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_teknik_produk']);
         Route::get('detail/{id}', [App\Http\Controllers\MasterController::class, 'detail_produk']);
         Route::post('store', [App\Http\Controllers\MasterController::class, 'store_produk_teknik']);
+        Route::post('update/{id}', [App\Http\Controllers\MasterController::class, 'update_produk_teknik']);
     });
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);
     Route::post('create', [App\Http\Controllers\MasterController::class, 'create_produk']);

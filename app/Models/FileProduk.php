@@ -10,7 +10,7 @@ class FileProduk extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'file_produk';
-    protected $fillable = ['produk_id', 'path'];
+    protected $fillable = ['produk_id', 'nama'];
 
     function produk()
     {
