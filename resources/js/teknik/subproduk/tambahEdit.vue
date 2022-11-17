@@ -169,7 +169,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Bahan</label>
-                                <v-select v-model="formSpecs.bahan" :options="bahanProduk">
+                                <v-select v-model="formSpecs.bahan" multiple :options="bahanProduk">
                                 </v-select>
                             </div>
                             <div class="form-group">
