@@ -28,7 +28,6 @@ class Produk extends Model
         'versi',
         'fungsi',
         'deskripsi',
-        'tipe',
         'no_produk_penyedia',
         'nama_perusahaan',
         'jenis_produk_ekat',

@@ -267,46 +267,66 @@ class MasterController extends Controller
     {
 
 
-        // $validator = Validator::make($request->all(),  [
-        //     'jenis' => 'required',
-        //     'nama' => 'required',
-        //     'kode' => 'required|unique:m_sparepart,kode',
-        //     'bahan' => 'required',
-        //     'satuan' => 'required',
-        // ]);
 
-        //  if ($validator->fails()) {
-        // return response()->json([
-        //     'message' => $validator->errors()
-        // ]);
-        // } else {
 
-        if ($request->hasFile('image')) {
-            $name = md5($request->file('image')->getClientOriginalName());
-            $guessExtension = $request->file('image')->guessExtension();
-            $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
-        }
-
-        $p = $request->panjang != NULL ? $request->panjang : 0;
-        $l = $request->lebar != NULL ? $request->lebar : 0;
-        $t = $request->tinggi != NULL ? $request->tinggi : 0;
-
-        $sparepart = Sparepart::create([
-            'kode' => $request->kode,
-            'nama' =>   $request->nama,
-            'jenis_part_id' => $request->jenis,
-            'deskripsi' =>  $request->deskripsi,
-            'dimensi' => $p . 'x' . $l . 'x' . $t,
-            'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
-            'fungsi' => $request->fungsi,
-            'satuan_id' => $request->satuan,
-
-            'versi' => $request->versi,
+        $validator = Validator::make($request->all(),  [
+            'formUmum.kode' => 'required|unique:produk,kode',
+            'formUmum.nama' => 'required|unique:produk,nama',
+            // 'bahan' => 'required',
+            // 'satuan' => 'required',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()
+            ]);
+        } else {
 
-        return response()->json(['status' => 'berhasil']);
-        //}
+            if ($request->hasFile('image')) {
+                $name = md5($request->file('image')->getClientOriginalName());
+                $guessExtension = $request->file('image')->guessExtension();
+                $request->file('image')->storeAs('public\sparepart', $name . '.' . $guessExtension);
+            }
+
+            if ($request->hasFile('lampiran')) {
+                foreach ($request->file('lampiran') as $lampiran) {
+                    $name = md5($lampiran->getClientOriginalName());
+                    $guessExtension = $lampiran->guessExtension();
+                    $lampiran->storeAs('public\produk', $name . '.' . $guessExtension);
+                }
+            }
+
+            $p = $request->formSpecs['panjang'] != NULL ? $request->formSpecs['panjang'] : 0;
+            $l = $request->formSpecs['lebar'] != NULL ? $request->formSpecs['lebar'] : 0;
+            $t = $request->formSpecs['tinggi'] != NULL ? $request->formSpecs['tinggi'] : 0;
+
+            $produk = Produk::create([
+                'kelompok_produk_id' => $request->formUmum['jenis'],
+                'kode' => $request->formUmum['kode'],
+                'nama' => $request->formUmum['nama'],
+                'gambar' => $request->hasFile('image') ? $name . '.' . $guessExtension : NULL,
+                'dimensi' => $p . 'x' . $l . 'x' . $t,
+                'satuan_id' => $request->formEkatalog['satuan'],
+                'versi' => $request->formSpecs['versi'],
+                'fungsi' => $request->formSpecs['fungsi'],
+                'deskripsi' => $request->formSpecs['deskripsi'],
+                'tipe' => $request->formEkatalog['tipe'],
+                'merk' => $request->formEkatalog['merk'],
+                'no_produk_penyedia' => $request->formEkatalog['noproduk'],
+                'nama_perusahaan' => $request->formEkatalog['perusahaan'],
+                'jenis_produk_ekat' => $request->formEkatalog['jenis'],
+                'kode_kbki' => $request->formEkatalog['kode'],
+                'no_ijin_edar' => $request->formEkatalog['noizin'],
+                'nilai_tkdn' => $request->formEkatalog['tkdn'],
+                'masa_berlaku' => $request->formEkatalog['expired']
+            ]);
+
+            for ($i = 0; $i < count($request->bahan); $i++) {
+                $produk->jenis_bahan()->attach($request->bahan[$i]);
+            }
+
+            return response()->json(['status' => 'berhasil']);
+        }
     }
 
     public function get_data_teknik_produk()
