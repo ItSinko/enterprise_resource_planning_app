@@ -60,10 +60,23 @@
                         this.headersDetail = res.data.data[0].header
                         this.detail = res.data.data[0].detail
                         this.loading = false
+                        this.tableBOM()
                     })
                 } catch (error) {
                     console.log(error)
                 }
+            },
+
+            tableBOM(){
+                $('.tableBOM').DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
             },
 
             edit(id) {
@@ -311,7 +324,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Modal Add BOM -->
     <AddBOM :produk_id="$route.params.id" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM"></AddBOM>
