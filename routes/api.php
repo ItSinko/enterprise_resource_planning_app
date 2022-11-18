@@ -27,6 +27,7 @@ Route::prefix('/bom')->group(function () {
     Route::get('/detail/{id}', [App\Http\Controllers\TeknikController::class, 'get_detail_bom']);
     Route::get('/edit/{id}', [App\Http\Controllers\TeknikController::class, 'edit_bom']);
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
+    Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
 Route::prefix('/part')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);

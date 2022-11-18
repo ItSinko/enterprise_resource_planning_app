@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -168,7 +169,7 @@ class TeknikController extends Controller
                     'produk' => $b->Produk->nama,
                     'nama_bom' => $b->nama,
                     'kode_bom' => $b->kode,
-                    'tahun_pembuatan' => $b->created_at->format("Y") ,
+                    'tahun_pembuatan' => $b->created_at->format("Y"),
                     'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
                 ),
                 'data_tabel' => array(),
@@ -184,5 +185,30 @@ class TeknikController extends Controller
             }
         }
         return response()->json(['data' => $data]);
+    }
+
+    public function delete_bom($id)
+    {
+
+        try {
+            $dbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                $q->where('bill_of_material_id', $id);
+            })->get();
+
+            if (count($dbom) > 0) {
+                $deldbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                    $q->where('bill_of_material_id', $id);
+                })->delete();
+                if (!$deldbom) {
+                    $bool = false;
+                }
+            }
+
+            BillOfMaterial::where('id', $id)->delete();
+
+            return response()->json(['status' => 'berhasil']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'gagal']);
+        }
     }
 }
