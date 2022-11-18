@@ -23,7 +23,7 @@ class TeknikController extends Controller
 
     public function update_bom(Request $request, $id)
     {
-
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required|unique:bill_of_material,kode,' . $id,
             'nama' => 'required|unique:bill_of_material,nama,' . $id
@@ -95,7 +95,7 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['value'],
+                    'part_id' => $request->part[$i]['id'],
                     'jumlah' => $request->part[$i]['jumlah'],
                     'satuan_id' => $request->part[$i]['satuan'],
                 ]);
@@ -119,15 +119,17 @@ class TeknikController extends Controller
             'kode' => $bom->kode,
             'nama' => $bom->nama,
             'keterangan' => NULL,
-            'is_aktif' => $bom->is_aktif,
+            'status' => $bom->is_aktif,
         );
 
 
         foreach ($bom->detail_bom as $key_bom => $b) {
-            $data['detail'][$key_bom] = array(
-                'id' => 's',
-                'kode' => $b->Sparepart->kode,
-                'nama' => $b->Sparepart->nama,
+            $data['part'][$key_bom] = array(
+                'namaPart' => array(
+                    'value' =>  $b->Sparepart->id,
+                    'satuan' => $b->Sparepart->satuan->id,
+                    'label' => $b->Sparepart->nama,
+                ),
                 'jumlah' => $b->jumlah
             );
         }
