@@ -1961,6 +1961,7 @@ class MasterController extends Controller
             foreach ($dbom as $key_bom => $d) {
                 $data['bom'][$key_bom] =  array(
                     'id' => $d->id,
+                    'bom_id' => $d->bom->id,
                     'produk' => $d->bom->produk->nama,
                     'versi' => $d->bom->nama,
                     'jumlah' => $d->jumlah

@@ -7,6 +7,7 @@ use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Validator;
 
 class TeknikController extends Controller
 {
@@ -20,6 +21,119 @@ class TeknikController extends Controller
         return view('page.teknik.bom.data.produk', ['id' => $id]);
     }
 
+    public function update_bom(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'kode' => 'required|unique:bill_of_material,kode,' . $id,
+            'nama' => 'required|unique:bill_of_material,nama,' . $id
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            $bom = BillOfMaterial::find($id);
+            $bom->kode = $request->kode;
+            $bom->nama = $request->nama;
+            $bom->produk_id = $request->produk_id;
+            $bom->is_aktif = $request->status;
+            $bom->save();
+
+
+            $dbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                $q->where('bill_of_material_id', $id);
+            })->get();
+
+            if (count($dbom) > 0) {
+                $deldbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                    $q->where('bill_of_material_id', $id);
+                })->delete();
+                if (!$deldbom) {
+                    $bool = false;
+                }
+            }
+
+            for ($i = 0; $i < count($request->part); $i++) {
+                DetailBillOfMaterial::create([
+                    'bill_of_material_id' => $bom->id,
+                    'part_id' => $request->part[$i]['id'],
+                    'jumlah' => $request->part[$i]['jumlah'],
+                    'satuan_id' => $request->part[$i]['satuan'],
+                ]);
+            }
+
+
+            return response()->json([
+                'status' => 'berhasil'
+            ]);
+        }
+    }
+    public function store_bom(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'kode' => 'required',
+            'nama' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            $bom = BillOfMaterial::create([
+                'produk_id' => $request->produk_id,
+                'kode' => $request->kode,
+                'nama' => $request->nama,
+                'keterangan' => NULL,
+                'is_aktif' => $request->status,
+            ]);
+
+
+            for ($i = 0; $i < count($request->part); $i++) {
+                DetailBillOfMaterial::create([
+                    'bill_of_material_id' => $bom->id,
+                    'part_id' => $request->part[$i]['id'],
+                    'jumlah' => $request->part[$i]['jumlah'],
+                    'satuan_id' => $request->part[$i]['satuan'],
+                ]);
+            }
+
+
+            return response()->json([
+                'status' => 'berhasil'
+            ]);
+        }
+    }
+
+    public function edit_bom($id)
+    {
+        $bom = BillOfMaterial::find($id);
+        $data = array();
+
+
+        $data = array(
+            'id' => $bom->id,
+            'kode' => $bom->kode,
+            'nama' => $bom->nama,
+            'keterangan' => NULL,
+            'is_aktif' => $bom->is_aktif,
+        );
+
+
+        foreach ($bom->detail_bom as $key_bom => $b) {
+            $data['detail'][$key_bom] = array(
+                'id' => 's',
+                'kode' => $b->Sparepart->kode,
+                'nama' => $b->Sparepart->nama,
+                'jumlah' => $b->jumlah
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
     public function get_data_bom()
     {
         $produk = Produk::whereHas('bom')->get();
