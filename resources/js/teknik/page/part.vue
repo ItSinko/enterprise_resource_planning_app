@@ -55,14 +55,8 @@ export default {
       ],
 
       // BOM
-      headerBOM: {
-        namaProduk: "FOX",
-        namaBOM: "BOM-001",
-        kodeBOM: "BOM-001",
-        tahunBuat: "2021",
-        status: "Aktif",
-      },
       loadingImages: false,
+      detailBOMs: null
     };
   },
   created() {
@@ -312,8 +306,12 @@ export default {
         });
       }
     },
-    detailBOM() {
-      $(".modalDetailBOM").modal("show");
+    async detailBOM(id) {
+      try {
+         await axios.get(`/api/bom/detail/${id}`).then((res) => {
+          this.detailBOMs = res.data.data[0]
+         });
+          $(".modalDetailBOM").modal("show");
       $(".tableDetailBOM").DataTable({
         destroy: true,
         paging: true,
@@ -324,6 +322,10 @@ export default {
         autoWidth: false,
         responsive: true,
       });
+      } catch (error) {
+        console.log(error);
+      }
+
     },
   },
   computed: {
@@ -642,7 +644,7 @@ export default {
                         <td>
                           <button
                             class="btn btn-sm btn-outline-info"
-                            @click="detailBOM"
+                            @click="detailBOM(detail.bom_id)"
                           >
                             <i class="fas fa-eye" aria-hidden="true"></i>
                           </button>
@@ -731,7 +733,7 @@ export default {
                         <UploadImages
                           @changed="handleImages"
                           :max="1"
-                          :images="formUmum.image"
+                          :Imgs="formUmum.image"
                           v-else
                           maxError="Maksimal 1 gambar"
                           uploadMsg="Silahkan Upload Gambar Part Disini"
@@ -846,7 +848,7 @@ export default {
     </div>
 
     <!-- Detail BOM -->
-    <div
+    <div v-if="detailBOMs"
       class="modal modalDetailBOM"
       id="modelId"
       tabindex="-1"
@@ -876,7 +878,7 @@ export default {
                       <div class="card-body">
                         <div class="card-title">Nama Produk</div>
                         <div class="card-text text-bold">
-                          {{ headerBOM.namaProduk }}
+                          {{ detailBOMs.header.produk }}
                         </div>
                       </div>
                     </div>
@@ -886,7 +888,7 @@ export default {
                       <div class="card-body">
                         <div class="card-title">Nama BOM</div>
                         <div class="card-text text-bold">
-                          {{ headerBOM.namaBOM }}
+                          {{ detailBOMs.header.nama_bom }}
                         </div>
                       </div>
                     </div>
@@ -898,7 +900,7 @@ export default {
                       <div class="card-body">
                         <div class="card-title">Kode BOM</div>
                         <div class="card-text text-bold">
-                          {{ headerBOM.kodeBOM }}
+                          {{ detailBOMs.header.kode_bom }}
                         </div>
                       </div>
                     </div>
@@ -908,7 +910,7 @@ export default {
                       <div class="card-body">
                         <div class="card-title">Tahun Pembuatan</div>
                         <div class="card-text text-bold">
-                          {{ headerBOM.tahunBuat }}
+                          {{ detailBOMs.header.tahun_pembuatan }}
                         </div>
                       </div>
                     </div>
@@ -919,7 +921,7 @@ export default {
                         <div class="card-title">Status</div>
                         <div class="card-text">
                           <span class="badge badge-danger">{{
-                            headerBOM.status
+                            detailBOMs.header.status
                           }}</span>
                         </div>
                       </div>
@@ -933,7 +935,7 @@ export default {
               <div class="card-body">
                 <div class="card-title text-bold">Part Bill Of Material</div>
                 <div class="card-text">
-                  <table class="table">
+                  <table class="table tableDetailBOM">
                     <thead class="thead-light">
                       <tr>
                         <th>No</th>
@@ -943,7 +945,12 @@ export default {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr></tr>
+                      <tr v-for="(table, key) in detailBOMs.data_tabel" :key="key">
+                        <td>{{ key + 1 }}</td>
+                        <td>{{ table.kode }}</td>
+                        <td>{{ table.nama }}</td>
+                        <td>{{ table.jumlah }}</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

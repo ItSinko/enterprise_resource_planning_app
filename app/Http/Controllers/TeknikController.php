@@ -168,8 +168,8 @@ class TeknikController extends Controller
                     'produk' => $b->Produk->nama,
                     'nama_bom' => $b->nama,
                     'kode_bom' => $b->kode,
-                    'tahun_pembuatan' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
-                    'status' => $b->created_at->format("Y")
+                    'tahun_pembuatan' => $b->created_at->format("Y") ,
+                    'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
                 ),
                 'data_tabel' => array(),
             );

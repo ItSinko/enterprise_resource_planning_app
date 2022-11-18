@@ -267,7 +267,7 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
-        //dd($request);
+        dd($request);
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:produk,kode',
             'nama' => 'required|unique:produk,nama',
@@ -295,6 +295,7 @@ class MasterController extends Controller
 
             $produk = Produk::create([
                 'kelompok_produk_id' => $request->jenis,
+                'produk_id' => $request->kategori,
                 'kode' => $request->kode,
                 'nama' => $request->nama,
                 'gambar' => $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL,
@@ -2198,13 +2199,13 @@ class MasterController extends Controller
         if (count($produk->jenis_bahan) > 0) {
 
             foreach ($produk->jenis_bahan as $key_jb => $s) {
-                $data[0]['detail']['bahan'][$key_jb] = array(
+                $data[0]['detail']['spesifikasi']['bahan'][$key_jb] = array(
                     'value' => $s->id,
                     'label' => $s->nama
                 );
             }
         } else {
-            $data[0]['detail']['bahan'] = array();
+            $data[0]['detail']['spesifikasi']['bahan'] = array();
         }
 
         foreach ($bom as $key_bom => $b) {

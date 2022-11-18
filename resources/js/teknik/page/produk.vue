@@ -1,6 +1,5 @@
 <script>
     import Header from '../components/header.vue'
-    import UploadImages from "../components/upload-images.vue";
     import UploadFiles from "../components/upload-files.vue";
     import mix from './mixproduk'
     import axios from 'axios'
@@ -8,7 +7,6 @@
         mixins: [mix],
         components: {
             Header,
-            UploadImages,
             UploadFiles,
         },
         data() {

@@ -3,7 +3,9 @@
     import UploadImages from "../components/upload-images.vue";
     import UploadFiles from "../components/upload-files.vue";
     import axios from 'axios'
+    import mix from './mix'
     export default {
+        mixins: [mix],
         props: {
             breadcumbs: {
                 type: Array,
@@ -32,11 +34,13 @@
             return {
                 loadingImages: false,
                 jenisProduk: [],
+                kategoriProduk: [],
                 bahanProduk: [],
                 merkProduk: [],
                 satuanProduk: [],
                 formUmum: {
                     jenis: null,
+                    kategori: null,
                     kode: null,
                     nama: null,
                     image: null,
@@ -70,8 +74,12 @@
         },
         methods: {
             async init() {
-                await axios.get("/api/jenis_part/selectdata").then((res) => {
+                await axios.get("/api/produk/selectkelompok").then((res) => {
                     this.jenisProduk = res.data.data;
+                });
+
+                await axios.get("/api/produk/selectkategori").then((res) => {
+                    this.kategoriProduk = res.data.data;
                 });
 
                 await axios.get("/api/jenis_bahan/selectdata").then((res) => {
@@ -95,6 +103,7 @@
             async save() {
                 let data = new FormData();
                 data.append('jenis', this.formUmum.jenis.value);
+                data.append('kategori', this.formUmum.kategori.value);
                 data.append('kode', this.formUmum.kode);
                 data.append('nama', this.formUmum.nama);
                 data.append('image', this.formUmum.image);
@@ -128,19 +137,6 @@
                     });
                 }
             },
-            isNumber(evt) {
-                evt = evt ? evt : window.event;
-                var charCode = evt.which ? evt.which : evt.keyCode;
-                if (
-                    charCode > 31 &&
-                    (charCode < 48 || charCode > 57) &&
-                    charCode !== 46
-                ) {
-                    evt.preventDefault();
-                } else {
-                    return true;
-                }
-            },
         }
     }
 
@@ -155,19 +151,25 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label for="">Jenis</label>
+                                <label for="">Jenis Produk</label>
                                 <v-select :options="jenisProduk" v-model="formUmum.jenis">
                                 </v-select>
                             </div>
 
                             <div class="form-group">
-                                <label for="">Kode Part</label>
+                                <label for="">Kategori Produk</label>
+                                <v-select :options="kategoriProduk" v-model="formUmum.kategori">
+                                </v-select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Kode Produk</label>
                                 <input type="text" class="form-control" v-model="formUmum.kode">
                             </div>
 
                             <div class="form-group">
-                                <label for="">Nama Part</label>
-                                <textarea class="form-control" cols="5" rows="5" v-model="formUmum.nama"></textarea>
+                                <label for="">Nama Produk</label>
+                                <textarea class="form-control" cols="2" rows="2" v-model="formUmum.nama"></textarea>
                             </div>
                         </div>
 
@@ -181,7 +183,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <UploadImages @changed="handleImages" :max="1" :images="formUmum.image" v-else
+                            <UploadImages @changed="handleImages" :max="1" v-else
                                 maxError="Maksimal 1 gambar" uploadMsg="Silahkan Upload Gambar Part Disini"
                                 clearAll="Hapus semua gambar" />
                         </div>
@@ -289,7 +291,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <upload-files @changed="uploadEkatalog" :file="formEkatalog.lampiran" :multiple="true">
+                            <upload-files @changed="uploadEkatalog" :multiple="true">
                             </upload-files>
                         </div>
                     </div>
