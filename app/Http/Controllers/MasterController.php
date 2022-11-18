@@ -1913,6 +1913,7 @@ class MasterController extends Controller
                 'jenis' => $s->jenis_part->nama,
                 'deskripsi' => $s->deskripsi != '' ? $s->deskripsi : '-',
                 'satuan' => $s->satuan->nama,
+                'satuan_id' => $s->satuan->id,
                 'jumlah' => rand(10, 100),
             );
         }
