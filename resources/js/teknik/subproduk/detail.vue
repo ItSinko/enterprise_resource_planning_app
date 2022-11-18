@@ -36,6 +36,12 @@
                         jumlah: null,
                     }
                 ],
+                formBom: {
+                    kode: null,
+                    nama: null,
+                    tanggal: null,
+                    status: null,
+                },
 
                 // Pagination Parts BOM
                 search: '',
@@ -60,7 +66,8 @@
                         res.data.data.forEach(element => {
                             this.parts.push({
                                 value: element.id,
-                                label: element.nama
+                                label: element.nama,
+                                satuan: element.satuan_id
                             })
                         })
                     })
@@ -104,6 +111,34 @@
             this.search = query
             this.offset = 0
             },
+
+            async simpanBOM(){
+                try {
+                    let data = {
+                        produk_id: this.$route.params.id,
+                        kode: this.formBom.kode,
+                        nama: this.formBom.nama,
+                        tanggal: this.formBom.tanggal,
+                        status: this.formBom.status,
+                        part: this.partBOM
+                    }
+                    if(this.titleModalBOM == 'Tambah BOM'){
+                        await axios.post('/api/bom/store', data).then(res => {
+                            this.$swal('Berhasil', 'Berhasil menambahkan BOM', 'success')
+                            $('.modalAddBOM').modal('hide')
+                            this.init()
+                        })
+                    }else{
+                        await axios.post('/api/bom/update', data).then(res => {
+                            this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
+                            $('.modalAddBOM').modal('hide')
+                            this.init()
+                        })
+                    }
+                } catch (error) {
+                    
+                }
+            }
         },
 
         computed: {
@@ -279,18 +314,15 @@
                                                             <td>{{ detail.tahun }}</td>
                                                             <td v-html="status(detail.status)"></td>
                                                             <td>
-                                                                <button class="btn btn-info btn-sm" @click="detail(detail.id)">
+                                                                <span style="color:blue"  @click="detail(detail.id)">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
-                                                                    Detail
-                                                                </button>
-                                                                <button class="btn btn-info btn-sm" @click="editBOM(detail.id)">
-                                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                                    Edit
-                                                                </button>
-                                                                <button class="btn btn-danger btn-sm" @click="deleteBOM(detail.id)">
-                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                                    Hapus
-                                                                </button>
+                                                                </span>
+                                                                <span style="color:yellow"  @click="editBOM(detail.id)">
+                                                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                                                </span>
+                                                                <span style="color:red"  @click="editBOM(detail.id)">
+                                                                    <i class="fa fa-trash" aria-hidden="true" @click="deleteBOM(detail.id)"></i>
+                                                                </span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -334,27 +366,27 @@
                                 <div class="card-text text-center">
                                     <div class="form-group row">
                                         <label for="" class="col-4 text-right">Kode BOM</label>
-                                        <input type="text" class="form-control col-5">
+                                        <input type="text" class="form-control col-5" v-model="formBom.kode">
                                     </div>
                                     <div class="form-group row">
                                         <label for="" class="col-4 text-right">Nama BOM</label>
-                                        <input type="text" class="form-control col-5">
+                                        <input type="text" class="form-control col-5" v-model="formBom.nama">
                                     </div>
                                     <div class="form-group row">
                                         <label for="" class="col-4 text-right">Tanggal Pembuatan</label>
-                                        <input type="date" class="form-control col-5">
+                                        <input type="date" class="form-control col-5" v-model="formBom.tanggal">
                                     </div>
                                     <div class="form-group row">
                                         <label for="" class="col-4 text-right">Status</label>
                                         <div class="row" style="padding-left: 20px">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                    id="inlineRadio1" value="import">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" v-model="formBom.status"
+                                                    id="inlineRadio1" value="1">
                                                 <label class="form-check-label" for="inlineRadio1">Aktif</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                    id="inlineRadio2" value="pdn">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" v-model="formBom.status"
+                                                    id="inlineRadio2" value="0">
                                                 <label class="form-check-label" for="inlineRadio2">Tidak Aktif</label>
                                             </div>
                                         </div>
@@ -412,7 +444,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-primary" @click="simpanBOM">Simpan</button>
                     </div>
                 </div>
             </div>

@@ -73,7 +73,7 @@ class TeknikController extends Controller
     }
     public function store_bom(Request $request)
     {
-
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required',
             'nama' => 'required'
@@ -96,7 +96,7 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['id'],
+                    'part_id' => $request->part[$i]['value'],
                     'jumlah' => $request->part[$i]['jumlah'],
                     'satuan_id' => $request->part[$i]['satuan'],
                 ]);
