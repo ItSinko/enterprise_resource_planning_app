@@ -80,6 +80,13 @@
                 }
             },
 
+            async deleteBOM(id){
+                await axios.post('/api/bom/delete/' + id).then(res => {
+                    this.$swal('Berhasil!', 'Data berhasil di hapus', 'success')
+                    this.init()
+                })
+            },
+
             async detailBOM(id) {
                 try {
                     await axios.get(`/api/bom/detail/${id}`).then((res) => {

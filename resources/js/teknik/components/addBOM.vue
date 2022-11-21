@@ -74,8 +74,8 @@ import axios from "axios";
                     } else {
                         let id = this.formBom.id
                         await axios.post('/api/bom/update/' + id, data).then(res => {
-                            // this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
-                            // $('.modalAddBOM').modal('hide')
+                            this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
+                            $('.modalAddBOM').modal('hide')
                             console.log(res.data)
                             this.init()
                         })
