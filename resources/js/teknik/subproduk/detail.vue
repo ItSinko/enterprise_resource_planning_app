@@ -4,12 +4,14 @@
     import mix from './mix'
     import DetailBOM from '../components/detailBOM.vue'
     import AddBOM from '../components/addBOM.vue'
+    import DownloadFile from '../components/downloadFile.vue'
     export default {
         mixins: [mix],
         components: {
             Header,
             DetailBOM,
             AddBOM,
+            DownloadFile,
         },
         data() {
             return {
@@ -30,6 +32,8 @@
                 loading: true,
                 headersDetail: null,
                 detail: null,
+                file : null,
+
 
                 // Modal BOM
                 titleModalBOM: '',
@@ -59,6 +63,7 @@
                     await axios.get('/api/produk/teknik/detail/' + id).then(res => {
                         this.headersDetail = res.data.data[0].header
                         this.detail = res.data.data[0].detail
+                        this.file = res.data.data[0].file
                         this.loading = false
                         this.tableBOM()
                     })
@@ -314,7 +319,9 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title text-bold">Dokumen</h4>
-                                            <p class="card-text"></p>
+                                            <div class="card-text">
+                                                <DownloadFile :url="'/storage/lampiran_produk/'" :filename="file"></DownloadFile>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

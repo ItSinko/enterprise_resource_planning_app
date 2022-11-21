@@ -8,16 +8,24 @@ import axios from "axios";
                 default: () => {}
             },
             partBOM: null,
-            produk_id: null,
+            produk_id: {
+                type: String,
+                default: null
+            },
         },
         data() {
             return {
-                parts: [],
-                loading: false,
+            parts: [],
+            loading: false,
                 // Pagination Parts BOM
             search: '',
             offset: 0,
             limit: 10,
+            // Pagination Products BOM
+            products: [],
+            search_produk: '',
+            offset_produk: 0,
+            limit_produk: 10,
             }
         },
         created() {
@@ -35,11 +43,22 @@ import axios from "axios";
                         })
                     this.loading = true;
                     })
+
+                if(this.produk_id == null){
+                    await axios.get('/api/produk/teknik/data').then(response => {
+                    response.data.data.forEach(element => {
+                            this.products.push({
+                                value: element.id,
+                                label: element.nama,
+                            })
+                        });
+                    });
+                }    
             },
             async simpanBOM() {
                 try {
                     let data = {
-                        produk_id: this.produk_id,
+                        produk_id: this.produk_id == null ? this.formBom.produk_selected.value : this.produk_id,
                         kode: this.formBom.kode,
                         nama: this.formBom.nama,
                         tanggal: this.formBom.tanggal,
@@ -95,6 +114,11 @@ import axios from "axios";
                 this.search = query
                 this.offset = 0
             },
+
+            onSearchProduk(query) {
+                this.search_produk = query
+                this.offset_produk = 0
+            },
         },
         computed: {
             filtered() {
@@ -127,6 +151,33 @@ import axios from "axios";
                 )
                 }
             },
+
+            filteredProduk() {
+                return this.products.filter(produk => {
+                    let string = produk.label.toLowerCase()
+                    return string.includes(this.search_produk.toLowerCase())
+                })
+            },
+
+            paginatedProduk() {
+                return this.filteredProduk.slice(this.offset_produk, this.limit_produk + this.offset_produk)
+            },
+
+            hasNextPageProduk() {
+                const nextOffset = this.offset_produk + this.limit_produk
+                return Boolean(
+                    this.filteredProduk.slice(nextOffset, this.limit_produk + nextOffset).length
+                )
+            },
+
+            hasPrevPageProduk() {
+                const prevOffset = this.offset_produk - this.limit_produk
+                return Boolean(
+                    this.filteredProduk.slice(prevOffset, this.limit_produk + prevOffset).length
+                )
+            },
+
+            
         }
     }
 
@@ -148,6 +199,22 @@ import axios from "axios";
                         <div class="card-body">
                             <h4 class="card-title">Identitas BOM</h4>
                             <div class="card-text text-center">
+                                <div class="form-group row" v-show="produk_id == null">
+                                    <label for="" class="col-4 text-right">Produk</label>
+                                    <div class="col-5">
+                                         <v-select v-model="formBom.produk_selected" :options="paginatedProduk"
+                                                    :filterable="false" @search="onSearchProduk">
+                                            <li slot="list-footer" class="pagination">
+                                                <button type="button" class="btn btn-secondary"
+                                                    :disabled="!hasPrevPageProduk"
+                                                    @click="offset_produk -= limit_produk">Prev</button>
+                                                <button type="button" class="btn btn-primary"
+                                                    :disabled="!hasNextPageProduk"
+                                                    @click="offset_produk += limit_produk">Next</button>
+                                            </li>
+                                        </v-select>
+                                    </div>
+                                </div>
                                 <div class="form-group row">
                                     <label for="" class="col-4 text-right">Kode BOM</label>
                                     <input type="text" class="form-control col-5" v-model="formBom.kode">

@@ -117,6 +117,10 @@ class TeknikController extends Controller
         $data = array(
             'id' => $bom->id,
             'kode' => $bom->kode,
+            'produk' => array(
+                'value' => $bom->produk->id,
+                'label' => $bom->produk->nama,
+            ),
             'nama' => $bom->nama,
             'keterangan' => NULL,
             'status' => $bom->is_aktif,
@@ -138,25 +142,20 @@ class TeknikController extends Controller
     }
     public function get_data_bom()
     {
-        $produk = Produk::whereHas('bom')->get();
+        $bom = BillOfMaterial::all();
         $data = array();
 
-        foreach ($produk as $key_produk => $p) {
-            $data[$key_produk] = array(
-                'produk' => $p->nama,
-                'detail' => array()
-            );
-
-            foreach ($p->bom as $key_bom => $b) {
-                $data[$key_produk]['detail'][$key_bom] = array(
+            foreach ($bom as $b) {
+                $data = array(
                     'id' => $b->id,
                     'kode' => $b->kode,
+                    'produk' => $b->Produk->nama,
                     'nama' => $b->nama,
                     'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
                     'tahun_pembuatan' => $b->created_at->format("Y")
                 );
             }
-        }
+    
         return response()->json(['data' => $data]);
     }
 
