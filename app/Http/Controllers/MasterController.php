@@ -2298,4 +2298,78 @@ class MasterController extends Controller
 
         return response()->json(['data' => $data]);
     }
+    public function edit_produk_teknik($id)
+    {
+        $produk = Produk::find($id);
+
+
+        if ($produk->dimensi != '') {
+            $convert_panjang = explode('x', $produk->dimensi);
+        } else {
+            $convert_panjang = explode('x', '0x0x0');
+        }
+
+
+        $data = array(
+            'id' => $produk->id,
+            'formUmum' => array(
+                'jenis' => array(
+                    'value' => $produk->kelompok_produk_id,
+                    'label' => $produk->KelompokProduk->nama,
+                ),
+                'kategori' => array(
+                    'value' => $produk->produk_id,
+                    'label' => $produk->product->nama,
+                ),
+                'kode' => $produk->kode,
+                'nama' => $produk->nama,
+                'image' => $produk->gambar,
+            ),
+            'formSpecs' => array(
+                'panjang' => isset($convert_panjang[0]) ? $convert_panjang[0] : '0',
+                'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
+                'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
+                'versi' => $produk->versi,
+            'fungsi' => $produk->fungsi,
+            'deskripsi' => $produk->deskripsi,
+           
+
+            ),
+            'formEkatalog' => array(
+                'tipe' => $produk->tipe,
+                'merek' => $produk->merek,
+                'noproduk' => $produk->no_produk_penyedia,
+                'satuan' => array(
+                    'value' => $produk->satuan_id,
+                    'label' => $produk->satuan->nama
+                ),
+                'perusahaan' => $produk->nama_perusahaan,
+                'jenis' => $produk->jenis_produk_ekat,
+                'kode' => $produk->kode_kbki,
+                'noizin' => $produk->no_ijin_edar,
+                'tkdn' => $produk->nilai_tkdn,
+                'expired' => $produk->masa_berlaku,
+            ),
+            
+
+
+        );
+
+
+        foreach ($produk->jenis_bahan  as  $key_bahan => $j) {
+            $data['formSpecs']['bahan'][$key_bahan] = array(
+                'value' => $j->id,
+                'label' => $j->nama
+            );
+        }
+
+        foreach ($produk->file_produk as $key_p => $f) {
+            $data['formEkatalog']['lampiran'][$key_p] = array(
+                'id' => $f->id,
+                'path' => $f->nama
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
 }

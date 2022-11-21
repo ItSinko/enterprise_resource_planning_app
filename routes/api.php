@@ -27,6 +27,7 @@ Route::prefix('/bom')->group(function () {
     Route::get('/detail/{id}', [App\Http\Controllers\TeknikController::class, 'get_detail_bom']);
     Route::get('/edit/{id}', [App\Http\Controllers\TeknikController::class, 'edit_bom']);
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
+    Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
 Route::prefix('/part')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
@@ -119,6 +120,7 @@ Route::prefix('/produk')->group(function () {
         Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_teknik_produk']);
         Route::get('detail/{id}', [App\Http\Controllers\MasterController::class, 'detail_produk']);
         Route::post('store', [App\Http\Controllers\MasterController::class, 'store_produk_teknik']);
+        Route::get('edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_produk_teknik']);
         Route::post('update/{id}', [App\Http\Controllers\MasterController::class, 'update_produk_teknik']);
     });
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);

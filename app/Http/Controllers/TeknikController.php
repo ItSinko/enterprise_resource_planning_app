@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +24,7 @@ class TeknikController extends Controller
 
     public function update_bom(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required|unique:bill_of_material,kode,' . $id,
             'nama' => 'required|unique:bill_of_material,nama,' . $id
@@ -72,10 +73,10 @@ class TeknikController extends Controller
     }
     public function store_bom(Request $request)
     {
-        dd($request->all());
+   // dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required',
-            'nama' => 'required'
+            'nama' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -95,9 +96,9 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['id'],
+                    'part_id' => $request->part[$i]['namaPart']['value'],
                     'jumlah' => $request->part[$i]['jumlah'],
-                    'satuan_id' => $request->part[$i]['satuan'],
+                    'satuan_id' => $request->part[$i]['namaPart']['satuan'],
                 ]);
             }
 
@@ -145,8 +146,8 @@ class TeknikController extends Controller
         $bom = BillOfMaterial::all();
         $data = array();
 
-            foreach ($bom as $b) {
-                $data = array(
+            foreach ($bom as $key_bom => $b) {
+                $data[$key_bom] = array(
                     'id' => $b->id,
                     'kode' => $b->kode,
                     'produk' => $b->Produk->nama,
@@ -169,7 +170,7 @@ class TeknikController extends Controller
                     'produk' => $b->Produk->nama,
                     'nama_bom' => $b->nama,
                     'kode_bom' => $b->kode,
-                    'tahun_pembuatan' => $b->created_at->format("Y") ,
+                    'tahun_pembuatan' => $b->created_at->format("Y"),
                     'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
                 ),
                 'data_tabel' => array(),
@@ -185,5 +186,30 @@ class TeknikController extends Controller
             }
         }
         return response()->json(['data' => $data]);
+    }
+
+    public function delete_bom($id)
+    {
+
+        try {
+            $dbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                $q->where('bill_of_material_id', $id);
+            })->get();
+
+            if (count($dbom) > 0) {
+                $deldbom = DetailBillOfMaterial::whereHas('bom', function ($q) use ($id) {
+                    $q->where('bill_of_material_id', $id);
+                })->delete();
+                if (!$deldbom) {
+                    $bool = false;
+                }
+            }
+
+            BillOfMaterial::where('id', $id)->delete();
+
+            return response()->json(['status' => 'berhasil']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'gagal']);
+        }
     }
 }
