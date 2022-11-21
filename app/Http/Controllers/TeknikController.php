@@ -24,7 +24,7 @@ class TeknikController extends Controller
 
     public function update_bom(Request $request, $id)
     {
-
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required|unique:bill_of_material,kode,' . $id,
             'nama' => 'required|unique:bill_of_material,nama,' . $id
@@ -96,7 +96,7 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['namaPart']['value'],
+                    'part_id' => $request->part[$i]['id'],
                     'jumlah' => $request->part[$i]['jumlah'],
                     'satuan_id' => $request->part[$i]['namaPart']['satuan'],
                 ]);
@@ -118,17 +118,23 @@ class TeknikController extends Controller
         $data = array(
             'id' => $bom->id,
             'kode' => $bom->kode,
+            'produk' => array(
+                'value' => $bom->produk->id,
+                'label' => $bom->produk->nama,
+            ),
             'nama' => $bom->nama,
             'keterangan' => NULL,
-            'is_aktif' => $bom->is_aktif,
+            'status' => $bom->is_aktif,
         );
 
 
         foreach ($bom->detail_bom as $key_bom => $b) {
-            $data['detail'][$key_bom] = array(
-                'id' => 's',
-                'kode' => $b->Sparepart->kode,
-                'nama' => $b->Sparepart->nama,
+            $data['part'][$key_bom] = array(
+                'namaPart' => array(
+                    'value' =>  $b->Sparepart->id,
+                    'satuan' => $b->Sparepart->satuan->id,
+                    'label' => $b->Sparepart->nama,
+                ),
                 'jumlah' => $b->jumlah
             );
         }
@@ -137,25 +143,20 @@ class TeknikController extends Controller
     }
     public function get_data_bom()
     {
-        $produk = Produk::whereHas('bom')->get();
+        $bom = BillOfMaterial::all();
         $data = array();
 
-        foreach ($produk as $key_produk => $p) {
-            $data[$key_produk] = array(
-                'produk' => $p->nama,
-                'detail' => array()
+        foreach ($bom as $b) {
+            $data = array(
+                'id' => $b->id,
+                'kode' => $b->kode,
+                'produk' => $b->Produk->nama,
+                'nama' => $b->nama,
+                'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
+                'tahun_pembuatan' => $b->created_at->format("Y")
             );
-
-            foreach ($p->bom as $key_bom => $b) {
-                $data[$key_produk]['detail'][$key_bom] = array(
-                    'id' => $b->id,
-                    'kode' => $b->kode,
-                    'nama' => $b->nama,
-                    'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
-                    'tahun_pembuatan' => $b->created_at->format("Y")
-                );
-            }
         }
+
         return response()->json(['data' => $data]);
     }
 

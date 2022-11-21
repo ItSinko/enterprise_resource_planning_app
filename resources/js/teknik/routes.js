@@ -2,10 +2,12 @@ import VueRouter from "vue-router";
 
 import Part from "./page/part.vue";
 import Produk from "./page/produk.vue";
+import Bom from "./page/bom.vue";
 import ProdukTambah from "./subproduk/tambahEdit.vue";
 import ProdukDetail from "./subproduk/detail.vue";
 import BarangMasuk from "./page/barangMasuk.vue";
 import PurchaseOrder from "./page/purchaseOrder.vue";
+
 
 const routes = [
     {
@@ -50,6 +52,10 @@ const routes = [
     {
         path: "/teknik/produk/detail/:id",
         component: ProdukDetail,
+    },
+    {
+        path: "/teknik/bom",
+        component: Bom,
     }
 ];
 

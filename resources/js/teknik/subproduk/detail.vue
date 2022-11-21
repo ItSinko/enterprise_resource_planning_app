@@ -2,10 +2,16 @@
     import Header from '../components/header.vue'
     import axios from 'axios'
     import mix from './mix'
+    import DetailBOM from '../components/detailBOM.vue'
+    import AddBOM from '../components/addBOM.vue'
+    import DownloadFile from '../components/downloadFile.vue'
     export default {
         mixins: [mix],
         components: {
-            Header
+            Header,
+            DetailBOM,
+            AddBOM,
+            DownloadFile,
         },
         data() {
             return {
@@ -26,7 +32,8 @@
                 loading: true,
                 headersDetail: null,
                 detail: null,
-                parts: [],
+                file : null,
+
 
                 // Modal BOM
                 titleModalBOM: '',
@@ -43,10 +50,7 @@
                     status: null,
                 },
 
-                // Pagination Parts BOM
-                search: '',
-                offset: 0,
-                limit: 10,
+                detailBOMs: null,
             }
         },
         created() {
@@ -59,21 +63,25 @@
                     await axios.get('/api/produk/teknik/detail/' + id).then(res => {
                         this.headersDetail = res.data.data[0].header
                         this.detail = res.data.data[0].detail
+                        this.file = res.data.data[0].file
                         this.loading = false
-                    })
-
-                    await axios.get('/api/part/data').then(res => {
-                        res.data.data.forEach(element => {
-                            this.parts.push({
-                                value: element.id,
-                                label: element.nama,
-                                satuan: element.satuan_id
-                            })
-                        })
+                        this.tableBOM()
                     })
                 } catch (error) {
                     console.log(error)
                 }
+            },
+
+            tableBOM(){
+                $('.tableBOM').DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
             },
 
             edit(id) {
@@ -82,22 +90,52 @@
 
             addBOM() {
                 this.titleModalBOM = 'Tambah BOM'
-                $('.modalAddBOM').modal('show')
+                setTimeout(() => {
+                    $('.modalAddBOM').modal('show')
+                }, 100);
             },
 
-            addPartBOM() {
-                this.partBOM.push({
-                    namaPart: null,
-                    jumlah: null,
-                })
-            },
-
-            deletePartBOM(index) {
-                if (this.partBOM.length > 1) {
-                    this.partBOM.splice(index, 1)
+            async editBOM(id){
+                try {
+                    await axios.get('/api/bom/edit/' + id).then(res => {
+                        console.log(res.data.data)
+                        this.titleModalBOM = 'Edit BOM'
+                        this.formBom.id = id
+                        this.formBom.kode = res.data.data.kode
+                        this.formBom.nama = res.data.data.nama
+                        this.formBom.tanggal = res.data.data.tanggal
+                        this.formBom.status = res.data.data.status
+                        this.partBOM = res.data.data.part
+                        $('.modalAddBOM').modal('show')
+                    })
+                } catch (error) {
+                    console.log(error)      
                 }
             },
 
+            async detailBOM(id) {
+            try {
+                await axios.get(`/api/bom/detail/${id}`).then((res) => {
+                this.detailBOMs = res.data.data[0]
+                });
+                $(".modalDetailBOM").modal("show");
+            $(".tableDetailBOM").DataTable({
+                destroy: true,
+                paging: true,
+                lengthChange: false,
+                searching: true,
+                ordering: false,
+                info: true,
+                autoWidth: false,
+                responsive: true,
+            });
+            } catch (error) {
+                console.log(error);
+            }
+
+            },
+
+            
             status(status){
                 switch (status) {
                     case 'Aktif':
@@ -107,62 +145,7 @@
                 }
             },
 
-            onSearch(query) {
-            this.search = query
-            this.offset = 0
-            },
-
-            async simpanBOM(){
-                try {
-                    let data = {
-                        produk_id: this.$route.params.id,
-                        kode: this.formBom.kode,
-                        nama: this.formBom.nama,
-                        tanggal: this.formBom.tanggal,
-                        status: this.formBom.status,
-                        part: this.partBOM
-                    }
-                    if(this.titleModalBOM == 'Tambah BOM'){
-                        await axios.post('/api/bom/store', data).then(res => {
-                            this.$swal('Berhasil', 'Berhasil menambahkan BOM', 'success')
-                            $('.modalAddBOM').modal('hide')
-                            this.init()
-                        })
-                    }else{
-                        await axios.post('/api/bom/update', data).then(res => {
-                            this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
-                            $('.modalAddBOM').modal('hide')
-                            this.init()
-                        })
-                    }
-                } catch (error) {
-                    
-                }
-            }
         },
-
-        computed: {
-            filtered() {
-            return this.parts.filter((part) =>
-                part.label.toLocaleLowerCase().includes(this.search.toLocaleLowerCase())
-            )
-            },
-            paginated() {
-            return this.filtered.slice(this.offset, this.limit + this.offset)
-            },
-            hasNextPage() {
-            const nextOffset = this.offset + this.limit
-            return Boolean(
-                this.filtered.slice(nextOffset, this.limit + nextOffset).length
-            )
-            },
-            hasPrevPage() {
-            const prevOffset = this.offset - this.limit
-            return Boolean(
-                this.filtered.slice(prevOffset, this.limit + prevOffset).length
-            )
-            },
-        }
     }
 
 </script>
@@ -314,14 +297,14 @@
                                                             <td>{{ detail.tahun }}</td>
                                                             <td v-html="status(detail.status)"></td>
                                                             <td>
-                                                                <span style="color:blue"  @click="detail(detail.id)">
+                                                                <span style="color:#17A2B8" class="pr-2"  @click="detailBOM(detail.id)">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                                 </span>
-                                                                <span style="color:yellow"  @click="editBOM(detail.id)">
+                                                                <span style="color:#FFC107" class="pr-2"  @click="editBOM(detail.id)">
                                                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                                                 </span>
-                                                                <span style="color:red"  @click="editBOM(detail.id)">
-                                                                    <i class="fa fa-trash" aria-hidden="true" @click="deleteBOM(detail.id)"></i>
+                                                                <span style="color:#DC3545"  @click="deleteBOM(detail.id)">
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -336,7 +319,9 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title text-bold">Dokumen</h4>
-                                            <p class="card-text"></p>
+                                            <div class="card-text">
+                                                <DownloadFile :url="'/storage/lampiran_produk/'" :filename="file"></DownloadFile>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -346,120 +331,13 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Modal Add BOM -->
-        <div class="modal fade modalAddBOM" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-            aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ titleModalBOM }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Identitas BOM</h4>
-                                <div class="card-text text-center">
-                                    <div class="form-group row">
-                                        <label for="" class="col-4 text-right">Kode BOM</label>
-                                        <input type="text" class="form-control col-5" v-model="formBom.kode">
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="" class="col-4 text-right">Nama BOM</label>
-                                        <input type="text" class="form-control col-5" v-model="formBom.nama">
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="" class="col-4 text-right">Tanggal Pembuatan</label>
-                                        <input type="date" class="form-control col-5" v-model="formBom.tanggal">
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="" class="col-4 text-right">Status</label>
-                                        <div class="row" style="padding-left: 20px">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" v-model="formBom.status"
-                                                    id="inlineRadio1" value="1">
-                                                <label class="form-check-label" for="inlineRadio1">Aktif</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" v-model="formBom.status"
-                                                    id="inlineRadio2" value="0">
-                                                <label class="form-check-label" for="inlineRadio2">Tidak Aktif</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <AddBOM :produk_id="$route.params.id" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM"></AddBOM>
 
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Part BOM</h4>
-                                <div class="card-text">
-                                    <div class="d-flex flex-row-reverse bd-highlight">
-                                        <div class="p-2 bd-highlight">
-                                            <button class="btn btn-primary" @click="addPartBOM">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
-                                            Tambah
-                                        </button>
-                                        </div>
-                                    </div>
-                                        <table class="table text-center">
-                                            <thead class="thead-light">
-                                                <th>No</th>
-                                                <th>Nama Part</th>
-                                                <th>Jumlah</th>
-                                                <th>Aksi</th>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(part, idx) in partBOM" :key="idx">
-                                                    <td>{{ idx+1 }}</td>
-                                                    <td>
-                                                          <v-select v-model="part.namaPart" :options="paginated" :filterable="false" @search="onSearch">
-                                                            <li slot="list-footer" class="pagination">
-                                                            <button type="button" class="btn btn-secondary" :disabled="!hasPrevPage" @click="offset -= limit">Prev</button>
-                                                            <button type="button" class="btn btn-primary" :disabled="!hasNextPage" @click="offset += limit">Next</button>
-                                                            </li>
-                                                        </v-select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                        <input type="number" class="form-control col-3" @keypress="isNumber" v-model="part.jumlah">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <i style="color: red" class="fa fa-minus" aria-hidden="true" @click="deletePartBOM(idx)"></i>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" @click="simpanBOM">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Detail BOM -->
+    <DetailBOM :detailBOMs="detailBOMs" />
+    
     </div>
 </template>
-<style scoped>
-.pagination {
-  display: flex;
-  margin: 0.25rem 0.25rem 0;
-}
-.pagination button {
-  flex-grow: 1;
-}
-.pagination button:hover {
-  cursor: pointer;
-}
-</style>
+
