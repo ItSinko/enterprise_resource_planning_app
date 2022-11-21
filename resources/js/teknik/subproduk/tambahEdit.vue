@@ -89,6 +89,14 @@
                 await axios.get("/api/jenis_satuan/selectdata").then((res) => {
                     this.satuanProduk = res.data.data;
                 });
+
+                if(this.$route.params.id != undefined){
+                    await axios.get("/api/produk/teknik/edit/"+this.$route.params.id).then((res) => {
+                        this.formUmum = res.data.data.formUmum;
+                        this.formSpecs = res.data.data.formSpecs;
+                        this.formEkatalog = res.data.data.formEkatalog;
+                    });
+                }
             },
             handleImages(images) {
                 this.formUmum.image = images[0]

@@ -24,10 +24,10 @@ class TeknikController extends Controller
 
     public function update_bom(Request $request, $id)
     {
-        dd($request->all());
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
-            'kode' => 'required|unique:bill_of_material,kode,' . $id,
-            'nama' => 'required|unique:bill_of_material,nama,' . $id
+            'kode' => 'required',
+            'nama' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -59,9 +59,9 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['id'],
+                    'part_id' => $request->part[$i]['namaPart']['value'],
                     'jumlah' => $request->part[$i]['jumlah'],
-                    'satuan_id' => $request->part[$i]['satuan'],
+                    'satuan_id' => $request->part[$i]['namaPart']['satuan'],
                 ]);
             }
 
@@ -73,10 +73,10 @@ class TeknikController extends Controller
     }
     public function store_bom(Request $request)
     {
-        //dd($request->all());
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'kode' => 'required',
-            'nama' => 'required'
+            'nama' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -96,7 +96,7 @@ class TeknikController extends Controller
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
-                    'part_id' => $request->part[$i]['id'],
+                    'part_id' => $request->part[$i]['namaPart']['value'],
                     'jumlah' => $request->part[$i]['jumlah'],
                     'satuan_id' => $request->part[$i]['namaPart']['satuan'],
                 ]);
@@ -146,8 +146,8 @@ class TeknikController extends Controller
         $bom = BillOfMaterial::all();
         $data = array();
 
-        foreach ($bom as $b) {
-            $data = array(
+        foreach ($bom as $key_bom => $b) {
+            $data[$key_bom] = array(
                 'id' => $b->id,
                 'kode' => $b->kode,
                 'produk' => $b->Produk->nama,
