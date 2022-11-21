@@ -34,7 +34,8 @@ class Produk extends Model
         'kode_kbki',
         'no_ijin_edar',
         'nilai_tkdn',
-        'masa_berlaku'
+        'masa_berlaku',
+        'produk_id'
     ];
 
     function bom()
