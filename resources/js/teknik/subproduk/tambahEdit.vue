@@ -112,10 +112,14 @@
                 delete this.formUmum.imageEdit
                 this.$store.dispatch('setLoading', false)
             },
-            deleteLampiran(index) {
+            async deleteLampiran(index) {
+                let id = this.formEkatalog.lampiranEdit[index].id
                 this.$store.dispatch('setLoading', true)
                 this.$store.dispatch('deleteProdukLampiran', index)
                 this.$store.dispatch('setLoading', false)
+                await axios.delete('/api/produk/teknik/delete/file/'+id).then((res) => {
+                    this.formEkatalog.lampiranEdit.splice(index, 1);
+                });
             },
             uploadEkatalog(files) {
                 console.log(files)
@@ -329,7 +333,7 @@
                             <div class="form-group"><label for="">Kode KBKI</label><input type="text"
                                     class="form-control" v-model="formEkatalog.kode"></div>
                             <div class="form-group"><label for="">Nomor Izin Edar</label><input type="text"
-                                    class="form-control" v-model="formEkatalog.nozin"></div>
+                                    class="form-control" v-model="formEkatalog.noizin"></div>
                             <div class="form-group"><label for="">Nilai TKDN (%)</label><input type="text"
                                     class="form-control" v-model="formEkatalog.tkdn"></div>
                             <div class="form-group"><label for="">Masa Berlaku Produk</label><input type="date"

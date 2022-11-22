@@ -267,6 +267,7 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:produk,kode',
             'nama' => 'required|unique:produk,nama',
@@ -1268,6 +1269,13 @@ class MasterController extends Controller
     public function delete_file_produk($id)
     {
         $data = FileProduk::find($id)->delete();
+
+        if($data){
+            return response()->json(['data' => 'success']);
+        }
+            else {
+                return response()->json(['data' => 'error']);
+            }
     }
 
     public function delete_produk($id)

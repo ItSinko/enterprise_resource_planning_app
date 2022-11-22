@@ -43,22 +43,22 @@
                 this.$router.push('/teknik/produk/edit/' + id)
             },
             deleteProduk(id) {
-                this.$swal({
-                    title: 'Hapus Produk',
-                    text: "Apakah anda yakin ingin menghapus produk ini?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Hapus!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // axios.delete('/api/produk/teknik/delete/' + id).then(res => {
-                            this.$swal('Berhasil!', 'Data berhasil di hapus', 'success')
-                        //     this.init()
-                        // })
-                    }
-                })
+                // this.$swal({
+                //     title: 'Hapus Produk',
+                //     text: "Apakah anda yakin ingin menghapus produk ini?",
+                //     icon: 'warning',
+                //     showCancelButton: true,
+                //     confirmButtonColor: '#3085d6',
+                //     cancelButtonColor: '#d33',
+                //     confirmButtonText: 'Ya, Hapus!'
+                // }).then((result) => {
+                //     if (result.isConfirmed) {
+                //         axios.delete('/api/produk/teknik/delete/' + id).then(res => {
+                //             this.$swal('Berhasil!', 'Data berhasil di hapus', 'success')
+                //             this.init()
+                //         })
+                //     }
+                // })
             },
             
         },
@@ -136,11 +136,11 @@
                                                     Edit
                                                 </button>
 
-                                                <button @click="deleteProduk(produk.id)" class="dropdown-item"
+                                                <!-- <button @click="deleteProduk(produk.id)" class="dropdown-item"
                                                     type="button">
                                                     <i class="far fa-trash-alt"></i>
                                                     Hapus
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </td>
                                     </tr>
