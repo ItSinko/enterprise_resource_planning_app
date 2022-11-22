@@ -75,6 +75,7 @@
         },
         methods: {
             async init() {
+                this.$store.dispatch('resetFiles')
                 await axios.get("/api/produk/selectkelompok").then((res) => {
                     this.jenisProduk = res.data.data;
                 });
