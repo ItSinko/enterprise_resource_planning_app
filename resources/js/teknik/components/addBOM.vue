@@ -16,7 +16,6 @@ import axios from "axios";
         data() {
             return {
             parts: [],
-            loading: false,
                 // Pagination Parts BOM
             search: '',
             offset: 0,
@@ -33,6 +32,7 @@ import axios from "axios";
         },
         methods: {
             async init(){
+                this.$store.dispatch('setLoading', true)
                 await axios.get('/api/part/data').then(res => {
                         res.data.data.forEach(element => {
                             this.parts.push({
@@ -41,7 +41,6 @@ import axios from "axios";
                                 satuan: element.satuan_id
                             })
                         })
-                    this.loading = true;
                     })
 
                 if(this.produk_id == null){
@@ -53,7 +52,9 @@ import axios from "axios";
                             })
                         });
                     });
-                }    
+                }
+                this.$store.dispatch('setLoading', false)
+
             },
             async simpanBOM() {
                 try {
@@ -65,6 +66,7 @@ import axios from "axios";
                         status: this.formBom.status,
                         part: this.partBOM
                     }
+                    this.$store.dispatch('setLoading', true)
                     if (this.titleModalBOM == 'Tambah BOM') {
                         await axios.post('/api/bom/store', data).then(res => {
                             this.$swal('Berhasil', 'Berhasil menambahkan BOM', 'success')
@@ -74,14 +76,15 @@ import axios from "axios";
                     } else {
                         let id = this.formBom.id
                         await axios.post('/api/bom/update/' + id, data).then(res => {
-                            // this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
-                            // $('.modalAddBOM').modal('hide')
-                            console.log(res.data)
+                            this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
+                            $('.modalAddBOM').modal('hide')
                             this.init()
                         })
                     }
+                    window.location.reload()
+                    this.$store.dispatch('setLoading', false)
                 } catch (error) {
-
+                    console.log(error)
                 }
             },
             isNumber(evt) {
@@ -122,7 +125,7 @@ import axios from "axios";
         },
         computed: {
             filtered() {
-                if(this.loading){
+                if(!this.$store.state.loading){
                     return this.parts.filter(part => {
                         let string = part.label.toLowerCase()
                         // return string.includes(this.search.toLowerCase())
@@ -131,12 +134,12 @@ import axios from "axios";
                 }
             },
             paginated() {
-                if(this.loading){
+                if(!this.$store.state.loading){
                     return this.filtered.slice(this.offset, this.limit + this.offset)
                 }
             },
             hasNextPage() {
-                if(this.loading){
+                if(!this.$store.state.loading){
                     const nextOffset = this.offset + this.limit
                 return Boolean(
                     this.filtered.slice(nextOffset, this.limit + nextOffset).length
@@ -144,7 +147,7 @@ import axios from "axios";
                 }
             },
             hasPrevPage() {
-                if(this.loading){
+                if(!this.$store.state.loading){
                     const prevOffset = this.offset - this.limit
                 return Boolean(
                     this.filtered.slice(prevOffset, this.limit + prevOffset).length
@@ -183,7 +186,7 @@ import axios from "axios";
 
 </script>
 <template>
-<div v-if="!loading"></div>
+<div v-if="$store.state.loading"></div>
     <div v-else class="modal fade modalAddBOM" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
