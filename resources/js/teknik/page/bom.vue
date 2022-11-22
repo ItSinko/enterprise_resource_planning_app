@@ -59,7 +59,8 @@
                 this.titleModalBOM = 'Tambah BOM'
                 setTimeout(() => {
                     $('.modalAddBOM').modal('show')
-                }, 100);
+                }, 50);
+                console.log(this.formBom);
             },
             async editBOM(id) {
                 try {
@@ -130,7 +131,12 @@
         <Header :title="title" :breadcumbs="breadcumbs" />
         <AddBOM :products="products" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM" />
         <DetailBOM :detailBOMs="detailBOMs" />
-        <div class="card">
+            <div class="d-flex justify-content-center" v-if="$store.state.loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        <div class="card" v-else>
             <div class="card-body">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">

@@ -267,7 +267,6 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
-        dd($request);
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:produk,kode',
             'nama' => 'required|unique:produk,nama',
@@ -338,7 +337,7 @@ class MasterController extends Controller
 
     public function update_produk_teknik(Request $request, $id)
     {
-        //dd($request);
+        dd($request->all());
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:m_sparepart,kode,' . $id,
             'nama' => 'required|unique:produk,nama' . $id,
@@ -2364,7 +2363,7 @@ class MasterController extends Controller
         }
 
         foreach ($produk->file_produk as $key_p => $f) {
-            $data['formEkatalog']['lampiran'][$key_p] = array(
+            $data['formEkatalog']['lampiranEdit'][$key_p] = array(
                 'id' => $f->id,
                 'path' => $f->nama
             );

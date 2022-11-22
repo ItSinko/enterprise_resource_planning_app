@@ -97,6 +97,7 @@ export default {
       this.Imgs = [];
       this.files = [];
       this.$emit("changed", this.files);
+      this.$store.dispatch("resetFiles");
     },
   },
 };
