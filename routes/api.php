@@ -122,6 +122,7 @@ Route::prefix('/produk')->group(function () {
         Route::post('store', [App\Http\Controllers\MasterController::class, 'store_produk_teknik']);
         Route::get('edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_produk_teknik']);
         Route::post('update/{id}', [App\Http\Controllers\MasterController::class, 'update_produk_teknik']);
+        Route::delete('delete/file/{id}', [App\Http\Controllers\MasterController::class, 'delete_file_produk']);
     });
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);
     Route::post('create', [App\Http\Controllers\MasterController::class, 'create_produk']);

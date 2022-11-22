@@ -91,8 +91,6 @@ class TeknikController extends Controller
                 'keterangan' => NULL,
                 'is_aktif' => $request->status,
             ]);
-
-
             for ($i = 0; $i < count($request->part); $i++) {
                 DetailBillOfMaterial::create([
                     'bill_of_material_id' => $bom->id,
@@ -102,19 +100,15 @@ class TeknikController extends Controller
                 ]);
             }
 
-
             return response()->json([
                 'status' => 'berhasil'
             ]);
         }
     }
-
     public function edit_bom($id)
     {
         $bom = BillOfMaterial::find($id);
         $data = array();
-
-
         $data = array(
             'id' => $bom->id,
             'kode' => $bom->kode,
@@ -126,8 +120,6 @@ class TeknikController extends Controller
             'keterangan' => NULL,
             'status' => $bom->is_aktif,
         );
-
-
         foreach ($bom->detail_bom as $key_bom => $b) {
             $data['part'][$key_bom] = array(
                 'namaPart' => array(
@@ -159,7 +151,6 @@ class TeknikController extends Controller
 
         return response()->json(['data' => $data]);
     }
-
     public function get_detail_bom($id)
     {
         $bom = BillOfMaterial::where('id', $id)->get();
@@ -187,7 +178,6 @@ class TeknikController extends Controller
         }
         return response()->json(['data' => $data]);
     }
-
     public function delete_bom($id)
     {
 

@@ -1266,6 +1266,11 @@ class MasterController extends Controller
     }
 
     //Delete
+    public function delete_file_produk($id)
+    {
+        $data = FileProduk::find($id)->delete();
+    }
+
     public function delete_produk($id)
     {
         $produk = Produk::findOrFail($id);
@@ -2330,9 +2335,9 @@ class MasterController extends Controller
                 'lebar' => isset($convert_panjang[1]) ? $convert_panjang[1] : '0',
                 'tinggi' => isset($convert_panjang[2]) ? $convert_panjang[2] : '0',
                 'versi' => $produk->versi,
-            'fungsi' => $produk->fungsi,
-            'deskripsi' => $produk->deskripsi,
-           
+                'fungsi' => $produk->fungsi,
+                'deskripsi' => $produk->deskripsi,
+
 
             ),
             'formEkatalog' => array(
@@ -2350,7 +2355,7 @@ class MasterController extends Controller
                 'tkdn' => $produk->nilai_tkdn,
                 'expired' => $produk->masa_berlaku,
             ),
-            
+
 
 
         );
