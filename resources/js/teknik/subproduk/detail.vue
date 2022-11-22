@@ -58,18 +58,20 @@
         },
         methods: {
             async init() {
+                // this.$store.dispatch('setLoading', true)
                 let id = this.$route.params.id
                 try {
                     await axios.get('/api/produk/teknik/detail/' + id).then(res => {
                         this.headersDetail = res.data.data[0].header
                         this.detail = res.data.data[0].detail
                         this.file = res.data.data[0].file
-                        this.loading = false
                         this.tableBOM()
+                        this.$store.dispatch('setLoading', false)
                     })
                 } catch (error) {
                     console.log(error)
                 }
+                
             },
 
             tableBOM(){
@@ -150,7 +152,7 @@
 
 </script>
 <template>
-    <div v-if="loading">
+    <div v-if="$store.state.loading">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
@@ -278,7 +280,7 @@
                                                 </button>
                                             </div>
                                             <p class="card-text">
-                                                <table class="table tableBOM text-center" v-if="!loading">
+                                                <table class="table tableBOM text-center" v-if="!$store.state.loading">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>No</th>
