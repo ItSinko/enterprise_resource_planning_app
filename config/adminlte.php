@@ -1585,47 +1585,71 @@ return [
             ],
         ],
 
-        [
-            'header' => 'AIR',
-            'auth' => [16, 10]
-        ],
 
         [
-            'text'    => 'Grafik Air',
-            'icon'    => 'fas fa-tint fa-fw',
-            'auth' => [16, 10],
-            'url' => '/mtc/air/masuk',
-            // [
-            //     'text' => 'Air Keluar',
-            //     'icon' => 'far fa-circle',
-            //     'url' => '/mtc/air/masuk',
-            //     'auth' => [16,10],
-            // ],
-        ],
-
-        [
-            'header' => 'LISTRIK',
-            'auth' => [16, 10]
-        ],
-
-        [
-            'text' => 'Panel Listrik',
-            'icon' => 'fas fa-bolt fa-fw',
-            'url' => '/mtc/listrik/panel',
-            'auth' => [16, 10],
+            'header' => 'Master',
+            'auth' => [10]
         ],
         [
-            'text' => 'Data Monitoring',
+            'text' => 'Part',
             'icon' => 'fas fa-database fa-fw',
-            'url' => '/mtc/listrik/monitoring/table',
-            'auth' => [16, 10],
+            'url' => '/teknik/part/',
+            'auth' => [10],
         ],
         [
-            'text' => 'Grafik Monitoring',
-            'icon' => 'far fa-chart-bar fa-fw',
-            'url' => '/mtc/listrik/monitoring/grafik',
-            'auth' => [16, 10],
+            'text' => 'Produk',
+            'icon' => 'fas fa-database fa-fw',
+            'url' => '/teknik/produk/',
+            'auth' => [10],
         ],
+        [
+            'text' => 'Bill of Material',
+            'icon' => 'fas fa-database fa-fw',
+            'url' => '/teknik/bom/',
+            'auth' => [10],
+        ],
+
+        // [
+        //     'header' => 'AIR',
+        //     'auth' => [16, 10]
+        // ],
+
+        // [
+        //     'text'    => 'Grafik Air',
+        //     'icon'    => 'fas fa-tint fa-fw',
+        //     'auth' => [16, 10],
+        //     'url' => '/mtc/air/masuk',
+        //     // [
+        //     //     'text' => 'Air Keluar',
+        //     //     'icon' => 'far fa-circle',
+        //     //     'url' => '/mtc/air/masuk',
+        //     //     'auth' => [16,10],
+        //     // ],
+        // ],
+
+        // [
+        //     'header' => 'LISTRIK',
+        //     'auth' => [16, 10]
+        // ],
+
+        // [
+        //     'text' => 'Panel Listrik',
+        //     'icon' => 'fas fa-bolt fa-fw',
+        //     'url' => '/mtc/listrik/panel',
+        //     'auth' => [16, 10],
+        // ],
+        // [
+        //     'text' => 'Data Monitoring',
+        //     'icon' => 'fas fa-database fa-fw',
+        //     'url' => '/mtc/listrik/monitoring/table',
+        //     'auth' => [16, 10],
+        // ],
+        // [
+        //     'text' => 'Grafik Monitoring',
+        //     'icon' => 'far fa-chart-bar fa-fw',
+        //     'url' => '/mtc/listrik/monitoring/grafik',
+        //     'auth' => [16, 10],
+        // ],
 
         // [
         //     'text'    => 'After Sales',
