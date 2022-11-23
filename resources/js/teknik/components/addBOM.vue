@@ -71,17 +71,22 @@ import axios from "axios";
                         await axios.post('/api/bom/store', data).then(res => {
                             this.$swal('Berhasil', 'Berhasil menambahkan BOM', 'success')
                             $('.modalAddBOM').modal('hide')
+                            $('.modal-backdrop').remove()
+                            $(document.body).removeClass("modal-open");
                             this.init()
+                            this.$emit('refresh')
                         })
                     } else {
                         let id = this.formBom.id
                         await axios.post('/api/bom/update/' + id, data).then(res => {
                             this.$swal('Berhasil', 'Berhasil mengubah BOM', 'success')
                             $('.modalAddBOM').modal('hide')
+                            $('.modal-backdrop').remove()
+                            $(document.body).removeClass("modal-open");
                             this.init()
+                            this.$emit('refresh')
                         })
                     }
-                    window.location.reload()
                     this.$store.dispatch('setLoading', false)
                 } catch (error) {
                     console.log(error)
@@ -187,7 +192,7 @@ import axios from "axios";
 </script>
 <template>
 <div v-if="$store.state.loading"></div>
-    <div v-else class="modal fade modalAddBOM" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    <div v-else class="modal fade modalAddBOM" id="modelId" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">

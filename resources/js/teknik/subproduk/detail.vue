@@ -33,7 +33,7 @@
                 headersDetail: null,
                 detail: null,
                 file : null,
-
+                loading: true,
 
                 // Modal BOM
                 titleModalBOM: '',
@@ -54,11 +54,11 @@
             }
         },
         created() {
-            this.init()
+            this.getDetailProduk()
         },
         methods: {
-            async init() {
-                // this.$store.dispatch('setLoading', true)
+            async getDetailProduk() {
+                this.loading = true
                 let id = this.$route.params.id
                 try {
                     await axios.get('/api/produk/teknik/detail/' + id).then(res => {
@@ -66,7 +66,7 @@
                         this.detail = res.data.data[0].detail
                         this.file = res.data.data[0].file
                         this.tableBOM()
-                        this.$store.dispatch('setLoading', false)
+                        this.loading = false
                     })
                 } catch (error) {
                     console.log(error)
@@ -152,7 +152,7 @@
 
 </script>
 <template>
-    <div v-if="$store.state.loading">
+    <div v-if="loading">
         <div class="d-flex justify-content-center">
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">Loading...</span>
@@ -280,7 +280,7 @@
                                                 </button>
                                             </div>
                                             <p class="card-text">
-                                                <table class="table tableBOM text-center" v-if="!$store.state.loading">
+                                                <table class="table tableBOM text-center" v-if="!loading">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>No</th>
@@ -335,7 +335,7 @@
         </div>
 
         <!-- Modal Add BOM -->
-    <AddBOM :produk_id="$route.params.id" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM"></AddBOM>
+    <AddBOM @refresh="getDetailProduk" :produk_id="$route.params.id" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM"></AddBOM>
 
     <!-- Detail BOM -->
     <DetailBOM :detailBOMs="detailBOMs" />

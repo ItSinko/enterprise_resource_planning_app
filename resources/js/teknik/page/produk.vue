@@ -36,7 +36,6 @@
                 this.$router.push('/teknik/produk/tambah')
             },
             detailProduk(id) {
-
                 this.$router.push(`/teknik/produk/detail/${id}`)    
             },
             editProduk(id) {

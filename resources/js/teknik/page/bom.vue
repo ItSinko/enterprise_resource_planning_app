@@ -129,7 +129,7 @@
 <template>
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
-        <AddBOM :products="products" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM" />
+        <AddBOM @refresh="init" :products="products" :formBom="formBom" :partBOM="partBOM" :titleModalBOM="titleModalBOM" />
         <DetailBOM :detailBOMs="detailBOMs" />
             <div class="d-flex justify-content-center" v-if="$store.state.loading">
                 <div class="spinner-border text-primary" role="status">
