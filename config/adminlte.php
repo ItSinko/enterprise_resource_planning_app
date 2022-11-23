@@ -764,17 +764,23 @@ return [
             'auth' => [11],
         ],
         [
-            'text' => 'Stok',
+            'text' => 'Transfer Antar Gudang',
+            'icon' => 'fas fa-exchange-alt',
             'auth' => [11],
-            'icon' =>  'fas fa-boxes',
-            'url' => '/gbmp/data_view'
+            'url'  => '/gbmp/transfer',
         ],
-        [
-            'text' => 'Pesanan PPIC',
-            'auth' => [11],
-            'icon' =>  'fas fa-boxes',
-            'url' => '/gbmp/bppb_view'
-        ],
+        // [
+        //     'text' => 'Stok',
+        //     'auth' => [11],
+        //     'icon' =>  'fas fa-boxes',
+        //     'url' => '/gbmp/data_view'
+        // ],
+        // [
+        //     'text' => 'Pesanan PPIC',
+        //     'auth' => [11],
+        //     'icon' =>  'fas fa-boxes',
+        //     'url' => '/gbmp/bppb_view'
+        // ],
         // Produksi (17)
         // [
         //     'header' => 'PERSIAPAN',

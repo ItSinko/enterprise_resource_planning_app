@@ -41,9 +41,6 @@ Route::get('/home', function () {
     return redirect('/');
 })->middleware('auth');
 
-Route::get("/test", function () {
-    return view('test');
-});
 Route::view('/modul_dashboard/show', 'auth.dashboard');
 Route::group(['middleware' => 'auth', 'middleware' => ['auth', 'divisi:jual,kes,prd,dc,gbj,qc,log,gk,mtc,mgrgdg,dirut,it']], function () {
     Route::view('/edit_pwd', 'page.setting.edit_pwd');
@@ -94,6 +91,9 @@ Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
 });
 Route::middleware('auth')->prefix('/teknik')->group(function () {
     Route::view('/{any?}', 'spa.teknik');
+});
+Route::middleware('auth')->prefix('/gbmp')->group(function () {
+    Route::view('/{any?}', 'spa.gbmp');
 });
 
 
