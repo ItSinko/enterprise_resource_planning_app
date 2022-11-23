@@ -78,6 +78,7 @@
 
             tableBOM(){
                 $('.tableBOM').DataTable({
+                    "destroy": true,
                     "paging": true,
                     "lengthChange": true,
                     "searching": true,
