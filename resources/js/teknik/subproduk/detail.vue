@@ -56,6 +56,9 @@
         created() {
             this.getDetailProduk()
         },
+        updated(){
+                        this.tableBOM()
+        },
         methods: {
             async getDetailProduk() {
                 this.loading = true
@@ -65,7 +68,6 @@
                         this.headersDetail = res.data.data[0].header
                         this.detail = res.data.data[0].detail
                         this.file = res.data.data[0].file
-                        this.tableBOM()
                         this.loading = false
                     })
                 } catch (error) {

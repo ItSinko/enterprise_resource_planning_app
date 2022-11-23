@@ -57,15 +57,24 @@
             },
             addBOM() {
                 this.titleModalBOM = 'Tambah BOM'
+                this.partBOM = [{
+                    namaPart: null,
+                    jumlah: null,
+                }],
+                this.formBom = {
+                    produk_selected: null,
+                    kode: null,
+                    nama: null,
+                    tanggal: null,
+                    status: null,
+                },
                 setTimeout(() => {
                     $('.modalAddBOM').modal('show')
                 }, 50);
-                console.log(this.formBom);
             },
             async editBOM(id) {
                 try {
                     await axios.get('/api/bom/edit/' + id).then(res => {
-                        console.log(res.data.data)
                         this.titleModalBOM = 'Edit BOM'
                         this.formBom.id = id
                         this.formBom.produk_selected = res.data.data.produk

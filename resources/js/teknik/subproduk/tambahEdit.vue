@@ -129,26 +129,21 @@
             cancel() {
                 this.$router.push('/teknik/produk')
             },
-            // save() {
-            //     if(Object.keys(this.$route.params).length > 0){
-            //         let mergeArrayFile = this.formEkatalog.lampiran.concat(this.formEkatalog.lampiranEdit);
-            //         this.formEkatalog.lampiran = mergeArrayFile;
-            //         this.saving()
-            //     }else{
-            //         this.formEkatalog.lampiran = this.formEkatalog.lampiran;
-            //         this.saving()
-            //     }
-            // },
-            async save(){
-                let lampiran = [];
-                if(Object.keys(this.$route.params).length > 0){
-                    let mergeArrayFile = this.formEkatalog.lampiran.concat(this.formEkatalog.lampiranEdit);
-                    lampiran = mergeArrayFile;
-                }else{
-                    lampiran = this.formEkatalog.lampiran;
-                }
-                console.log(lampiran)
+            save() {
+                const formNotValid = 
+                this.formUmum.jenis != null &&
+                this.formUmum.kategori != null &&
+                this.formSpecs.bahan.length > 0 &&
+                this.formEkatalog.satuan != null
 
+                console.log(formNotValid)
+                if(!formNotValid){
+                    this.$swal('Peringatan', 'Form tidak boleh kosong', 'warning')
+                }else{
+                    this.saving()
+                }
+            },
+            async saving(){
                 let data = new FormData();
                 data.append('jenis', this.formUmum.jenis.value);
                 data.append('kategori', this.formUmum.kategori.value);
@@ -174,18 +169,20 @@
                 data.append('noizin', this.formEkatalog.noizin);
                 data.append('tkdn', this.formEkatalog.tkdn);
                 data.append('expired', this.formEkatalog.expired);
-                for (let i = 0; i < lampiran.length; i++) {
-                    data.append('lampiran[]', lampiran[i]);
+                for (let i = 0; i < this.formEkatalog.lampiran.length; i++) {
+                    data.append('lampiran[]', this.formEkatalog.lampiran[i]);
                 }
                 if (Object.keys(this.$route.params).length > 0) {
                     await axios.post("/api/produk/teknik/update/"+this.$route.params.id, data).then((res) => {
                         this.$swal('Berhasil', 'Data berhasil diubah', 'success')
                         this.$router.push('/teknik/produk')
+                        this.$emit('refresh')
                     });
                 } else {
                     await axios.post("/api/produk/teknik/store", data).then((res) => {
                         this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
                         this.$router.push('/teknik/produk')
+                        this.$emit('refresh')
                     });
                 }
             }
