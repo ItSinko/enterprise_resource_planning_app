@@ -56,7 +56,16 @@ import axios from "axios";
                 this.$store.dispatch('setLoading', false)
 
             },
-            async simpanBOM() {
+            simpanBOM(){
+                const formNotValid = Object.values(this.formBom).some(value => value === null || value === '')
+                || this.partBOM.some(value => value.namaPart === null || value.jumlah === null)
+                if(formNotValid){
+                    this.$swal('Gagal', 'Form tidak boleh ada yang kosong', 'error')
+                }else{
+                    this.save()
+                }
+            },
+            async save() {
                 try {
                     let data = {
                         produk_id: this.produk_id == null ? this.formBom.produk_selected.value : this.produk_id,
