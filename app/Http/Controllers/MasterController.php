@@ -267,7 +267,6 @@ class MasterController extends Controller
 
     public function store_produk_teknik(Request $request)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(),  [
             'kode' => 'required|unique:produk,kode',
             'nama' => 'required|unique:produk,nama',
