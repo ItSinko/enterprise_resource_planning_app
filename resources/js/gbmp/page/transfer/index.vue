@@ -349,12 +349,31 @@
                     },
                 ],
                 search: '',
+                gudangtransfer: [],
             }
+        },
+        methods: {
+            clickFilterdalamProses(filter) {
+                if (this.gudangtransfer.includes(filter)) {
+                    this.gudangtransfer = this.gudangtransfer.filter(item => item !== filter)
+                } else {
+                    this.gudangtransfer.push(filter)
+                }
+            },
         },
         computed: {
             filteredGudangTransfers() {
+                let filtered = []
+                if (this.gudangtransfer.length > 0) {
+                    this.gudangtransfer.forEach(filter => {
+                        filtered = filtered.concat(this.gudangtransfers.filter(item => item.status == filter))
+                    })
+                } else {
+                    filtered = this.gudangtransfers
+                }
+
                 const dataIsNotNull = (data) => data !== null && data !== undefined && data !== "" ? data : "-";
-                return this.gudangtransfers.filter((gudangtransfer) => {
+                return filtered.filter((gudangtransfer) => {
                     const search = this.search.toLowerCase();
                     const no_transfer = dataIsNotNull(gudangtransfer.no_transfer).toString().toLowerCase();
                     const divisi = dataIsNotNull(gudangtransfer.divisi).toString().toLowerCase();
@@ -421,7 +440,7 @@
                                     <div class="form-group"><label for="">Status</label></div>
                                     <div class="form-group" v-for="status in getUniqueStatus" :key="status">
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" :value="status">
+                                            <input type="checkbox" class="form-check-input" @click="clickFilterdalamProses(status)" :ref="status" :value="status">
                                             <label for="" class="form-check-label">{{ status }}</label>
                                         </div>
                                     </div>
