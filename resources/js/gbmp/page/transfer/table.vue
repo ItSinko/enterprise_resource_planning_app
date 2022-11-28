@@ -34,6 +34,29 @@
                     default:
                         return 'badge-primary'
                 }
+            },
+
+            buttonColor(status) {
+                switch (status) {
+                    case 'Transfer Barang':
+                        return 'btn-primary' 
+                    case 'Terima Barang':
+                        return 'btn-warning'
+                    default:
+                        return 'btn-primary'
+                }
+            },
+            detail(id){
+                this.$emit('detail', id)
+            },
+
+            condition(status, id) {
+                switch (status) {
+                    case 'Transfer Barang':
+                        return this.$emit('barang', status, id)
+                    case 'Terima Barang':
+                        return this.$emit('barang', status, id)
+                }
             }
         },
     }
@@ -61,7 +84,13 @@
                     <td>{{ moment(trf.tanggal) }}</td>
                     <td>{{ trf.keterangan }}</td>
                     <td><span class="badge" :class="statusClass(trf.status)">{{ trf.status }}</span></td>
-                    <td></td>
+                    <td>
+                        <button class="btn btn-sm" :class="buttonColor(trf.barang)" @click="condition(trf.barang, trf.no_transfer)">{{ trf.barang }}</button>
+                        <button class="btn btn-sm btn-outline-info" @click="detail(trf.no_transfer)">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                            Detail
+                        </button>
+                    </td>
                 </tr>
             </tbody>
             <tbody v-else>

@@ -769,6 +769,12 @@ return [
             'auth' => [11],
             'url'  => '/gbmp/transfer',
         ],
+        [
+            'text' => 'Barang Masuk',
+            'icon' => 'fas fa-sign-in-alt',
+            'auth' => [11],
+            'url'  => '/gbmp/barang-masuk',
+        ],
         // [
         //     'text' => 'Stok',
         //     'auth' => [11],

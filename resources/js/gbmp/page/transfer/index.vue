@@ -1,8 +1,10 @@
 <script>
-    import Header from '../../components/header.vue'
+    import Header from '../../components/header.vue' 
     import Table from './table.vue'
     import Loading from '../../components/loading.vue'
     import axios from 'axios'
+    import addTransfer from './tambah.vue'
+    import detailTransfer from './detail.vue'
     import mix from './mix'
     export default {
         mixins: [mix],
@@ -10,6 +12,8 @@
             Header,
             Table,
             Loading,
+            addTransfer,
+            detailTransfer
         },
         data() {
             return {
@@ -30,6 +34,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -37,6 +42,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     },
                     {
                         'no_transfer': 'TRF-0001',
@@ -45,6 +51,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -52,6 +59,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -59,6 +67,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -66,6 +75,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -73,6 +83,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -80,6 +91,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -87,6 +99,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -94,6 +107,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -101,6 +115,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -108,6 +123,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -115,6 +131,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -122,6 +139,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -129,6 +147,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -136,6 +155,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -143,6 +163,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -150,6 +171,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -157,6 +179,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -164,6 +187,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Selesai',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -171,6 +195,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -178,6 +203,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -185,6 +211,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -192,6 +219,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -199,6 +227,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -206,6 +235,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -213,6 +243,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -220,6 +251,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -227,6 +259,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -234,6 +267,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -241,6 +275,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -248,6 +283,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -255,6 +291,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -262,6 +299,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -269,6 +307,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -276,6 +315,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -283,6 +323,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -290,6 +331,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -297,6 +339,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -304,6 +347,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -311,6 +355,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -318,6 +363,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -325,6 +371,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -332,6 +379,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     }, {
                         'no_transfer': 'TRF-0001',
                         'divisi': 'GBMP',
@@ -339,6 +387,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Draft',
                         'ket': 'masuk',
+                        'barang': 'Transfer Barang',
                     }, {
                         'no_transfer': 'TRF-0002',
                         'divisi': 'GBMP',
@@ -346,6 +395,7 @@
                         'keterangan': 'Transfer Barang',
                         'status': 'Menunggu Permintaan',
                         'ket': 'keluar',
+                        'barang': 'Terima Barang',
                     },
                 ],
                 search: '',
@@ -360,6 +410,61 @@
                     this.gudangtransfer.push(filter)
                 }
             },
+            createTransfer() {
+                $('.modalAddTransfer').modal('show')
+            },
+            detailTransfer(id) {
+                console.log(id)
+                $('.modalDetailTransfer').modal('show')
+            },
+
+            barang(brg, id) {
+                console.log(brg)
+                switch (brg) {
+                    case 'Transfer Barang':
+                        return this.$swal({
+                            'title': 'Transfer Barang',
+                            'text': 'Anda yakin ingin mentransfer barang?',
+                            'icon': 'warning',
+                            'showCancelButton': true,
+                            'confirmButtonColor': '#3085d6',
+                            'cancelButtonColor': '#d33',
+                            'confirmButtonText': 'Ya',
+                            'cancelButtonText': 'Batal',
+                        }).then((result) => {
+                            if (result.value) {
+                                this.$swal({
+                                    'title': 'Berhasil',
+                                    'text': 'Barang berhasil ditransfer',
+                                    'icon': 'success',
+                                    'showConfirmButton': false,
+                                    'timer': 1500,
+                                })
+                            }
+                        })
+                    case 'Terima Barang':
+                        return this.$swal({
+                            'title': 'Terima Barang',
+                            'text': 'Anda yakin ingin menerima barang dengan benar?',
+                            'icon': 'warning',
+                            'showCancelButton': true,
+                            'confirmButtonColor': '#3085d6',
+                            'cancelButtonColor': '#d33',
+                            'confirmButtonText': 'Ya',
+                            'cancelButtonText': 'Batal',
+                        }).then((result) => {
+                            if (result.value) {
+                                this.$swal({
+                                    'title': 'Berhasil',
+                                    'text': 'Barang berhasil diterima',
+                                    'icon': 'success',
+                                    'showConfirmButton': false,
+                                    'timer': 1500,
+                                })
+                            }
+                        })
+                }
+            }
         },
         computed: {
             filteredGudangTransfers() {
@@ -398,6 +503,8 @@
 <template>
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
+        <add-transfer />
+        <detail-transfer />
         <Loading v-if="loading" />
         <div class="card" v-else>
             <div class="card-body">
@@ -425,7 +532,8 @@
 
                 <div class="d-flex bd-highlight">
                     <div class="p-2 bd-highlight">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTransfer">
+                        <button type="button" @click="createTransfer" class="btn btn-primary" data-toggle="modal"
+                            data-target="#modalTransfer">
                             <i class="fas fa-plus"></i> Transfer Antar Gudang
                         </button>
                     </div>
@@ -440,7 +548,8 @@
                                     <div class="form-group"><label for="">Status</label></div>
                                     <div class="form-group" v-for="status in getUniqueStatus" :key="status">
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" @click="clickFilterdalamProses(status)" :ref="status" :value="status">
+                                            <input type="checkbox" class="form-check-input"
+                                                @click="clickFilterdalamProses(status)" :ref="status" :value="status">
                                             <label for="" class="form-check-label">{{ status }}</label>
                                         </div>
                                     </div>
@@ -455,7 +564,7 @@
                         </div>
                     </div>
                 </div>
-                <Table :transfers="renderPaginate" />
+                <Table :transfers="renderPaginate" @detail="detailTransfer" @barang="barang" />
                 <div class="card-footer">
                     <div class="d-flex flex-row-reverse bd-highlight">
                         <nav aria-label="...">
