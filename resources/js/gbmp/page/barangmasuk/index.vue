@@ -13,11 +13,11 @@
                         link: '#'
                     },
                     {
-                        name: 'Transfer Antar Gudang',
-                        link: '/gbmp/transfer'
+                        name: 'Barang Masuk',
+                        link: '/gbmp/barang-masuk'
                     },
                 ],
-                title: 'Transfer Antar Gudang',
+                title: 'Barang Masuk',
             }
         },
     }

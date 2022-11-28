@@ -26,6 +26,9 @@ export default {
                     return 'badge badge-secondary'
             }
         },
+        detail(idx){
+            this.$emit('detail', idx)
+        }
     },
 }
 </script>
@@ -44,8 +47,8 @@ export default {
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody v-for="(proses, idx) in dalamProses" :key="idx">
-                <tr>
+            <tbody v-if="dalamProses.length > 0">
+                <tr  v-for="(proses, idx) in dalamProses" :key="idx">
                     <td>
                         <input type="checkbox" :value="proses.no_po" ref="proses" @click="checked(idx)">
                     </td>
@@ -67,7 +70,16 @@ export default {
                     <td>
                         <span :class="status(proses.status)">{{ proses.status }}</span>
                     </td>
-                    <td></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info" @click="detail(idx)">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="8" class="text-center">Tidak ada data</td>
                 </tr>
             </tbody>
         </table>

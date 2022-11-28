@@ -14,7 +14,8 @@
                     },
                     'lot': {
                         'value': '',
-                        'label': 'LOT-0001'
+                        'label': 'LOT-0001',
+                        'stok': 20
                     },
                     'jumlah': 10,
                 }],
@@ -37,7 +38,15 @@
                     'jumlah': 10,
                 });
             },
- isNumber(evt) {
+            calcStok(stok, jml){
+                const stokBaru = stok - jml
+                if(stokBaru < 0){
+                    return true
+                }else{
+                    return false
+                }
+            },
+            isNumber(evt) {
             evt = evt ? evt : window.event;
             var charCode = evt.which ? evt.which : evt.keyCode;
             if (
@@ -124,6 +133,9 @@
                                                     </td>
                                                     <td>
                                                         <v-select v-model="barang.lot"></v-select>
+                                                        <span class="text-danger text-center" v-if="calcStok(barang.lot.stok, barang.jumlah)">
+                                                            Stok saat ini {{ barang.lot.stok }}
+                                                        </span>
                                                     </td>
                                                     <td><input @keypress="isNumber($event)" type="text" class="form-control"
                                                             v-model=" barang.jumlah"></td>
