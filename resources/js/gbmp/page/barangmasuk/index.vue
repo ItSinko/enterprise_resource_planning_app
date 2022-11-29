@@ -1,10 +1,14 @@
 <script>
     import Header from '../../components/header.vue'
     import dalamProses from './dalamproses'
+    import riwayatPO from './riwayatPO'
+    import jadwalPenerimaan from './jadwalpenerimaan'
     export default {
         components: {
             Header,
-            dalamProses
+            dalamProses,
+            riwayatPO,
+            jadwalPenerimaan,
         },
         data() {
             return {
@@ -44,8 +48,12 @@
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                 <dalamProses />
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">Profile</div>
-            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Contact</div>
+            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                <riwayatPO />
+            </div>
+            <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                <jadwalPenerimaan />
+            </div>
         </div>
     </div>
 </template>
