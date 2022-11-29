@@ -1,6 +1,6 @@
 <script>
 import modalTable from './modalTable.vue'
-import modalTerimaBarang from './modalTerimaBarang.vue'
+import modalTerimaBarang from './terimaBarang/modalTerimaBarang.vue'
 export default {
     props: {
         produks: {
