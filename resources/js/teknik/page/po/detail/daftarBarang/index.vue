@@ -10,7 +10,40 @@ export default {
                 {
                     'nama' : 'Produk 1',
                     'jumlah' : 10,
-
+                   'progress': {
+                        'total' : {
+                            'class' : 'bg-success',
+                            'width' : 50
+                        },
+                        'sudah' : {
+                            'class' : 'bg-danger',
+                            'width' : 25
+                        },
+                        'belum' : {
+                            'class' : 'bg-warning',
+                            'width' : 25
+                        },
+                    },
+                    'aksi' : 'analisa'
+                },
+                {
+                    'nama' : 'Produk 2',
+                    'jumlah' : 10,
+                     'progress': {
+                            'total' : {
+                             'class' : 'bg-success',
+                             'width' : 50
+                            },
+                            'sudah' : {
+                             'class' : 'bg-danger',
+                             'width' : 25
+                            },
+                            'belum' : {
+                             'class' : 'bg-warning',
+                             'width' : 25
+                            },
+                      },
+                    'aksi' : 'klasifikasi'
                 }
             ]
         }
