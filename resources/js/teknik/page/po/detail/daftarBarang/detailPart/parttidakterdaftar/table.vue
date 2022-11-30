@@ -6,11 +6,26 @@ export default {
             default: () => []
         },
     },
+    data() {
+        return {
+            partsSelected: [],
+        }
+    },
     methods: {
         checkedAll() {
-            this.dataTable.forEach((row) => {
-                row.checked = this.checked
-            })
+            if (this.partsSelected.length == this.dataTable.length) {
+                this.partsSelected = []
+                this.$refs.checkedPackAll.checked = false
+                this.$refs.checkedPack.forEach((item) => {
+                    item.checked = false
+                })
+            } else {
+                this.partsSelected = this.dataTable.map((item) => item.id)
+                this.$refs.checkedPackAll.checked = true
+                this.$refs.checkedPack.forEach((item) => {
+                    item.checked = true
+                })
+            }
         }
     }
 }
