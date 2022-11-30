@@ -1,7 +1,7 @@
 <script>
-import Header from '../components/header.vue'
-import dalamProses from '../barangmasuk/dalamProses.vue'
-import riwayatPO from '../barangmasuk/riwayatPO.vue'
+import Header from '../../components/header.vue'
+import dalamProses from './dalamProses'
+import riwayatPO from './riwayatPO'
     export default {
         components: {
             Header,
@@ -27,7 +27,16 @@ import riwayatPO from '../barangmasuk/riwayatPO.vue'
                     tanggal: '2020-01-01',
                     estimasi: '2020-01-01',
                     status: 'Pemeriksaan Lanjutan'
-                }]
+                }],
+                                breadcumbs: [{
+                        name: 'Beranda',
+                        link: '#'
+                    },
+                    {
+                        name: 'Purchase Order',
+                        link: '/teknik/bom'
+                    },
+                ],
             }
         },
     }
@@ -35,7 +44,7 @@ import riwayatPO from '../barangmasuk/riwayatPO.vue'
 </script>
 <template>
     <div>
-        <Header :title="'Purchase Order'"/>
+        <Header :title="'Purchase Order'" :breadcumbs="breadcumbs"/>
         <div class="card">
             <div class="card-body">
                 <dalamProses :purchaseorders="purchaseorders"/>
