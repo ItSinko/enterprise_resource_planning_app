@@ -25,7 +25,17 @@
                     permasalahan: 'Permasalahan',
                     keterangan: 'Keterangan',
                     tindak_lanjut: 'Tindak Lanjut'
-                }]
+                }],
+                partsNotTerdaftar: [
+                    {
+                    nama_packing_list: 'Packing List 1',
+                    jumlah_pemesanan: 10
+                    },
+                    {
+                    nama_packing_list: 'Packing List 2',
+                    jumlah_pemesanan: 20
+                    },
+                ]
             }
         },
     }
@@ -61,7 +71,7 @@
                             </div>
                             <div class="tab-pane fade" id="pills-partsnonterdaftar" role="tabpanel"
                                 aria-labelledby="pills-partsnonterdaftar-tab">
-                                <tidakTerdaftar />
+                                <tidakTerdaftar :dataTable="partsNotTerdaftar"/>
                             </div>
                         </div>
                 </div>
