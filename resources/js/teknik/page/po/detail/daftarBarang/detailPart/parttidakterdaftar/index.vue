@@ -1,8 +1,10 @@
 <script>
     import Table from './table.vue'
+    import klasifikasi from './klasifikasipart'
     export default {
         components: {
-            Table
+            Table,
+            klasifikasi
         },
         props: {
             dataTable: {
@@ -13,6 +15,15 @@
         data() {
             return {
                 search: '',
+                partsSelected: [],
+            }
+        },
+        methods: {
+            checkedPartsNotTerdaftar(data) {
+                this.partsSelected = data
+            },
+            klasifikasiPart() {
+                $('.modalKlasifikasi').modal('show')
             }
         },
         computed: {
@@ -32,12 +43,13 @@
     <div>
         <div class="d-flex">
             <div class="mr-auto p-2">
-                <button class="btn btn-warning">Klasifikasi Part</button>
+                <button class="btn btn-warning" @click="klasifikasiPart">Klasifikasi Part</button>
             </div>
             <div class="p-2">
                 <input type="text" class="form-control" v-model="search" placeholder="Cari Part">
             </div>
         </div>
-        <Table :dataTable="filteredData" />
+        <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar"/>
+        <klasifikasi :dataTable="partsSelected"/>
     </div>
 </template>

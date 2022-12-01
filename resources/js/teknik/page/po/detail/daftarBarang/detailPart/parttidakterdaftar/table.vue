@@ -26,6 +26,17 @@ export default {
                     item.checked = true
                 })
             }
+            this.$emit('checked', this.partsSelected)
+        },
+        checked(index){
+            if (this.partsSelected.includes(this.dataTable[index])) {
+                this.partsSelected.splice(this.partsSelected.indexOf(this.dataTable[index]), 1)
+                this.$refs.checkedPack[index].checked = false
+            } else {
+                this.partsSelected.push(this.dataTable[index])
+                this.$refs.checkedPack[index].checked = true
+            }
+            this.$emit('checked', this.partsSelected)
         }
     }
 }
@@ -43,7 +54,7 @@ export default {
             </thead>
             <tbody v-if="dataTable.length > 0">
                 <tr v-for="(item, index) in dataTable" :key="index">
-                    <td><input type="checkbox" name="" id="" ref="checkedPack"></td>
+                    <td><input type="checkbox" @click="checked(index)" name="" id="" ref="checkedPack"></td>
                     <td>{{ item.nama_packing_list }}</td>
                     <td>{{ item.jumlah_pemesanan }}</td>
                     <td>

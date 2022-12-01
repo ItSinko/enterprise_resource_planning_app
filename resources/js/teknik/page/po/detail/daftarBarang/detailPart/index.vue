@@ -28,21 +28,23 @@
                 }],
                 partsNotTerdaftar: [
                     {
+                    id: 1,
                     nama_packing_list: 'Packing List 1',
                     jumlah_pemesanan: 10
                     },
                     {
+                    id: 2,
                     nama_packing_list: 'Packing List 2',
                     jumlah_pemesanan: 20
                     },
-                ]
+                ],
             }
         },
     }
 
 </script>
 <template>
-    <div class="modal fade modalDetail" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade modalDetail">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
