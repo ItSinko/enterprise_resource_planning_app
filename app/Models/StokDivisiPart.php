@@ -21,8 +21,9 @@ class StokDivisiPart extends Model
     {
         return $this->belongsTo(Sparepart::class, 'part_id', 'id');
     }
+
     public function DetailStokDivisiPart()
     {
-        return $this->hasMany(DetailStokDivisiPart::class, 'stok_divisi_part_id', 'id');
+        return $this->hasMany(DetailStokDivisiPart::class);
     }
 }

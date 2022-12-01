@@ -30,6 +30,7 @@ use App\Models\DetailLogistik;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
+use App\Models\DetailStokDivisiPart;
 use App\Models\Divisi;
 use App\Models\Ekspedisi;
 use App\Models\FileProduk;
@@ -43,7 +44,9 @@ use App\Models\Mproduk;
 use App\Models\Satuan;
 use App\Models\Sparepart;
 use App\Models\SparepartGudang;
+use App\Models\StokDivisiPart;
 use App\Models\SystemLog;
+use App\Models\LotNumber;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
 use App\Models\teknik\JenisBahan;
@@ -2372,9 +2375,20 @@ class MasterController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    function get_data_divisi()
+
+    public function  get_data_divisi_sparepart($divisi, $part)
     {
-        $data = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31])->get();
-        return response()->json($data);
+        $StokDivisiPart = StokDivisiPart::with('DetailStokDivisiPart.LotNumber')->where(['divisi_id' => $divisi, 'part_id' => $part])->get();
+        $data = array();
+        foreach ($StokDivisiPart as  $d) {
+            foreach ($d->DetailStokDivisiPart as $key_b => $e) {
+                $data[$key_b] = array(
+                    'id' => $e->id,
+                    'stok' => $e->stok_onhand,
+                    'lot' => $e->LotNumber->number
+                );
+            }
+        }
+        return response()->json(['data' => $data]);
     }
 }

@@ -30,17 +30,9 @@ Route::prefix('/bom')->group(function () {
     Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
 
-Route::prefix('/divisi')->group(function () {
-    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_divisi']);
-});
-
-Route::prefix('/pembelian')->group(function () {
-
-    Route::get('/data/part/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_sparepart']);
-});
-
 
 Route::prefix('/part')->group(function () {
+    Route::get('/divisi/{divisi_id}/{part_id}', [App\Http\Controllers\MasterController::class, 'get_data_divisi_sparepart']);
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
     Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_sparepart']);
     Route::get('/detail/{id}', [App\Http\Controllers\MasterController::class, 'get_detail_sparepart']);
