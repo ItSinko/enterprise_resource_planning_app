@@ -30,6 +30,7 @@ use App\Models\DetailLogistik;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
+use App\Models\Divisi;
 use App\Models\Ekspedisi;
 use App\Models\FileProduk;
 use App\Models\Logistik;
@@ -1269,12 +1270,11 @@ class MasterController extends Controller
     {
         $data = FileProduk::find($id)->delete();
 
-        if($data){
+        if ($data) {
             return response()->json(['data' => 'success']);
+        } else {
+            return response()->json(['data' => 'error']);
         }
-            else {
-                return response()->json(['data' => 'error']);
-            }
     }
 
     public function delete_produk($id)
@@ -2209,7 +2209,6 @@ class MasterController extends Controller
         );
 
         if (count($produk->jenis_bahan) > 0) {
-
             foreach ($produk->jenis_bahan as $key_jb => $s) {
                 $data[0]['detail']['spesifikasi']['bahan'][$key_jb] = array(
                     'value' => $s->id,
@@ -2219,7 +2218,6 @@ class MasterController extends Controller
         } else {
             $data[0]['detail']['spesifikasi']['bahan'] = array();
         }
-
         foreach ($bom as $key_bom => $b) {
             $data[0]['detail']['bom'][$key_bom] = array(
                 'id' => $b->id,
@@ -2229,19 +2227,14 @@ class MasterController extends Controller
                 'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
             );
         }
-
         foreach ($produk->file_produk as $key_p => $f) {
             $data[0]['file'][$key_p] = array(
                 'id' => $f->id,
                 'path' => $f->nama
             );
         }
-
-
-
         return response()->json(['data' => $data]);
     }
-
     public function selectdata_jenis()
     {
         $jenispart = JenisPart::all();
@@ -2309,6 +2302,7 @@ class MasterController extends Controller
 
         return response()->json(['data' => $data]);
     }
+
     public function edit_produk_teknik($id)
     {
         $produk = Produk::find($id);
@@ -2343,8 +2337,6 @@ class MasterController extends Controller
                 'versi' => $produk->versi,
                 'fungsi' => $produk->fungsi,
                 'deskripsi' => $produk->deskripsi,
-
-
             ),
             'formEkatalog' => array(
                 'tipe' => $produk->tipe,
@@ -2361,11 +2353,7 @@ class MasterController extends Controller
                 'tkdn' => $produk->nilai_tkdn,
                 'expired' => $produk->masa_berlaku,
             ),
-
-
-
         );
-
 
         foreach ($produk->jenis_bahan  as  $key_bahan => $j) {
             $data['formSpecs']['bahan'][$key_bahan] = array(
@@ -2382,5 +2370,11 @@ class MasterController extends Controller
         }
 
         return response()->json(['data' => $data]);
+    }
+
+    function get_data_divisi()
+    {
+        $data = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31])->get();
+        return response()->json($data);
     }
 }

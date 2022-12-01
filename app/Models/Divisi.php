@@ -18,4 +18,8 @@ class Divisi extends Model
     {
         return $this->hasMany(Karyawan::class);
     }
+    public function StokDivisiPart()
+    {
+        return $this->hasMany(StokDivisiPart::class, 'divisi_id', 'id');
+    }
 }

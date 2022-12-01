@@ -62,10 +62,10 @@ class GudangController extends Controller
 {
     function updateStokGudang($id)
     {
-        $d = NoseriBarangJadi::whereHas('gudang', function($q) use($id) {
+        $d = NoseriBarangJadi::whereHas('gudang', function ($q) use ($id) {
             $q->where('gdg_barang_jadi_id', $id);
         })->where('is_aktif', 1)->count();
-        $a = NoseriBarangJadi::whereHas('gudang', function($q) use($id) {
+        $a = NoseriBarangJadi::whereHas('gudang', function ($q) use ($id) {
             $q->where('gdg_barang_jadi_id', $id);
         })->where('is_aktif', 1)->where('is_ready', 0)->count();
         GudangBarangJadi::find($id)->update(['stok' => $d, 'stok_siap' => $a]);
@@ -74,122 +74,121 @@ class GudangController extends Controller
     function get_rekap_so_produk()
     {
         try {
-            $data = GudangBarangJadi::
-            select(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama) as produkk'), 'gdg_barang_jadi.id')
-            ->leftJoin('produk as p', 'p.id', '=', 'gdg_barang_jadi.produk_id')
-            ->addSelect([
-                'count_transfer' => function($query){
-                    $query->selectRaw('count(t_gbj_noseri.id)')
-                    ->from('t_gbj_noseri')
-                    ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
-                    ->leftjoin('t_gbj', 't_gbj.id', '=', 't_gbj_detail.t_gbj_id')
-                    ->leftjoin('pesanan', 'pesanan.id', '=', 't_gbj.pesanan_id')
-                    ->whereNotIn('pesanan.log_id', ["7", "10", "20"])
-                    ->whereColumn('t_gbj_detail.gdg_brg_jadi_id', 'gdg_barang_jadi.id')
-                    ->limit(1);
-                },
-                'count_ekat_sepakat' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
-                    ->limit(1);
-                },
-                'count_ekat_po' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereRaw('pesanan.log_id not in ("7", "10","20") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
-                    ->limit(1);
-                },
-                'count_ekat_nego' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereRaw('pesanan.log_id in ("7") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
-                    ->limit(1);
-                },'count_ekat_draft' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereRaw('pesanan.log_id in ("7")  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
-                    ->limit(1);
-                },
-                'count_spa_po' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('spa', 'spa.pesanan_id', '=', 'pesanan.id')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
-                    ->limit(1);
-                },'count_spb_po' => function ($query) {
-                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                    ->join('spb', 'spb.pesanan_id', '=', 'pesanan.id')
-                    ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                    ->whereNotNull('pesanan.so')
-                    ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
-                    ->limit(1);
-                }
-            ])
-            ->has('DetailPesananProduk')
-            // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
-            // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) > count_transfer')
-            ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_nego, 0) + coalesce(count_ekat_draft, 0) + coalesce(count_ekat_po, 0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
-            ->orderBy(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama)'))
-            ->get();
+            $data = GudangBarangJadi::select(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama) as produkk'), 'gdg_barang_jadi.id')
+                ->leftJoin('produk as p', 'p.id', '=', 'gdg_barang_jadi.produk_id')
+                ->addSelect([
+                    'count_transfer' => function ($query) {
+                        $query->selectRaw('count(t_gbj_noseri.id)')
+                            ->from('t_gbj_noseri')
+                            ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
+                            ->leftjoin('t_gbj', 't_gbj.id', '=', 't_gbj_detail.t_gbj_id')
+                            ->leftjoin('pesanan', 'pesanan.id', '=', 't_gbj.pesanan_id')
+                            ->whereNotIn('pesanan.log_id', ["7", "10", "20"])
+                            ->whereColumn('t_gbj_detail.gdg_brg_jadi_id', 'gdg_barang_jadi.id')
+                            ->limit(1);
+                    },
+                    'count_ekat_sepakat' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
+                            ->limit(1);
+                    },
+                    'count_ekat_po' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereRaw('pesanan.log_id not in ("7", "10","20") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
+                            ->limit(1);
+                    },
+                    'count_ekat_nego' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereRaw('pesanan.log_id in ("7") AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
+                            ->limit(1);
+                    }, 'count_ekat_draft' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereRaw('pesanan.log_id in ("7")  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
+                            ->limit(1);
+                    },
+                    'count_spa_po' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('spa', 'spa.pesanan_id', '=', 'pesanan.id')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                            ->limit(1);
+                    }, 'count_spb_po' => function ($query) {
+                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                            ->from('detail_pesanan')
+                            ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                            ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                            ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                            ->join('spb', 'spb.pesanan_id', '=', 'pesanan.id')
+                            ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                            ->whereNotNull('pesanan.so')
+                            ->whereRaw('pesanan.log_id not in (7, 10,20) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                            ->limit(1);
+                    }
+                ])
+                ->has('DetailPesananProduk')
+                // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
+                // ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_po,0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) > count_transfer')
+                ->havingRaw('(coalesce(count_ekat_sepakat, 0) + coalesce(count_ekat_nego, 0) + coalesce(count_ekat_draft, 0) + coalesce(count_ekat_po, 0) + coalesce(count_spa_po, 0) + coalesce(count_spb_po, 0)) != 0')
+                ->orderBy(DB::raw('concat(p.nama," ",gdg_barang_jadi.nama)'))
+                ->get();
 
             $dt = datatables()->of($data)
                 ->addIndexColumn()
-                ->editColumn('permintaan', function($d){
+                ->editColumn('permintaan', function ($d) {
                     $minta = intval($d->count_ekat_sepakat) + intval($d->count_ekat_po) + intval($d->count_ekat_nego) + intval($d->count_ekat_draft) + intval($d->count_spa_po) + intval($d->count_spb_po);
                     return $minta;
                 })
-                ->editColumn('sisa', function($d){
+                ->editColumn('sisa', function ($d) {
                     $minta = intval($d->count_ekat_sepakat) + intval($d->count_ekat_po) + intval($d->count_ekat_nego) + intval($d->count_ekat_draft) + intval($d->count_spa_po) + intval($d->count_spb_po);
                     $tf = intval($d->count_transfer);
                     return $minta - $tf;
                 })
-                ->editColumn('transfer', function($d){
+                ->editColumn('transfer', function ($d) {
                     return intval($d->count_transfer);
                 })
-                ->editColumn('aksi', function($d){
+                ->editColumn('aksi', function ($d) {
                     $a = '<button type="button" data-toggle="modal" data-target="#detailmodal" data-attr="" data-id="' . $d->id . '" class="btn btn-outline-info btn-sm detailBrg"><i class="far fa-eye"></i> Detail</button>';
-                        return $a;
+                    return $a;
                 })
                 ->rawColumns(['aksi'])
                 ->make(true);
 
             return $dt;
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -198,101 +197,102 @@ class GudangController extends Controller
         try {
             $data = Pesanan::whereHas('DetailPesanan.DetailPesananProduk.GudangBarangJadi', function ($q) use ($id) {
                 $q->where('id', $id);
-            })->addSelect(['count_pesanan' => function($q) use($id){
+            })->addSelect([
+                'count_pesanan' => function ($q) use ($id) {
                     $q->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                    ->from('detail_pesanan')
-                    ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                    ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                    ->join('gdg_barang_jadi', 'gdg_barang_jadi.produk_id', '=', 'detail_penjualan_produk.produk_id')
-                    ->whereRaw('gdg_barang_jadi.id = '.$id.' AND detail_pesanan_produk.gudang_barang_jadi_id = '. $id)
-                    // ->whereNotNull('pesanan.no_po')
-                    ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
-                    ->limit(1);
-                }, 'count_transfer' => function($q) use($id){
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('gdg_barang_jadi', 'gdg_barang_jadi.produk_id', '=', 'detail_penjualan_produk.produk_id')
+                        ->whereRaw('gdg_barang_jadi.id = ' . $id . ' AND detail_pesanan_produk.gudang_barang_jadi_id = ' . $id)
+                        // ->whereNotNull('pesanan.no_po')
+                        ->whereColumn('detail_pesanan.pesanan_id', 'pesanan.id')
+                        ->limit(1);
+                }, 'count_transfer' => function ($q) use ($id) {
                     $q->selectRaw('count(t_gbj_noseri.id)')
-                    ->from('t_gbj_noseri')
-                    ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
-                    ->leftjoin('t_gbj', 't_gbj.id', 't_gbj_detail.t_gbj_id')
-                    // ->where('t_gbj_noseri.jenis', '"keluar"')
-                    ->where('t_gbj_detail.gdg_brg_jadi_id', $id)
-                    ->whereColumn('t_gbj.pesanan_id', 'pesanan.id')
-                    ->limit(1);
-                }, 'tgl_kontrak_custom' => function($q){
+                        ->from('t_gbj_noseri')
+                        ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
+                        ->leftjoin('t_gbj', 't_gbj.id', 't_gbj_detail.t_gbj_id')
+                        // ->where('t_gbj_noseri.jenis', '"keluar"')
+                        ->where('t_gbj_detail.gdg_brg_jadi_id', $id)
+                        ->whereColumn('t_gbj.pesanan_id', 'pesanan.id')
+                        ->limit(1);
+                }, 'tgl_kontrak_custom' => function ($q) {
                     $q->selectRaw('IF(provinsi.status = "2", SUBDATE(ekatalog.tgl_kontrak, INTERVAL 14 DAY), SUBDATE(ekatalog.tgl_kontrak, INTERVAL 21 DAY))')
-                    ->from('ekatalog')
-                    ->join('provinsi', 'provinsi.id', '=', 'ekatalog.provinsi_id')
-                    ->whereColumn('ekatalog.pesanan_id', 'pesanan.id')
-                    ->limit(1);
+                        ->from('ekatalog')
+                        ->join('provinsi', 'provinsi.id', '=', 'ekatalog.provinsi_id')
+                        ->whereColumn('ekatalog.pesanan_id', 'pesanan.id')
+                        ->limit(1);
                 }
             ])
-            ->with(['Ekatalog.Customer.Provinsi', 'Spa.Customer.Provinsi', 'Spb.Customer.Provinsi'])
-            ->whereNotIn('log_id', ['10', '20'])
-            ->whereNotNull('pesanan.so')
-            // ->havingRaw('count_pesanan > count_transfer')
-            ->get();
+                ->with(['Ekatalog.Customer.Provinsi', 'Spa.Customer.Provinsi', 'Spb.Customer.Provinsi'])
+                ->whereNotIn('log_id', ['10', '20'])
+                ->whereNotNull('pesanan.so')
+                // ->havingRaw('count_pesanan > count_transfer')
+                ->get();
 
             $dt = datatables()->of($data)
-                    ->addIndexColumn()
-                    ->addColumn('jumlah', function ($data) {
-                        $jumlah = $data->count_pesanan;
-                        return $jumlah;
-                    })
-                    ->addColumn('status', function($data){
-                        $hitung = $data->count_transfer;
-                        return $hitung;
-                    })
-                    ->addColumn('so', function ($data) {
-                        if (!empty($data->so)) {
-                            return $data->so;
-                        } else {
-                            return '-';
+                ->addIndexColumn()
+                ->addColumn('jumlah', function ($data) {
+                    $jumlah = $data->count_pesanan;
+                    return $jumlah;
+                })
+                ->addColumn('status', function ($data) {
+                    $hitung = $data->count_transfer;
+                    return $hitung;
+                })
+                ->addColumn('so', function ($data) {
+                    if (!empty($data->so)) {
+                        return $data->so;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('po', function ($data) {
+                    if (!empty($data->no_po)) {
+                        return $data->no_po;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('customer', function ($data) {
+                    if ($data->Ekatalog) {
+                        if (isset($data->Ekatalog->Customer)) {
+                            return $data->Ekatalog->Customer->nama;
                         }
-                    })
-                    ->addColumn('po', function ($data) {
-                        if (!empty($data->no_po)) {
-                            return $data->no_po;
-                        } else {
-                            return '-';
+                    } else if ($data->Spa) {
+                        if (isset($data->Spa->Customer)) {
+                            return $data->Spa->Customer->nama;
                         }
-                    })
-                    ->addColumn('customer', function($data){
-                        if($data->Ekatalog){
-                            if(isset($data->Ekatalog->Customer)){
-                                return $data->Ekatalog->Customer->nama;
-                            }
-                        }else if($data->Spa){
-                            if(isset($data->Spa->Customer)){
-                                return $data->Spa->Customer->nama;
-                            }
-                        }else{
-                            if(isset($data->Spb->Customer)){
-                                return $data->Spb->Customer->nama;
-                            }
+                    } else {
+                        if (isset($data->Spb->Customer)) {
+                            return $data->Spb->Customer->nama;
                         }
-                    })
-                    ->addColumn('aksi', function ($data) {
-                        if (isset($data->Ekatalog)) {
-                            if ($data->status != 'draft') {
-                                return  '<a data-toggle="modal" data-target="ekatalog" class="penjualanmodal" data-value="ekatalog"  data-id="' . $data->id . '">
-                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
-                            </a>';
-                            }
-                        } else if (isset($data->Spa)) {
-                            return  '<a data-toggle="modal" data-target="spa" class="penjualanmodal" data-value="spa"  data-id="' . $data->id . '">
-                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
-                            </a>';
-                        } else {
-                            return  '<a data-toggle="modal" data-target="spb" class="penjualanmodal" data-value="spb"  data-id="' . $data->id . '">
+                    }
+                })
+                ->addColumn('aksi', function ($data) {
+                    if (isset($data->Ekatalog)) {
+                        if ($data->status != 'draft') {
+                            return  '<a data-toggle="modal" data-target="ekatalog" class="penjualanmodal" data-value="ekatalog"  data-id="' . $data->id . '">
                                   <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
                             </a>';
                         }
-                    })
-                    ->rawColumns(['aksi'])
-                    ->make(true);
+                    } else if (isset($data->Spa)) {
+                        return  '<a data-toggle="modal" data-target="spa" class="penjualanmodal" data-value="spa"  data-id="' . $data->id . '">
+                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
+                            </a>';
+                    } else {
+                        return  '<a data-toggle="modal" data-target="spb" class="penjualanmodal" data-value="spb"  data-id="' . $data->id . '">
+                                  <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-eye"></i> Detail</button>
+                            </a>';
+                    }
+                })
+                ->rawColumns(['aksi'])
+                ->make(true);
 
             return $dt;
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -300,18 +300,18 @@ class GudangController extends Controller
     {
         try {
             $data = GudangBarangJadi::leftJoin('produk as p', 'p.id', '=', 'gdg_barang_jadi.produk_id')
-                    ->leftJoin('m_satuan as s', 's.id', '=', 'gdg_barang_jadi.satuan_id')
-                    ->leftJoin('kelompok_produk as kp', 'kp.id', '=', 'p.kelompok_produk_id')
-                    ->select(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama) as produkk'), 'p.merk', 'kp.nama as kel_produk', 'gdg_barang_jadi.id', 's.nama as satuan', 'gdg_barang_jadi.stok', 'gdg_barang_jadi.stok_siap')
-                    ->orderBy(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama)'))
-                    ->addSelect(['count_barang' => function ($query) {
-                        $query->selectRaw('count(noseri_barang_jadi.id)')
+                ->leftJoin('m_satuan as s', 's.id', '=', 'gdg_barang_jadi.satuan_id')
+                ->leftJoin('kelompok_produk as kp', 'kp.id', '=', 'p.kelompok_produk_id')
+                ->select(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama) as produkk'), 'p.merk', 'kp.nama as kel_produk', 'gdg_barang_jadi.id', 's.nama as satuan', 'gdg_barang_jadi.stok', 'gdg_barang_jadi.stok_siap')
+                ->orderBy(DB::raw('concat(p.nama," ", gdg_barang_jadi.nama)'))
+                ->addSelect(['count_barang' => function ($query) {
+                    $query->selectRaw('count(noseri_barang_jadi.id)')
                         ->from('noseri_barang_jadi')
                         ->where('noseri_barang_jadi.is_ready', '0')
                         ->whereColumn('noseri_barang_jadi.gdg_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->limit(1);
-                    },'count_ekat_sepakat' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_ekat_sepakat' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -320,8 +320,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
                         ->limit(1);
-                    },'count_ekat_nego' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_ekat_nego' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -330,8 +330,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
                         ->limit(1);
-                    },'count_ekat_draft' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_ekat_draft' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -340,8 +340,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id in (7)  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
                         ->limit(1);
-                    },'count_ekat_po' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_ekat_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -350,8 +350,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
                         ->limit(1);
-                    },'count_spa_po' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_spa_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -360,8 +360,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
                         ->limit(1);
-                    },'count_spb_po' => function ($query) {
-                        $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                }, 'count_spb_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
                         ->from('detail_pesanan')
                         ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
                         ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
@@ -370,8 +370,8 @@ class GudangController extends Controller
                         ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
                         ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
                         ->limit(1);
-                    }])->with('Produk')
-                    ->get();
+                }])->with('Produk')
+                ->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -384,7 +384,7 @@ class GudangController extends Controller
                 })
                 ->addColumn('jumlah', function ($data) {
                     $this->updateStokGudang($data->id);
-                    return $data->stok . ' ' . $data->satuan.'<br><span class="badge badge-dark">Stok Siap: '.$data->stok_siap.' '.$data->satuan.'</span>';
+                    return $data->stok . ' ' . $data->satuan . '<br><span class="badge badge-dark">Stok Siap: ' . $data->stok_siap . ' ' . $data->satuan . '</span>';
                 })
                 ->addColumn('jumlah1', function ($data) {
                     $ss = $data->count_ekat_sepakat + $data->count_ekat_nego + $data->count_ekat_draft + $data->count_spa_po + $data->count_spb_po + $data->count_ekat_po;
@@ -422,9 +422,8 @@ class GudangController extends Controller
                 })
                 ->rawColumns(['action', 'action_direksi', 'jumlah'])
                 ->make(true);
-
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -439,9 +438,8 @@ class GudangController extends Controller
                 'nama_produk' => $datas
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getNoseri(Request $request, $id)
@@ -450,12 +448,12 @@ class GudangController extends Controller
             $data = NoseriBarangJadi::whereHas('gudang', function ($d) use ($id) {
                 $d->where('id', $id);
             })
-            ->where([
-                'is_aktif' => 1,
-                'is_ready' => 0,
-                'is_change' => 1,
-                'is_delete' => 0
-            ])->get();
+                ->where([
+                    'is_aktif' => 1,
+                    'is_ready' => 0,
+                    'is_change' => 1,
+                    'is_delete' => 0
+                ])->get();
             $layout = Layout::where('jenis_id', 1)->get();
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -465,7 +463,7 @@ class GudangController extends Controller
                 ->addColumn('seri', function ($d) {
                     return '<input type="hidden" class="form-control" id="noseriOri[]" value="' . $d->noseri . '"><input type="text" class="form-control" id="noseri[]" value="' . $d->noseri . '" disabled>';
                 })
-                ->addColumn('nomor', function($d){
+                ->addColumn('nomor', function ($d) {
                     return $d->noseri;
                 })
                 ->addColumn('Layout', function ($d) use ($layout) {
@@ -491,9 +489,8 @@ class GudangController extends Controller
                 ->rawColumns(['ids', 'Layout', 'aksi', 'seri'])
                 ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getNoseriDone(Request $request, $id)
@@ -516,7 +513,7 @@ class GudangController extends Controller
                 ->addColumn('seri', function ($d) {
                     return '<input type="hidden" class="form-control" id="noseriOri[]" value="' . $d->noseri . '"><input type="text" class="form-control" id="noseri[]" value="' . $d->noseri . '" disabled>';
                 })
-                ->addColumn('nomor', function($d){
+                ->addColumn('nomor', function ($d) {
                     return $d->noseri;
                 })
                 ->addColumn('used', function ($d) {
@@ -532,9 +529,8 @@ class GudangController extends Controller
                 ->rawColumns(['ids', 'Layout', 'aksi', 'seri'])
                 ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getHistory($id)
@@ -553,7 +549,7 @@ class GudangController extends Controller
                     return $d->from->nama;
                 })->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -561,117 +557,120 @@ class GudangController extends Controller
     {
         try {
             $data = GudangBarangJadi::distinct()
-            ->select('gdg_barang_jadi.id',
-            DB::raw("concat(p.nama,' ',gdg_barang_jadi.nama) as produkk"),
-            DB::raw("concat(gdg_barang_jadi.stok,'',ms.nama) as stok_gudang"),'gdg_barang_jadi.stok','kp.nama as kel_produk','ms.nama as satuan')
-            ->leftjoin(DB::raw('t_gbj_detail tgd'),'tgd.gdg_brg_jadi_id','=','gdg_barang_jadi.id')
-            ->join(DB::raw('produk as p'),'p.id','=','gdg_barang_jadi.produk_id')
-            ->join(DB::raw('kelompok_produk as kp'),'kp.id','=','p.kelompok_produk_id')
-            ->join(DB::raw('m_satuan as ms'),'ms.id','=','gdg_barang_jadi.satuan_id')
-            ->whereNotNull('tgd.gdg_brg_jadi_id')
-            ->orderBy(DB::raw("concat(p.nama,' ',gdg_barang_jadi.nama)"),'ASC')
-            ->addSelect(['count_barang' => function ($query) {
-                $query->selectRaw('count(noseri_barang_jadi.id)')
-                ->from('noseri_barang_jadi')
-                ->where('noseri_barang_jadi.is_ready', '0')
-                ->whereColumn('noseri_barang_jadi.gdg_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->limit(1);
-            },'count_ekat_sepakat' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
-                ->limit(1);
-            },'count_ekat_nego' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
-                ->limit(1);
-            },'count_ekat_draft' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id in (7)  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
-                ->limit(1);
-            },'count_ekat_po' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
-                ->limit(1);
-            },'count_spa_po' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('spa', 'spa.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
-                ->limit(1);
-            },'count_spb_po' => function ($query) {
-                $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
-                ->from('detail_pesanan')
-                ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
-                ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
-                ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
-                ->join('spb', 'spb.pesanan_id', '=', 'pesanan.id')
-                ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
-                ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
-                ->limit(1);
-            }])->with('Produk')
-            ->get();
+                ->select(
+                    'gdg_barang_jadi.id',
+                    DB::raw("concat(p.nama,' ',gdg_barang_jadi.nama) as produkk"),
+                    DB::raw("concat(gdg_barang_jadi.stok,'',ms.nama) as stok_gudang"),
+                    'gdg_barang_jadi.stok',
+                    'kp.nama as kel_produk',
+                    'ms.nama as satuan'
+                )
+                ->leftjoin(DB::raw('t_gbj_detail tgd'), 'tgd.gdg_brg_jadi_id', '=', 'gdg_barang_jadi.id')
+                ->join(DB::raw('produk as p'), 'p.id', '=', 'gdg_barang_jadi.produk_id')
+                ->join(DB::raw('kelompok_produk as kp'), 'kp.id', '=', 'p.kelompok_produk_id')
+                ->join(DB::raw('m_satuan as ms'), 'ms.id', '=', 'gdg_barang_jadi.satuan_id')
+                ->whereNotNull('tgd.gdg_brg_jadi_id')
+                ->orderBy(DB::raw("concat(p.nama,' ',gdg_barang_jadi.nama)"), 'ASC')
+                ->addSelect(['count_barang' => function ($query) {
+                    $query->selectRaw('count(noseri_barang_jadi.id)')
+                        ->from('noseri_barang_jadi')
+                        ->where('noseri_barang_jadi.is_ready', '0')
+                        ->whereColumn('noseri_barang_jadi.gdg_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->limit(1);
+                }, 'count_ekat_sepakat' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "sepakat"')
+                        ->limit(1);
+                }, 'count_ekat_nego' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id in (7) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "negosiasi"')
+                        ->limit(1);
+                }, 'count_ekat_draft' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id in (7)  AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status = "draft"')
+                        ->limit(1);
+                }, 'count_ekat_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('ekatalog', 'ekatalog.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id AND ekatalog.status != "batal"')
+                        ->limit(1);
+                }, 'count_spa_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('spa', 'spa.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                        ->limit(1);
+                }, 'count_spb_po' => function ($query) {
+                    $query->selectRaw('sum(detail_pesanan.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan')
+                        ->join('detail_pesanan_produk', 'detail_pesanan_produk.detail_pesanan_id', '=', 'detail_pesanan.id')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan.penjualan_produk_id')
+                        ->join('pesanan', 'pesanan.id', '=', 'detail_pesanan.pesanan_id')
+                        ->join('spb', 'spb.pesanan_id', '=', 'pesanan.id')
+                        ->whereColumn('detail_pesanan_produk.gudang_barang_jadi_id', 'gdg_barang_jadi.id')
+                        ->whereRaw('pesanan.log_id not in (7, 10) AND detail_penjualan_produk.produk_id = gdg_barang_jadi.produk_id')
+                        ->limit(1);
+                }])->with('Produk')
+                ->get();
 
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('stock', function ($d) {
-                return $d->stok . ' ' . $d->satuan;
-            })
-            ->addColumn('stok_jual', function ($data) {
-                if ($data->id) {
-                    $ss = $data->count_ekat_sepakat + $data->count_ekat_nego + $data->count_ekat_draft + $data->count_spa_po + $data->count_spb_po + $data->count_ekat_po;
-                    return $data->stok - $ss . ' ' . $data->satuan;
-                } else {
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('stock', function ($d) {
+                    return $d->stok . ' ' . $d->satuan;
+                })
+                ->addColumn('stok_jual', function ($data) {
+                    if ($data->id) {
+                        $ss = $data->count_ekat_sepakat + $data->count_ekat_nego + $data->count_ekat_draft + $data->count_spa_po + $data->count_spb_po + $data->count_ekat_po;
+                        return $data->stok - $ss . ' ' . $data->satuan;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('kelompok', function ($d) {
+                    return $d->kel_produk;
+                })
+                ->addColumn('product', function ($d) {
+                    return $d->produkk;
+                })
+                ->addColumn('kode_produk', function ($d) {
                     return '-';
-                }
-            })
-            ->addColumn('kelompok', function ($d) {
-                return $d->kel_produk;
-            })
-            ->addColumn('product', function ($d) {
-                return $d->produkk;
-            })
-            ->addColumn('kode_produk', function ($d) {
-                return '-';
-            })
-            ->addColumn('action', function ($d) {
-                return '<a class="btn btn-outline-primary" href="' . url('gbj/tp/' . $d->id . '') . '"><i
+                })
+                ->addColumn('action', function ($d) {
+                    return '<a class="btn btn-outline-primary" href="' . url('gbj/tp/' . $d->id . '') . '"><i
                         class="far fa-eye"></i> Detail</a>';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getAllTransaksi()
@@ -691,85 +690,85 @@ class GudangController extends Controller
                 ->where('h.jenis', '=', 'masuk')
                 ->orderByDesc('h.tgl_masuk')
                 ->get();
-        $g = datatables()->of($data1)
-            ->addIndexColumn()
-            // ->addColumn('so', function ($d) {
-            //     if (isset($d->so)) {
-            //         return $d->so;
-            //     } else {
-            //         return '-';
-            //     }
-            // })
-            // ->addColumn('po', function ($d) {
-            //     if (isset($d->no_po)) {
-            //         return $d->no_po;
-            //     } else {
-            //         return '-';
-            //     }
-            // })
-            // ->addColumn('logs', function($d) {
-            //     if (isset($d->so)) {
-            //         if ($d->log_id == 9) {
-            //             $ax = "<span class='badge badge-pill badge-secondary'>".$d->nama."</span>";
-            //         } else if ($d->log_id == 6) {
-            //             $ax = "<span class='badge badge-pill badge-warning'>".$d->nama."</span>";
-            //         } elseif ($d->log_id == 8) {
-            //             $ax = "<span class='badge badge-pill badge-info'>".$d->nama."</span>";
-            //         } elseif ($d->log_id == 11) {
-            //             $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
-            //         } elseif ($d->log_id == 10) {
-            //             $ax = "<span class='badge badge-pill badge-success'>".$d->nama."</span>";
-            //         } else {
-            //             $ax = "<span class='badge badge-pill badge-danger'>".$d->nama."</span>";
-            //         }
+            $g = datatables()->of($data1)
+                ->addIndexColumn()
+                // ->addColumn('so', function ($d) {
+                //     if (isset($d->so)) {
+                //         return $d->so;
+                //     } else {
+                //         return '-';
+                //     }
+                // })
+                // ->addColumn('po', function ($d) {
+                //     if (isset($d->no_po)) {
+                //         return $d->no_po;
+                //     } else {
+                //         return '-';
+                //     }
+                // })
+                // ->addColumn('logs', function($d) {
+                //     if (isset($d->so)) {
+                //         if ($d->log_id == 9) {
+                //             $ax = "<span class='badge badge-pill badge-secondary'>".$d->nama."</span>";
+                //         } else if ($d->log_id == 6) {
+                //             $ax = "<span class='badge badge-pill badge-warning'>".$d->nama."</span>";
+                //         } elseif ($d->log_id == 8) {
+                //             $ax = "<span class='badge badge-pill badge-info'>".$d->nama."</span>";
+                //         } elseif ($d->log_id == 11) {
+                //             $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
+                //         } elseif ($d->log_id == 10) {
+                //             $ax = "<span class='badge badge-pill badge-success'>".$d->nama."</span>";
+                //         } else {
+                //             $ax = "<span class='badge badge-pill badge-danger'>".$d->nama."</span>";
+                //         }
 
-            //         return $ax;
-            //     } else {
-            //         return '-';
-            //     }
-            // })
-            ->addColumn('date_in', function ($d) {
-                if (isset($d->tgl_masuk)) {
-                    return Carbon::parse($d->tgl_masuk)->isoFormat('D MMMM Y');
-                } else {
-                    return "-";
-                }
-            })
-            // ->addColumn('date_out', function ($d) {
-            //     if (isset($d->tgl_keluar)) {
-            //         return Carbon::parse($d->tgl_keluar)->isoFormat('D MMMM Y');
-            //     } else {
-            //         return "-";
-            //     }
-            // })
-            ->addColumn('divisi', function ($d) {
-                // if ($d->jenis == 'keluar') {
-                //     return '<span class="badge badge-info">' . $d->ke . '</span>';
-                // } else {
+                //         return $ax;
+                //     } else {
+                //         return '-';
+                //     }
+                // })
+                ->addColumn('date_in', function ($d) {
+                    if (isset($d->tgl_masuk)) {
+                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMMM Y');
+                    } else {
+                        return "-";
+                    }
+                })
+                // ->addColumn('date_out', function ($d) {
+                //     if (isset($d->tgl_keluar)) {
+                //         return Carbon::parse($d->tgl_keluar)->isoFormat('D MMMM Y');
+                //     } else {
+                //         return "-";
+                //     }
+                // })
+                ->addColumn('divisi', function ($d) {
+                    // if ($d->jenis == 'keluar') {
+                    //     return '<span class="badge badge-info">' . $d->ke . '</span>';
+                    // } else {
                     return '<span class="badge badge-success">' . $d->dari . '</span>';
-                // }
-            })
-            // ->addColumn('tujuan', function ($d) {
-            //     return $d->deskripsi;
-            // })
-            ->addColumn('jumlah', function ($d) {
-                return $d->qty.' Unit';
-            })
-            ->addColumn('product', function ($d) {
-                return $d->produkk;
-            })
-            ->addColumn('action', function ($d) {
-                return '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id="' . $d->id . '">
+                    // }
+                })
+                // ->addColumn('tujuan', function ($d) {
+                //     return $d->deskripsi;
+                // })
+                ->addColumn('jumlah', function ($d) {
+                    return $d->qty . ' Unit';
+                })
+                ->addColumn('product', function ($d) {
+                    return $d->produkk;
+                })
+                ->addColumn('action', function ($d) {
+                    return '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id="' . $d->id . '">
                 <button class="btn btn-outline-primary"><i
                 class="far fa-eye"></i> Detail</button>
                         </a>';
-            })
-            ->rawColumns(['divisi', 'action', 'logs'])
-            ->make(true);
+                })
+                ->rawColumns(['divisi', 'action', 'logs'])
+                ->make(true);
 
             return $g;
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -778,30 +777,29 @@ class GudangController extends Controller
         try {
             $data = NoseriTGbj::with('layout', 'detail', 'seri')->where('t_gbj_detail_id', $id)->get();
 
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('layout', function ($d) {
-                if (isset($d->layout->ruang)) {
-                    return $d->layout->ruang;
-                } else {
-                    return '-';
-                }
-            })
-            ->addColumn('seri', function ($d) {
-                return $d->seri->noseri;
-            })
-            ->addColumn('checkbox', function ($d) {
-                return '<input type="checkbox" class="cb-child" value="' . $d->id . '">';
-            })
-            ->addColumn('title', function ($d) {
-                return $d->detail->produk->produk->nama . ' ' . $d->detail->produk->nama;
-            })
-            ->rawColumns(['checkbox', 'layout'])
-            ->make(true);
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('layout', function ($d) {
+                    if (isset($d->layout->ruang)) {
+                        return $d->layout->ruang;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('seri', function ($d) {
+                    return $d->seri->noseri;
+                })
+                ->addColumn('checkbox', function ($d) {
+                    return '<input type="checkbox" class="cb-child" value="' . $d->id . '">';
+                })
+                ->addColumn('title', function ($d) {
+                    return $d->detail->produk->produk->nama . ' ' . $d->detail->produk->nama;
+                })
+                ->rawColumns(['checkbox', 'layout'])
+                ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getDetailHistory($id)
@@ -809,100 +807,99 @@ class GudangController extends Controller
         try {
             $data1 = TFProduksiDetail::with('header', 'produk', 'noseri')->where('gdg_brg_jadi_id', $id)->get();
 
-        return datatables()->of($data1)
-            ->addIndexColumn()
-            ->addColumn('so', function ($d) {
-                if (isset($d->header->pesanan_id)) {
-                    return $d->header->pesanan->so;
-                } else {
-                    return '-';
-                }
-            })
-            ->addColumn('po', function ($d) {
-                if (isset($d->header->pesanan_id)) {
-                    return $d->header->pesanan->no_po;
-                } else {
-                    return '-';
-                }
-            })
-            ->addColumn('logs', function($d) {
-                if (isset($d->header->pesanan_id)) {
-                    if ($d->header->pesanan->log_id == 9) {
-                        $ax = "<span class='badge badge-pill badge-secondary'>".$d->header->pesanan->log->nama."</span>";
-                    } else if ($d->header->pesanan->log_id == 6) {
-                        $ax = "<span class='badge badge-pill badge-warning'>".$d->header->pesanan->log->nama."</span>";
-                    } elseif ($d->header->pesanan->log_id == 8) {
-                        $ax = "<span class='badge badge-pill badge-info'>".$d->header->pesanan->log->nama."</span>";
-                    } elseif ($d->header->pesanan->log_id == 11) {
-                        $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
-                    } elseif ($d->header->pesanan->log_id == 10) {
-                        $ax = "<span class='badge badge-pill badge-success'>".$d->header->pesanan->log->nama."</span>";
+            return datatables()->of($data1)
+                ->addIndexColumn()
+                ->addColumn('so', function ($d) {
+                    if (isset($d->header->pesanan_id)) {
+                        return $d->header->pesanan->so;
                     } else {
-                        $ax = "<span class='badge badge-pill badge-danger'>".$d->header->pesanan->log->nama."</span>";
+                        return '-';
                     }
+                })
+                ->addColumn('po', function ($d) {
+                    if (isset($d->header->pesanan_id)) {
+                        return $d->header->pesanan->no_po;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('logs', function ($d) {
+                    if (isset($d->header->pesanan_id)) {
+                        if ($d->header->pesanan->log_id == 9) {
+                            $ax = "<span class='badge badge-pill badge-secondary'>" . $d->header->pesanan->log->nama . "</span>";
+                        } else if ($d->header->pesanan->log_id == 6) {
+                            $ax = "<span class='badge badge-pill badge-warning'>" . $d->header->pesanan->log->nama . "</span>";
+                        } elseif ($d->header->pesanan->log_id == 8) {
+                            $ax = "<span class='badge badge-pill badge-info'>" . $d->header->pesanan->log->nama . "</span>";
+                        } elseif ($d->header->pesanan->log_id == 11) {
+                            $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
+                        } elseif ($d->header->pesanan->log_id == 10) {
+                            $ax = "<span class='badge badge-pill badge-success'>" . $d->header->pesanan->log->nama . "</span>";
+                        } else {
+                            $ax = "<span class='badge badge-pill badge-danger'>" . $d->header->pesanan->log->nama . "</span>";
+                        }
 
-                    return $ax;
-                } else {
-                    return '-';
-                }
-            })
-            ->addColumn('date_in', function ($d) {
-                if (isset($d->header->tgl_masuk)) {
-                    return Carbon::parse($d->header->tgl_masuk)->isoFormat('D MMM YYYY');
-                } else {
-                    return "-";
-                }
-            })
-            ->addColumn('date_out', function ($d) {
-                if (isset($d->header->tgl_keluar)) {
-                    return date('d-m-Y', strtotime($d->header->tgl_keluar));
-                } else {
-                    return "-";
-                }
-            })
-            ->addColumn('divisi', function ($d) {
-                if ($d->header->jenis == 'keluar') {
-                    return '<span class="badge badge-info">' . $d->header->divisi->nama . '</span>';
-                } else {
-                    return '<span class="badge badge-success">' . $d->header->darii->nama . '</span>';
-                }
-            })
-            ->addColumn('tujuan', function ($d) {
-                return $d->header->deskripsi;
-            })
-            ->addColumn('jumlah', function ($d) {
-                return $d->qty . ' ' . $d->produk->satuan->nama;
-            })
-            ->addColumn('action', function ($d) {
-                return '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id="' . $d->id . '">
+                        return $ax;
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('date_in', function ($d) {
+                    if (isset($d->header->tgl_masuk)) {
+                        return Carbon::parse($d->header->tgl_masuk)->isoFormat('D MMM YYYY');
+                    } else {
+                        return "-";
+                    }
+                })
+                ->addColumn('date_out', function ($d) {
+                    if (isset($d->header->tgl_keluar)) {
+                        return date('d-m-Y', strtotime($d->header->tgl_keluar));
+                    } else {
+                        return "-";
+                    }
+                })
+                ->addColumn('divisi', function ($d) {
+                    if ($d->header->jenis == 'keluar') {
+                        return '<span class="badge badge-info">' . $d->header->divisi->nama . '</span>';
+                    } else {
+                        return '<span class="badge badge-success">' . $d->header->darii->nama . '</span>';
+                    }
+                })
+                ->addColumn('tujuan', function ($d) {
+                    return $d->header->deskripsi;
+                })
+                ->addColumn('jumlah', function ($d) {
+                    return $d->qty . ' ' . $d->produk->satuan->nama;
+                })
+                ->addColumn('action', function ($d) {
+                    return '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id="' . $d->id . '">
                             <button type="button" class="btn btn-outline-info"><i
                             class="far fa-eye"> Detail</i></button>
                         </a>';
-            })
-            ->rawColumns(['divisi', 'action', 'logs'])
-            ->make(true);
+                })
+                ->rawColumns(['divisi', 'action', 'logs'])
+                ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
-
     }
 
     function getDetailHistorySeri($id)
     {
         try {
             $data = NoseriTGbj::with('seri', 'layout')->where('t_gbj_detail_id', $id)->get();
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('noser', function ($d) {
-                return $d->seri->noseri;
-            })
-            ->addColumn('posisi', function ($d) {
-                return $d->layout_id == null ? '-' : $d->layout->ruang;
-                // return $d
-            })
-            ->make(true);
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('noser', function ($d) {
+                    return $d->seri->noseri;
+                })
+                ->addColumn('posisi', function ($d) {
+                    return $d->layout_id == null ? '-' : $d->layout->ruang;
+                    // return $d
+                })
+                ->make(true);
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -917,30 +914,29 @@ class GudangController extends Controller
     function getNonSODone()
     {
         try {
-            $data = TFProduksi::
-                    leftJoin('divisi as p', 'p.id', '=', 't_gbj.ke')
-                    ->leftJoin('t_gbj_detail as tgd', 'tgd.t_gbj_id', '=', 't_gbj.id')
-                    ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
-                    ->leftJoin('produk as pp', 'pp.id', '=', 'gbj.produk_id')
-                    ->where([
-                        ['t_gbj.jenis', '=', 'keluar'],
-                        // ['t_gbj.status_id', '=', 2],
-                    ])->whereNull('t_gbj.pesanan_id')
-                    ->selectRaw('t_gbj.id, tgd.gdg_brg_jadi_id,
+            $data = TFProduksi::leftJoin('divisi as p', 'p.id', '=', 't_gbj.ke')
+                ->leftJoin('t_gbj_detail as tgd', 'tgd.t_gbj_id', '=', 't_gbj.id')
+                ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+                ->leftJoin('produk as pp', 'pp.id', '=', 'gbj.produk_id')
+                ->where([
+                    ['t_gbj.jenis', '=', 'keluar'],
+                    // ['t_gbj.status_id', '=', 2],
+                ])->whereNull('t_gbj.pesanan_id')
+                ->selectRaw('t_gbj.id, tgd.gdg_brg_jadi_id,
                                 concat(pp.nama," ",gbj.nama) as produkk, sum(tgd.qty) as qty')
-                    ->groupBy('gbj.id')
-                    ->orderByRaw('concat(pp.nama," ",gbj.nama)')
-                    ->get();
+                ->groupBy('gbj.id')
+                ->orderByRaw('concat(pp.nama," ",gbj.nama)')
+                ->get();
             $dt = datatables()->of($data)
                 ->addIndexColumn()
                 // ->editColumn('tgl_keluar', function($d){
                 //     return Carbon::parse($d->tgl_keluar)->isoFormat('D MMM YYYY');
                 // })
-                ->editColumn('qty', function($d){
-                    return $d->qty.' Unit';
+                ->editColumn('qty', function ($d) {
+                    return $d->qty . ' Unit';
                 })
-                ->editColumn('aksi', function($d){
-                    return '<a href="export_nonso/'.$d->gdg_brg_jadi_id.'">
+                ->editColumn('aksi', function ($d) {
+                    return '<a href="export_nonso/' . $d->gdg_brg_jadi_id . '">
                             <button class="btn btn-outline-primary"><i class="fas fa-eye"></i> Cetak</button>
                         </a>';
                 })
@@ -949,56 +945,55 @@ class GudangController extends Controller
 
             return $dt;
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
     function exportNonso($id)
     {
         try {
-            $data = TFProduksiDetail::
-                    leftJoin('t_gbj as tg', 't_gbj_detail.t_gbj_id', '=', 'tg.id')
-                    ->leftJoin('divisi as p', 'p.id', '=', 'tg.ke')
-                    ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id', '=', 't_gbj_detail.gdg_brg_jadi_id')
-                    ->leftJoin('produk as pp', 'pp.id', '=', 'gbj.produk_id')
-                    ->where([
-                        ['tg.jenis', '=', 'keluar'],
-                    ])->whereNull('tg.pesanan_id')
-                    ->selectRaw('p.nama as nm_divisi, tg.tgl_keluar, tg.deskripsi, tg.id as tgdid, t_gbj_detail.id,
+            $data = TFProduksiDetail::leftJoin('t_gbj as tg', 't_gbj_detail.t_gbj_id', '=', 'tg.id')
+                ->leftJoin('divisi as p', 'p.id', '=', 'tg.ke')
+                ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id', '=', 't_gbj_detail.gdg_brg_jadi_id')
+                ->leftJoin('produk as pp', 'pp.id', '=', 'gbj.produk_id')
+                ->where([
+                    ['tg.jenis', '=', 'keluar'],
+                ])->whereNull('tg.pesanan_id')
+                ->selectRaw('p.nama as nm_divisi, tg.tgl_keluar, tg.deskripsi, tg.id as tgdid, t_gbj_detail.id,
                                 concat(pp.nama," ",gbj.nama) as produkk, t_gbj_detail.qty')
-                    ->where("t_gbj_detail.gdg_brg_jadi_id", "=", $id)
-                    ->first();
+                ->where("t_gbj_detail.gdg_brg_jadi_id", "=", $id)
+                ->first();
 
-            return Excel::download(new NonsoExport($id), 'Laporan Tanpa SO '.$data->produkk.'.xlsx');
-
+            return Excel::download(new NonsoExport($id), 'Laporan Tanpa SO ' . $data->produkk . '.xlsx');
         } catch (\Exception $e) {
-            return response()->json(['error'=> true, 'msg' => $e->getMessage()]);
+            return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
     }
 
-    function get_data_waiting_approve(Request $request) {
+    function get_data_waiting_approve(Request $request)
+    {
         try {
             $data = NoseriBrgJadiLog::where([
                 'status' => 'waiting'
-            ])->whereHas('noseri', function($d) use($request){
+            ])->whereHas('noseri', function ($d) use ($request) {
                 $d->where('gdg_barang_jadi_id', $request->gbjid);
             })->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('checkbox', function($d) {
-                    return '<input type="checkbox" id="noseriid" name="id" value="'.$d->noseri_id.'">';
+                ->addColumn('checkbox', function ($d) {
+                    return '<input type="checkbox" id="noseriid" name="id" value="' . $d->noseri_id . '">';
                 })
-                ->addColumn('noseri_lama', function($d) {
+                ->addColumn('noseri_lama', function ($d) {
                     return $d->data_lama;
                 })
-                ->addColumn('noseri', function($d) {
+                ->addColumn('noseri', function ($d) {
                     return $d->data_baru == null ? '-' : $d->data_baru;
                 })
-                ->editColumn('action',function($d){
-                    return $d->action == 'delete' ? '<span class="badge badge-danger">Hapus</span>': '<span class="badge badge-info">Ubah</span>';
+                ->editColumn('action', function ($d) {
+                    return $d->action == 'delete' ? '<span class="badge badge-danger">Hapus</span>' : '<span class="badge badge-info">Ubah</span>';
                 })
-                ->addColumn('requested', function($d) {
+                ->addColumn('requested', function ($d) {
                     return $d->actionn->nama;
                 })
                 ->rawColumns(['checkbox', 'action'])
@@ -1011,54 +1006,54 @@ class GudangController extends Controller
         }
     }
 
-    function delete_noseri(Request $request) {
+    function delete_noseri(Request $request)
+    {
         try {
             // dd($request->all());
             $check = NoseriTGbj::whereIn('noseri_id', $request->noseriid);
             $dataseri = [];
 
-            foreach($check->get() as $c) {
+            foreach ($check->get() as $c) {
                 $nbj = NoseriBarangJadi::find($c->noseri_id);
                 array_push($dataseri, $nbj->is_ready);
             }
             if (count($dataseri) == 0) {
                 $cek = NoseriBarangJadi::whereIn('id', $request->noseriid)->get();
 
-                foreach($cek as $cc) {
+                foreach ($cek as $cc) {
                     $nbjj = NoseriBarangJadi::find($cc->id);
                     // return $nbjj;
                     NoseriBrgJadiLog::create([
-                            'gbj_id' => $request->gbjid,
-                            'noseri_id' => $cc->id,
-                            'data_lama' => $nbjj->noseri,
-                            'action' => 'delete',
-                            'action_by' => $request->actionby,
-                            'status' => 'waiting',
-                            'remark' => $request->alasan
-                        ]);
+                        'gbj_id' => $request->gbjid,
+                        'noseri_id' => $cc->id,
+                        'data_lama' => $nbjj->noseri,
+                        'action' => 'delete',
+                        'action_by' => $request->actionby,
+                        'status' => 'waiting',
+                        'remark' => $request->alasan
+                    ]);
                     NoseriBarangJadi::find($cc->id)->update(['is_change' => 0, 'is_delete' => 1]);
                 }
-                return response()->json(['error'=>false, 'msg'=> 'Mohon Tunggu Persetujuan dari Manajer']);
+                return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manajer']);
             } else {
                 if (empty(array_filter($dataseri))) {
                     if (count($check->get()) > 0) {
-                        foreach($check->get() as $d) {
+                        foreach ($check->get() as $d) {
                             $nbjj = NoseriBarangJadi::find($d->noseri_id);
 
                             NoseriBrgJadiLog::create([
-                                    'gbj_id' => $request->gbjid,
-                                    'noseri_id' => $d->noseri_id,
-                                    'data_lama' => $nbjj->noseri,
-                                    'action' => 'delete',
-                                    'action_by' => $request->actionby,
-                                    'status' => 'waiting',
-                                    'remark' => $request->alasan
-                                ]);
+                                'gbj_id' => $request->gbjid,
+                                'noseri_id' => $d->noseri_id,
+                                'data_lama' => $nbjj->noseri,
+                                'action' => 'delete',
+                                'action_by' => $request->actionby,
+                                'status' => 'waiting',
+                                'remark' => $request->alasan
+                            ]);
                             NoseriBarangJadi::find($d->noseri_id)->update(['is_change' => 0, 'is_delete' => 1]);
                         }
-
                     }
-                    return response()->json(['error'=>false, 'msg'=> 'Mohon Tunggu Persetujuan dari Manajer']);
+                    return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manajer']);
                 } else {
                     return response()->json(['error' => true, 'msg' => 'Noseri Ada yang Sedang Digunakan']);
                 }
@@ -1081,16 +1076,16 @@ class GudangController extends Controller
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('merk', function($d){
+                ->addColumn('merk', function ($d) {
                     return $d->gudang->produk->merk;
                 })
-                ->addColumn('produk', function($d){
-                    return $d->gudang->nama == null ? $d->gudang->produk->nama : $d->gudang->produk->nama.' <b>'.$d->gudang->nama.'</b>';
+                ->addColumn('produk', function ($d) {
+                    return $d->gudang->nama == null ? $d->gudang->produk->nama : $d->gudang->produk->nama . ' <b>' . $d->gudang->nama . '</b>';
                 })
-                ->addColumn('kelompok', function($d){
+                ->addColumn('kelompok', function ($d) {
                     return $d->gudang->produk->KelompokProduk->nama;
                 })
-                ->addColumn('action', function($d) {
+                ->addColumn('action', function ($d) {
                     return '<a data-toggle="modal" data-target="#deletemodal" class="deletemodal" data-attr=""  data-id="' . $d->gdg_barang_jadi_id . '">
                                 <button class="btn btn-outline-success btn-sm" type="button" >
                                 <i class="far fa-eye"></i> Detail
@@ -1117,16 +1112,16 @@ class GudangController extends Controller
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('merk', function($d){
+                ->addColumn('merk', function ($d) {
                     return $d->gudang->produk->merk;
                 })
-                ->addColumn('produk', function($d){
-                    return $d->gudang->nama == null ? $d->gudang->produk->nama : $d->gudang->produk->nama.' <b>'.$d->gudang->nama.'</b>';
+                ->addColumn('produk', function ($d) {
+                    return $d->gudang->nama == null ? $d->gudang->produk->nama : $d->gudang->produk->nama . ' <b>' . $d->gudang->nama . '</b>';
                 })
-                ->addColumn('kelompok', function($d){
+                ->addColumn('kelompok', function ($d) {
                     return $d->gudang->produk->KelompokProduk->nama;
                 })
-                ->addColumn('action', function($d) {
+                ->addColumn('action', function ($d) {
                     return '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr=""  data-id="' . $d->gdg_barang_jadi_id . '">
                                 <button class="btn btn-outline-success btn-sm" type="button" >
                                 <i class="far fa-eye"></i> Detail
@@ -1149,32 +1144,32 @@ class GudangController extends Controller
             $data = NoseriBrgJadiLog::where([
                 'status' => 'waiting',
                 'action' => 'delete'
-            ])->whereHas('noseri', function($d) use($request) {
+            ])->whereHas('noseri', function ($d) use ($request) {
                 $d->where('gdg_barang_jadi_id', $request->gbj);
             })->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('checkbox', function($d) {
-                    return '<input type="checkbox" class="cb-child1" id="noseriid" name="id" value="'.$d->noseri_id.'">';
+                ->addColumn('checkbox', function ($d) {
+                    return '<input type="checkbox" class="cb-child1" id="noseriid" name="id" value="' . $d->noseri_id . '">';
                 })
-                ->addColumn('produk', function($d){
-                    return $d->noseri->gudang->nama == null ? $d->noseri->gudang->produk->nama : $d->noseri->gudang->produk->nama.' <b>'.$d->noseri->gudang->nama.'</b>';
+                ->addColumn('produk', function ($d) {
+                    return $d->noseri->gudang->nama == null ? $d->noseri->gudang->produk->nama : $d->noseri->gudang->produk->nama . ' <b>' . $d->noseri->gudang->nama . '</b>';
                 })
-                ->addColumn('merk', function($d){
+                ->addColumn('merk', function ($d) {
                     return $d->noseri->gudang->produk->merk;
                 })
-                ->addColumn('noseri', function($d) {
+                ->addColumn('noseri', function ($d) {
                     return $d->noseri->noseri;
                 })
-                ->addColumn('requested', function($d) {
+                ->addColumn('requested', function ($d) {
                     return $d->actionn->nama;
                 })
-                ->addColumn('tgl_aju', function($d){
+                ->addColumn('tgl_aju', function ($d) {
                     return Carbon::createFromFormat('Y-m-d H:i:s', $d->created_at)->isoFormat('D MMMM YYYY');
                 })
-                ->addColumn('action', function($d) {
-                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->id.'">
+                ->addColumn('action', function ($d) {
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="' . $d->id . '">
                             <i class="far fa-eye"></i> Detail
                             </button>';
                 })
@@ -1194,38 +1189,38 @@ class GudangController extends Controller
             $data = NoseriBrgJadiLog::where([
                 'status' => 'waiting',
                 'action' => 'update',
-            ])->whereHas('noseri', function($d) use($request) {
+            ])->whereHas('noseri', function ($d) use ($request) {
                 $d->where('gdg_barang_jadi_id', $request->gbj);
             })->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('checkbox', function($d) {
-                    return '<input type="checkbox" class="cb-child" id="noseriid" name="id" value="'.$d->noseri_id.'">';
+                ->addColumn('checkbox', function ($d) {
+                    return '<input type="checkbox" class="cb-child" id="noseriid" name="id" value="' . $d->noseri_id . '">';
                 })
-                ->addColumn('produk', function($d){
-                    return $d->noseri->gudang->nama == null ? $d->noseri->gudang->produk->nama : $d->noseri->gudang->produk->nama.' <b>'.$d->noseri->gudang->nama.'</b>';
+                ->addColumn('produk', function ($d) {
+                    return $d->noseri->gudang->nama == null ? $d->noseri->gudang->produk->nama : $d->noseri->gudang->produk->nama . ' <b>' . $d->noseri->gudang->nama . '</b>';
                 })
-                ->addColumn('merk', function($d){
+                ->addColumn('merk', function ($d) {
                     return $d->noseri->gudang->produk->merk;
                 })
-                ->addColumn('kelompok', function($d){
+                ->addColumn('kelompok', function ($d) {
                     return $d->noseri->gudang->produk->KelompokProduk->nama;
                 })
-                ->addColumn('lama', function($d) {
+                ->addColumn('lama', function ($d) {
                     return $d->data_lama;
                 })
-                ->addColumn('baru', function($d) {
+                ->addColumn('baru', function ($d) {
                     return $d->data_baru;
                 })
-                ->addColumn('tgl_aju', function($d){
+                ->addColumn('tgl_aju', function ($d) {
                     return Carbon::createFromFormat('Y-m-d H:i:s', $d->created_at)->isoFormat('D MMMM YYYY');
                 })
-                ->addColumn('requested', function($d) {
+                ->addColumn('requested', function ($d) {
                     return $d->actionn->nama;
                 })
-                ->addColumn('action', function($d) {
-                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="'.$d->id.'">
+                ->addColumn('action', function ($d) {
+                    return '<button class="btn btn-outline-success btn-sm btnAlasan" type="button" data-id="' . $d->id . '">
                             <i class="far fa-eye"></i> Detail
                             </button>';
                 })
@@ -1241,19 +1236,20 @@ class GudangController extends Controller
 
 
 
-    function edit_noseri(Request $request) {
+    function edit_noseri(Request $request)
+    {
         try {
             // dd($request->all());
             $dataseri = [];
-            $data = NoseriBarangJadi::whereIn('id',$request->data);
+            $data = NoseriBarangJadi::whereIn('id', $request->data);
             $check = NoseriBarangJadi::whereIn('noseri', $request->new)->get();
             if (count($check) > 0) {
-                foreach($check as $d) {
+                foreach ($check as $d) {
                     array_push($dataseri, $d->noseri);
                 }
-                return response()->json(['error' => true, 'msg' => 'Noseri '.implode(', ', $dataseri).' Sudah Terdaftar']);
+                return response()->json(['error' => true, 'msg' => 'Noseri ' . implode(', ', $dataseri) . ' Sudah Terdaftar']);
             } else {
-                foreach($data->get() as $k => $c) {
+                foreach ($data->get() as $k => $c) {
                     NoseriBrgJadiLog::create([
                         'gbj_id' => $request->gbjid,
                         'noseri_id' => $c->id,
@@ -1269,7 +1265,6 @@ class GudangController extends Controller
 
                 return response()->json(['error' => false, 'msg' => 'Mohon Tunggu Persetujuan dari Manager']);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -1284,13 +1279,13 @@ class GudangController extends Controller
             $check = NoseriTGbj::whereIn('noseri_id', $request->noseriid);
             $dataseri = [];
 
-            foreach($check->get() as $c) {
+            foreach ($check->get() as $c) {
                 $nbj = NoseriBarangJadi::find($c->noseri_id);
                 array_push($dataseri, $nbj->is_ready);
             }
             if ($request->is_acc == 'rejected') {
                 $obj = [
-                    'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama.' '.GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
+                    'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama . ' ' . GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
                     'noseri' => NoseriBarangJadi::whereIn('id', $request->noseriid)->get()->pluck('noseri'),
                     'status' => $request->is_acc == 'rejected' ? 'Ditolak' : 'Disetujui',
                     'komentar' => $request->komentar,
@@ -1299,7 +1294,7 @@ class GudangController extends Controller
                 if (count($dataseri) == 0) {
                     $cek = NoseriBarangJadi::whereIn('id', $request->noseriid)->get();
 
-                    foreach($cek as $cc) {
+                    foreach ($cek as $cc) {
                         NoseriBrgJadiLog::where('noseri_id', $cc->id)->where([
                             'action' => 'delete',
                             'status' => 'waiting'
@@ -1307,7 +1302,7 @@ class GudangController extends Controller
                         NoseriBarangJadi::find($cc->id)->update(['is_change' => 1, 'is_delete' => 0]);
                     }
                 } else {
-                    foreach($check->get() as $ddd) {
+                    foreach ($check->get() as $ddd) {
                         NoseriBrgJadiLog::where('noseri_id', $ddd->noseri_id)->where([
                             'action' => 'delete',
                             'status' => 'waiting'
@@ -1322,10 +1317,10 @@ class GudangController extends Controller
                     'response' => json_encode($obj),
                     'user_id' => $request->accby
                 ]);
-                return response()->json(['error'=>false, 'msg'=> 'Penolakan Berhasil Dilakukan']);
+                return response()->json(['error' => false, 'msg' => 'Penolakan Berhasil Dilakukan']);
             } else {
                 $obj = [
-                    'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama.' '.GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
+                    'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama . ' ' . GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
                     'noseri' => NoseriBarangJadi::whereIn('id', $request->noseriid)->get()->pluck('noseri'),
                     'status' => $request->is_acc == 'rejected' ? 'Ditolak' : 'Disetujui',
                     'komentar' => $request->komentar,
@@ -1339,14 +1334,14 @@ class GudangController extends Controller
                         'response' => json_encode($obj),
                         'user_id' => $request->accby
                     ]);
-                    foreach($cekk as $ckc) {
+                    foreach ($cekk as $ckc) {
                         NoseriBrgJadiLog::where('noseri_id', $ckc->id)->where([
                             'action' => 'delete',
                             'status' => 'waiting'
                         ])->update(['status' => 'approve', 'acc_by' => $request->accby, 'komentar' => $request->komentar]);
                         NoseriBarangJadi::find($ckc->id)->delete();
                     }
-                    return response()->json(['error'=>false, 'msg'=> 'Noseri Berhasil Dihapus']);
+                    return response()->json(['error' => false, 'msg' => 'Noseri Berhasil Dihapus']);
                 } else {
                     if (empty(array_filter($dataseri))) {
                         SystemLog::create([
@@ -1355,18 +1350,18 @@ class GudangController extends Controller
                             'response' => json_encode($obj),
                             'user_id' => $request->accby
                         ]);
-                        foreach($check->get() as $d) {
+                        foreach ($check->get() as $d) {
                             NoseriBrgJadiLog::where('noseri_id', $d->noseri_id)->where([
                                 'action' => 'delete',
                                 'status' => 'waiting'
                             ])->update(['status' => 'approved', 'acc_by' => $request->accby, 'komentar' => $request->komentar]);
-                            NoseriTGbj::where('noseri_id',$d->noseri_id)->delete();
+                            NoseriTGbj::where('noseri_id', $d->noseri_id)->delete();
                             NoseriBarangJadi::find($d->noseri_id)->delete();
                         }
-                        return response()->json(['error'=>false, 'msg'=> 'Noseri Berhasil Dihapus']);
+                        return response()->json(['error' => false, 'msg' => 'Noseri Berhasil Dihapus']);
                     } else {
                         $obj1 = [
-                            'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama.' '.GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
+                            'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama . ' ' . GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
                             'noseri' => NoseriBarangJadi::whereIn('id', $request->noseriid)->get()->pluck('noseri'),
                             'status' => $request->is_acc == 'rejected' ? 'Ditolak' : 'Disetujui',
                             'komentar' => $request->komentar,
@@ -1379,7 +1374,7 @@ class GudangController extends Controller
                             'response' => json_encode($obj1),
                             'user_id' => $request->accby
                         ]);
-                        foreach($check->get() as $dd) {
+                        foreach ($check->get() as $dd) {
                             NoseriBrgJadiLog::where('noseri_id', $dd->noseri_id)->where([
                                 'action' => 'delete',
                                 'status' => 'waiting'
@@ -1389,10 +1384,7 @@ class GudangController extends Controller
                         return response()->json(['error' => true, 'msg' => 'Noseri Ada yang Sedang Digunakan']);
                     }
                 }
-
-
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -1405,7 +1397,7 @@ class GudangController extends Controller
     {
         try {
             $obj = [
-                'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama.' '.GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
+                'produk' => Produk::find(GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->produk_id)->nama . ' ' . GudangBarangJadi::find(NoseriBarangJadi::whereIn('id', $request->noseriid)->first()->gdg_barang_jadi_id)->nama,
                 'noseri' => NoseriBarangJadi::whereIn('id', $request->noseriid)->get()->pluck('noseri'),
                 'status' => $request->is_acc == 'rejected' ? 'Ditolak' : 'Disetujui',
                 'komentar' => $request->komentar,
@@ -1415,13 +1407,13 @@ class GudangController extends Controller
                 $a = NoseriBrgJadiLog::whereIn('noseri_id', $request->noseriid)->where([
                     'action' => 'update',
                     'status' => 'waiting'
-                    ])->get()->pluck('data_lama');
-                for ($i=0; $i < count($a); $i++) {
+                ])->get()->pluck('data_lama');
+                for ($i = 0; $i < count($a); $i++) {
                     NoseriBrgJadiLog::where('noseri_id', $request->noseriid[$i])->where([
                         'action' => 'update',
                         'status' => 'waiting'
                     ])->update(['status' => 'rejected', 'acc_by' => $request->accby, 'komentar' => $request->komentar]);
-                    NoseriBarangJadi::where('id', $request->noseriid[$i])->update(['is_change' => 1, 'noseri'=> $a[$i]]);
+                    NoseriBarangJadi::where('id', $request->noseriid[$i])->update(['is_change' => 1, 'noseri' => $a[$i]]);
                 }
                 SystemLog::create([
                     'tipe' => 'GBJ - Manager',
@@ -1432,8 +1424,8 @@ class GudangController extends Controller
                 return response()->json(['error' => false, 'msg' => 'Noseri Batal Diubah']);
             } else {
                 // return 'acc';
-                $data = NoseriBarangJadi::whereIn('id',$request->noseriid);
-                foreach($data->get() as $k => $c) {
+                $data = NoseriBarangJadi::whereIn('id', $request->noseriid);
+                foreach ($data->get() as $k => $c) {
                     NoseriBrgJadiLog::where('noseri_id', $c->id)->where([
                         'action' => 'update',
                         'status' => 'waiting'
@@ -1475,85 +1467,84 @@ class GudangController extends Controller
             where tg.dari = 17 and tg.ke = 13 and tgn2.status_id = 3
             group by tg.tgl_masuk, tgd.gdg_brg_jadi_id");
             // return $data;
-        $x = [];
-        $y = [];
-        foreach ($data as $k) {
-            $x[] = $k->tgl_masuk;
-            $y[] = $k->gdg_brg_jadi_id;
-        }
+            $x = [];
+            $y = [];
+            foreach ($data as $k) {
+                $x[] = $k->tgl_masuk;
+                $y[] = $k->gdg_brg_jadi_id;
+            }
 
-        $datax = TFProduksiDetail::
-            leftJoin('t_gbj as tg', 't_gbj_detail.t_gbj_id', '=', 'tg.id')
-            ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id','=','t_gbj_detail.gdg_brg_jadi_id')
-            ->leftJoin('produk as p', 'p.id','=','gbj.produk_id')
-            ->select('tg.tgl_masuk', DB::raw("concat(p.nama, ' ', gbj.nama) as produkk"), DB::raw('sum(t_gbj_detail.qty) as total'), 't_gbj_detail.gdg_brg_jadi_id', )
-            ->groupBy('tg.tgl_masuk')
-            ->groupBy('t_gbj_detail.gdg_brg_jadi_id')
-            ->where('tg.dari', 17)
-            ->where('tg.ke', 13)
-            ->whereIn('tg.tgl_masuk', $x)
-            ->whereIn('t_gbj_detail.gdg_brg_jadi_id', $y)
-            ->get();
+            $datax = TFProduksiDetail::leftJoin('t_gbj as tg', 't_gbj_detail.t_gbj_id', '=', 'tg.id')
+                ->leftJoin('gdg_barang_jadi as gbj', 'gbj.id', '=', 't_gbj_detail.gdg_brg_jadi_id')
+                ->leftJoin('produk as p', 'p.id', '=', 'gbj.produk_id')
+                ->select('tg.tgl_masuk', DB::raw("concat(p.nama, ' ', gbj.nama) as produkk"), DB::raw('sum(t_gbj_detail.qty) as total'), 't_gbj_detail.gdg_brg_jadi_id',)
+                ->groupBy('tg.tgl_masuk')
+                ->groupBy('t_gbj_detail.gdg_brg_jadi_id')
+                ->where('tg.dari', 17)
+                ->where('tg.ke', 13)
+                ->whereIn('tg.tgl_masuk', $x)
+                ->whereIn('t_gbj_detail.gdg_brg_jadi_id', $y)
+                ->get();
 
-        return datatables()->of($datax)
-            ->addIndexColumn()
-            ->addColumn('bppb', function($d) {
-                // return '-';
-                $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
-                    $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
-                    $q->whereHas('header', function ($a) use ($d) {
-                        $a->where('tgl_masuk', $d->tgl_masuk)->where('ke', 13)->where('dari', 17);
-                    });
-                })->where('jenis', 'masuk')->first();
+            return datatables()->of($datax)
+                ->addIndexColumn()
+                ->addColumn('bppb', function ($d) {
+                    // return '-';
+                    $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
+                        $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
+                        $q->whereHas('header', function ($a) use ($d) {
+                            $a->where('tgl_masuk', $d->tgl_masuk)->where('ke', 13)->where('dari', 17);
+                        });
+                    })->where('jenis', 'masuk')->first();
 
-                $nobppb = JadwalRakitNoseri::with('header')->where('noseri', $seri_done->seri->noseri)->first();
-                return $nobppb->header->no_bppb == '-' ? '-' : $nobppb->header->no_bppb;
-            })
-            ->addColumn('tgl_masuk', function ($d) {
-                if (isset($d->tgl_masuk)) {
-                    return Carbon::parse($d->tgl_masuk)->isoFormat('D MMMM Y');
-                } else {
-                    return '-';
-                }
-            })
-            ->addColumn('product', function ($d) {
-                return $d->produkk;
-            })
-            ->addColumn('jumlah', function ($d) {
-                $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
-                    $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
-                    $q->whereHas('header', function ($a) use ($d) {
-                        $a->where('tgl_masuk', $d->tgl_masuk)->where('ke', 13)->where('dari', 17);
-                    });
-                })->where('jenis', 'masuk')->where('status_id', 3)->get()->count();
+                    $nobppb = JadwalRakitNoseri::with('header')->where('noseri', $seri_done->seri->noseri)->first();
+                    return $nobppb->header->no_bppb == '-' ? '-' : $nobppb->header->no_bppb;
+                })
+                ->addColumn('tgl_masuk', function ($d) {
+                    if (isset($d->tgl_masuk)) {
+                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMMM Y');
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('product', function ($d) {
+                    return $d->produkk;
+                })
+                ->addColumn('jumlah', function ($d) {
+                    $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
+                        $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
+                        $q->whereHas('header', function ($a) use ($d) {
+                            $a->where('tgl_masuk', $d->tgl_masuk)->where('ke', 13)->where('dari', 17);
+                        });
+                    })->where('jenis', 'masuk')->where('status_id', 3)->get()->count();
 
-                return $d->total.'<br><span class="badge badge-dark"> Sisa Diterima ' . intval($d->total - $seri_done) . '</span>';
-            })
-            ->addColumn('action', function ($d) {
-                $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
-                    $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
-                    $q->whereHas('header', function ($a) use ($d) {
-                        $a->where('tgl_masuk', $d->tgl_masuk);
-                        $a->where('dari', 17);
-                    });
-                })->where('jenis', 'masuk')->where('status_id', 3)->get()->count();
+                    return $d->total . '<br><span class="badge badge-dark"> Sisa Diterima ' . intval($d->total - $seri_done) . '</span>';
+                })
+                ->addColumn('action', function ($d) {
+                    $seri_done = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
+                        $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
+                        $q->whereHas('header', function ($a) use ($d) {
+                            $a->where('tgl_masuk', $d->tgl_masuk);
+                            $a->where('dari', 17);
+                        });
+                    })->where('jenis', 'masuk')->where('status_id', 3)->get()->count();
 
-                $seri = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
-                    $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
-                    $q->whereHas('header', function ($a) use ($d) {
-                        $a->where('tgl_masuk', $d->tgl_masuk);
-                        $a->where('dari', 17);
-                    });
-                })->where('jenis', 'masuk')->get()->count();
+                    $seri = NoseriTGbj::whereHas('detail', function ($q) use ($d) {
+                        $q->where('gdg_brg_jadi_id', $d->gdg_brg_jadi_id);
+                        $q->whereHas('header', function ($a) use ($d) {
+                            $a->where('tgl_masuk', $d->tgl_masuk);
+                            $a->where('dari', 17);
+                        });
+                    })->where('jenis', 'masuk')->get()->count();
 
-                if ($seri == $seri_done) {
-                    return  '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-produk="' . $d->produkk . '" data-attr=""  data-id="' . $d->id . '" data-tgl="' . $d->tgl_masuk . '" data-brgid="' . $d->gdg_brg_jadi_id . '">
+                    if ($seri == $seri_done) {
+                        return  '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-produk="' . $d->produkk . '" data-attr=""  data-id="' . $d->id . '" data-tgl="' . $d->tgl_masuk . '" data-brgid="' . $d->gdg_brg_jadi_id . '">
                                 <button class="btn btn-outline-info btn-sm" type="button" >
                                 <i class="far fa-eye"></i>&nbsp;Detail
                                 </button>
                             </a>';
-                } else {
-                    return  '
+                    } else {
+                        return  '
                             <a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-produk="' . $d->produkk . '"data-attr=""  data-id="' . $d->id . '" data-tgl="' . $d->tgl_masuk . '" data-brgid="' . $d->gdg_brg_jadi_id . '">
                                 <button class="btn btn-outline-info btn-sm" type="button" >
                                 <i class="far fa-eye"></i>&nbsp;Detail
@@ -1565,10 +1556,10 @@ class GudangController extends Controller
                                 </button>
                             </a>
                            ';
-                }
-            })
-            ->rawColumns(['action', 'jumlah'])
-            ->make(true);
+                    }
+                })
+                ->rawColumns(['action', 'jumlah'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -1579,24 +1570,24 @@ class GudangController extends Controller
 
     function getRakitNoseri($id, $value)
     {
-       try {
-        $data = NoseriTGbj::whereHas('detail', function ($q) use ($id, $value) {
-            $q->where('gdg_brg_jadi_id', $id);
-            $q->whereHas('header', function ($a) use ($value) {
-                $a->where('tgl_masuk', $value);
-            });
-        })->where('status_id', 3)->where('jenis', 'masuk')->get();
-        return datatables()->of($data)
-            ->addColumn('layout', function ($d) {
-                return $d->layout->ruang;
-            })
-            ->addColumn('noserii', function ($d) {
-                return $d->seri->noseri;
-            })
-            ->addColumn('title', function ($d) {
-                return $d->detail->produk->produk->nama . ' ' . $d->detail->produk->nama;
-            })
-            ->make(true);
+        try {
+            $data = NoseriTGbj::whereHas('detail', function ($q) use ($id, $value) {
+                $q->where('gdg_brg_jadi_id', $id);
+                $q->whereHas('header', function ($a) use ($value) {
+                    $a->where('tgl_masuk', $value);
+                });
+            })->where('status_id', 3)->where('jenis', 'masuk')->get();
+            return datatables()->of($data)
+                ->addColumn('layout', function ($d) {
+                    return $d->layout->ruang;
+                })
+                ->addColumn('noserii', function ($d) {
+                    return $d->seri->noseri;
+                })
+                ->addColumn('title', function ($d) {
+                    return $d->detail->produk->produk->nama . ' ' . $d->detail->produk->nama;
+                })
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -1771,7 +1762,7 @@ class GudangController extends Controller
                     array_push($arr_seri, $d->noseri);
                 }
 
-                foreach($datarakit as $c) {
+                foreach ($datarakit as $c) {
                     array_push($arr_rakit, $c->noseri);
                 }
 
@@ -1804,27 +1795,34 @@ class GudangController extends Controller
     {
         try {
             //code...
-            $data = TFProduksi::
-                    leftJoin('pesanan as p', 'p.id', '=', 't_gbj.pesanan_id')
-                    ->leftJoin('m_state as ms', 'ms.id', '=', 'p.log_id')
-                    ->leftJoin('ekatalog as e', 'e.pesanan_id', '=', 'p.id')
-                    ->leftJoin('customer as c_ekat', 'c_ekat.id', '=', 'e.customer_id')
-                    ->leftJoin('spa', 'spa.pesanan_id', '=', 'p.id')
-                    ->leftJoin('customer as c_spa', 'c_spa.id', '=', 'spa.customer_id')
-                    ->leftJoin('spb', 'spb.pesanan_id', '=', 'p.id')
-                    ->leftJoin('customer as c_spb', 'c_spb.id', '=', 'spb.customer_id')
-                    ->leftJoin('provinsi as prov', 'prov.id', '=', 'e.provinsi_id')
-                    ->where([
-                        ['t_gbj.jenis', '=', 'keluar'],
-                        ['t_gbj.status_id', '=', 2],
-                    ])->whereNotNull('t_gbj.pesanan_id')
-                    ->select('p.so', 'p.no_po', 'p.log_id', 'ms.nama as log_nama',
-                                DB::raw("case
+            $data = TFProduksi::leftJoin('pesanan as p', 'p.id', '=', 't_gbj.pesanan_id')
+                ->leftJoin('m_state as ms', 'ms.id', '=', 'p.log_id')
+                ->leftJoin('ekatalog as e', 'e.pesanan_id', '=', 'p.id')
+                ->leftJoin('customer as c_ekat', 'c_ekat.id', '=', 'e.customer_id')
+                ->leftJoin('spa', 'spa.pesanan_id', '=', 'p.id')
+                ->leftJoin('customer as c_spa', 'c_spa.id', '=', 'spa.customer_id')
+                ->leftJoin('spb', 'spb.pesanan_id', '=', 'p.id')
+                ->leftJoin('customer as c_spb', 'c_spb.id', '=', 'spb.customer_id')
+                ->leftJoin('provinsi as prov', 'prov.id', '=', 'e.provinsi_id')
+                ->where([
+                    ['t_gbj.jenis', '=', 'keluar'],
+                    ['t_gbj.status_id', '=', 2],
+                ])->whereNotNull('t_gbj.pesanan_id')
+                ->select(
+                    'p.so',
+                    'p.no_po',
+                    'p.log_id',
+                    'ms.nama as log_nama',
+                    DB::raw("case
                                 when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
                                 when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
                                 when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
-                            end as divisi"), 'e.tgl_kontrak', 'p.id', 'prov.status')
-                    ->get();
+                            end as divisi"),
+                    'e.tgl_kontrak',
+                    'p.id',
+                    'prov.status'
+                )
+                ->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -1834,20 +1832,20 @@ class GudangController extends Controller
                 ->addColumn('nopo', function ($d) {
                     return $d->no_po;
                 })
-                ->addColumn('logs', function($d) {
+                ->addColumn('logs', function ($d) {
                     if (isset($d->id)) {
                         if ($d->log_id == 9) {
-                            $ax = "<span class='badge badge-pill badge-secondary'>".$d->log_nama."</span>";
+                            $ax = "<span class='badge badge-pill badge-secondary'>" . $d->log_nama . "</span>";
                         } else if ($d->log_id == 6) {
-                            $ax = "<span class='badge badge-pill badge-warning'>".$d->log_nama."</span>";
+                            $ax = "<span class='badge badge-pill badge-warning'>" . $d->log_nama . "</span>";
                         } elseif ($d->log_id == 8) {
-                            $ax = "<span class='badge badge-pill badge-info'>".$d->log_nama."</span>";
+                            $ax = "<span class='badge badge-pill badge-info'>" . $d->log_nama . "</span>";
                         } elseif ($d->log_id == 11) {
                             $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
                         } elseif ($d->log_id == 10) {
-                            $ax = "<span class='badge badge-pill badge-success'>".$d->log_nama."</span>";
+                            $ax = "<span class='badge badge-pill badge-success'>" . $d->log_nama . "</span>";
                         } else {
-                            $ax = "<span class='badge badge-pill badge-danger'>".$d->log_nama."</span>";
+                            $ax = "<span class='badge badge-pill badge-danger'>" . $d->log_nama . "</span>";
                         }
 
                         return $ax;
@@ -1914,8 +1912,8 @@ class GudangController extends Controller
 
             $validation = $spreadsheet->getActiveSheet()->getCell('B2')
                 ->getDataValidation();
-            $validation->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $validation->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $validation->setAllowBlank(false);
             $validation->setShowInputMessage(true);
             $validation->setShowErrorMessage(true);
@@ -1950,10 +1948,10 @@ class GudangController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
 
             $noo = 2;
-            foreach($produk as $p) {
-                $spreadsheet->getActiveSheet()->setCellValue('A'. $noo, $p->id);
-                $spreadsheet->getActiveSheet()->setCellValue('B'. $noo, $p->produk->merk);
-                $spreadsheet->getActiveSheet()->setCellValue('C'. $noo, $p->produk->nama.' '.$p->nama);
+            foreach ($produk as $p) {
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $noo, $p->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $noo, $p->produk->merk);
+                $spreadsheet->getActiveSheet()->setCellValue('C' . $noo, $p->produk->nama . ' ' . $p->nama);
                 $noo++;
                 $no++;
             }
@@ -1984,26 +1982,26 @@ class GudangController extends Controller
             $file->move(public_path('upload/noseri/'), $filename);
 
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/noseri/'. $filename));
+            $spreadsheet = $reader->load(public_path('upload/noseri/' . $filename));
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'C', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('C', $column_limit);
             $startcount = 2;
             $data = array();
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'no' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'C' . $row )->getValue()
+                    'no' => $sheet->getCell('A' . $row)->getValue(),
+                    'produk' => $sheet->getCell('B' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('C' . $row)->getValue()
                 ];
                 $startcount++;
             }
 
-            foreach($data as $d) {
+            foreach ($data as $d) {
                 $aa[] = $d['noseri'];
                 $bb[] = $d['produk'];
             }
@@ -2024,11 +2022,11 @@ class GudangController extends Controller
                     </tr>
                     </thead>
                     <tbody>";
-            foreach($sheet1 as $key => $row) {
+            foreach ($sheet1 as $key => $row) {
                 $a = $row['A'];
                 $b = $row['B'];
                 $c = $row['C'];
-                if($numrow > 1) {
+                if ($numrow > 1) {
                     $nis_td = (!empty($c)) ? "" : " style='background: #E07171;'";
                     $html .= "<tr>";
                     $html .= "<td" . $nis_td . ">" . $a . "</td>";
@@ -2040,7 +2038,7 @@ class GudangController extends Controller
             }
             $html .= "</tbody></table>";
 
-            if(count($check) > 0 || count($check_rakit) > 0) {
+            if (count($check) > 0 || count($check_rakit) > 0) {
                 foreach ($check as $item) {
                     array_push($seri, $item);
                 }
@@ -2066,26 +2064,26 @@ class GudangController extends Controller
     {
         try {
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/noseri/'. $request->namafile));
+            $spreadsheet = $reader->load(public_path('upload/noseri/' . $request->namafile));
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'C', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('C', $column_limit);
             $startcount = 2;
             $data = array();
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'no' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'C' . $row )->getValue()
+                    'no' => $sheet->getCell('A' . $row)->getValue(),
+                    'produk' => $sheet->getCell('B' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('C' . $row)->getValue()
                 ];
                 $startcount++;
             }
 
-            foreach($data as $d) {
+            foreach ($data as $d) {
                 $aa[] = $d['noseri'];
                 $bb[] = $d['produk'];
             }
@@ -2096,12 +2094,12 @@ class GudangController extends Controller
                 ->join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
                 ->get()->pluck('id');
             // return ;
-            foreach($aa as $key => $nn) {
+            foreach ($aa as $key => $nn) {
                 $dat_arr[] = [
                     'gdg_barang_jadi_id' => GudangBarangJadi::select('gdg_barang_jadi.id')
-                    ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $bb[$key])
-                    ->join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
-                    ->first()->id,
+                        ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $bb[$key])
+                        ->join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
+                        ->first()->id,
                     'dari' => 13,
                     'noseri' => strtoupper($nn),
                     'jenis' => 'MASUK',
@@ -2129,7 +2127,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function download_template_so(Request $request, $id)
@@ -2140,13 +2137,13 @@ class GudangController extends Controller
             $dataso = Pesanan::where('id', $id)->first();
 
             $dpp = DB::table(DB::raw('detail_pesanan dp'))
-                ->select('dp.id','p.so','pp.nama as nama_paket',DB::raw('concat(p2.nama," ",gbj.nama) as produkk'),'dp.jumlah', 'dpp.id as dppid', 'p.id as pesid', 'gbj.id as gbjid')
-                ->leftJoin(DB::raw('detail_pesanan_produk dpp'),'dpp.detail_pesanan_id','=','dp.id')
-                ->leftJoin(DB::raw('penjualan_produk pp'),'pp.id','=','dp.penjualan_produk_id')
-                ->leftJoin(DB::raw('pesanan p'),'p.id','=','dp.pesanan_id')
-                ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','dpp.gudang_barang_jadi_id')
-                ->leftJoin(DB::raw('produk p2'),'p2.id','=','gbj.produk_id')
-                ->where('dp.pesanan_id',$id)
+                ->select('dp.id', 'p.so', 'pp.nama as nama_paket', DB::raw('concat(p2.nama," ",gbj.nama) as produkk'), 'dp.jumlah', 'dpp.id as dppid', 'p.id as pesid', 'gbj.id as gbjid')
+                ->leftJoin(DB::raw('detail_pesanan_produk dpp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+                ->leftJoin(DB::raw('penjualan_produk pp'), 'pp.id', '=', 'dp.penjualan_produk_id')
+                ->leftJoin(DB::raw('pesanan p'), 'p.id', '=', 'dp.pesanan_id')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'dpp.gudang_barang_jadi_id')
+                ->leftJoin(DB::raw('produk p2'), 'p2.id', '=', 'gbj.produk_id')
+                ->where('dp.pesanan_id', $id)
                 ->get();
 
             // spreadsheet
@@ -2167,8 +2164,8 @@ class GudangController extends Controller
 
             $so_val = $spreadsheet->getActiveSheet()->getCell('B2')
                 ->getDataValidation();
-            $so_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $so_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $so_val->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $so_val->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $so_val->setAllowBlank(false);
             $so_val->setShowInputMessage(true);
             $so_val->setShowErrorMessage(true);
@@ -2183,8 +2180,8 @@ class GudangController extends Controller
 
             $paket_val = $spreadsheet->getActiveSheet()->getCell('C2')
                 ->getDataValidation();
-            $paket_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $paket_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $paket_val->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $paket_val->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $paket_val->setAllowBlank(false);
             $paket_val->setShowInputMessage(true);
             $paket_val->setShowErrorMessage(true);
@@ -2199,8 +2196,8 @@ class GudangController extends Controller
 
             $produk_val = $spreadsheet->getActiveSheet()->getCell('D2')
                 ->getDataValidation();
-            $produk_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $produk_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $produk_val->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $produk_val->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $produk_val->setAllowBlank(false);
             $produk_val->setShowInputMessage(true);
             $produk_val->setShowErrorMessage(true);
@@ -2244,39 +2241,39 @@ class GudangController extends Controller
 
             $detail_no = 2;
             $gbjid = [];
-            foreach($dpp as $dpp) {
+            foreach ($dpp as $dpp) {
                 $datacek = NoseriTGbj::whereHas('detail', function ($q) use ($dpp) {
                     $q->where('gdg_brg_jadi_id', $dpp->gbjid);
                     $q->where('detail_pesanan_produk_id', $dpp->dppid);
                 })->whereHas('detail.header', function ($q) use ($dpp) {
                     $q->where('pesanan_id', $dpp->pesid);
                 })->get()->count();
-                    $spreadsheet->getActiveSheet()->setCellValue('A'. $detail_no, $dpp->id);
-                    $spreadsheet->getActiveSheet()->setCellValue('B'. $detail_no, $dpp->so);
-                    $spreadsheet->getActiveSheet()->setCellValue('C'. $detail_no, $dpp->nama_paket);
-                    $spreadsheet->getActiveSheet()->setCellValue('D'. $detail_no, $dpp->produkk);
-                    $spreadsheet->getActiveSheet()->setCellValue('E'. $detail_no, $dpp->jumlah);
-                    $spreadsheet->getActiveSheet()->setCellValue('F'. $detail_no, $datacek);
-                    $spreadsheet->getActiveSheet()->setCellValue('G'. $detail_no, $dpp->jumlah - $datacek);
-                    $detail_no++;
-                    $no++;
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $detail_no, $dpp->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $detail_no, $dpp->so);
+                $spreadsheet->getActiveSheet()->setCellValue('C' . $detail_no, $dpp->nama_paket);
+                $spreadsheet->getActiveSheet()->setCellValue('D' . $detail_no, $dpp->produkk);
+                $spreadsheet->getActiveSheet()->setCellValue('E' . $detail_no, $dpp->jumlah);
+                $spreadsheet->getActiveSheet()->setCellValue('F' . $detail_no, $datacek);
+                $spreadsheet->getActiveSheet()->setCellValue('G' . $detail_no, $dpp->jumlah - $datacek);
+                $detail_no++;
+                $no++;
                 $gbjid[] = $dpp->gbjid;
             }
 
             $noseri = DB::table(DB::raw('noseri_barang_jadi tn'))
-                    ->select('tn.id',DB::raw('concat(p.nama," ",gbj.nama) as produkk'),'tn.noseri')
-                    ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tn.gdg_barang_jadi_id')
-                    ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-                    ->where([
-                        // 'is_rakit' => 0,
-                        'is_aktif' => 1,
-                        'is_ready' => 0,
-                        // 'is_repair' => 0,
-                        'is_change' => 1,
-                        'is_delete' => 0,
-                        // 'log_id' => 13,
-                    ])
-                    ->whereIn('gbj.id', $gbjid)->get();
+                ->select('tn.id', DB::raw('concat(p.nama," ",gbj.nama) as produkk'), 'tn.noseri')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tn.gdg_barang_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where([
+                    // 'is_rakit' => 0,
+                    'is_aktif' => 1,
+                    'is_ready' => 0,
+                    // 'is_repair' => 0,
+                    'is_change' => 1,
+                    'is_delete' => 0,
+                    // 'log_id' => 13,
+                ])
+                ->whereIn('gbj.id', $gbjid)->get();
 
             $spreadsheet->createSheet();
             $spreadsheet->setActiveSheetIndex(2);
@@ -2288,17 +2285,17 @@ class GudangController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
 
             $noseri_no = 2;
-            foreach($noseri as $ns) {
-                $spreadsheet->getActiveSheet()->setCellValue('A'. $noseri_no, $ns->id);
-                $spreadsheet->getActiveSheet()->setCellValue('B'. $noseri_no, $ns->produkk);
-                $spreadsheet->getActiveSheet()->setCellValue('C'. $noseri_no, $ns->noseri);
+            foreach ($noseri as $ns) {
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $noseri_no, $ns->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $noseri_no, $ns->produkk);
+                $spreadsheet->getActiveSheet()->setCellValue('C' . $noseri_no, $ns->noseri);
                 $noseri_no++;
                 $no++;
             }
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             // header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment; filename="'.$dataso->so.'.xlsx"'); // Set nama file excel nya
+            header('Content-Disposition: attachment; filename="' . $dataso->so . '.xlsx"'); // Set nama file excel nya
             header('Cache-Control: max-age=0');
 
             $writer = new Xlsx($spreadsheet);
@@ -2320,28 +2317,28 @@ class GudangController extends Controller
             $file->move(public_path('upload/so/'), $filename);
 
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/so/'. $filename));
+            $spreadsheet = $reader->load(public_path('upload/so/' . $filename));
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'E', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('E', $column_limit);
             $startcount = 2;
             $data = array();
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'no' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'so' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'paket' => $sheet->getCell( 'C' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'D' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'E' . $row )->getValue(),
+                    'no' => $sheet->getCell('A' . $row)->getValue(),
+                    'so' => $sheet->getCell('B' . $row)->getValue(),
+                    'paket' => $sheet->getCell('C' . $row)->getValue(),
+                    'produk' => $sheet->getCell('D' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('E' . $row)->getValue(),
                 ];
                 $startcount++;
             }
 
-            foreach($data as $d) {
+            foreach ($data as $d) {
                 $seri[] = $d['noseri'];
                 $produk[] = $d['produk'];
                 $paket[] = $d['paket'];
@@ -2366,13 +2363,13 @@ class GudangController extends Controller
                     </tr>
                     </thead>
                     <tbody>";
-            foreach($sheet1 as $key => $row) {
+            foreach ($sheet1 as $key => $row) {
                 $a = $row['A'];
                 $b = $row['B'];
                 $c = $row['C'];
                 $d = $row['D'];
                 $e = $row['E'];
-                if($numrow > 1) {
+                if ($numrow > 1) {
                     $nis_td = (!empty($c)) ? "" : " style='background: #E07171;'";
                     $html .= "<tr>";
                     $html .= "<td" . $nis_td . ">" . $a . "</td>";
@@ -2388,18 +2385,18 @@ class GudangController extends Controller
 
             $a = Pesanan::where('id', $request->soid1)->first();
             if ($a->so == implode("", array_unique($so))) {
-                if(count($cek) != count($seri)) {
+                if (count($cek) != count($seri)) {
                     $seri_final = [];
                     foreach ($cek as $item) {
                         array_push($no_seri, $item);
                     }
 
-                    foreach($seri as $ns) {
+                    foreach ($seri as $ns) {
                         if (!in_array($ns, $no_seri)) {
                             array_push($seri_final, $ns);
                         }
                     }
-                    return response()->json(['msg' => 'Nomor seri '.implode(', ', $seri_final).' belum terdaftar', 'error' => true, 'data' => $html, 'noseri' => implode(', ', $seri_final)]);
+                    return response()->json(['msg' => 'Nomor seri ' . implode(', ', $seri_final) . ' belum terdaftar', 'error' => true, 'data' => $html, 'noseri' => implode(', ', $seri_final)]);
                 } else {
                     return response()->json(['msg' => 'Sales Order Sudah Bisa Diunggah', 'error' => false, 'data' => $html]);
                 }
@@ -2410,7 +2407,6 @@ class GudangController extends Controller
                     'msg' => 'Nomor Sales Order Tidak Sesuai'
                 ]);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -2421,7 +2417,7 @@ class GudangController extends Controller
 
     function groupBy($arr, $criteria): array
     {
-        return array_reduce($arr, function($accumulator, $item) use ($criteria) {
+        return array_reduce($arr, function ($accumulator, $item) use ($criteria) {
             $key = (is_callable($criteria)) ? $criteria($item) : $item[$criteria];
             if (!array_key_exists($key, $accumulator)) {
                 $accumulator[$key] = [];
@@ -2437,14 +2433,14 @@ class GudangController extends Controller
         try {
             // dd($request->all());
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/so/'. $request->namafile));
+            $spreadsheet = $reader->load(public_path('upload/so/' . $request->namafile));
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'E', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('E', $column_limit);
             $startcount = 2;
             $data = array();
             $dat_arr = array();
@@ -2452,42 +2448,39 @@ class GudangController extends Controller
             $detail_arr = array();
             $noseri_arr = array();
             $dat_log = [];
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'no' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'so' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'paket' => $sheet->getCell( 'C' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'D' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'E' . $row )->getValue(),
+                    'no' => $sheet->getCell('A' . $row)->getValue(),
+                    'so' => $sheet->getCell('B' . $row)->getValue(),
+                    'paket' => $sheet->getCell('C' . $row)->getValue(),
+                    'produk' => $sheet->getCell('D' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('E' . $row)->getValue(),
                 ];
                 $startcount++;
             }
 
-            foreach($data as $kh => $d) {
+            foreach ($data as $kh => $d) {
                 $seri[] = $d['noseri'];
                 $produk[] = $d['produk'];
                 $paket[] = $d['paket'];
             }
 
-            foreach($produk as $key => $prd) {
-                $dat_arr[] =[
-                    'paket' => DetailPesananProduk::
-                                                join('detail_pesanan as dp', 'dp.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
-                                                ->join('penjualan_produk as pp', 'pp.id', '=', 'dp.penjualan_produk_id')
-                                                ->where('dp.pesanan_id', $request->soid)
-                                                ->where('pp.nama', $paket[$key])
-                                                ->where('detail_pesanan_produk.gudang_barang_jadi_id', GudangBarangJadi::
-                                                join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
-                                                ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
-                                                ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
-                                                ->first()->id)
-                                                ->select('pp.nama', 'detail_pesanan_produk.id')
-                                                ->first()->id,
-                    'produk' => GudangBarangJadi::
-                                join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
-                                ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
-                                ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
-                                ->first()->id,
+            foreach ($produk as $key => $prd) {
+                $dat_arr[] = [
+                    'paket' => DetailPesananProduk::join('detail_pesanan as dp', 'dp.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
+                        ->join('penjualan_produk as pp', 'pp.id', '=', 'dp.penjualan_produk_id')
+                        ->where('dp.pesanan_id', $request->soid)
+                        ->where('pp.nama', $paket[$key])
+                        ->where('detail_pesanan_produk.gudang_barang_jadi_id', GudangBarangJadi::join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
+                            ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
+                            ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
+                            ->first()->id)
+                        ->select('pp.nama', 'detail_pesanan_produk.id')
+                        ->first()->id,
+                    'produk' => GudangBarangJadi::join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
+                        ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
+                        ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
+                        ->first()->id,
                     'serii' => $seri[$key],
                     'noseri' => NoseriBarangJadi::where('noseri', $seri[$key])->first()->id,
                 ];
@@ -2495,7 +2488,7 @@ class GudangController extends Controller
 
             $arr = [];
             $arrm = [];
-            foreach($dat_arr as $da) {
+            foreach ($dat_arr as $da) {
                 $arr[$da['paket']]['produk'] = $da['produk'];
                 $arr[$da['paket']]['noseri'][] = $da['noseri'];
             }
@@ -2504,10 +2497,10 @@ class GudangController extends Controller
             $a = TFProduksi::where('pesanan_id', $request->soid)->first();
             // return $a;
             if ($a) {
-                foreach($arr as $key => $values) {
+                foreach ($arr as $key => $values) {
                     $c = TFProduksiDetail::where('t_gbj_id', $a->id)->where('gdg_brg_jadi_id', $values['produk'])->where('detail_pesanan_produk_id', $key)->first();
                     if ($c) {
-                        foreach($values['noseri'] as $k => $v) {
+                        foreach ($values['noseri'] as $k => $v) {
                             NoseriTGbj::create([
                                 't_gbj_detail_id' => $c->id,
                                 'noseri_id' => $v,
@@ -2566,7 +2559,7 @@ class GudangController extends Controller
                             'created_by' => $request->userid
                         ]);
 
-                        foreach($values['noseri'] as $k => $v) {
+                        foreach ($values['noseri'] as $k => $v) {
                             NoseriTGbj::create([
                                 't_gbj_detail_id' => $detail->id,
                                 'noseri_id' => $v,
@@ -2626,8 +2619,7 @@ class GudangController extends Controller
                     'created_by' => $request->userid
                 ]);
 
-                foreach($arr as $key1 => $value1)
-                {
+                foreach ($arr as $key1 => $value1) {
                     $detail = TFProduksiDetail::create([
                         't_gbj_id' => $header->id,
                         'detail_pesanan_produk_id' => $key1,
@@ -2640,7 +2632,7 @@ class GudangController extends Controller
                         'created_by' => $request->userid
                     ]);
 
-                    foreach($value1['noseri'] as $k => $v) {
+                    foreach ($value1['noseri'] as $k => $v) {
                         NoseriTGbj::create([
                             't_gbj_detail_id' => $detail->id,
                             'noseri_id' => $v,
@@ -2698,7 +2690,7 @@ class GudangController extends Controller
             }
             $del = new Filesystem;
             $del->cleanDirectory(public_path('upload/so/'));
-            File::delete(public_path('upload/so/'.$request->namafile));
+            File::delete(public_path('upload/so/' . $request->namafile));
             return response()->json(['msg' => 'Data Terkirim ke QC']);
         } catch (\Exception $e) {
             return response()->json([
@@ -2751,8 +2743,8 @@ class GudangController extends Controller
 
             $tujuan_val = $spreadsheet->getActiveSheet()->getCell('A2')
                 ->getDataValidation();
-            $tujuan_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $tujuan_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $tujuan_val->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $tujuan_val->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $tujuan_val->setAllowBlank(false);
             $tujuan_val->setShowInputMessage(true);
             $tujuan_val->setShowErrorMessage(true);
@@ -2767,8 +2759,8 @@ class GudangController extends Controller
 
             $produk_val = $spreadsheet->getActiveSheet()->getCell('C2')
                 ->getDataValidation();
-            $produk_val->setType( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST );
-            $produk_val->setErrorStyle( \PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION );
+            $produk_val->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_LIST);
+            $produk_val->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_INFORMATION);
             $produk_val->setAllowBlank(false);
             $produk_val->setShowInputMessage(true);
             $produk_val->setShowErrorMessage(true);
@@ -2798,11 +2790,11 @@ class GudangController extends Controller
             $spreadsheet->getActiveSheet()->setCellValue('B1', 'Nama');
             $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 
-            $tujuan = Divisi::whereNotIn('id', [1,2,3,4,5,31])->get();
+            $tujuan = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31])->get();
             $noo = 2;
-            foreach($tujuan as $t) {
-                $spreadsheet->getActiveSheet()->setCellValue('A'. $noo, $t->id);
-                $spreadsheet->getActiveSheet()->setCellValue('B'. $noo, $t->nama);
+            foreach ($tujuan as $t) {
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $noo, $t->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $noo, $t->nama);
                 $noo++;
             }
 
@@ -2814,15 +2806,15 @@ class GudangController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
 
             $produk = DB::table('gdg_barang_jadi as gbj')
-                        ->join('produk as p', 'p.id', '=', 'gbj.produk_id')
-                        ->select('gbj.id', DB::raw('concat(p.nama," ",gbj.nama) as produkk'))
-                        // ->orderBy(DB::raw('concat(p.nama," ",gbj.nama) as produkk'))
-                        ->get();
+                ->join('produk as p', 'p.id', '=', 'gbj.produk_id')
+                ->select('gbj.id', DB::raw('concat(p.nama," ",gbj.nama) as produkk'))
+                // ->orderBy(DB::raw('concat(p.nama," ",gbj.nama) as produkk'))
+                ->get();
 
             $no = 2;
-            foreach($produk as $p) {
-                $spreadsheet->getActiveSheet()->setCellValue('A'. $no, $p->id);
-                $spreadsheet->getActiveSheet()->setCellValue('B'. $no, $p->produkk);
+            foreach ($produk as $p) {
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $no, $p->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $no, $p->produkk);
                 $no++;
             }
 
@@ -2836,31 +2828,31 @@ class GudangController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
 
             $noseri = DB::table(DB::raw('noseri_barang_jadi tn'))
-                    ->select('tn.id',DB::raw('concat(p.nama," ",gbj.nama) as produkk'),'tn.noseri')
-                    ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tn.gdg_barang_jadi_id')
-                    ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-                    ->where([
-                        // 'is_rakit' => 0,
-                        'is_aktif' => 1,
-                        'is_ready' => 0,
-                        // 'is_repair' => 0,
-                        'is_change' => 1,
-                        'is_delete' => 0,
-                        // 'log_id' => 13,
-                    ])
-                    ->get();
+                ->select('tn.id', DB::raw('concat(p.nama," ",gbj.nama) as produkk'), 'tn.noseri')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tn.gdg_barang_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where([
+                    // 'is_rakit' => 0,
+                    'is_aktif' => 1,
+                    'is_ready' => 0,
+                    // 'is_repair' => 0,
+                    'is_change' => 1,
+                    'is_delete' => 0,
+                    // 'log_id' => 13,
+                ])
+                ->get();
 
             $noseri_no = 2;
-            foreach($noseri as $ns) {
-                $spreadsheet->getActiveSheet()->setCellValue('A'. $noseri_no, $ns->id);
-                $spreadsheet->getActiveSheet()->setCellValue('B'. $noseri_no, $ns->produkk);
-                $spreadsheet->getActiveSheet()->setCellValue('C'. $noseri_no, $ns->noseri);
+            foreach ($noseri as $ns) {
+                $spreadsheet->getActiveSheet()->setCellValue('A' . $noseri_no, $ns->id);
+                $spreadsheet->getActiveSheet()->setCellValue('B' . $noseri_no, $ns->produkk);
+                $spreadsheet->getActiveSheet()->setCellValue('C' . $noseri_no, $ns->noseri);
                 $noseri_no++;
                 $no++;
             }
 
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                // header('Content-Type: application/vnd.ms-excel');
+            // header('Content-Type: application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename="Template.xlsx"'); // Set nama file excel nya
             header('Cache-Control: max-age=0');
 
@@ -2884,29 +2876,29 @@ class GudangController extends Controller
             $file->move(public_path('upload/nonso/'), $filename);
 
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/nonso/'. $filename));
+            $spreadsheet = $reader->load(public_path('upload/nonso/' . $filename));
 
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'E', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('E', $column_limit);
             $startcount = 2;
             $data = array();
 
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'tujuan' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'desk' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'C' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'D' . $row )->getValue(),
+                    'tujuan' => $sheet->getCell('A' . $row)->getValue(),
+                    'desk' => $sheet->getCell('B' . $row)->getValue(),
+                    'produk' => $sheet->getCell('C' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('D' . $row)->getValue(),
                 ];
                 $startcount++;
             }
 
-            foreach($data as $d) {
+            foreach ($data as $d) {
                 $tujuan[] = $d['tujuan'];
                 $desk[] = $d['desk'];
                 $produk[] = $d['produk'];
@@ -2928,12 +2920,12 @@ class GudangController extends Controller
                     </tr>
                     </thead>
                     <tbody>";
-            foreach($sheet1 as $key => $row) {
+            foreach ($sheet1 as $key => $row) {
                 $a = $row['A'];
                 $b = $row['B'];
                 $c = $row['C'];
                 $d = $row['D'];
-                if($numrow > 1) {
+                if ($numrow > 1) {
                     $nis_td = (!empty($c)) ? "" : " style='background: #E07171;'";
                     $html .= "<tr>";
                     $html .= "<td" . $nis_td . ">" . $a . "</td>";
@@ -2946,18 +2938,18 @@ class GudangController extends Controller
             }
             $html .= "</tbody></table>";
 
-            if(count($cek) != count($noseri)) {
+            if (count($cek) != count($noseri)) {
                 $seri_final = [];
                 foreach ($cek as $item) {
                     array_push($no_seri, $item);
                 }
 
-                foreach($noseri as $ns) {
+                foreach ($noseri as $ns) {
                     if (!in_array($ns, $no_seri)) {
                         array_push($seri_final, $ns);
                     }
                 }
-                return response()->json(['msg' => 'Nomor seri '.implode(', ', $seri_final).' belum terdaftar', 'error' => true, 'data' => $html, 'noseri' => implode(', ', $seri_final)]);
+                return response()->json(['msg' => 'Nomor seri ' . implode(', ', $seri_final) . ' belum terdaftar', 'error' => true, 'data' => $html, 'noseri' => implode(', ', $seri_final)]);
             } else {
                 return response()->json(['msg' => 'File Sudah Bisa Diunggah', 'error' => false, 'data' => $html]);
             }
@@ -2973,14 +2965,14 @@ class GudangController extends Controller
     {
         try {
             $reader = new ReaderXlsx();
-            $spreadsheet = $reader->load(public_path('upload/nonso/'. $request->namafile));
+            $spreadsheet = $reader->load(public_path('upload/nonso/' . $request->namafile));
             $spreadsheet->setActiveSheetIndex(0);
 
             $sheet        = $spreadsheet->getActiveSheet();
             $row_limit    = $sheet->getHighestDataRow();
             $column_limit = $sheet->getHighestDataColumn();
-            $row_range    = range( 2, $row_limit );
-            $column_range = range( 'E', $column_limit );
+            $row_range    = range(2, $row_limit);
+            $column_range = range('E', $column_limit);
             $startcount = 2;
             $data = array();
             $dat_arr = array();
@@ -2988,31 +2980,30 @@ class GudangController extends Controller
             $detail_arr = array();
             $noseri_arr = array();
             $dat_log = [];
-            foreach ( $row_range as $row ) {
+            foreach ($row_range as $row) {
                 $data[] = [
-                    'tujuan' =>$sheet->getCell( 'A' . $row )->getValue(),
-                    'desk' => $sheet->getCell( 'B' . $row )->getValue(),
-                    'produk' => $sheet->getCell( 'C' . $row )->getValue(),
-                    'noseri' => $sheet->getCell( 'D' . $row )->getValue(),
+                    'tujuan' => $sheet->getCell('A' . $row)->getValue(),
+                    'desk' => $sheet->getCell('B' . $row)->getValue(),
+                    'produk' => $sheet->getCell('C' . $row)->getValue(),
+                    'noseri' => $sheet->getCell('D' . $row)->getValue(),
                 ];
                 $startcount++;
             }
 
-            foreach($data as $kh => $d) {
+            foreach ($data as $kh => $d) {
                 $tujuan[] = $d['tujuan'];
                 $desk[] = $d['desk'];
                 $produk[] = $d['produk'];
                 $noseri[] = $d['noseri'];
             }
 
-            foreach($produk as $key => $prd) {
+            foreach ($produk as $key => $prd) {
                 $dat_arr[] = [
                     'tujuan' => Divisi::where('nama', $tujuan[$key])->first()->id,
-                    'produk' => GudangBarangJadi::
-                                join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
-                                ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
-                                ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
-                                ->first()->id,
+                    'produk' => GudangBarangJadi::join('produk', 'produk.id', 'gdg_barang_jadi.produk_id')
+                        ->where(DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama)"), $prd)
+                        ->select('gdg_barang_jadi.id', DB::raw("concat(produk.nama, ' ', gdg_barang_jadi.nama) as name"))
+                        ->first()->id,
                     'serii' => $noseri[$key],
                     'desk' => $desk[$key],
                     'noseri' => NoseriBarangJadi::where('noseri', $noseri[$key])->first()->id,
@@ -3020,14 +3011,14 @@ class GudangController extends Controller
             }
             // return $dat_arr;
             $arr = [];
-            foreach($dat_arr as $da) {
+            foreach ($dat_arr as $da) {
                 $arr[$da['produk']]['tujuan'] = $da['tujuan'];
                 $arr[$da['produk']]['desk'] = $da['desk'];
                 $arr[$da['produk']]['noseri'][] = $da['noseri'];
             }
 
             // return $arr;
-            foreach($arr as $key => $value) {
+            foreach ($arr as $key => $value) {
                 $header = TFProduksi::create([
                     'tgl_keluar' => Carbon::now(),
                     'ke' => $value['tujuan'],
@@ -3046,7 +3037,7 @@ class GudangController extends Controller
                     'created_by' => $request->userid
                 ]);
 
-                foreach($value['noseri'] as $k => $v) {
+                foreach ($value['noseri'] as $k => $v) {
                     NoseriTGbj::create([
                         't_gbj_detail_id' => $detail->id,
                         'noseri_id' => $v,
@@ -3082,7 +3073,7 @@ class GudangController extends Controller
 
             $del = new Filesystem;
             $del->cleanDirectory(public_path('upload/nonso/'));
-            File::delete(public_path('upload/nonso/'.$request->namafile));
+            File::delete(public_path('upload/nonso/' . $request->namafile));
 
             return response()->json(['msg' => 'Data Terkirim']);
         } catch (\Exception $e) {
@@ -3135,9 +3126,9 @@ class GudangController extends Controller
     {
         try {
             $id = $request->id;
-            if(($request->produk_id && $request->satuan_id) == null) {
+            if (($request->produk_id && $request->satuan_id) == null) {
                 return response()->json(['msg' => 'Produk dan Satuan Harus Diisi', 'error' => true]);
-            }else{
+            } else {
                 if ($id) {
                     $brg_jadi = GudangBarangJadi::find($id);
 
@@ -3209,7 +3200,7 @@ class GudangController extends Controller
                         'user_id' => $request->userid,
                     ]);
                 }
-            return response()->json(['msg' => 'Successfully']);
+                return response()->json(['msg' => 'Successfully']);
             }
         } catch (\Exception $e) {
             return response()->json([
@@ -3347,7 +3338,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function finalDraftRakit(Request $request)
@@ -3362,7 +3352,7 @@ class GudangController extends Controller
                 'created_by' => $request->userid
             ]);
 
-            foreach($request->produk as $key => $value) {
+            foreach ($request->produk as $key => $value) {
                 $detail = TFProduksiDetail::create([
                     't_gbj_id' => $header->id,
                     'gdg_brg_jadi_id' => $value['prd'],
@@ -3372,7 +3362,7 @@ class GudangController extends Controller
                     'created_by' => $request->userid
                 ]);
 
-                foreach($value['noseri'] as $k => $v) {
+                foreach ($value['noseri'] as $k => $v) {
                     $seri = NoseriBarangJadi::create([
                         'gdg_barang_jadi_id' =>  $value['prd'],
                         'dari' => $request->divisi,
@@ -3409,7 +3399,7 @@ class GudangController extends Controller
             SystemLog::create([
                 'tipe' => 'GBJ',
                 'subjek' => 'Penerimaan Selain Perakitan',
-                'response' =>json_encode($obj),
+                'response' => json_encode($obj),
                 'user_id' => $request->userid,
             ]);
 
@@ -3430,7 +3420,7 @@ class GudangController extends Controller
             return response()->json([
                 'error' => false,
                 'msg' => 'Data Berhasil Ditemukan',
-                'data'=> $data->remark
+                'data' => $data->remark
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -3447,7 +3437,7 @@ class GudangController extends Controller
 
             return datatables()->of($data)
                 ->addIndexColumn()
-                ->addColumn('status', function($q) {
+                ->addColumn('status', function ($q) {
                     if ($q->action == 'update') {
                         switch ($q->status) {
                             case 'rejected':
@@ -3477,9 +3467,8 @@ class GudangController extends Controller
                                 break;
                         }
                     }
-
                 })
-                ->addColumn('aksi', function($d) {
+                ->addColumn('aksi', function ($d) {
                     return '<a data-toggle="modal" data-target="#openModalHistory" class="openModalHistory" data-attr="" data-id="' . $d->id . '">
                                 <button class="btn btn-outline-info btn-sm"><i class="fas fa-eye"></i>Detail</button>
                             </a>';
@@ -3496,12 +3485,12 @@ class GudangController extends Controller
         $data = NoseriBarangJadi::whereHas('gudang', function ($d) use ($id) {
             $d->where('id', $id);
         })
-        ->where([
-            'is_aktif' => 1,
-            'is_ready' => 0,
-            'is_change' => 1,
-            'is_delete' => 0
-        ])->get()->count();
+            ->where([
+                'is_aktif' => 1,
+                'is_ready' => 0,
+                'is_change' => 1,
+                'is_delete' => 0
+            ])->get()->count();
 
         $data_done = NoseriBarangJadi::whereHas('gudang', function ($d) use ($id) {
             $d->where('id', $id);
@@ -3514,7 +3503,7 @@ class GudangController extends Controller
 
         $data_wait = NoseriBrgJadiLog::where([
             'status' => 'waiting'
-        ])->whereHas('noseri', function($d) use($id){
+        ])->whereHas('noseri', function ($d) use ($id) {
             $d->where('gdg_barang_jadi_id', $id);
         })->get()->count();
 
@@ -3544,8 +3533,6 @@ class GudangController extends Controller
                     'data_stf' => $data->remark
                 ]);
             }
-
-
         } catch (\Exception $e) {
             return response()->json(['error' => true, 'msg' => $e->getMessage()]);
         }
@@ -3635,7 +3622,7 @@ class GudangController extends Controller
 
     function select_divisi()
     {
-        $data = Divisi::whereNotIn('id', [1,2,3,4,5,31])->get();
+        $data = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31])->get();
         return response()->json($data);
     }
 
@@ -3745,76 +3732,73 @@ class GudangController extends Controller
     {
         try {
             $data = GudangBarangJadi::with('produk')->whereBetween('stok', [10, 20])->orderBy('stok', 'asc')->get();
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('prd', function ($d) {
-                return $d->produk->nama . ' ' . $d->nama;
-            })
-            ->addColumn('jml', function ($d) {
-                return $d->stok . ' ' . $d->satuan->nama;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('prd', function ($d) {
+                    return $d->produk->nama . ' ' . $d->nama;
+                })
+                ->addColumn('jml', function ($d) {
+                    return $d->stok . ' ' . $d->satuan->nama;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProdukstok59()
     {
         try {
             $data = GudangBarangJadi::with('produk')->whereBetween('stok', [5, 9])->orderBy('stok', 'asc')->get();
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('prd', function ($d) {
-                return $d->produk->nama . ' ' . $d->nama;
-            })
-            ->addColumn('jml', function ($d) {
-                return $d->stok . ' ' . $d->satuan->nama;
-            })
-            ->addColumn('action', function ($d) {
-                return  '<a data-toggle="modal" data-target="#editmodal" class="editmodal2" data-attr=""  data-id="' . $d->gdg_brg_jadi_id . '">
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('prd', function ($d) {
+                    return $d->produk->nama . ' ' . $d->nama;
+                })
+                ->addColumn('jml', function ($d) {
+                    return $d->stok . ' ' . $d->satuan->nama;
+                })
+                ->addColumn('action', function ($d) {
+                    return  '<a data-toggle="modal" data-target="#editmodal" class="editmodal2" data-attr=""  data-id="' . $d->gdg_brg_jadi_id . '">
                             <button class="btn btn-outline-primary" type="button" >
                             <i class="fas fa-paper-plane"></i>
                             </button>
                         </a>';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProdukstok14()
     {
         try {
             $data = GudangBarangJadi::with('produk')->whereBetween('stok', [1, 4])->orderBy('stok', 'asc')->get();
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('prd', function ($d) {
-                return $d->produk->nama . ' ' . $d->nama;
-            })
-            ->addColumn('jml', function ($d) {
-                return $d->stok . ' ' . $d->satuan->nama;
-            })
-            ->rawColumns(['action', 'tgl_masuk'])
-            ->make(true);
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('prd', function ($d) {
+                    return $d->produk->nama . ' ' . $d->nama;
+                })
+                ->addColumn('jml', function ($d) {
+                    return $d->stok . ' ' . $d->satuan->nama;
+                })
+                ->rawColumns(['action', 'tgl_masuk'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProdukIn36()
@@ -3859,7 +3843,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProdukIn612()
@@ -3904,7 +3887,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProduk1236()
@@ -3949,7 +3931,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProduk36Plus()
@@ -3985,7 +3966,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getProdukByLayout(Request $request)
@@ -4005,7 +3985,6 @@ class GudangController extends Controller
                 })
                 ->addColumn('jml', function ($d) {
                     return $d->jumlah;
-
                 })
                 ->addColumn('layout', function ($d) {
                     if (isset($d->layout_id)) {
@@ -4021,18 +4000,17 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     // penerimaan
     function hh1()
     {
         $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
+            ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+            ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+            ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+            ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+            ->where('tgd.jenis', '=', 'masuk')
             ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 1 day)')
             ->get();
         return count($data);
@@ -4041,11 +4019,11 @@ class GudangController extends Controller
     function hh2()
     {
         $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
+            ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+            ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+            ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+            ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+            ->where('tgd.jenis', '=', 'masuk')
             ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 2 day)')
             ->get();
         return count($data);
@@ -4054,11 +4032,11 @@ class GudangController extends Controller
     function hh3()
     {
         $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
+            ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+            ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+            ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+            ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+            ->where('tgd.jenis', '=', 'masuk')
             ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 3 day)')
             ->get();
         return count($data);
@@ -4068,13 +4046,13 @@ class GudangController extends Controller
     {
         try {
             $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
-            ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 1 day)')
-            ->get();
+                ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+                ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where('tgd.jenis', '=', 'masuk')
+                ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 1 day)')
+                ->get();
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('tgl_masuk', function ($d) {
@@ -4106,20 +4084,19 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getPenerimaanProduk2(Request $request)
     {
         try {
             $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
-            ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 2 day)')
-            ->get();
+                ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+                ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where('tgd.jenis', '=', 'masuk')
+                ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 2 day)')
+                ->get();
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('tgl_masuk', function ($d) {
@@ -4151,20 +4128,19 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getPenerimaanProduk3(Request $request)
     {
         try {
             $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
-            ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 3 day)')
-            ->get();
+                ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+                ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where('tgd.jenis', '=', 'masuk')
+                ->whereRaw('tg.tgl_masuk = date_sub(now(), interval 3 day)')
+                ->get();
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('tgl_masuk', function ($d) {
@@ -4196,87 +4172,90 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function getPenerimaanAll()
     {
         try {
             $data = DB::table(DB::raw('t_gbj_detail tgd'))
-            ->select('tg.tgl_masuk',DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'),'tgd.qty','tgd.id')
-            ->leftJoin(DB::raw('t_gbj tg'),'tg.id','=','tgd.t_gbj_id')
-            ->leftJoin(DB::raw('gdg_barang_jadi gbj'),'gbj.id','=','tgd.gdg_brg_jadi_id')
-            ->leftJoin(DB::raw('produk p'),'p.id','=','gbj.produk_id')
-            ->where('tgd.jenis','=','masuk')
-            ->get();
-        return datatables()->of($data)
-            ->addIndexColumn()
-            ->addColumn('tgl_masuk', function ($d) {
-                if ($d->tgl_masuk) {
+                ->select('tg.tgl_masuk', DB::raw('CONCAT(p.nama," ",gbj.nama) as prduk'), 'tgd.qty', 'tgd.id')
+                ->leftJoin(DB::raw('t_gbj tg'), 'tg.id', '=', 'tgd.t_gbj_id')
+                ->leftJoin(DB::raw('gdg_barang_jadi gbj'), 'gbj.id', '=', 'tgd.gdg_brg_jadi_id')
+                ->leftJoin(DB::raw('produk p'), 'p.id', '=', 'gbj.produk_id')
+                ->where('tgd.jenis', '=', 'masuk')
+                ->get();
+            return datatables()->of($data)
+                ->addIndexColumn()
+                ->addColumn('tgl_masuk', function ($d) {
+                    if ($d->tgl_masuk) {
 
-                    $a = Carbon::now()->diffInDays($d->tgl_masuk);
+                        $a = Carbon::now()->diffInDays($d->tgl_masuk);
 
-                    if ($a == 1) {
-                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-info">Lewat ' . $a . ' Hari</span>';
-                    } else if ($a == 2) {
-                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-warning">Lewat ' . $a . ' Hari</span>';
-                    } else if ($a >= 3) {
-                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-danger">Lewat ' . $a . ' Hari</span>';
+                        if ($a == 1) {
+                            return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-info">Lewat ' . $a . ' Hari</span>';
+                        } else if ($a == 2) {
+                            return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-warning">Lewat ' . $a . ' Hari</span>';
+                        } else if ($a >= 3) {
+                            return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY') . '<br><span class="badge badge-danger">Lewat ' . $a . ' Hari</span>';
+                        }
+                    } else {
+                        return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY');
                     }
-                } else {
-                    return Carbon::parse($d->tgl_masuk)->isoFormat('D MMM YYYY');
-                }
-            })
-            ->addColumn('product', function ($d) {
-                return $d->prduk;
-            })
-            ->addColumn('jumlah', function ($d) {
-                return $d->qty;
-            })
-            ->addColumn('action', function ($d) {
-                return  '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr="" data-brg="' . $d->prduk . '" data-id="' . $d->id . '">
+                })
+                ->addColumn('product', function ($d) {
+                    return $d->prduk;
+                })
+                ->addColumn('jumlah', function ($d) {
+                    return $d->qty;
+                })
+                ->addColumn('action', function ($d) {
+                    return  '<a data-toggle="modal" data-target="#editmodal" class="editmodal" data-attr="" data-brg="' . $d->prduk . '" data-id="' . $d->id . '">
                             <button class="btn btn-outline-primary" type="button" >
                             <i class="fas fa-paper-plane"></i>
                             </button>
                         </a>';
-            })
-            ->rawColumns(['action', 'tgl_masuk'])
-            ->make(true);
+                })
+                ->rawColumns(['action', 'tgl_masuk'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     // penjualan
     function he1()
     {
         $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-            ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-            DB::raw('count(dpp.gudang_barang_jadi_id)'),
-            DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-            DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-            DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-            'ms.nama as log_nama',
-            DB::raw("case
+            ->select(
+                'p.id',
+                'p.so',
+                'p.no_po',
+                'p.log_id',
+                DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                'ms.nama as log_nama',
+                DB::raw("case
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
             when p.so is null then c_ekat.nama
-            end as divisi"))
-            ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-            ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-            ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-            ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-            ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-            ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
+            end as divisi")
+            )
+            ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+            ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+            ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+            ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+            ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+            ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
             ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 1 day)')
             ->groupBy('p.id')
             ->get();
@@ -4287,28 +4266,33 @@ class GudangController extends Controller
     function he2()
     {
         $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-            ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-            DB::raw('count(dpp.gudang_barang_jadi_id)'),
-            DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-            DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-            DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-            'ms.nama as log_nama',
-            DB::raw("case
+            ->select(
+                'p.id',
+                'p.so',
+                'p.no_po',
+                'p.log_id',
+                DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                'ms.nama as log_nama',
+                DB::raw("case
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
             when p.so is null then c_ekat.nama
-            end as divisi"))
-            ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-            ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-            ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-            ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-            ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-            ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
+            end as divisi")
+            )
+            ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+            ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+            ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+            ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+            ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+            ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
             ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 2 day)')
             ->groupBy('p.id')
             ->get();
@@ -4319,31 +4303,36 @@ class GudangController extends Controller
     function he3()
     {
         $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-        ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-        DB::raw('count(dpp.gudang_barang_jadi_id)'),
-        DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-        DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-        DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-        'ms.nama as log_nama',
-        DB::raw("case
+            ->select(
+                'p.id',
+                'p.so',
+                'p.no_po',
+                'p.log_id',
+                DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                'ms.nama as log_nama',
+                DB::raw("case
         when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
         when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
         when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
         when p.so is null then c_ekat.nama
-        end as divisi"))
-        ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-        ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-        ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-        ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-        ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-        ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-        ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-        ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-        ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-        ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
-        ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end <= date_sub(now(), interval 3 day)')
-        ->groupBy('p.id')
-        ->get();
+        end as divisi")
+            )
+            ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+            ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+            ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+            ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+            ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+            ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+            ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
+            ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end <= date_sub(now(), interval 3 day)')
+            ->groupBy('p.id')
+            ->get();
 
         return count($data);
     }
@@ -4352,31 +4341,36 @@ class GudangController extends Controller
     {
         try {
             $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-            ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-            DB::raw('count(dpp.gudang_barang_jadi_id)'),
-            DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-            DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-            DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-            'ms.nama as log_nama',
-            DB::raw("case
+                ->select(
+                    'p.id',
+                    'p.so',
+                    'p.no_po',
+                    'p.log_id',
+                    DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                    DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                    DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                    DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                    'ms.nama as log_nama',
+                    DB::raw("case
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
             when p.so is null then c_ekat.nama
-            end as divisi"))
-            ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-            ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-            ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-            ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-            ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-            ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
-            ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 1 day)')
-            ->groupBy('p.id')
-            ->get();
+            end as divisi")
+                )
+                ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+                ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+                ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+                ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+                ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+                ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
+                ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 1 day)')
+                ->groupBy('p.id')
+                ->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -4435,38 +4429,42 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function list_tf2()
     {
         try {
             $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-            ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-            DB::raw('count(dpp.gudang_barang_jadi_id)'),
-            DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-            DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-            DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-            'ms.nama as log_nama',
-            DB::raw("case
+                ->select(
+                    'p.id',
+                    'p.so',
+                    'p.no_po',
+                    'p.log_id',
+                    DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                    DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                    DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                    DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                    'ms.nama as log_nama',
+                    DB::raw("case
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
             when p.so is null then c_ekat.nama
-            end as divisi"))
-            ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-            ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-            ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-            ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-            ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-            ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
-            ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 2 day)')
-            ->groupBy('p.id')
-            ->get();
+            end as divisi")
+                )
+                ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+                ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+                ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+                ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+                ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+                ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
+                ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end = date_sub(now(), interval 2 day)')
+                ->groupBy('p.id')
+                ->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -4525,38 +4523,42 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function list_tf3()
     {
         try {
             $data = DB::table(DB::raw('detail_pesanan_produk dpp'))
-            ->select('p.id','p.so', 'p.no_po', 'p.log_id',
-            DB::raw('count(dpp.gudang_barang_jadi_id)'),
-            DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
-            DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
-            DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
-            'ms.nama as log_nama',
-            DB::raw("case
+                ->select(
+                    'p.id',
+                    'p.so',
+                    'p.no_po',
+                    'p.log_id',
+                    DB::raw('count(dpp.gudang_barang_jadi_id)'),
+                    DB::raw('sum(case when dpp.status_cek = 4 then 1 else 0 end) as total_cek'),
+                    DB::raw('sum(case when dpp.status_cek is null then 1 else 0 end) as total_uncek'),
+                    DB::raw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end as batas'),
+                    'ms.nama as log_nama',
+                    DB::raw("case
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPA' then c_spa.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'SPB' then c_spb.nama
             when substring_index(substring_index(p.so, '/', 2), '/', -1) = 'EKAT' then c_ekat.nama
             when p.so is null then c_ekat.nama
-            end as divisi"))
-            ->leftJoin(DB::raw('detail_pesanan dp'),'dpp.detail_pesanan_id','=','dp.id')
-            ->leftJoin(DB::raw('pesanan p'),'dp.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('ekatalog e'),'e.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('provinsi p2'),'p2.id','=','e.provinsi_id')
-            ->leftJoin(DB::raw('m_state ms'),'ms.id','=','p.log_id')
-            ->leftJoin(DB::raw('spa s'),'s.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('spb s2'),'s2.pesanan_id','=','p.id')
-            ->leftJoin(DB::raw('customer c_ekat'),'c_ekat.id','=','e.customer_id')
-            ->leftJoin(DB::raw('customer c_spa'),'c_spa.id','=','s.customer_id')
-            ->leftJoin(DB::raw('customer c_spb'),'c_spb.id','=','s2.customer_id')
-            ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end <= date_sub(now(), interval 3 day)')
-            ->groupBy('p.id')
-            ->get();
+            end as divisi")
+                )
+                ->leftJoin(DB::raw('detail_pesanan dp'), 'dpp.detail_pesanan_id', '=', 'dp.id')
+                ->leftJoin(DB::raw('pesanan p'), 'dp.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('ekatalog e'), 'e.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('provinsi p2'), 'p2.id', '=', 'e.provinsi_id')
+                ->leftJoin(DB::raw('m_state ms'), 'ms.id', '=', 'p.log_id')
+                ->leftJoin(DB::raw('spa s'), 's.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('spb s2'), 's2.pesanan_id', '=', 'p.id')
+                ->leftJoin(DB::raw('customer c_ekat'), 'c_ekat.id', '=', 'e.customer_id')
+                ->leftJoin(DB::raw('customer c_spa'), 'c_spa.id', '=', 's.customer_id')
+                ->leftJoin(DB::raw('customer c_spb'), 'c_spb.id', '=', 's2.customer_id')
+                ->whereRaw('case when p2.status = 1 then DATE_SUB(e.tgl_kontrak, INTERVAL 35 DAY) else DATE_SUB(e.tgl_kontrak, INTERVAL 28 DAY) end <= date_sub(now(), interval 3 day)')
+                ->groupBy('p.id')
+                ->get();
 
             return datatables()->of($data)
                 ->addIndexColumn()
@@ -4615,7 +4617,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function detailsale($id, $value)
@@ -4682,21 +4683,20 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function outSO()
     {
         try {
             $data = DB::table('detail_pesanan_produk as dpp')
-                    ->select(DB::raw('concat(p.nama, " ", gbj.nama) as prd'), DB::raw('sum(dp.jumlah) as jumlah'),'gbj.stok')
-                    ->join('gdg_barang_jadi as gbj', 'gbj.id', '=', 'dpp.gudang_barang_jadi_id')
-                    ->join('detail_pesanan as dp', 'dp.id', '=', 'dpp.detail_pesanan_id')
-                    ->join('produk as p', 'p.id', '=', 'gbj.produk_id')
-                    ->where('jumlah', '>', 'gbj.stok')
-                    ->groupBy('dpp.gudang_barang_jadi_id')
-                    ->orderBy(DB::raw('concat(p.nama, " ", gbj.nama)'))
-                    ->get();
+                ->select(DB::raw('concat(p.nama, " ", gbj.nama) as prd'), DB::raw('sum(dp.jumlah) as jumlah'), 'gbj.stok')
+                ->join('gdg_barang_jadi as gbj', 'gbj.id', '=', 'dpp.gudang_barang_jadi_id')
+                ->join('detail_pesanan as dp', 'dp.id', '=', 'dpp.detail_pesanan_id')
+                ->join('produk as p', 'p.id', '=', 'gbj.produk_id')
+                ->where('jumlah', '>', 'gbj.stok')
+                ->groupBy('dpp.gudang_barang_jadi_id')
+                ->orderBy(DB::raw('concat(p.nama, " ", gbj.nama)'))
+                ->get();
             return datatables()->of($data)
                 ->addIndexColumn()
                 ->addColumn('produk', function ($d) {
@@ -4715,7 +4715,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function updateSeriLayout(Request $request)
@@ -4733,7 +4732,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     function addSeri(Request $request)
@@ -4762,7 +4760,7 @@ class GudangController extends Controller
                 $request->no_seri
             ];
             $obj = [
-                'produk' => Produk::find($pid)->nama.' '.GudangBarangJadi::find($request->id)->nama,
+                'produk' => Produk::find($pid)->nama . ' ' . GudangBarangJadi::find($request->id)->nama,
                 'jumlah' => $count,
                 'noseri' => $request->no_seri,
             ];
@@ -4780,7 +4778,6 @@ class GudangController extends Controller
                 'msg' => $e->getMessage(),
             ]);
         }
-
     }
 
     public function getHariBatasKontrak($value, $limit)
@@ -4836,7 +4833,7 @@ class GudangController extends Controller
                         }
 
                         $obj = [
-                            'produk' => Produk::find(GudangBarangJadi::find($values['prd'])->produk_id)->nama.' '.GudangBarangJadi::find($values['prd'])->nama,
+                            'produk' => Produk::find(GudangBarangJadi::find($values['prd'])->produk_id)->nama . ' ' . GudangBarangJadi::find($values['prd'])->nama,
                             'dpp_id' => $key,
                             'pesanan_so' => Pesanan::find($request->pesanan_id)->so,
                             'pesanan_po' => Pesanan::find($request->pesanan_id)->no_po,
@@ -4900,7 +4897,7 @@ class GudangController extends Controller
                         }
 
                         $obj = [
-                            'produk' => Produk::find(GudangBarangJadi::find($values['prd'])->produk_id)->nama.' '.GudangBarangJadi::find($values['prd'])->nama,
+                            'produk' => Produk::find(GudangBarangJadi::find($values['prd'])->produk_id)->nama . ' ' . GudangBarangJadi::find($values['prd'])->nama,
                             'dpp_id' => $key,
                             'pesanan_so' => Pesanan::find($request->pesanan_id)->so,
                             'pesanan_po' => Pesanan::find($request->pesanan_id)->no_po,
@@ -5015,80 +5012,79 @@ class GudangController extends Controller
     {
         try {
             $Ekatalog = collect(Pesanan::has('Ekatalog')->whereIn('log_id', [20])->get());
-        $Spa = collect(Pesanan::has('Spa')->whereIn('log_id', [20])->get());
-        $Spb = collect(Pesanan::has('Spb')->whereIn('log_id', [20])->get());
+            $Spa = collect(Pesanan::has('Spa')->whereIn('log_id', [20])->get());
+            $Spb = collect(Pesanan::has('Spb')->whereIn('log_id', [20])->get());
 
-        $data = $Ekatalog->merge($Spa)->merge($Spb);
-        $x = [];
-        foreach ($data as $k) {
-            $x[] = $k->id;
-        }
+            $data = $Ekatalog->merge($Spa)->merge($Spb);
+            $x = [];
+            foreach ($data as $k) {
+                $x[] = $k->id;
+            }
 
-        $datax = TFProduksi::whereIn('pesanan_id', $x)->get();
+            $datax = TFProduksi::whereIn('pesanan_id', $x)->get();
 
-        return datatables()->of($datax)
-            ->addIndexColumn()
-            ->addColumn('so', function ($data) {
-                return $data->pesanan->so;
-            })
-            ->addColumn('no_po', function ($data) {
-                return $data->pesanan->no_po;
-            })
-            ->addColumn('nama_customer', function ($data) {
-                $name = explode('/', $data->pesanan->so);
-                for ($i = 1; $i < count($name); $i++) {
-                    if ($name[1] == 'EKAT') {
-                        return $data->pesanan->Ekatalog->Customer->nama;
-                    } elseif ($name[1] == 'SPA') {
-                        return $data->pesanan->Spa->Customer->nama;
-                    } elseif ($name[1] == 'SPB') {
-                        return $data->pesanan->Spb->Customer->nama;
+            return datatables()->of($datax)
+                ->addIndexColumn()
+                ->addColumn('so', function ($data) {
+                    return $data->pesanan->so;
+                })
+                ->addColumn('no_po', function ($data) {
+                    return $data->pesanan->no_po;
+                })
+                ->addColumn('nama_customer', function ($data) {
+                    $name = explode('/', $data->pesanan->so);
+                    for ($i = 1; $i < count($name); $i++) {
+                        if ($name[1] == 'EKAT') {
+                            return $data->pesanan->Ekatalog->Customer->nama;
+                        } elseif ($name[1] == 'SPA') {
+                            return $data->pesanan->Spa->Customer->nama;
+                        } elseif ($name[1] == 'SPB') {
+                            return $data->pesanan->Spb->Customer->nama;
+                        }
                     }
-                }
-            })
-            ->addColumn('aksi', function($data){
-                $name = explode('/', $data->pesanan->so);
-                for ($i = 1; $i < count($name); $i++) {
-                    if ($name[1] == 'EKAT') {
-                        $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="ekatalog"  data-id="' . $data->pesanan->id . '" data-alasan="'.$data->pesanan->ket_batal.'" data-tgl="'.Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY').'">
+                })
+                ->addColumn('aksi', function ($data) {
+                    $name = explode('/', $data->pesanan->so);
+                    for ($i = 1; $i < count($name); $i++) {
+                        if ($name[1] == 'EKAT') {
+                            $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="ekatalog"  data-id="' . $data->pesanan->id . '" data-alasan="' . $data->pesanan->ket_batal . '" data-tgl="' . Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY') . '">
                                     <button class="btn btn-outline-info btn-sm" type="button">
                                         <i class="fas fa-eye"></i>&nbsp;Detail
                                     </button>
                                 </a>';
-                    } elseif ($name[1] == 'SPA') {
-                        $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="spa"  data-id="' . $data->pesanan->id . '" data-alasan="'.$data->pesanan->ket_batal.'" data-tgl="'.Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY').'">
+                        } elseif ($name[1] == 'SPA') {
+                            $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="spa"  data-id="' . $data->pesanan->id . '" data-alasan="' . $data->pesanan->ket_batal . '" data-tgl="' . Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY') . '">
                                     <button class="btn btn-outline-info btn-sm" type="button">
                                         <i class="fas fa-eye"></i>&nbsp;Detail
                                     </button>
                                 </a>';
-                    } elseif ($name[1] == 'SPB') {
-                        $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="spb"  data-id="' . $data->pesanan->id . '" data-alasan="'.$data->pesanan->ket_batal.'" data-tgl="'.Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY').'">
+                        } elseif ($name[1] == 'SPB') {
+                            $a = '<a data-toggle="modal" data-target="#btndetail" class="btndetail" data-attr="" data-value="spb"  data-id="' . $data->pesanan->id . '" data-alasan="' . $data->pesanan->ket_batal . '" data-tgl="' . Carbon::createFromFormat('Y-m-d', $data->pesanan->tgl_batal)->isoFormat('D MMMM YYYY') . '">
                                     <button class="btn btn-outline-info btn-sm" type="button">
                                         <i class="fas fa-eye"></i>&nbsp;Detail
                                     </button>
                                 </a>';
+                        }
                     }
-                }
-                return $a;
-            })
-            ->addColumn('logs', function($d) {
-                if ($d->pesanan->log_id == 9) {
-                    $ax = "<span class='badge badge-pill badge-secondary'>".$d->pesanan->log->nama."</span>";
-                } else if ($d->pesanan->log_id == 6) {
-                    $ax = "<span class='badge badge-pill badge-warning'>".$d->pesanan->log->nama."</span>";
-                } elseif ($d->pesanan->log_id == 8) {
-                    $ax = "<span class='badge badge-pill badge-info'>".$d->pesanan->log->nama."</span>";
-                } elseif ($d->pesanan->log_id == 11) {
-                    $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
-                } else {
-                    $ax = "<span class='badge badge-pill badge-danger'>".$d->pesanan->log->nama."</span>";
-                }
+                    return $a;
+                })
+                ->addColumn('logs', function ($d) {
+                    if ($d->pesanan->log_id == 9) {
+                        $ax = "<span class='badge badge-pill badge-secondary'>" . $d->pesanan->log->nama . "</span>";
+                    } else if ($d->pesanan->log_id == 6) {
+                        $ax = "<span class='badge badge-pill badge-warning'>" . $d->pesanan->log->nama . "</span>";
+                    } elseif ($d->pesanan->log_id == 8) {
+                        $ax = "<span class='badge badge-pill badge-info'>" . $d->pesanan->log->nama . "</span>";
+                    } elseif ($d->pesanan->log_id == 11) {
+                        $ax = "<span class='badge badge-pill badge-dark'>Logistik</span>";
+                    } else {
+                        $ax = "<span class='badge badge-pill badge-danger'>" . $d->pesanan->log->nama . "</span>";
+                    }
 
-                return $ax;
-            })
-            ->rawColumns(['aksi', 'logs'])
-            ->make(true);
-
+                    return $ax;
+                })
+                ->rawColumns(['aksi', 'logs'])
+                ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -5104,13 +5100,13 @@ class GudangController extends Controller
             if ($check) {
                 $chk_detail = TFProduksiDetail::whereIn('t_gbj_id', [$check->id])->get();
                 $did = [];
-                foreach($chk_detail as $detail) {
+                foreach ($chk_detail as $detail) {
                     $did[] = $detail->id;
                 }
                 $nid = [];
                 $nidd = [];
                 $chk_noseri = NoseriTGbj::whereIn('t_gbj_detail_id', $did)->get();
-                foreach($chk_noseri as $noseri) {
+                foreach ($chk_noseri as $noseri) {
                     $nid[] = $noseri->id;
                     $nidd[] = $noseri->noseri_id;
                 }
@@ -5146,5 +5142,10 @@ class GudangController extends Controller
     function export_noseri_gudang(Request $request)
     {
         return Excel::download(new NoseriGudangExport(), 'NoseriBarangJadi.xlsx');
+    }
+
+    function tfgbmp(Request $request)
+    {
+        dd($request);
     }
 }

@@ -29,6 +29,17 @@ Route::prefix('/bom')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
     Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
+
+Route::prefix('/divisi')->group(function () {
+    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_divisi']);
+});
+
+Route::prefix('/pembelian')->group(function () {
+
+    Route::get('/data/part/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_sparepart']);
+});
+
+
 Route::prefix('/part')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
     Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_sparepart']);
@@ -200,8 +211,12 @@ Route::prefix('/laporan')->group(function () {
     Route::post('/logistik/{pengiriman}/{ekspedisi}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\LogistikController::class, 'get_data_laporan_logistik']);
 });
 
+Route::prefix('/gbmp')->group(function () {
+    Route::post('/tf', [App\Http\Controllers\GudangController::class, 'tfgbmp']);
+});
+
 Route::prefix('/gbj')->group(function () {
-    Route::post('data', [App\Http\Controllers\GudangController::class, 'get_data_barang_jadi'])->middleware('jwt.verify');
+    Route::post('data', [App\Http\Controllers\GudangController::class, 'get_data_barang_jadi']);
     Route::post('/create', [App\Http\Controllers\GudangController::class, 'StoreBarangJadi']);
     Route::post('/edit/{id}', [App\Http\Controllers\GudangController::class, 'UpdateBarangJadi']);
     Route::delete('/delete/{id}', [App\Http\Controllers\GudangController::class, 'DestroyBarangJadi']);
