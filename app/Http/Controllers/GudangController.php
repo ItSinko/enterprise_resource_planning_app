@@ -35,6 +35,7 @@ use App\Models\User;
 use Illuminate\Filesystem\Filesystem;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -5144,8 +5145,90 @@ class GudangController extends Controller
         return Excel::download(new NoseriGudangExport(), 'NoseriBarangJadi.xlsx');
     }
 
-    function tfgbmp(Request $request)
+    function tfgbmp_store(Request $request)
     {
-        dd($request);
+        //dd(count($request->detail_t_gbj));
+        $validator = Validator::make($request->all(), [
+            'no_transfer' => 'required',
+            'divisi' => 'required',
+            'tanggal' => 'required',
+            'ket' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            $tf = TFProduksi::create([
+                'no_transaksi' => $request->no_transfer,
+                'tgl_keluar' => $request->tanggal,
+                'ke' => $request->divisi,
+                'dari' => 11,
+                'status_id' => 1,
+                'jenis' => 'keluar',
+                'deskripsi' => $request->ket,
+                'created_by' => 11,
+
+
+            ]);
+            for ($i = 0; $i < count($request->detail_t_gbj); $i++) {
+                TFProduksiDetail::create([
+                    't_gbj_id' => $tf->id,
+                    'detail_stok_divisi_part_id' => $request->detail_t_gbj[$i]['detail_stok_divisi_part_id'],
+                    'qty' => $request->detail_t_gbj[$i]['jumlah'],
+                    'jenis' => 'keluar',
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'berhasil'
+            ]);
+        }
+    }
+
+    function tfgbmp_data()
+    {
+        $data = array();
+        $tf = TFProduksi::with(['Divisi'])->where('ke', 11)->orWhere('dari', 11)->get();
+        foreach ($tf as $key => $d) {
+            $data[$key] = array(
+                'id' => $d->id,
+                'no_transaksi' => $d->no_transaksi,
+                'divisi' => $d->ke == 11 ?  $d->darii->nama : $d->divisi->nama,
+                'tanggal_transfer' => $d->tgl_masuk == NULL ? Carbon::parse($d->tgl_keluar)->format('d M Y')  : Carbon::parse($d->tgl_masuk)->format('d M Y'),
+                'jenis' => $d->jenis,
+                'status' => $d->Status->nama,
+                'ket' => $d->deskripsi
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+    function tfgbmp_detail($id)
+    {
+        $data = array();
+        $tf = TFProduksi::with(['Divisi'])->find($id);
+        $data['header'] = array(
+            'id' => $tf->id,
+            'no_transaksi' => $tf->no_transaksi,
+            'divisi' => $tf->ke == 11 ?  $tf->darii->nama : $tf->divisi->nama,
+            'tanggal_transfer' => $tf->tgl_masuk == NULL ? Carbon::parse($tf->tgl_keluar)->format('d M Y')  : Carbon::parse($tf->tgl_masuk)->format('d M Y'),
+            'jenis' => $tf->jenis,
+            'status' => $tf->Status->nama,
+            'ket' => $tf->deskripsi
+        );
+
+        foreach ($tf->detail as $key_b => $e) {
+            $data['header']['part'][$key_b] = array(
+                'id' => $e->id,
+                'lot_number' => $e->DetailStokDivisiPart->Lotnumber->number,
+                'nama' => $e->DetailStokDivisiPart->StokDivisiPart->Sparepart->nama,
+                'stok' => $e->qty
+            );
+        }
+
+
+        return response()->json(['data' => $data]);
     }
 }

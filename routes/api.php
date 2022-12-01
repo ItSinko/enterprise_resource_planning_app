@@ -205,6 +205,9 @@ Route::prefix('/laporan')->group(function () {
 
 Route::prefix('/gbmp')->group(function () {
     Route::post('/tf', [App\Http\Controllers\GudangController::class, 'tfgbmp']);
+    Route::get('/data', [App\Http\Controllers\GudangController::class, 'tfgbmp_data']);
+    Route::get('/data/{id}', [App\Http\Controllers\GudangController::class, 'tfgbmp_detail']);
+    Route::post('/store', [App\Http\Controllers\GudangController::class, 'tfgbmp_store']);
 });
 
 Route::prefix('/gbj')->group(function () {

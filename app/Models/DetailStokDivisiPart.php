@@ -20,4 +20,8 @@ class DetailStokDivisiPart extends Model
     {
         return $this->belongsTo(StokDivisiPart::class, 'stok_divisi_part_id', 'id');
     }
+    public function TFProduksi()
+    {
+        return $this->hasMany(TFProduksi::class);
+    }
 }

@@ -11,7 +11,7 @@ class TFProduksiDetail extends Model
     protected $connection = 'erp';
     protected $table = 't_gbj_detail';
 
-    protected $fillable = ['status_id', 'state_id', 'gdg_brg_jadi_id', 'detail_pesanan_produk_id', 't_gbj_id', 'qty', 'jenis', 'created_by', 'created_at'];
+    protected $fillable = ['status_id', 'state_id', 'detail_stok_divisi_part_id', 'gdg_brg_jadi_id', 'detail_pesanan_produk_id', 't_gbj_id', 'qty', 'jenis', 'created_by', 'created_at'];
 
     function header()
     {
@@ -72,5 +72,9 @@ class TFProduksiDetail extends Model
             ->with('detail.header')
             ->get();
         return $jumlah;
+    }
+    function DetailStokDivisiPart()
+    {
+        return $this->belongsTo(DetailStokDivisiPart::class, 'detail_stok_divisi_part_id', 'id');
     }
 }

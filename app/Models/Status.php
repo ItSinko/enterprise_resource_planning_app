@@ -10,4 +10,9 @@ class Status extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'm_status';
+
+    function status()
+    {
+        return $this->hasMany(Status::class);
+    }
 }
