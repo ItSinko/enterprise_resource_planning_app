@@ -9,6 +9,15 @@
                 type: Array,
                 default: () => []
             },
+            headers : {
+                type: Object,
+                default: () => {}
+            },
+        },
+        methods: {
+            modalClose() {
+                $('.modalKlasifikasi').modal('hide')
+            }
         },
     }
 
@@ -19,7 +28,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-bold">Klasifikasi Part</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" @click="modalClose">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -39,7 +48,7 @@
                                     <div class="card">
                                         <div class="card-body card-success">
                                             <h4 class="card-title">Nama Produk</h4>
-                                            <p class="card-text text-bold">Text</p>
+                                            <p class="card-text text-bold">{{ headers }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -72,10 +81,10 @@
                             </div>
                         </div>
                     </div>
-                    <Table :dataTable="dataTable" />
+                    <Table :dataTable="dataTable" :headers="headers"/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" @click="modalClose">Batal</button>
                     <button type="button" class="btn btn-warning">Terima</button>
                 </div>
             </div>

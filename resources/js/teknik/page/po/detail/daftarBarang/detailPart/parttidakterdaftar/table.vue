@@ -20,7 +20,7 @@ export default {
                     item.checked = false
                 })
             } else {
-                this.partsSelected = this.dataTable.map((item) => item.id)
+                this.partsSelected = this.dataTable.map((item) => item)
                 this.$refs.checkedPackAll.checked = true
                 this.$refs.checkedPack.forEach((item) => {
                     item.checked = true

@@ -30,14 +30,41 @@
                     {
                     id: 1,
                     nama_packing_list: 'Packing List 1',
-                    jumlah_pemesanan: 10
+                    jumlah_pemesanan: 10,
+                    part: [{
+                        nama_part: {
+                            value: 1,
+                            label: 'Part 1'
+                        }
+                    }, {
+                        nama_part: {
+                            value: 2,
+                            label: 'Part 2'
+                        }
+                    }]
                     },
                     {
                     id: 2,
                     nama_packing_list: 'Packing List 2',
-                    jumlah_pemesanan: 20
+                    jumlah_pemesanan: 20,
+                    part: [{
+                        nama_part: {
+                            value: 1,
+                            label: 'Part 1'
+                        }
+                    }, {
+                        nama_part: {
+                            value: 2,
+                            label: 'Part 2'
+                        }
+                    }]
                     },
                 ],
+            }
+        },
+        methods: {
+            modalClose() {
+                $('.modalDetail').modal('hide')
             }
         },
     }
@@ -49,7 +76,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ title }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" @click="modalClose">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -73,7 +100,7 @@
                             </div>
                             <div class="tab-pane fade" id="pills-partsnonterdaftar" role="tabpanel"
                                 aria-labelledby="pills-partsnonterdaftar-tab">
-                                <tidakTerdaftar :dataTable="partsNotTerdaftar"/>
+                                <tidakTerdaftar :dataTable="partsNotTerdaftar" :headers="title"/>
                             </div>
                         </div>
                 </div>

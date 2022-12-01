@@ -11,6 +11,10 @@
                 type: Array,
                 default: () => []
             },
+            headers : {
+                type: Object,
+                default: () => {}
+            },
         },
         data() {
             return {
@@ -50,6 +54,6 @@
             </div>
         </div>
         <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar"/>
-        <klasifikasi :dataTable="partsSelected"/>
+        <klasifikasi :dataTable="partsSelected" :headers="headers"/>
     </div>
 </template>
