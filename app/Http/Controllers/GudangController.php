@@ -5147,7 +5147,7 @@ class GudangController extends Controller
 
     function tfgbmp_store(Request $request)
     {
-        //dd(count($request->detail_t_gbj));
+        dd(count($request->detail_t_gbj));
         $validator = Validator::make($request->all(), [
             'no_transfer' => 'required',
             'divisi' => 'required',
@@ -5194,7 +5194,7 @@ class GudangController extends Controller
         foreach ($tf as $key => $d) {
             $data[$key] = array(
                 'id' => $d->id,
-                'no_transaksi' => $d->no_transaksi,
+                'no_transaksi' => $d->no_transaksi == null ? '-' : $d->no_transaksi,
                 'divisi' => $d->ke == 11 ?  $d->darii->nama : $d->divisi->nama,
                 'tanggal_transfer' => $d->tgl_masuk == NULL ? Carbon::parse($d->tgl_keluar)->format('d M Y')  : Carbon::parse($d->tgl_masuk)->format('d M Y'),
                 'jenis' => $d->jenis,
@@ -5211,18 +5211,19 @@ class GudangController extends Controller
         $tf = TFProduksi::with(['Divisi'])->find($id);
         $data['header'] = array(
             'id' => $tf->id,
-            'no_transaksi' => $tf->no_transaksi,
+            'no_transaksi' => $tf->no_transaksi == NULL ? '-' : $tf->no_transaksi,
             'divisi' => $tf->ke == 11 ?  $tf->darii->nama : $tf->divisi->nama,
-            'tanggal_transfer' => $tf->tgl_masuk == NULL ? Carbon::parse($tf->tgl_keluar)->format('d M Y')  : Carbon::parse($tf->tgl_masuk)->format('d M Y'),
+            'tanggal_transfer' => $tf->tgl_masuk == NULL ? $tf->tgl_keluar  : $tf->tgl_masuk,
             'jenis' => $tf->jenis,
             'status' => $tf->Status->nama,
             'ket' => $tf->deskripsi
         );
 
         foreach ($tf->detail as $key_b => $e) {
-            $data['header']['part'][$key_b] = array(
+            $data['part'][$key_b] = array(
                 'id' => $e->id,
                 'lot_number' => $e->DetailStokDivisiPart->Lotnumber->number,
+                'kode' => $e->DetailStokDivisiPart->StokDivisiPart->Sparepart->kode,
                 'nama' => $e->DetailStokDivisiPart->StokDivisiPart->Sparepart->nama,
                 'stok' => $e->qty
             );

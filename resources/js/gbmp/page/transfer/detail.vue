@@ -1,4 +1,5 @@
 <script>
+import moment from 'moment'
 export default {
     props: {
         detail: {
@@ -6,11 +7,14 @@ export default {
             default: () => {}
         },
     },
+    methods: {
+        moment(date) {
+            return moment(date).lang('ID').format('DD MMMM YYYY')
+        },
+    },
 }
 </script>
 <template>
-    <div>
-        <!-- Modal -->
         <div class="modal fade modalDetailTransfer" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
@@ -28,7 +32,7 @@ export default {
                                         <div class="card card-danger">
                                             <div class="card-body">
                                                 <p>No Transaksi</p>
-                                                <p class="text-bold">PRD/FXB</p>
+                                                <p class="text-bold">{{ detail.header.no_transaksi }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -36,7 +40,7 @@ export default {
                                         <div class="card card-info">
                                             <div class="card-body">
                                                 <p>Divisi Asal / Tujuan</p>
-                                                <p class="text-bold">Produksi</p>
+                                                <p class="text-bold">{{ detail.header.divisi }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +48,7 @@ export default {
                                         <div class="card card-success">
                                             <div class="card-body">
                                                 <p>Tanggal Transfer</p>
-                                                <p class="text-bold">18 Oktober 2022</p>
+                                                <p class="text-bold">{{ moment(detail.header.tanggal_transfer) }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -52,7 +56,7 @@ export default {
                                         <div class="card card-secondary">
                                             <div class="card-body">
                                                 <p>Status</p>
-                                                <span class="badge badge-info">Draft</span>
+                                                <span class="badge badge-info">{{ detail.header.status }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -75,23 +79,11 @@ export default {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>FXB-001</td>
-                                                <td>LOT-001</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>FXB-002</td>
-                                                <td>LOT-002</td>
-                                                <td>200</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>FXB-003</td>
-                                                <td>LOT-003</td>
-                                                <td>300</td>
+                                            <tr v-for="(item, index) in detail.part" :key="index">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ item.kode }} - {{ item.nama }}</td>
+                                                <td>{{ item.lot_number }}</td>
+                                                <td>{{ item.stok }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -102,7 +94,6 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <style>
     .card-danger {

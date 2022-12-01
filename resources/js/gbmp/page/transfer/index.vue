@@ -1,5 +1,5 @@
 <script>
-    import Header from '../../components/header.vue' 
+    import Header from '../../components/header.vue'
     import Table from './table.vue'
     import Loading from '../../components/loading.vue'
     import axios from 'axios'
@@ -27,382 +27,22 @@
                     },
                 ],
                 title: 'Transfer Antar Gudang',
-                gudangtransfers: [{
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-02',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    },
-                    {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Selesai',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    }, {
-                        'no_transfer': 'TRF-0001',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Draft',
-                        'ket': 'masuk',
-                        'barang': 'Transfer Barang',
-                    }, {
-                        'no_transfer': 'TRF-0002',
-                        'divisi': 'GBMP',
-                        'tanggal': '2020-01-01',
-                        'keterangan': 'Transfer Barang',
-                        'status': 'Menunggu Permintaan',
-                        'ket': 'keluar',
-                        'barang': 'Terima Barang',
-                    },
-                ],
+                gudangtransfers: [],
                 search: '',
                 gudangtransfer: [],
+                details: null,
             }
         },
+        created() {
+            this.getGudangTransfer()
+        },
         methods: {
+            async getGudangTransfer() {
+                this.loading = true
+                const { data } = await axios.get('/api/gbmp/data')
+                this.gudangtransfers = data.data
+                this.loading = false
+            },
             clickFilterdalamProses(filter) {
                 if (this.gudangtransfer.includes(filter)) {
                     this.gudangtransfer = this.gudangtransfer.filter(item => item !== filter)
@@ -413,9 +53,12 @@
             createTransfer() {
                 $('.modalAddTransfer').modal('show')
             },
-            detailTransfer(id) {
-                console.log(id)
+            async detailTransfer(id) {
+                const { data } = await axios.get(`/api/gbmp/data/${id}`)
+                this.details = data.data
+                setTimeout(() => {
                 $('.modalDetailTransfer').modal('show')
+                }, 100);
             },
 
             barang(brg, id) {
@@ -504,7 +147,7 @@
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
         <add-transfer />
-        <detail-transfer />
+        <detail-transfer :detail="details" v-if="details"/>
         <Loading v-if="loading" />
         <div class="card" v-else>
             <div class="card-body">
@@ -574,9 +217,7 @@
                                 </li>
                                 <li class="page-item" :class="paginate == currentPage ? 'active' : ''"
                                     v-for="paginate in pages" :key="paginate">
-                                    <a class="page-link" @click="nowPage(paginate)">{{
-                  paginate
-                }}</a>
+                                    <a class="page-link" @click="nowPage(paginate)">{{ paginate }}</a>
                                 </li>
                                 <li class="page-item">
                                     <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"

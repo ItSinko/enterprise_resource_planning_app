@@ -36,26 +36,36 @@
                 }
             },
 
-            buttonColor(status) {
-                switch (status) {
-                    case 'Transfer Barang':
-                        return 'btn-primary' 
-                    case 'Terima Barang':
-                        return 'btn-warning'
-                    default:
-                        return 'btn-primary'
+            buttonColor(status, jenis) {
+                if (status == 'Draft' && jenis == 'masuk') {
+                    return 'btn-primary'
+                } else if (status == 'Draft' && jenis == 'keluar') {
+                    return 'btn-warning'
+                } else {
+                    return 'btn-primary'
                 }
             },
-            detail(id){
+            detail(id) {
                 this.$emit('detail', id)
             },
 
-            condition(status, id) {
-                switch (status) {
-                    case 'Transfer Barang':
-                        return this.$emit('barang', status, id)
-                    case 'Terima Barang':
-                        return this.$emit('barang', status, id)
+            condition(status, jenis, id) {
+                if (status == 'Draft' && jenis == 'masuk') {
+                    return console.log(status)
+                } else if (status == 'Draft' && jenis == 'keluar') {
+                    return console.log(status)
+                } else {
+                    return console.log(status)
+                }
+            },
+
+            keterangan(status, jenis) {
+                if (status == 'Draft' && jenis == 'masuk') {
+                    return 'Transfer Barang'
+                } else if (status == 'Draft' && jenis == 'keluar') {
+                    return 'Terima Barang'
+                } else {
+                    return 'detail'
                 }
             }
         },
@@ -79,14 +89,18 @@
             <tbody v-if="transfers.length > 0">
                 <tr v-for="(trf, idx) in transfers" :key="idx">
                     <td>{{ idx+1 }}</td>
-                    <td>{{ trf.no_transfer }}</td>
-                    <td :class="divisiClass(trf.ket)">{{ trf.divisi }}</td>
-                    <td>{{ moment(trf.tanggal) }}</td>
-                    <td>{{ trf.keterangan }}</td>
+                    <td>{{ trf.no_transaksi }}</td>
+                    <td :class="divisiClass(trf.jenis)">{{ trf.divisi }}</td>
+                    <td>{{ moment(trf.tanggal_transfer) }}</td>
+                    <td>
+                        {{ trf.ket }}
+                    </td>
                     <td><span class="badge" :class="statusClass(trf.status)">{{ trf.status }}</span></td>
                     <td>
-                        <button class="btn btn-sm" :class="buttonColor(trf.barang)" @click="condition(trf.barang, trf.no_transfer)">{{ trf.barang }}</button>
-                        <button class="btn btn-sm btn-outline-info" @click="detail(trf.no_transfer)">
+                        <button class="btn btn-sm" :class="buttonColor(trf.status, trf.jenis)"
+                            @click="condition(trf.status, trf.jenis)"
+                            v-show="keterangan(trf.status, trf.jenis) != 'detail'">{{ keterangan(trf.status, trf.jenis) }}</button>
+                        <button class="btn btn-sm btn-outline-info" @click="detail(trf.id)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                             Detail
                         </button>
