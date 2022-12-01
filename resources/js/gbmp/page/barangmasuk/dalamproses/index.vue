@@ -148,7 +148,7 @@
                         </div>
                         <div class="ml-auto p-2 bd-highlight">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Cari Barang Masuk"
+                                <input type="text" class="form-control" placeholder="Cari..."
                                     v-model="search">
                             </div>
                         </div>

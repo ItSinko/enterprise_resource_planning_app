@@ -1,4 +1,5 @@
 <script>
+    import axios from 'axios'
     export default {
         data() {
             return {
@@ -19,9 +20,28 @@
                     },
                     'jumlah': 10,
                 }],
+                divisions: [],
             }
         },
+        created() {
+            this.getDivisi()
+        },
         methods: {
+            async getDivisi() {
+                try {
+                    await axios.get('/api/gbj/sel-divisi').then(res => {
+                        res.data.map((item) => {
+                            this.divisions.push({
+                                'value': item.id,
+                                'label': item.nama
+                            })
+                        })
+                    })
+                } catch (error) {
+                    return error
+                }
+            },
+
             removepart(index) {
                 this.barangs.splice(index, 1);
             },
@@ -64,9 +84,6 @@
 
 </script>
 <template>
-    <div>
-
-        <!-- Modal -->
         <div class="modal fade modalAddTransfer" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
             aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
@@ -92,7 +109,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Divisi</label>
-                                                <input type="text" class="form-control" v-model="form.divisi">
+                                                <v-select :options="divisions" v-model="form.divisi"></v-select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="">Keterangan</label>
@@ -158,5 +175,4 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>

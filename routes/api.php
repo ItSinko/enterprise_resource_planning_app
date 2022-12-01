@@ -221,7 +221,7 @@ Route::prefix('/gbj')->group(function () {
     Route::get('sel-product/{id}', [GudangController::class, 'select_product_by_id']);
     Route::get('sel-satuan', [GudangController::class, 'select_satuan']);
     Route::get('sel-layout', [GudangController::class, 'select_layout']);
-    Route::get('sel-divisi', [GudangController::class, 'select_divisi'])->middleware('jwt.verify');
+    Route::get('sel-divisi', [GudangController::class, 'select_divisi']);
     Route::get('sel-gbj', [GudangController::class, 'select_gbj'])->middleware('jwt.verify');
 
     // so

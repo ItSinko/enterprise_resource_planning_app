@@ -26,6 +26,30 @@
                     },
                 ],
                 title: 'Barang Masuk',
+                produks: [{
+                    'nama_produk': 'Produk 1',
+                    'jumlah': 10,
+                    'progress': 80,
+                    'status': 'Selesai',
+                }],
+                dokumens: [
+                    {
+                    'path': 'Dokumen 1',
+                    'jenis_dokumen': 'Surat Jalan',
+                    },
+                    {
+                    'path': 'Dokumen 2',
+                    'jenis_dokumen': 'Surat Pemesanan',
+                    },
+                    {
+                    'path': 'Dokumen 3',
+                    'jenis_dokumen': 'Surat Jalan',
+                    },
+                    {
+                    'path': 'Dokumen 4',
+                    'jenis_dokumen': 'Surat Pemesanan',
+                    },
+                ],
             }
         },
     }
@@ -50,10 +74,10 @@
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                         aria-labelledby="pills-home-tab">
-                        <Table />
+                        <Table :produks="produks" />
                     </div>
                     <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <Dokumen />
+                        <Dokumen :dokumens="dokumens"/>
                     </div>
                 </div>
             </div>
