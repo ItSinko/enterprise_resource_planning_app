@@ -37,6 +37,9 @@ export default {
                 this.$refs.checkedPack[index].checked = true
             }
             this.$emit('checked', this.partsSelected)
+        },
+        detailPart(index) {
+            this.$emit('detail', index)
         }
     }
 }
@@ -58,7 +61,7 @@ export default {
                     <td>{{ item.nama_packing_list }}</td>
                     <td>{{ item.jumlah_pemesanan }}</td>
                     <td>
-                        <button class="btn btn-outline-info btn-sm">
+                        <button class="btn btn-outline-info btn-sm" @click="detailPart(index)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                             Detail
                         </button>

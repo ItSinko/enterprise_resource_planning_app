@@ -28,6 +28,9 @@
             },
             klasifikasiPart() {
                 $('.modalKlasifikasi').modal('show')
+            },
+            detail(index){
+                console.log(index)
             }
         },
         computed: {
@@ -53,7 +56,7 @@
                 <input type="text" class="form-control" v-model="search" placeholder="Cari Part">
             </div>
         </div>
-        <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar"/>
+        <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar" @detail="detail"/>
         <klasifikasi :headers="headers"/>
     </div>
 </template>
