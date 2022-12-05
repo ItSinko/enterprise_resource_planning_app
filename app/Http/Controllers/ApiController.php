@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth as JWTAuth;
+
 class ApiController extends Controller
 {
     //
     public function register(Request $request)
     {
-    	//Validate data
+        //Validate data
         $data = $request->only('name', 'email', 'password');
         $validator = Validator::make($data, [
             'name' => 'required|string',
@@ -28,9 +30,9 @@ class ApiController extends Controller
 
         //Request is valid, create new user
         $user = User::create([
-        	'name' => $request->name,
-        	'email' => $request->email,
-        	'password' => bcrypt($request->password)
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
         ]);
 
         //User created, return success response
@@ -57,27 +59,32 @@ class ApiController extends Controller
             return response()->json(['error' => 'gagal'], 200);
         }
 
-        //Request is validated
-        //Crean token
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
-                	'success' => false,
-                	'message' => 'Login credentials are invalid.',
+                    'success' => false,
+                    'message' => 'Login credentials are invalid.',
                 ], 400);
             }
         } catch (JWTException $e) {
-    	return $credentials;
+            return $credentials;
             return response()->json([
-                	'success' => false,
-                	'message' => 'Could not create token.',
-                ], 500);
+                'success' => false,
+                'message' => 'Could not create token.',
+            ], 500);
         }
 
- 		//Token created, return with success response and jwt token
+
+        if (Auth::attempt($credentials)) {
+            $divisi = Auth::user()->Karyawan->divisi_id;
+        } else {
+            $divisi = '0';
+        }
+
         return response()->json([
             'success' => true,
             'token' => $token,
+            'divisi' => $divisi,
         ]);
     }
 }
