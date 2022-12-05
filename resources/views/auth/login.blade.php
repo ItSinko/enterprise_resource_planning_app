@@ -87,6 +87,7 @@
             },
             success: function(response) {
                 localStorage.setItem('lokal_token', response.token);
+                localStorage.setItem('divisi', response.divisi);
                 //console.log(sessionStorage.getItem('token'))
                 //console.log(response.token);
             }
