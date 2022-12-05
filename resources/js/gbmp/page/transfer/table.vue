@@ -1,6 +1,6 @@
 <script>
     import moment from 'moment'
-
+    import axios from 'axios'
     export default {
         props: {
             transfers: {
@@ -53,7 +53,28 @@
                 if (status == 'Draft' && jenis == 'masuk') {
                     return console.log(status)
                 } else if (status == 'Draft' && jenis == 'keluar') {
-                    return console.log(status)
+                    this.$swal({
+                        title: 'Terima Barang',
+                        text: "Anda yakin ingin menerima barang dengan benar?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const kirim = {
+                                id: id,
+                                status: 'post'
+                            }
+                            const {
+                                data
+                            } = axios.post('/api/gbmp/store', kirim)
+                            this.$emit('refresh')
+                            this.$swal('Berhasil!', 'Barang berhasil diterima.', 'success')
+                        }
+                    })
                 } else {
                     return console.log(status)
                 }
@@ -98,7 +119,7 @@
                     <td><span class="badge" :class="statusClass(trf.status)">{{ trf.status }}</span></td>
                     <td>
                         <button class="btn btn-sm" :class="buttonColor(trf.status, trf.jenis)"
-                            @click="condition(trf.status, trf.jenis)"
+                            @click="condition(trf.status, trf.jenis, trf.id)"
                             v-show="keterangan(trf.status, trf.jenis) != 'detail'">{{ keterangan(trf.status, trf.jenis) }}</button>
                         <button class="btn btn-sm btn-outline-info" @click="detail(trf.id)">
                             <i class="fa fa-eye" aria-hidden="true"></i>

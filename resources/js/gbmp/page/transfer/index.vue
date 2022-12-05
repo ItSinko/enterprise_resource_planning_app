@@ -149,7 +149,7 @@
 <template>
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
-        <add-transfer />
+        <add-transfer @refresh="getGudangTransfer"/>
         <detail-transfer :detail="details" v-if="details"/>
         <Loading v-if="loading" />
         <div class="card" v-else>
@@ -210,7 +210,7 @@
                         </div>
                     </div>
                 </div>
-                <Table :transfers="renderPaginate" @detail="detailTransfer" @barang="barang" />
+                <Table :transfers="renderPaginate" @detail="detailTransfer" @barang="barang" @refresh="getGudangTransfer"/>
                 <div class="card-footer">
                     <div class="d-flex flex-row-reverse bd-highlight">
                         <nav aria-label="...">

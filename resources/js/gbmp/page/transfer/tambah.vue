@@ -104,8 +104,18 @@
                 if (kirimIsNotValid) {
                     return alert('Silahkan input data dengan benar')
                 }else{
+                    const success = () => {
+                        this.$emit('refresh')
+                        $('.modalAddTransfer').modal('hide')
+                        this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
+                    }
+
+                    const error = () => {
+                        this.$swal('Gagal', 'Data gagal disimpan', 'error')
+                    }
                     const { data } = await axios.post('/api/gbmp/store', kirim)
-                    console.log(data)
+                    data.status == 'success' ? success : error
+                    this.$emit('refresh')
                 }
                 
             }
