@@ -15,4 +15,8 @@ class Status extends Model
     {
         return $this->hasMany(Status::class);
     }
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 'status_id', 'id');
+    }
 }

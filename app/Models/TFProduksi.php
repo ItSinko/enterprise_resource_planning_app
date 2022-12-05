@@ -59,4 +59,14 @@ class TFProduksi extends Model
         }
         return $jumlah;
     }
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 't_gbj_id', 'id');
+    }
+    function last_status($divisi)
+    {
+        $id = $this->id;
+        $data = TFProduksiHistory::where(['t_gbj_id' => $id, 'divisi_id' => $divisi])->latest()->first();
+        return $data->Status->nama;
+    }
 }

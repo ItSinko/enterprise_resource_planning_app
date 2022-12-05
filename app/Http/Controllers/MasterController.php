@@ -2378,17 +2378,27 @@ class MasterController extends Controller
 
     public function  get_data_divisi_sparepart($divisi, $part)
     {
-        $StokDivisiPart = StokDivisiPart::with('DetailStokDivisiPart.LotNumber')->where(['divisi_id' => $divisi, 'part_id' => $part])->get();
-        $data = array();
-        foreach ($StokDivisiPart as  $d) {
-            foreach ($d->DetailStokDivisiPart as $key_b => $e) {
+        if ($part != 0) {
+            $StokDivisiPart = StokDivisiPart::with('DetailStokDivisiPart.LotNumber')->where(['divisi_id' => $divisi, 'part_id' => $part])->get();
+            foreach ($StokDivisiPart as  $d) {
+                foreach ($d->DetailStokDivisiPart as $key_b => $e) {
+                    $data[$key_b] = array(
+                        'id' => $e->id,
+                        'stok' => $e->stok,
+                        'lot' => $e->LotNumber->number
+                    );
+                }
+            }
+        } else {
+            $StokDivisiPart = StokDivisiPart::where('divisi_id', $divisi)->get();
+            foreach ($StokDivisiPart as $key_b => $e) {
                 $data[$key_b] = array(
                     'id' => $e->id,
-                    'stok' => $e->stok_onhand,
-                    'lot' => $e->LotNumber->number
+                    'nama' => $e->Sparepart->nama,
                 );
             }
         }
+
         return response()->json(['data' => $data]);
     }
 }

@@ -11,6 +11,7 @@ use App\Models\DetailEkatalog;
 use App\Models\DetailEkatalogProduk;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananProduk;
+use App\Models\DetailStokDivisiPart;
 use App\Models\Divisi;
 use App\Models\Ekatalog;
 use App\Models\GudangBarangJadi;
@@ -28,9 +29,11 @@ use App\Models\Produk;
 use App\Models\Satuan;
 use App\Models\Spa;
 use App\Models\Spb;
+use App\Models\StokDivisiPart;
 use App\Models\SystemLog;
 use App\Models\TFProduksi;
 use App\Models\TFProduksiDetail;
+use App\Models\TFProduksiHistory;
 use App\Models\User;
 use Illuminate\Filesystem\Filesystem;
 use Yajra\DataTables\Facades\DataTables;
@@ -5147,42 +5150,115 @@ class GudangController extends Controller
 
     function tfgbmp_store(Request $request)
     {
-        //dd(count($request->detail_t_gbj));
-        $validator = Validator::make($request->all(), [
-            'no_transfer' => 'required',
-            'divisi' => 'required',
-            'tanggal' => 'required',
-            'ket' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'gagal'
+        if ($request->status == 'draft') {
+            $validator = Validator::make($request->all(), [
+                'no_transfer' => 'required|unique:t_gbj,no_transaksi',
+                'divisi' => 'required',
+                'tanggal' => 'required',
+                'ket' => 'required',
             ]);
-        } else {
-            $tf = TFProduksi::create([
-                'no_transaksi' => $request->no_transfer,
-                'tgl_keluar' => $request->tanggal,
-                'ke' => $request->divisi,
-                'dari' => 11,
-                'status_id' => 1,
-                'jenis' => 'keluar',
-                'deskripsi' => $request->ket,
-                'created_by' => 11,
 
-
-            ]);
-            for ($i = 0; $i < count($request->detail_t_gbj); $i++) {
-                TFProduksiDetail::create([
-                    't_gbj_id' => $tf->id,
-                    'detail_stok_divisi_part_id' => $request->detail_t_gbj[$i]['detail_stok_divisi_part_id'],
-                    'qty' => $request->detail_t_gbj[$i]['jumlah'],
-                    'jenis' => 'keluar',
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'gagal'
                 ]);
+            } else {
+                $tf = TFProduksi::create([
+                    'no_transaksi' => $request->no_transfer,
+                    'tgl_keluar' => $request->tanggal,
+                    'ke' => $request->divisi,
+                    'dari' => 11,
+                    'jenis' => 'keluar',
+                    'deskripsi' => $request->ket,
+                    'created_by' => 11,
+                ]);
+
+
+                for ($i = 0; $i < count($request->detail_t_gbj); $i++) {
+                    TFProduksiDetail::create([
+                        't_gbj_id' => $tf->id,
+                        'detail_stok_divisi_part_id' => $request->detail_t_gbj[$i]['detail_stok_divisi_part_id'],
+                        'qty' => $request->detail_t_gbj[$i]['jumlah'],
+                        'jenis' => 'keluar',
+                    ]);
+                }
+
+                TFProduksiHistory::create([
+                    't_gbj_id' => $tf->id,
+                    'status_id' => 1,
+                    'divisi_id' => 11
+                ]);
+
+                return response()->json([
+                    'status' => 'berhasil'
+                ]);
+            }
+        } else if ($request->status == 'post') {
+            $validator = Validator::make($request->all(), [
+                'id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'gagal'
+                ]);
+            } else {
+                TFProduksiHistory::create([
+                    't_gbj_id' => $request->id,
+                    'status_id' => 2,
+                    'divisi_id' => 11
+                ]);
+                TFProduksiHistory::create([
+                    't_gbj_id' => $request->id,
+                    'status_id' => 1,
+                    'divisi_id' => 2
+                ]);
+
+                $tfp = TFProduksi::find($request->id);
+                foreach ($tfp->detail as $d) {
+                    $sparepart[] = array(
+                        'id' => $d->DetailStokDivisiPart->StokDivisiPart->getId($tfp->ke, $d->DetailStokDivisiPart->StokDivisiPart->part_id, $d->DetailStokDivisiPart->lot_id),
+                        'stok_divisi_id' => $d->DetailStokDivisiPart->StokDivisiPart->getStokDivisiId($tfp->ke, $d->DetailStokDivisiPart->StokDivisiPart->part_id),
+                        'old_id' => $d->DetailStokDivisiPart->id,
+                        'part_id' => $d->DetailStokDivisiPart->StokDivisiPart->part_id,
+                        'lot_id' => $d->DetailStokDivisiPart->lot_id,
+                        'qty' => $d->qty,
+                        'status' => $d->DetailStokDivisiPart->StokDivisiPart->status($tfp->ke, $d->DetailStokDivisiPart->StokDivisiPart->part_id)
+
+                    );
+                }
+
+                for ($i = 0; $i < count($tfp->detail); $i++) {
+                    if ($sparepart[$i]['status'] == 'kosong') {
+                        $header = StokDivisiPart::create([
+                            'part_id' => $sparepart[$i]['part_id'],
+                            'divisi_id' => $tfp->ke
+                        ]);
+
+                        DetailStokDivisiPart::create([
+                            'stok_divisi_part_id' => $header->id,
+                            'lot_id' => $sparepart[$i]['lot_id'],
+                            'stok' => $sparepart[$i]['qty'],
+                        ]);
+                    } else {
+                        $detail = DetailStokDivisiPart::find($sparepart[$i]['id']);
+                        $detail->stok = $detail->stok + $sparepart[$i]['qty'];
+                        $detail->save();
+
+                        $old_detail = DetailStokDivisiPart::find($sparepart[$i]['old_id']);
+                        $old_detail->stok = $old_detail->stok - $sparepart[$i]['qty'];
+                        $old_detail->save();
+                    }
+                }
             }
 
             return response()->json([
-                'status' => 'berhasil'
+                'status' => 'berhasil',
+                'data' => $sparepart
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'gagal'
             ]);
         }
     }
@@ -5198,7 +5274,7 @@ class GudangController extends Controller
                 'divisi' => $d->ke == 11 ?  $d->darii->nama : $d->divisi->nama,
                 'tanggal_transfer' => $d->tgl_masuk == NULL ? Carbon::parse($d->tgl_keluar)->format('d M Y')  : Carbon::parse($d->tgl_masuk)->format('d M Y'),
                 'jenis' => $d->jenis,
-                'status' => $d->Status->nama,
+                'status' => $d->last_status(11),
                 'ket' => $d->deskripsi
             );
         }

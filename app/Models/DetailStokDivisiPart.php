@@ -10,7 +10,8 @@ class DetailStokDivisiPart extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'detail_stok_divisi_part';
-    protected $fillable = ['stok_divisi_part_id', 'lot_id', 'stok_order', 'stok_onhand'];
+    protected $fillable = ['stok_divisi_part_id', 'lot_id', 'stok'];
+    public $timestamps = false;
 
     public function LotNumber()
     {

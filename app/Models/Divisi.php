@@ -22,4 +22,8 @@ class Divisi extends Model
     {
         return $this->hasMany(StokDivisiPart::class, 'divisi_id', 'id');
     }
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 'divisi_id', 'id');
+    }
 }
