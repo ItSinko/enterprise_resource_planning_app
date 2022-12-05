@@ -1,10 +1,12 @@
 <script>
     import Table from './table.vue'
     import klasifikasi from './klasifikasipart'
+    import Detail from './detailPart'
     export default {
         components: {
             Table,
-            klasifikasi
+            klasifikasi,
+            Detail
         },
         props: {
             dataTable: {
@@ -30,7 +32,7 @@
                 $('.modalKlasifikasi').modal('show')
             },
             detail(index){
-                console.log(index)
+                $('.modalDetailPart').modal('show')
             }
         },
         computed: {
@@ -58,5 +60,6 @@
         </div>
         <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar" @detail="detail"/>
         <klasifikasi :headers="headers"/>
+        <Detail/>
     </div>
 </template>
