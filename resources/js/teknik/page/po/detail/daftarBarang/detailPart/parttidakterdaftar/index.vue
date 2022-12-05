@@ -54,6 +54,6 @@
             </div>
         </div>
         <Table :dataTable="filteredData" @checked="checkedPartsNotTerdaftar"/>
-        <klasifikasi :dataTable="partsSelected" :headers="headers"/>
+        <klasifikasi :headers="headers"/>
     </div>
 </template>

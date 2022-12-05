@@ -5,18 +5,54 @@
             Table
         },
         props: {
-            dataTable: {
-                type: Array,
-                default: () => []
-            },
             headers : {
                 type: Object,
                 default: () => {}
             },
         },
+        data() {
+            return {
+                dataTable : [                    {
+                    id: 1,
+                    nama_packing_list: 'Packing List 1',
+                    jumlah_pemesanan: 10,
+                    part: [{
+                        nama_part: {
+                            value: 1,
+                            label: 'Part 1'
+                        }
+                    }, {
+                        nama_part: {
+                            value: 2,
+                            label: 'Part 2'
+                        }
+                    }]
+                    },
+                    {
+                    id: 2,
+                    nama_packing_list: 'Packing List 2',
+                    jumlah_pemesanan: 20,
+                    part: [{
+                        nama_part: {
+                            value: 1,
+                            label: 'Part 1'
+                        }
+                    }, {
+                        nama_part: {
+                            value: 2,
+                            label: 'Part 2'
+                        }
+                    }]
+                    },]
+            }
+        },
         methods: {
             modalClose() {
                 $('.modalKlasifikasi').modal('hide')
+            },
+
+            removeRow(parts, packing) {
+                this.dataTable[packing].part.splice(parts, 1)
             }
         },
     }
@@ -81,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-                    <Table :dataTable="dataTable" :headers="headers"/>
+                    <Table :dataTable="dataTable" :headers="headers" @removeRow="removeRow"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" @click="modalClose">Batal</button>
