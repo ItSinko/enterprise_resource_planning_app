@@ -31,6 +31,7 @@
                 search: '',
                 gudangtransfer: [],
                 details: null,
+                divisi: null,
             }
         },
         created() {
@@ -39,7 +40,9 @@
         methods: {
             async getGudangTransfer() {
                 this.loading = true
-                const { data } = await axios.get('/api/gbmp/data')
+                const getDivisi = localStorage.getItem('divisi')
+                this.divisi = getDivisi
+                const { data } = await axios.get(`/api/gbmp/data/${getDivisi}`)
                 this.gudangtransfers = data.data
                 this.loading = false
             },
@@ -54,7 +57,7 @@
                 $('.modalAddTransfer').modal('show')
             },
             async detailTransfer(id) {
-                const { data } = await axios.get(`/api/gbmp/data/${id}`)
+                const { data } = await axios.get(`/api/gbmp/data/${this.divisi}/${id}`)
                 this.details = data.data
                 setTimeout(() => {
                 $('.modalDetailTransfer').modal('show')

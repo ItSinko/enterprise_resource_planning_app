@@ -5150,13 +5150,14 @@ class GudangController extends Controller
 
     function tfgbmp_store(Request $request)
     {
-        dd($request->all());
+       // dd($request);
         if ($request->status == 'draft') {
             $validator = Validator::make($request->all(), [
-                'no_transfer' => 'required|unique:t_gbj,no_transaksi',
-                'divisi' => 'required',
+                'no_transaksi' => 'required|unique:t_gbj,no_transaksi',
+                'divisifrom' => 'required',
+                'divisitransfer' => 'required',
                 'tanggal' => 'required',
-                'ket' => 'required',
+                'keterangan' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -5165,21 +5166,21 @@ class GudangController extends Controller
                 ]);
             } else {
                 $tf = TFProduksi::create([
-                    'no_transaksi' => $request->no_transfer,
+                    'no_transaksi' => $request->no_transaksi,
                     'tgl_keluar' => $request->tanggal,
-                    'ke' => $request->divisi,
-                    'dari' => 11,
+                    'ke' => $request->divisitransfer,
+                    'dari' => $request->divisifrom,
                     'jenis' => 'keluar',
-                    'deskripsi' => $request->ket,
+                    'deskripsi' => $request->keterangan,
                     'created_by' => 11,
                 ]);
 
 
-                for ($i = 0; $i < count($request->detail_t_gbj); $i++) {
+                for ($i = 0; $i < count($request->barangs); $i++) {
                     TFProduksiDetail::create([
                         't_gbj_id' => $tf->id,
-                        'detail_stok_divisi_part_id' => $request->detail_t_gbj[$i]['detail_stok_divisi_part_id'],
-                        'qty' => $request->detail_t_gbj[$i]['jumlah'],
+                        'detail_stok_divisi_part_id' => $request->barangs[$i]['lot']['value'],
+                        'qty' => $request->barangs[$i]['jumlah'],
                         'jenis' => 'keluar',
                     ]);
                 }
@@ -5264,7 +5265,7 @@ class GudangController extends Controller
         }
     }
 
-    function tfgbmp_data()
+    function tfgbmp_data($divisi)
     {
         $data = array();
         $tf = TFProduksi::with(['Divisi'])->where('ke', 11)->orWhere('dari', 11)->get();
@@ -5272,27 +5273,27 @@ class GudangController extends Controller
             $data[$key] = array(
                 'id' => $d->id,
                 'no_transaksi' => $d->no_transaksi == null ? '-' : $d->no_transaksi,
-                'divisi' => $d->ke == 11 ?  $d->darii->nama : $d->divisi->nama,
+                'divisi' => $d->ke == $divisi ?  $d->darii->nama : $d->divisi->nama,
                 'tanggal_transfer' => $d->tgl_masuk == NULL ? Carbon::parse($d->tgl_keluar)->format('d M Y')  : Carbon::parse($d->tgl_masuk)->format('d M Y'),
                 'jenis' => $d->jenis,
-                'status' => $d->last_status(11),
+                'status' => $d->last_status($divisi),
                 'ket' => $d->deskripsi
             );
         }
 
         return response()->json(['data' => $data]);
     }
-    function tfgbmp_detail($id)
+    function tfgbmp_detail($divisi,$id)
     {
         $data = array();
         $tf = TFProduksi::with(['Divisi'])->find($id);
         $data['header'] = array(
             'id' => $tf->id,
             'no_transaksi' => $tf->no_transaksi == NULL ? '-' : $tf->no_transaksi,
-            'divisi' => $tf->ke == 11 ?  $tf->darii->nama : $tf->divisi->nama,
+            'divisi' => $tf->ke == $divisi ?  $tf->darii->nama : $tf->divisi->nama,
             'tanggal_transfer' => $tf->tgl_masuk == NULL ? $tf->tgl_keluar  : $tf->tgl_masuk,
             'jenis' => $tf->jenis,
-            'status' => $tf->Status->nama,
+            'status' =>$tf->last_status($divisi),
             'ket' => $tf->deskripsi
         );
 

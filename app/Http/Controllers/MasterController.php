@@ -2383,9 +2383,9 @@ class MasterController extends Controller
             foreach ($StokDivisiPart as  $d) {
                 foreach ($d->DetailStokDivisiPart as $key_b => $e) {
                     $data[$key_b] = array(
-                        'id' => $e->id,
+                        'value' => $e->id,
                         'stok' => $e->stok,
-                        'lot' => $e->LotNumber->number
+                        'label' => $e->LotNumber->number
                     );
                 }
             }
@@ -2393,12 +2393,12 @@ class MasterController extends Controller
             $StokDivisiPart = StokDivisiPart::where('divisi_id', $divisi)->get();
             foreach ($StokDivisiPart as $key_b => $e) {
                 $data[$key_b] = array(
-                    'id' => $e->id,
-                    'nama' => $e->Sparepart->nama,
+                    'value' => $e->part_id,
+                    'label' => $e->Sparepart->nama,
                 );
             }
         }
 
-        return response()->json(['data' => $data]);
+        return response()->json(['parts' => $data]);
     }
 }
