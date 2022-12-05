@@ -79,6 +79,10 @@
                 return true;
             }
         },
+            async save(){
+                const { data } = await axios.post('/api/gbmp/store', this.form)
+                console.log(data)
+            }
         }
     }
 
@@ -170,7 +174,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-primary" @click="save">Simpan</button>
                     </div>
                 </div>
             </div>
