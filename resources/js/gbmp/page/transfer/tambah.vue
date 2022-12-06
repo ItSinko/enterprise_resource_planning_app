@@ -23,6 +23,13 @@
         created() {
             this.getDivisi()
         },
+        computed: {
+            removeDivision() {
+                return this.divisions.filter((division) => {
+                    return division.value != this.divisi
+                })
+            }
+        },
         methods: {
             async getDivisi() {
                 try {
@@ -85,6 +92,19 @@
                 } = await axios.get(`/api/part/divisi/${this.divisi}/${id.value}`).then(res => res.data)
                 this.barangs[index].data_lot = parts
             },
+            reset(){
+                this.form = {
+                    no_transaksi: '',
+                    divisi: '',
+                    keterangan: '',
+                }
+                this.barangs = [{
+                    kode_nama: null,
+                    lot: null,
+                    data_lot: [],
+                    jumlah: null,
+                }]
+            },
             async save() {
                 const kirim = {
                     no_transaksi: this.form.no_transaksi,
@@ -102,20 +122,21 @@
                 item.jumlah === null || item.jumlah === '') ||
                 Object.values(kirim.barangs).some((item) => this.calcStok(item.lot.stok, item.jumlah))
                 if (kirimIsNotValid) {
-                    return alert('Silahkan input data dengan benar')
+                    this.$swal('Error', 'Data tidak boleh kosong', 'error')
                 }else{
                     const success = () => {
                         this.$emit('refresh')
                         $('.modalAddTransfer').modal('hide')
                         this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
+                        this.reset()
                     }
 
                     const error = () => {
                         this.$swal('Gagal', 'Data gagal disimpan', 'error')
                     }
                     const { data } = await axios.post('/api/gbmp/store', kirim)
-                    data.status == 'success' ? success : error
-                    this.$emit('refresh')
+                    console.log(data.status)
+                    data.status == 'berhasil' ? success() : error()
                 }
                 
             }
@@ -149,7 +170,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="">Divisi</label>
-                                            <v-select :options="divisions" v-model="form.divisi"></v-select>
+                                            <v-select :options="removeDivision" v-model="form.divisi"></v-select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Keterangan</label>
