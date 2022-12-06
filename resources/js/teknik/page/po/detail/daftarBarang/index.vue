@@ -1,8 +1,10 @@
 <script>
 import Table from './table.vue'
+import Analisa from './analisa'
 export default {
     components: {
-        Table
+        Table,
+        Analisa
     },
     data() {
         return {
@@ -48,10 +50,16 @@ export default {
             ]
         }
     },
+    methods: {
+        analisa(data) {
+            $('.modalAnalisa').modal('show')
+        },
+    },
 }
 </script>
 <template>
 <div class="card">
+    <analisa/>
     <div class="card-body">
                 <div class="card">
             <div class="card-body">
@@ -73,7 +81,7 @@ export default {
                         <p class="pr-2">Jumlah Barang yang <strong>telah</strong> diperiksa</p>
                     </div>
                 </div>
-                <Table :dataTable="produks" />
+                <Table :dataTable="produks" @analisa="analisa"/>
             </div>
         </div>
     </div>

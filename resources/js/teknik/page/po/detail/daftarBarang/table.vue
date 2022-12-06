@@ -19,7 +19,13 @@ export default {
         detail(data) {
             $('.modalDetail').modal('show')
             this.title = data
-        }
+        },
+        analisa(data) {
+            this.$emit('analisa', data)
+        },
+        klasifikasi(data) {
+            this.$emit('klasifikasi', data)
+        },
     },
 }
 </script>
@@ -45,10 +51,10 @@ export default {
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-sm" v-if="table.aksi == 'analisa'">
+                        <button class="btn btn-danger btn-sm" @click="analisa(idx)" v-if="table.aksi == 'analisa'">
                             Analisa Pemeriksaan Barang
                         </button>
-                        <button class="btn btn-warning btn-sm" v-if="table.aksi == 'klasifikasi'">
+                        <button class="btn btn-warning btn-sm" @click="klasifikasi(idx)" v-if="table.aksi == 'klasifikasi'">
                             Klasifikasi Part
                         </button>
                         <button class="btn-sm btn-outline-info btn" @click="detail(table.nama)">
