@@ -57,6 +57,8 @@
                     value: '12',
                     label: 'Desember'
                 }],
+                selectYears: '',
+                selectMonth: '',
             }
         },
         methods: {
@@ -80,6 +82,16 @@
                 }
                 return years
             },
+            getDatesMonthsAndYearsSelected() {
+                if(this.selectMonth && this.selectYears) {
+                    const date = {
+                        minDates: new Date(this.selectYears.value, this.selectMonth.value, 1),
+                        maxDates: new Date(this.selectYears.value, this.selectMonth.value, 31)
+                    }
+                    return date
+                }
+                return null
+            },
         }
     }
 
@@ -102,11 +114,11 @@
                             <div class="card-body">
                                 <div class="form-group row">
                                     <label for="" class="col-4 text-right">Periode Bulan</label>
-                                    <v-select :options="month" class="col-5"></v-select>
+                                    <v-select v-model="selectMonth" :options="month" class="col-5"></v-select>
                                 </div>
                                 <div class="form-group row">
                                     <label for="" class="col-4 text-right">Periode Tahun</label>
-                                    <v-select :options="get5YearsOld" class="col-5"></v-select>
+                                    <v-select v-model="selectYears" :options="get5YearsOld" class="col-5"></v-select>
                                 </div>
 
                                 <table class="table">
@@ -131,7 +143,7 @@
                                             <td>{{ proses.supplier }}</td>
                                             <td>{{ moment(proses.estimasi_datang) }}</td>
                                             <td>
-                                                <input type="date" name="" id="" class="form-control">
+                                                <input type="date" name="" id="" class="form-control" :min="getDatesMonthsAndYearsSelected.minDates" :max="getDatesMonthsAndYearsSelected.maxDates">
                                             </td>
                                             <td>
                                                 <input type="date" name="" id="" class="form-control">
