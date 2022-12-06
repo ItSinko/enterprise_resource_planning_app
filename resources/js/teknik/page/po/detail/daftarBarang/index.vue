@@ -1,10 +1,12 @@
 <script>
 import Table from './table.vue'
 import Analisa from './analisa'
+import klasifikasi from './detailPart/parttidakterdaftar/klasifikasipart'
 export default {
     components: {
         Table,
-        Analisa
+        Analisa,
+        klasifikasi
     },
     data() {
         return {
@@ -47,19 +49,27 @@ export default {
                       },
                     'aksi' : 'klasifikasi'
                 }
-            ]
+            ],
+            produk_selected: '',
         }
     },
     methods: {
         analisa(data) {
             $('.modalAnalisa').modal('show')
         },
+        klasifikasi(data) {
+            this.produk_selected = data
+            setTimeout(() => {
+                $('.modalKlasifikasi').modal('show')
+            }, 100)
+        }
     },
 }
 </script>
 <template>
 <div class="card">
     <analisa/>
+    <klasifikasi :headers="produk_selected"/>
     <div class="card-body">
                 <div class="card">
             <div class="card-body">
@@ -81,7 +91,7 @@ export default {
                         <p class="pr-2">Jumlah Barang yang <strong>telah</strong> diperiksa</p>
                     </div>
                 </div>
-                <Table :dataTable="produks" @analisa="analisa"/>
+                <Table :dataTable="produks" @analisa="analisa" @klasifikasi="klasifikasi"/>
             </div>
         </div>
     </div>

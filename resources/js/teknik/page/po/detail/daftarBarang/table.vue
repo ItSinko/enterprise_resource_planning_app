@@ -54,7 +54,7 @@ export default {
                         <button class="btn btn-danger btn-sm" @click="analisa(idx)" v-if="table.aksi == 'analisa'">
                             Analisa Pemeriksaan Barang
                         </button>
-                        <button class="btn btn-warning btn-sm" @click="klasifikasi(idx)" v-if="table.aksi == 'klasifikasi'">
+                        <button class="btn btn-warning btn-sm" @click="klasifikasi(table.nama)" v-if="table.aksi == 'klasifikasi'">
                             Klasifikasi Part
                         </button>
                         <button class="btn-sm btn-outline-info btn" @click="detail(table.nama)">

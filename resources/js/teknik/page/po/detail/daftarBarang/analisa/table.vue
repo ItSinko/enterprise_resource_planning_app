@@ -10,10 +10,10 @@ export default {
 </script>
 <template>
     <div>
-        <table class="table">
+        <table class="table text-center">
             <thead class="thead-light">
                 <tr>
-                    <th></th>
+                    <th rowspan="2"></th>
                     <th rowspan="2">Nama Produk</th>
                     <th colspan="2">Jumlah</th>
                     <th colspan="2">Hasil</th>
