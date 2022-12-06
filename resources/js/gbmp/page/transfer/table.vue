@@ -71,8 +71,10 @@
                             const {
                                 data
                             } = axios.post('/api/gbmp/store', kirim)
-                            this.$emit('refresh')
                             this.$swal('Berhasil!', 'Barang berhasil diterima.', 'success')
+                            setTimeout(() => {
+                                this.$emit('refresh')
+                            }, 100);
                         }
                     })
                 } else {
