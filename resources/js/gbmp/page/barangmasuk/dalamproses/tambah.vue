@@ -57,8 +57,8 @@
                     value: '12',
                     label: 'Desember'
                 }],
-                selectYears: '',
-                selectMonth: '',
+                selectYears: null,
+                selectMonth: null,
             }
         },
         methods: {
@@ -68,7 +68,31 @@
             deleteProses(idx, po) {
                 this.$emit('deleteProses', idx, po)
             },
-        },
+            simpan() {
+                const dataisValid = () => {
+                    let isValid = false
+                    if(this.addProses.length > 0 && this.selectMonth && this.selectYears){
+                        this.addProses.some(proses => {
+                            if(proses.jadwal_mulai && proses.jadwal_selesai && proses.jadwal_mulai <= proses.jadwal_selesai) {
+                                isValid = true
+                                return true
+                            }
+                    })
+                    }
+                    return isValid
+                }
+                const success = () => {
+                    this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
+                    $('.modalAddProses').modal('hide')
+                }
+
+                const error = () => {
+                    this.$swal('Gagal', 'Data gagal disimpan', 'error')
+                }
+
+                return dataisValid() ? success() : error()
+            },
+        },  
 
         computed: {
             get5YearsOld() {
@@ -83,14 +107,16 @@
                 return years
             },
             getDatesMonthsAndYearsSelected() {
+                const date = {
+                    minDates: null,
+                    maxDates: null
+                }
                 if(this.selectMonth && this.selectYears) {
-                    const date = {
-                        minDates: new Date(this.selectYears.value, this.selectMonth.value, 1),
-                        maxDates: new Date(this.selectYears.value, this.selectMonth.value, 31)
-                    }
+                    date.minDates = `${this.selectYears.value}-${this.selectMonth.value}-01`
+                    date.maxDates = `${this.selectYears.value}-${this.selectMonth.value}-${new Date(this.selectYears.value, this.selectMonth.value, 0).getDate()}`
                     return date
                 }
-                return null
+                return date
             },
         }
     }
@@ -143,10 +169,10 @@
                                             <td>{{ proses.supplier }}</td>
                                             <td>{{ moment(proses.estimasi_datang) }}</td>
                                             <td>
-                                                <input type="date" name="" id="" class="form-control" :min="getDatesMonthsAndYearsSelected.minDates" :max="getDatesMonthsAndYearsSelected.maxDates">
+                                                <input v-model="proses.jadwal_mulai" type="date" name="" id="" class="form-control" :min="getDatesMonthsAndYearsSelected.minDates" :max="getDatesMonthsAndYearsSelected.maxDates">
                                             </td>
                                             <td>
-                                                <input type="date" name="" id="" class="form-control">
+                                                <input v-model="proses.jadwal_selesai" type="date" name="" id="" class="form-control" :min="proses.jadwal_mulai" :max="getDatesMonthsAndYearsSelected.maxDates">
                                             </td>
                                             <td>
                                                 <i class="fa fa-minus" style="color: red" aria-hidden="true" @click="deleteProses(index, proses.no_po)"></i>
@@ -159,7 +185,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                        <button type="button" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-primary" @click="simpan">Simpan</button>
                     </div>
                 </div>
             </div>
