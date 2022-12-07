@@ -15,8 +15,8 @@ export default {
                     jumlah_sample : 5,
                     jumlah_ok : 5,
                     jumlah_nok : 0,
-                    permasalahan: 'Tidak ada',
-                    keterangan: 'Tidak ada'
+                    permasalahan: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.',
+                    keterangan: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.'
                 },
                 {
                     nama_produk : 'Produk 2',
@@ -24,8 +24,8 @@ export default {
                     jumlah_sample : 5,
                     jumlah_ok : 5,
                     jumlah_nok : 0,
-                    permasalahan: 'Tidak ada',
-                    keterangan: 'Tidak ada'
+                    permasalahan: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.',
+                    keterangan: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.'
                 }
             ]
         }

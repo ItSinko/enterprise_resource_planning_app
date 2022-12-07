@@ -71,7 +71,7 @@ export default {
     <analisa/>
     <klasifikasi :headers="produk_selected"/>
     <div class="card-body">
-                <div class="card">
+        <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
@@ -91,9 +91,9 @@ export default {
                         <p class="pr-2">Jumlah Barang yang <strong>telah</strong> diperiksa</p>
                     </div>
                 </div>
-                <Table :dataTable="produks" @analisa="analisa" @klasifikasi="klasifikasi"/>
             </div>
         </div>
+        <Table :dataTable="produks" @analisa="analisa" @klasifikasi="klasifikasi"/>
     </div>
 </div>
 </template>

@@ -10,7 +10,7 @@ export default {
 </script>
 <template>
     <div>
-        <table class="table text-center">
+        <table class="table text-center tableAnalisaBarang">
             <thead class="thead-light">
                 <tr>
                     <th rowspan="2"></th>
