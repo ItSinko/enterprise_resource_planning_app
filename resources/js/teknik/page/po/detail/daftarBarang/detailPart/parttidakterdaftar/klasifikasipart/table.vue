@@ -39,7 +39,12 @@
             },
 
             addNew() {
-                console.log('add new')
+                this.detailParts.push({
+                    nama_part: {
+                        value: null,
+                        label: null
+                    }
+                })
             },
             removePart(index){
                 this.detailParts.splice(index, 1)
@@ -49,6 +54,7 @@
             },
             simpanDraft(){
                 this.dataTable[this.headersDetail.index].part = this.detailParts
+                this.close()
             }
         },
     }
@@ -129,7 +135,7 @@
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary"  @click="addNew">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     Tambah Part
                                                 </button>
