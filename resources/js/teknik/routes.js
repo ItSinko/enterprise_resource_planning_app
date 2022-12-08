@@ -5,8 +5,8 @@ import Produk from "./page/produk.vue";
 import Bom from "./page/bom.vue";
 import ProdukTambah from "./subproduk/tambahEdit.vue";
 import ProdukDetail from "./subproduk/detail.vue";
-import BarangMasuk from "./page/barangMasuk.vue";
-import PurchaseOrder from "./page/purchaseOrder.vue";
+import PurchaseOrder from "./page/po";
+import DetailPO from "./page/po/detail";
 
 
 const routes = [
@@ -19,8 +19,8 @@ const routes = [
         component: Produk
     },
     {
-        path: "/teknik/barangMasuk",
-        component: BarangMasuk
+        path: "/teknik/detailPO",
+        component: DetailPO
     },
     {
         path: "/teknik/purchaseOrder",

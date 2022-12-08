@@ -35,23 +35,11 @@ export default {
         filteredBOMs() {
             const dataIsNotNull = (data) =>
                 data !== null && data !== undefined && data !== "" ? data : "";
-            return this.boms.filter((bom) => {
-                const search = this.search.toLowerCase();
-                const nama = dataIsNotNull(bom.nama).toLowerCase();
-                const kode = dataIsNotNull(bom.kode).toLowerCase();
-                const produk = dataIsNotNull(bom.produk).toLowerCase();
-                const aktif = dataIsNotNull(bom.aktif).toLowerCase();
-                const tahun_pembuatan = dataIsNotNull(bom.tahun_pembuatan).toLowerCase();
-
-
-                return (
-                    nama.includes(search)  ||
-                    kode.includes(search) ||
-                    produk.includes(search) ||
-                    aktif.includes(search) ||
-                    tahun_pembuatan.includes(search)
-                )
-            });
+            return this.boms.filter((row) => {
+                return Object.keys(row).some((key) => {
+                    return String(dataIsNotNull(row[key])).toLowerCase().includes(this.search.toLowerCase())
+                })
+            })
 
         },
         renderPaginate() {
