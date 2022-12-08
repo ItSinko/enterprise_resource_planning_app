@@ -57,16 +57,30 @@ import Table from './table.vue'
                     },
                 }
                 ],
+                statusSelected: [],
             }
         },
         methods: {
             moment(date) {
                 return moment(date).lang("ID").format('DD MMMM YYYY')
             },
+            clickFilterdalamProses(status){
+                if (this.statusSelected.includes(status)) {
+                    this.statusSelected = this.statusSelected.filter(item => item !== status)
+                } else {
+                    this.statusSelected.push(status)
+                }
+            }
         },
         computed: {
+            filterJadwals() {
+                if (this.statusSelected.length > 0) {
+                    return this.jadwals.filter(jadwal => this.statusSelected.includes(jadwal.status))
+                }
+                return this.jadwals
+            },
             groupDateJadwals() {
-                return this.jadwals.reduce((acc, jadwal) => {
+                return this.filterJadwals.reduce((acc, jadwal) => {
                     const date = moment(jadwal.tanggal).format('YYYY-MM-DD')
                     if (!acc[date]) {
                         acc[date] = []
@@ -75,6 +89,14 @@ import Table from './table.vue'
                     return acc
                 }, {})
             },
+            getUniqueStatus() {
+                return this.jadwals.reduce((acc, jadwal) => {
+                    if (!acc.includes(jadwal.status)) {
+                        acc.push(jadwal.status)
+                    }
+                    return acc
+                }, [])
+            },
         }
     }
 
@@ -82,7 +104,11 @@ import Table from './table.vue'
 <template>
     <div class="card">
         <div class="card-body">
-                <header-jadwal :month-years="monthYears"></header-jadwal>
+                <header-jadwal
+                :statusData="getUniqueStatus" 
+                :month-years="monthYears"
+                @clickFilterdalamProses="clickFilterdalamProses"
+                ></header-jadwal>
                 <Table :dataTable="groupDateJadwals" />
         </div>
     </div>

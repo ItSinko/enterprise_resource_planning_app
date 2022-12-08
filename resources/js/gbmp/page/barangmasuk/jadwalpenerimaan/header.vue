@@ -6,6 +6,10 @@
             monthYears: {
                 type: String,
                 required: true
+            },
+            statusData: {
+                type: Array,
+                default: () => []
             }
         },
         methods: {
@@ -19,6 +23,9 @@
             prevMonthYear() {
                 this.monthYears = moment(this.monthYears, 'MM-YYYY').lang("ID").subtract(1, 'months').format('MM YYYY')
             },
+            clickFilterdalamProses(status) {
+                this.$emit('clickFilterdalamProses', status)
+            }
         },
     }
 
@@ -33,6 +40,28 @@
                     Pilih Periode
                     <i class="fa fa-caret-down" aria-hidden="true"></i>
                 </button>
+                                            <div class="dropdown-menu">
+                                <div class="px-3 py-3">
+                                    <div class="form-group"><label for="">Status</label></div>
+                                    <div class="form-group" v-for="status in statusData" :key="status">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                @click="clickFilterdalamProses(status)" :ref="status" :value="status">
+                                            <label for="" class="form-check-label">{{ status }}</label>
+                                        </div>
+                                    </div>
+                                    <!-- Ngambil dari Tanggal PO -->
+                                    <div class="form-group"><label for="">Tanggal PO</label></div>
+                                    <div class="form-group">
+                                        <label for="">Mulai Tanggal</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Hingga Tanggal</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
             </div>
             <div class="bd-highlight">
                 <h2 class="font-bold">
