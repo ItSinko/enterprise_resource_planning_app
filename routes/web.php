@@ -95,7 +95,9 @@ Route::middleware('auth')->prefix('/teknik')->group(function () {
 Route::middleware('auth')->prefix('/gbmp')->group(function () {
     Route::view('/{any?}', 'spa.gbmp');
 });
-
+Route::middleware('auth')->prefix('/pembelian')->group(function () {
+    Route::view('/{any?}', 'spa.pembelian');
+});
 
 Route::group(['prefix' => '/gbj', 'middleware' => ['auth', 'divisi:gbj,mgrgdg,dirut']], function () {
     Route::view('/stok/{any?}', 'page.gbj.stok');
