@@ -37,6 +37,7 @@ const routes = [
         component: SupplierDetail,
         name: "supplierDetail",
     }
+    
 ];
 
 const router = new VueRouter({
