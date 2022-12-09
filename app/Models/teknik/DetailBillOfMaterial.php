@@ -2,6 +2,7 @@
 
 namespace App\Models\teknik;
 
+use App\Models\DetailPermintaanPembelian;
 use App\Models\Satuan;
 use App\Models\Sparepart;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,5 +28,9 @@ class DetailBillOfMaterial extends Model
     function satuan()
     {
         return $this->belongsTo(Satuan::class, 'satuan_id');
+    }
+    public function DetailPermintaanPembelianProduk()
+    {
+        return $this->hasMany(DetailPermintaanPembelianProduk::class);
     }
 }

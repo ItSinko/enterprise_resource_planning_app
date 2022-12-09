@@ -22,4 +22,8 @@ class BillOfMaterial extends Model
     {
         return $this->belongsTo(Produk::class, 'produk_id');
     }
+    public function DetailPermintaanPembelian()
+    {
+        return $this->hasMany(DetailPermintaanPembelian::class);
+    }
 }

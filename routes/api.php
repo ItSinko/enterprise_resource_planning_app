@@ -202,7 +202,11 @@ Route::prefix('/laporan')->group(function () {
     Route::post('/qc/{jenis}/{produk}/{no_so}/{hasil}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\QcController::class, 'get_data_laporan_qc']);
     Route::post('/logistik/{pengiriman}/{ekspedisi}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\LogistikController::class, 'get_data_laporan_logistik']);
 });
-
+Route::prefix('/pembelian')->group(function () {
+    Route::prefix('/pp')->group(function () {
+        Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+    });
+});
 Route::prefix('/gbmp')->group(function () {
     Route::post('/tf', [App\Http\Controllers\GudangController::class, 'tfgbmp']);
     Route::get('/data/{divisi}', [App\Http\Controllers\GudangController::class, 'tfgbmp_data']);
@@ -225,6 +229,7 @@ Route::prefix('/gbj')->group(function () {
     Route::get('sel-satuan', [GudangController::class, 'select_satuan']);
     Route::get('sel-layout', [GudangController::class, 'select_layout']);
     Route::get('sel-divisi', [GudangController::class, 'select_divisi']);
+    Route::get('sel-divisi/{id}', [GudangController::class, 'select_divisi_detail']);
     Route::get('sel-gbj', [GudangController::class, 'select_gbj'])->middleware('jwt.verify');
 
     // so
