@@ -1,7 +1,7 @@
 <script>
 import Table from './table.vue'
 import Header from '../../components/header.vue'
-import mix from './mix'
+import mix from '../../mix'
 export default {
     components: {
         Table,
@@ -59,7 +59,7 @@ export default {
         },
     },
     computed: {
-        filteredSuppliers() {
+        filteredDatatables() {
             const dataIsNotNull = (data) =>
             data !== null && data !== undefined && data !== "" ? data : "-";
             return this.suppliers.filter((supplier) => {

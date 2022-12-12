@@ -23,13 +23,13 @@ export default {
     },
     computed: {
         renderPaginate() {
-            return this.filteredSuppliers.slice(
+            return this.filteredDatatables.slice(
               this.perPage * (this.currentPage - 1),
               this.perPage * this.currentPage
             );
           },
         pages() {
-            let totalPages = Math.ceil(this.filteredSuppliers.length / this.perPage)
+            let totalPages = Math.ceil(this.filteredDatatables.length / this.perPage)
 
             let pages = []
 

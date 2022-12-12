@@ -1,10 +1,15 @@
 import VueRouter from "vue-router";
 
+// Supplier
 import Supplier from "./page/supplier";
 import SupplierTambah from "./page/supplier/tambahedit.vue";
 import SupplierDetail from "./page/supplier/detail";
+// Permintaan
+import Permintaan from "./page/permintaan";
+import PermintaanTambahDalamProses from "./page/permintaan/dalamproses/tambah";
 
 const routes = [
+    // Supplier
     {
         path: "/pembelian/supplier",
         component: Supplier,
@@ -36,8 +41,19 @@ const routes = [
         path: "/pembelian/supplier/:id",
         component: SupplierDetail,
         name: "supplierDetail",
+    },
+    // Permintaan
+    {
+        path: "/pembelian/permintaan",
+        component: Permintaan,
+        name: "permintaan",
+    },
+    // Dalam Proses
+    {
+        path: "/pembelian/permintaan/dalamproses/create",
+        component: PermintaanTambahDalamProses,
+        name: "permintaanTambahDalamProses",
     }
-
 ];
 
 const router = new VueRouter({

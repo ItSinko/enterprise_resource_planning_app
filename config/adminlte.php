@@ -239,6 +239,23 @@ return [
             'icon'        => 'nav-icon fa fa-home',
             'auth'        => [23, 34]
         ],
+        // Pembelian
+        [
+            'header' => 'Pembelian',
+            'auth' => [7],
+        ],
+        [
+            'text'  =>  'Supplier',
+            'icon'  =>  'fas fa-truck',
+            'url'   =>  '/pembelian/supplier',
+            'auth'  => [7],
+        ],
+        [
+            'text' => 'Permintaan Pembelian',
+            'icon' => 'fas fa-shopping-cart',
+            'url' => '/pembelian/permintaan',
+            'auth' => [7],
+        ],
         // PPIC (24)
         [
             'header' => 'Data',

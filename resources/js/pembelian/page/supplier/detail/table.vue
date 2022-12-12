@@ -1,5 +1,5 @@
 <script>
-    import mix from '../mix'
+    import mix from '../../../mix'
     import moment from 'moment'
     export default {
         mixins: [mix],
@@ -15,7 +15,7 @@
             }
         },
         methods: {
-            status(status){
+            status(status) {
                 switch (status) {
                     case 'batal':
                         return `<span class="badge badge-danger">${status}</span>`
@@ -38,36 +38,36 @@
                         break;
                 }
             },
-            moment(date){
+            moment(date) {
                 return moment(date).lang('id').format('LL')
             }
         },
         computed: {
-            filteredSuppliers() {
+            filteredDatatables() {
                 const dataIsNotNull = (data) =>
-                data !== null && data !== undefined && data !== "" ? data : "-";
+                    data !== null && data !== undefined && data !== "" ? data : "-";
                 return this.dataTable.filter((data) => {
                     return (
                         dataIsNotNull(data.no_po)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(data.divisi)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(data.tanggal_diminta)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(data.estimasi_kedatangan)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(data.status)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase())
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase())
                     )
                 })
             }
@@ -102,7 +102,9 @@
                     <td>{{ data.divisi }}</td>
                     <td>{{ moment(data.tanggal_diminta) }}</td>
                     <td>{{ moment(data.estimasi_kedatangan) }}</td>
-                    <td><div v-html="status(data.status)"></div></td>
+                    <td>
+                        <div v-html="status(data.status)"></div>
+                    </td>
                 </tr>
             </tbody>
             <tbody v-else>
@@ -111,22 +113,22 @@
                 </tr>
             </tbody>
         </table>
-                        <div class="d-flex flex-row-reverse bd-highlight">
-                    <nav aria-label="...">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
-                            </li>
-                            <li class="page-item" :class="paginate == currentPage ? 'active' : ''"
-                                v-for="paginate in pages" :key="paginate">
-                                <a class="page-link" @click="nowPage(paginate)">{{paginate}}</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
-                                    @click="nextPage">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
+                    </li>
+                    <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
+                        :key="paginate">
+                        <a class="page-link" @click="nowPage(paginate)">{{paginate}}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
+                            @click="nextPage">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </template>
