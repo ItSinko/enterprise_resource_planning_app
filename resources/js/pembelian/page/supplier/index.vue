@@ -44,7 +44,6 @@ export default {
                     email: 'Jiawang@wang.com',
                     telepon: '08123456789',
                 },
-                
             ]
         }
     },
@@ -113,7 +112,7 @@ export default {
                         </div>
                     </div>
                 </div>
-                <Table :dataTable="filteredSuppliers" @edit="editSupplier" @detail="detailSupplier"/>
+                <Table :dataTable="renderPaginate" @edit="editSupplier" @detail="detailSupplier"/>
             </div>
                         <div class="card-footer">
                 <div class="d-flex flex-row-reverse bd-highlight">

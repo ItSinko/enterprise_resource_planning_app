@@ -17,7 +17,7 @@ export default {
                 <p class="text-bold">Data Supplier</p>
                 <div class="row">
                     <div class="col-2">
-                        <i class="fa fa-barcode fa-2xl" aria-hidden="true"></i>
+                        <i class="fa fa-barcode fa-xl" aria-hidden="true"></i>
                     </div>
                     <div class="col">
                         <p>Kode Supplier</p>
@@ -26,7 +26,7 @@ export default {
                 </div>
                 <div class="row">
                     <div class="col-2">
-                        <i class="fa fa-map-pin fa-2xl" aria-hidden="true"></i>
+                        <i class="fa fa-map-pin fa-xl" aria-hidden="true"></i>
                     </div>
                     <div class="col">
                         <p>Jenis Supplier</p>
@@ -35,10 +35,10 @@ export default {
                 </div>
                 <div class="row">
                     <div class="col-2">
-                        <i class="fas fa-money-bill-wave fa-2xl"></i>
+                        <i class="fas fa-money-bill-wave fa-xl"></i>
                     </div>
                     <div class="col">
-                        <p>Kurs Supplier</p>
+                        <p>Kurs</p>
                         <p class="text-bold">Kurs Supplier</p>
                     </div>
                 </div>
