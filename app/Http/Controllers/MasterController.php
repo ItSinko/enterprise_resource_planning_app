@@ -47,6 +47,7 @@ use App\Models\SparepartGudang;
 use App\Models\StokDivisiPart;
 use App\Models\SystemLog;
 use App\Models\LotNumber;
+use App\Models\Supplier;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
 use App\Models\teknik\JenisBahan;
@@ -58,6 +59,7 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPUnit\Framework\returnValueMap;
+
 
 class MasterController extends Controller
 {
@@ -2400,5 +2402,72 @@ class MasterController extends Controller
         }
 
         return response()->json(['parts' => $data]);
+    }
+
+    public function get_data_supplier()
+    {
+        $data = Supplier::all();
+        return response()->json(['data' => $data]);
+    }
+    public function store_supplier(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'kode' => 'required|unique:supplier,kode',
+            'nama' => 'required|unique:supplier,nama',
+            'jenis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            Supplier::create([
+                'kode' => $request->kode,
+                'nama' => $request->nama,
+                'kurs' => $request->kurs,
+                'email' =>  $request->email,
+                'telepon' => $request->telepon,
+                'jenis' => $request->jenis,
+            ]);
+
+
+            return response()->json([
+                'status' => 'berhasil'
+            ]);
+        }
+    }
+
+
+    public function edit_supplier($id)
+    {
+        $data = Supplier::find($id);
+        return response()->json(['data' => $data]);
+    }
+
+    public function update_supplier(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'kode' => 'required|unique:supplier,kode,' . $id,
+            'nama' => 'required|unique:supplier,nama,' . $id,
+            'jenis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            $data = Supplier::find($id);
+            $data->kode = $request->kode;
+            $data->nama = $request->nama;
+            $data->kurs = $request->kurs;
+            $data->email =  $request->email;
+            $data->telepon = $request->telepon;
+            $data->jenis = $request->jenis;
+            $data->save();
+            return response()->json(['status' => 'berhasil']);
+        }
     }
 }

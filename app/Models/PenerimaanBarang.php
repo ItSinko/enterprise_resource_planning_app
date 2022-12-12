@@ -9,7 +9,7 @@ class PenerimaanBarang extends Model
 {
     use HasFactory;
     protected $connection = 'erp';
-    protected $table = 'penerimaan_barang';
+    protected $table = 'penerimaan_gdg';
     protected $fillable = ['pembelian_id', 'lot_id', 'no_lpb', 'tgl_kedatangan', 'ket'];
 
     public function DetailPenerimaanBarang()

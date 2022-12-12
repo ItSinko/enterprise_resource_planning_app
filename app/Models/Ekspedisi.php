@@ -23,4 +23,8 @@ class Ekspedisi extends Model
     {
         return $this->hasMany(Logistik::class);
     }
+    public function PermintaanPembelian()
+    {
+        return $this->hasMany(PermintaanPembelian::class);
+    }
 }

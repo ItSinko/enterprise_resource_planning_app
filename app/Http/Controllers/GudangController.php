@@ -3629,6 +3629,11 @@ class GudangController extends Controller
         $data = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31])->get();
         return response()->json($data);
     }
+    function select_divisi_detail($id)
+    {
+        $data = Divisi::whereNotIn('id', [1, 2, 3, 4, 5, 31, $id])->get();
+        return response()->json($data);
+    }
 
     function select_gbj()
     {
@@ -5150,7 +5155,7 @@ class GudangController extends Controller
 
     function tfgbmp_store(Request $request)
     {
-       // dd($request);
+        // dd($request);
         if ($request->status == 'draft') {
             $validator = Validator::make($request->all(), [
                 'no_transaksi' => 'required|unique:t_gbj,no_transaksi',
@@ -5205,18 +5210,19 @@ class GudangController extends Controller
                     'status' => 'gagal'
                 ]);
             } else {
+                $tfp = TFProduksi::find($request->id);
                 TFProduksiHistory::create([
                     't_gbj_id' => $request->id,
                     'status_id' => 2,
-                    'divisi_id' => 11
+                    'divisi_id' => $tfp->dari
                 ]);
                 TFProduksiHistory::create([
                     't_gbj_id' => $request->id,
                     'status_id' => 1,
-                    'divisi_id' => 2
+                    'divisi_id' => $tfp->ke
                 ]);
 
-                $tfp = TFProduksi::find($request->id);
+
                 foreach ($tfp->detail as $d) {
                     $sparepart[] = array(
                         'id' => $d->DetailStokDivisiPart->StokDivisiPart->getId($tfp->ke, $d->DetailStokDivisiPart->StokDivisiPart->part_id, $d->DetailStokDivisiPart->lot_id),
@@ -5283,7 +5289,7 @@ class GudangController extends Controller
 
         return response()->json(['data' => $data]);
     }
-    function tfgbmp_detail($divisi,$id)
+    function tfgbmp_detail($divisi, $id)
     {
         $data = array();
         $tf = TFProduksi::with(['Divisi'])->find($id);
@@ -5293,7 +5299,7 @@ class GudangController extends Controller
             'divisi' => $tf->ke == $divisi ?  $tf->darii->nama : $tf->divisi->nama,
             'tanggal_transfer' => $tf->tgl_masuk == NULL ? $tf->tgl_keluar  : $tf->tgl_masuk,
             'jenis' => $tf->jenis,
-            'status' =>$tf->last_status($divisi),
+            'status' => $tf->last_status($divisi),
             'ket' => $tf->deskripsi
         );
 

@@ -49,4 +49,8 @@ class Sparepart extends Model
     {
         return $this->hasMany(StokDivisiPart::class, 'part_id', 'id');
     }
+    public function DetailPermintaanPembelianProduk()
+    {
+        return $this->hasMany(DetailPermintaanPembelianProduk::class);
+    }
 }
