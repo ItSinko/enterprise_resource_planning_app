@@ -11,15 +11,15 @@ const routes = [
         name: "supplier",
     },
     {
-        path: "/pembelian/edit",
+        path: "/pembelian/supplier/create",
         component: SupplierTambah,
         name: "supplierTambah",
     },
     {
-        path: "/pembelian/edit",
+        path: "/pembelian/supplier/:id/edit",
         component: SupplierTambah,
         props: {
-            judul: "Edit Supplier",
+            title: "Edit Supplier",
             breadcumbs: [{
                 name: 'Beranda',
                 link: '#'
@@ -33,11 +33,11 @@ const routes = [
         }
     },
     {
-        path: "/pembelian/detail",
+        path: "/pembelian/supplier/:id",
         component: SupplierDetail,
         name: "supplierDetail",
     }
-    
+
 ];
 
 const router = new VueRouter({

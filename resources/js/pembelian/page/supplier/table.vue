@@ -6,6 +6,14 @@
                 default: () => []
             }
         },
+        methods: {
+            edit(id) {
+                this.$emit('edit', id)
+            },
+            detail(id) {
+                this.$emit('detail', id)
+            }
+        }
     }
 
 </script>
@@ -46,12 +54,18 @@
                     left: 0px;
                     will-change: transform;
                   ">
-                            <button class="dropdown-item" type="button">
+                            <button 
+                            @click="detail(supplier.id)"
+                            class="dropdown-item" 
+                            type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>
 
-                            <button class="dropdown-item" type="button">
+                            <button
+                            @click="edit(supplier.id)"
+                             class="dropdown-item" 
+                             type="button">
                                 <i class="fas fa-pencil-alt"></i>
                                 Edit
                             </button>

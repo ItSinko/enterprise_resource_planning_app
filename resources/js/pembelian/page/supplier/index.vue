@@ -48,6 +48,17 @@ export default {
             ]
         }
     },
+    methods: {
+        addSupplier() {
+            this.$router.push('/pembelian/supplier/create')
+        },
+        editSupplier(id) {
+            this.$router.push(`/pembelian/supplier/${id}/edit`)
+        },
+        detailSupplier(id) {
+            this.$router.push(`/pembelian/supplier/${id}`)
+        },
+    },
     computed: {
         filteredSuppliers() {
             const dataIsNotNull = (data) =>
@@ -91,7 +102,7 @@ export default {
             <div class="card-body">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" @click="addSupplier">
                             <i class="fas fa-plus"></i>
                             Tambah Supplier
                         </button>
@@ -102,7 +113,7 @@ export default {
                         </div>
                     </div>
                 </div>
-                <Table :dataTable="filteredSuppliers"/>
+                <Table :dataTable="filteredSuppliers" @edit="editSupplier" @detail="detailSupplier"/>
             </div>
                         <div class="card-footer">
                 <div class="d-flex flex-row-reverse bd-highlight">

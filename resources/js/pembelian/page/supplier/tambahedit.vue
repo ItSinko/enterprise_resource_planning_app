@@ -1,5 +1,6 @@
 <script>
     import Header from '../../components/header.vue'
+    import axios from 'axios'
     export default {
         components: {
             Header
@@ -22,7 +23,89 @@
                     link: '/pembelian/supplier/tambah'
                 }]
             },
-        }
+        },
+        data() {
+            return {
+                supplier: {
+                    nama: '',
+                    kode: '',
+                    kurs: '',
+                    jenis: '',
+                },
+                alamat_supplier: {
+                    alamat: '',
+                    kode_pos: '',
+                    negara: '',
+                },
+                kontak_supplier: {
+                    telepon: '',
+                    email: '',
+                    fax: '',
+                },
+            }
+        },
+        methods: {
+            batal() {
+                this.$router.push('/pembelian/supplier')
+            },
+            simpan(){
+                let data = {
+                    supplier: this.supplier,
+                    alamat_supplier: this.alamat_supplier,
+                    kontak_supplier: this.kontak_supplier,
+                }
+                const checkIsNotNull = (obj) => {
+                    for (let key in obj) {
+                        if (obj[key] === '') {
+                            return false
+                        }
+                    }
+                    return true
+                }
+                const checkEmailIsValid = (email) => {
+                    let regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+                    return regex.test(email)
+                }
+
+                const success = () => {
+                    this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
+                    this.$router.push('/pembelian/supplier')
+                }
+
+                const error = () => {
+                    this.$swal('Gagal', 'Data gagal disimpan', 'error')
+                }
+
+                const saveData = () => {
+                    const { supplier, alamat_supplier, kontak_supplier } = data
+                    // axios.post('/api/pembelian/supplier', {
+                    //     supplier,
+                    //     alamat_supplier,
+                    //     kontak_supplier,
+                    // }).then(res => {
+                    //     success()
+                    // }).catch(err => {
+                    //     error()
+                    // })
+                    success()
+                }
+
+                if (checkIsNotNull(data.supplier) && checkIsNotNull(data.alamat_supplier) && checkIsNotNull(data.kontak_supplier)) {
+                    checkEmailIsValid(data.kontak_supplier.email) ? saveData() : this.$swal('Gagal', 'Email tidak valid', 'error')
+                } else {
+                    this.$swal('Gagal', 'Data tidak boleh kosong', 'error')
+                }
+            },
+            isNumber(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();;
+                } else {
+                    return true;
+                }
+            },
+        },
     }
 
 </script>
@@ -38,32 +121,32 @@
                             <div class="form-group row">
                                 <label for="" class="col-4 text-right">Nama Supplier</label>
                                 <div class="col-5">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="supplier.nama">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="col-4 text-right">Kode Supplier</label>
                                 <div class="col-4">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="supplier.kode">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="col-4 text-right">Kurs</label>
                                 <div class="col-4">
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" v-model="supplier.kurs">
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="col-4 text-right">Kurs</label>
+                                <label for="" class="col-4 text-right">Jenis Supplier</label>
                                 <div class="row" style="padding-left: 20px">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="option1">
+                                            id="inlineRadio1" value="import" v-model="supplier.jenis">
                                         <label class="form-check-label" for="inlineRadio1">Import</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio2" value="option2">
+                                            id="inlineRadio2" value="lokal" v-model="supplier.jenis">
                                         <label class="form-check-label" for="inlineRadio2">Lokal</label>
                                     </div>
                                 </div>
@@ -82,15 +165,15 @@
                                         <div class="form-group row">
                                             <label for="" class="col-2">Alamat</label>
                                             <textarea class="col-8 form-control" name="" id="" cols="5"
-                                                rows="5"></textarea>
+                                                rows="5" v-model="alamat_supplier.alamat"></textarea>
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Kode Pos</label>
-                                            <input type="text" class="form-control col-3">
+                                            <input type="text" class="form-control col-3" v-model="alamat_supplier.kode_pos" @keypress="isNumber($event)">
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Negara</label>
-                                            <input type="text" class="form-control col-5">
+                                            <input type="text" class="form-control col-5" v-model="alamat_supplier.negara">
                                         </div>
                                     </div>
                                 </div>
@@ -106,15 +189,22 @@
                                         <div class="form-group row">
                                             <label for="" class="col-2">Email</label>
                                             <textarea class="col-8 form-control" name="" id="" cols="5"
+                                                v-model="kontak_supplier.email"
                                                 rows="5"></textarea>
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">No Telepon</label>
-                                            <input type="text" class="form-control col-8">
+                                            <input type="text" class="form-control col-8"
+                                            @keypress="isNumber($event)"
+                                            v-model="kontak_supplier.telepon"
+                                            >
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Fax</label>
-                                            <input type="text" class="form-control col-8">
+                                            <input type="text" class="form-control col-8"
+                                            v-model="kontak_supplier.fax"
+                                            @keypress="isNumber($event)"
+                                            >
                                         </div>
                                     </div>
                                 </div>
@@ -126,10 +216,10 @@
             <div class="card-footer">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">
-                        <button class="btn btn-danger">Batal</button>
+                        <button class="btn btn-danger" @click="batal">Batal</button>
                     </div>
                     <div class="p-2 bd-highlight">
-                        <button class="btn btn-primary">Simpan</button>
+                        <button class="btn btn-primary" @click="simpan">Simpan</button>
                     </div>
                 </div>
             </div>
