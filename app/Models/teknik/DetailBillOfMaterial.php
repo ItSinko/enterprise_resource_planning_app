@@ -29,8 +29,4 @@ class DetailBillOfMaterial extends Model
     {
         return $this->belongsTo(Satuan::class, 'satuan_id');
     }
-    public function DetailPermintaanPembelianProduk()
-    {
-        return $this->hasMany(DetailPermintaanPembelianProduk::class);
-    }
 }

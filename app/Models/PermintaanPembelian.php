@@ -15,4 +15,8 @@ class PermintaanPembelian extends Model
     {
         return $this->hasMany(DetailPermintaanPembelian::class);
     }
+    public function PoPembelian()
+    {
+        return $this->hasMany(PoPembelian::class);
+    }
 }

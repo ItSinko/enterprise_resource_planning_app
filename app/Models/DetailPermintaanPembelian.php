@@ -25,9 +25,13 @@ class DetailPermintaanPembelian extends Model
     {
         return $this->belongsTo(Aset::class, 'aset_id');
     }
-
-    public function DetailPermintaanPembelianProduk()
+    public function Part()
     {
-        return $this->hasMany(DetailPermintaanPembelianProduk::class);
+        return $this->belongsTo(Sparepart::class, 'part_id');
+    }
+
+    public function DetailPoPembelian()
+    {
+        return $this->hasMany(DetailPoPembelian::class);
     }
 }

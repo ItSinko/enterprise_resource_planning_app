@@ -29,6 +29,12 @@ Route::prefix('/bom')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
     Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
+Route::prefix('/supplier')->group(function () {
+    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
+    Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_supplier']);
+    Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
+    Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+});
 
 
 Route::prefix('/part')->group(function () {
@@ -205,6 +211,10 @@ Route::prefix('/laporan')->group(function () {
 Route::prefix('/pembelian')->group(function () {
     Route::prefix('/pp')->group(function () {
         Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+    });
+    Route::prefix('/po')->group(function () {
+        Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
+        Route::get('detail/{poid}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);
     });
 });
 Route::prefix('/gbmp')->group(function () {
