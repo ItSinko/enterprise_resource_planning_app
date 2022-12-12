@@ -46,12 +46,17 @@
                 }
             },
             checked(idx) {
+                console.log(idx)
                 this.dalamProses.find((proses, index) => {
                     if (index === idx) {
-                        if (this.proses_selected.includes(proses)) {
+                        if (this.proses_selected.find(item => item.no_po === proses.no_po)) {
                             this.proses_selected.splice(this.proses_selected.indexOf(proses), 1)
                         } else {
-                            this.proses_selected.push(proses)
+                            this.proses_selected.push({
+                                ...proses,
+                                jadwal_mulai: null,
+                                jadwal_selesai: null,
+                            })
                         }
                     }
                 })

@@ -68,11 +68,23 @@
                                 id: id,
                                 status: 'post'
                             }
+
+                            const success = () => {
+                                this.$swal('Berhasil!', 'Barang berhasil diterima.', 'success')
+                            }
+
+                            const error = () => {
+                                this.$swal('Gagal!', 'Barang gagal diterima.', 'error')
+                            }
+
                             const {
                                 data
                             } = axios.post('/api/gbmp/store', kirim)
-                            this.$emit('refresh')
-                            this.$swal('Berhasil!', 'Barang berhasil diterima.', 'success')
+                                .then(success)
+                                .catch(error)
+                            setTimeout(() => {
+                                this.$emit('refresh')
+                            }, 100);
                         }
                     })
                 } else {

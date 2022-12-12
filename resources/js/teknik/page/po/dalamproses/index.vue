@@ -1,7 +1,9 @@
 <script>
-    import mix from './mix.js'
+    import Table from './table.vue'
     export default {
-        mixins: [mix],
+        components: {
+            Table
+        },
         props: {
             purchaseorders: {
                 type: Array,
@@ -22,18 +24,6 @@
                     this.filterdalamProses.push(filter)
                 }
             },
-        },
-        mounted() {
-            $('.dalamProsesTable').DataTable({
-                "destroy": true,
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
         },
         computed: {
             filtereddalamProses() {
@@ -99,36 +89,6 @@
                 <input type="text" class="form-control" v-model="searchdalamProses" placeholder="Cari...">
             </div>
         </div>
-        <table class="table dalamProsesTable">
-            <thead class="thead-light">
-                <tr>
-                    <th>No PO</th>
-                    <th>Divisi</th>
-                    <th>Supplier</th>
-                    <th>Tanggal Dimitra</th>
-                    <th>Estimasi Kedatangan</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="purchaseorder in filtereddalamProses" :key="purchaseorder.id">
-                    <td>{{purchaseorder.nopo}}</td>
-                    <td>{{purchaseorder.divisi}}</td>
-                    <td>{{purchaseorder.supplier}}</td>
-                    <td>{{formatDateIndonesia(purchaseorder.tanggal)}}</td>
-                    <td>{{formatDateIndonesia(purchaseorder.estimasi)}}</td>
-                    <td v-html="status(purchaseorder.status)"></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-info">
-                            <i class="fa fa-eye" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr v-if="filtereddalamProses.length == 0">
-                    <td colspan="7" class="text-center">Tidak Ditemukan</td>
-                </tr>
-            </tbody>
-        </table>
+        <Table :purchaseorders="filtereddalamProses" />
     </div>
 </template>

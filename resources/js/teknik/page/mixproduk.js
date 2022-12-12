@@ -34,24 +34,11 @@ export default {
         filteredProducts() {
             const dataIsNotNull = (data) =>
                 data !== null && data !== undefined && data !== "" ? data : "";
-            return this.products.filter((product) => {
-                const search = this.search.toLowerCase();
-                const nama = dataIsNotNull(product.nama).toLowerCase();
-                const kode = dataIsNotNull(product.kode).toLowerCase();
-                const kategori = dataIsNotNull(product.kategori).toLowerCase();
-                const jenis = dataIsNotNull(product.jenis).toLowerCase();
-                const deskripsi = dataIsNotNull(product.deskripsi).toLowerCase();
-                const jumlah = dataIsNotNull(product.jumlah).toString().toLowerCase();
-
-                return (
-                    nama.includes(search)  ||
-                    kode.includes(search) ||
-                    kategori.includes(search) ||
-                    jenis.includes(search) ||
-                    deskripsi.includes(search) ||
-                    jumlah.includes(search)
-                )
-            });
+            return this.products.filter((row) => {
+                return Object.keys(row).some((key) => {
+                    return String(dataIsNotNull(row[key])).toLowerCase().includes(this.search.toLowerCase())
+                })
+            })
 
         },
         renderPaginate() {
