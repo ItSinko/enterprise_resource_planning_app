@@ -12,6 +12,19 @@
             },
             detail(id) {
                 this.$emit('detail', id)
+            },
+            jenis(jenis){
+                switch (jenis) {
+                    case 'lokal':
+                        return `<span class="badge badge-primary">Local</span>`
+                        break;
+                    case 'impor':
+                        return `<span class="badge badge-danger">Import</span>`
+                        break;
+                    default:
+                        return `<span class="badge badge-primary">${jenis}</span>`
+                        break;
+                }
             }
         }
     }
@@ -37,7 +50,7 @@
                     <td>{{ index + 1 }}</td>
                     <td>{{ supplier.kode }}</td>
                     <td>{{ supplier.nama }}</td>
-                    <td>{{ supplier.jenis }}</td>
+                    <td><div v-html="jenis(supplier.jenis)"></div></td>
                     <td>{{ supplier.kurs }}</td>
                     <td>{{ supplier.email }}</td>
                     <td>{{ supplier.telepon }}</td>

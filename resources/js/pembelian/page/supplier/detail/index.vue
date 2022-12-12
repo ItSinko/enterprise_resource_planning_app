@@ -2,6 +2,7 @@
     import Header from '../../../components/header.vue'
     import HeaderCard from './header.vue'
     import Table from './table.vue'
+    import axios from 'axios'
     export default {
         components: {
             Header,
@@ -24,6 +25,7 @@
                         link: '/pembelian/supplier/detail'
                     }
                 ],
+                headers: null,
                 dataTable: [{
                         id: 1,
                         no_po: 'PO-001',
@@ -40,9 +42,19 @@
                         estimasi_kedatangan: '2020-01-01',
                         status: 'batal'
                     }
-                ]
+                ],
+                id: this.$route.params.id 
             }
         },
+        created() {
+            this.getDetailSuppliers()
+        },
+        methods: {
+            async getDetailSuppliers () {
+                const { data } = await axios.get(`/api/supplier/edit/${this.id}`).then(res => res.data)
+                this.headers = data
+            }
+        }
     }
 
 </script>
@@ -53,7 +65,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-3">
-                        <HeaderCard />
+                        <HeaderCard :headers="headers"/>
                     </div>
                     <div class="col">
                         <Table :dataTable="dataTable" />

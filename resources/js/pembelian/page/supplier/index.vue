@@ -1,11 +1,14 @@
 <script>
 import Table from './table.vue'
 import Header from '../../components/header.vue'
+import Loading from '../../components/loading.vue'
 import mix from '../../mix'
+import axios from 'axios'
 export default {
     components: {
         Table,
-        Header
+        Header,
+        Loading
     },
     mixins: [mix],
     data() {
@@ -25,29 +28,19 @@ export default {
             // Search
             search: '',
 
-            suppliers: [
-                {
-                    id: 1,
-                    kode: 'SUP-001',
-                    nama: 'PT. Sinar Jaya',
-                    jenis: 'local',
-                    kurs: 'IDR',
-                    email: 'sinarjaya@mail.com',
-                    telepon: '08123456789',
-                },
-                {
-                    id: 2,
-                    kode: 'SUP-002',
-                    nama: 'Jia Wang',
-                    jenis: 'local',
-                    kurs: 'IDR',
-                    email: 'Jiawang@wang.com',
-                    telepon: '08123456789',
-                },
-            ]
+            suppliers: [],
+            loading: true,
         }
     },
+    created() {
+        this.getSupplier()
+    },
     methods: {
+        async getSupplier(){
+            const { data } = await axios.get('/api/supplier/data').then(res => res.data)
+            this.suppliers = data
+            this.loading = false
+        },
         addSupplier() {
             this.$router.push('/pembelian/supplier/create')
         },
@@ -97,7 +90,8 @@ export default {
 <template>
     <div>
         <Header :breadcumbs="breadcumbs" :title="title" />
-        <div class="card">
+        <loading v-if="loading" />
+        <div class="card" v-else>
             <div class="card-body">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">

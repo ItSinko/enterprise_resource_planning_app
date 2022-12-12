@@ -42,9 +42,29 @@
                     email: '',
                     fax: '',
                 },
+                id: this.$route.params.id || null,
             }
         },
+        created() {
+                this.getSupplier()
+        },
         methods: {
+            async getSupplier() {
+                if (this.id) {
+                    const { data } = await axios.get(`/api/supplier/edit/${this.id}`).then(res => res.data)
+                    const { kode, nama, email, telepon, jenis, kurs } = data
+                    this.supplier = {
+                        kode,
+                        nama,
+                        jenis,
+                        kurs,
+                    }
+                    this.kontak_supplier = {
+                        email,
+                        telepon,
+                    }
+                }
+            },
             batal() {
                 this.$router.push('/pembelian/supplier')
             },
@@ -78,16 +98,32 @@
 
                 const saveData = () => {
                     const { supplier, alamat_supplier, kontak_supplier } = data
-                    // axios.post('/api/pembelian/supplier', {
-                    //     supplier,
-                    //     alamat_supplier,
-                    //     kontak_supplier,
-                    // }).then(res => {
-                    //     success()
-                    // }).catch(err => {
-                    //     error()
-                    // })
-                    success()
+                    
+                    const isAdd = () => {
+                        axios.post('/api/supplier/store', {
+                            supplier,
+                            alamat_supplier,
+                            kontak_supplier,
+                        }).then(res => {
+                            success()
+                        }).catch(err => {
+                            error()
+                        })
+                    }
+
+                    const isUpdated = () => {
+                        axios.post(`/api/supplier/update/${this.id}`, {
+                            supplier,
+                            alamat_supplier,
+                            kontak_supplier,
+                        }).then(res => {
+                            success()
+                        }).catch(err => {
+                            error()
+                        })
+                    }
+
+                    this.id ? isUpdated() : isAdd()
                 }
 
                 if (checkIsNotNull(data.supplier) && checkIsNotNull(data.alamat_supplier) && checkIsNotNull(data.kontak_supplier)) {
@@ -141,7 +177,7 @@
                                 <div class="row" style="padding-left: 20px">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="import" v-model="supplier.jenis">
+                                            id="inlineRadio1" value="impor" v-model="supplier.jenis">
                                         <label class="form-check-label" for="inlineRadio1">Import</label>
                                     </div>
                                     <div class="form-check form-check-inline">

@@ -2411,10 +2411,11 @@ class MasterController extends Controller
     }
     public function store_supplier(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
-            'kode' => 'required|unique:supplier,kode',
-            'nama' => 'required|unique:supplier,nama',
-            'jenis' => 'required',
+            'supplier.kode' => 'required|unique:supplier,kode',
+            'supplier.nama' => 'required|unique:supplier,nama',
+            'supplier.jenis' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -2423,12 +2424,12 @@ class MasterController extends Controller
             ]);
         } else {
             Supplier::create([
-                'kode' => $request->kode,
-                'nama' => $request->nama,
-                'kurs' => $request->kurs,
-                'email' =>  $request->email,
-                'telepon' => $request->telepon,
-                'jenis' => $request->jenis,
+                'kode' => $request->supplier['kode'],
+                'nama' => $request->supplier['nama'],
+                'kurs' => $request->supplier['kurs'],
+                'email' =>  $request->kontak_supplier['email'],
+                'telepon' => $request->kontak_supplier['telepon'],
+                'jenis' => $request->supplier['jenis'],
             ]);
 
 
@@ -2447,11 +2448,10 @@ class MasterController extends Controller
 
     public function update_supplier(Request $request, $id)
     {
-
         $validator = Validator::make($request->all(), [
-            'kode' => 'required|unique:supplier,kode,' . $id,
-            'nama' => 'required|unique:supplier,nama,' . $id,
-            'jenis' => 'required',
+            'supplier.kode' => 'required|unique:supplier,kode,' . $id,
+            'supplier.nama' => 'required|unique:supplier,nama,' . $id,
+            'supplier.jenis' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -2460,12 +2460,12 @@ class MasterController extends Controller
             ]);
         } else {
             $data = Supplier::find($id);
-            $data->kode = $request->kode;
-            $data->nama = $request->nama;
-            $data->kurs = $request->kurs;
-            $data->email =  $request->email;
-            $data->telepon = $request->telepon;
-            $data->jenis = $request->jenis;
+            $data->kode = $request->supplier['kode'];
+            $data->nama = $request->supplier['nama'];
+            $data->kurs = $request->supplier['kurs'];
+            $data->email =  $request->kontak_supplier['email'];
+            $data->telepon = $request->kontak_supplier['telepon'];
+            $data->jenis = $request->supplier['jenis'];
             $data->save();
             return response()->json(['status' => 'berhasil']);
         }

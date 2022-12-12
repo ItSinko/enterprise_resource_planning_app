@@ -1,15 +1,20 @@
 <script>
 export default {
-    
+    props: {
+        headers: {
+            type: Object,
+            default: null
+        }
+    },
 }
 </script>
 <template>
     <div>
         <div class="card card-primary">
             <div class="card-body text-center">
-                <p class="text-bold">Nama Perusahaan</p>
+                <p class="text-bold">{{ headers.nama }}</p>
                 <p>Alamat Perusahaan</p>
-                <p>Kode Pos</p>
+                <p>{{ headers.kode }}</p>
             </div>
         </div>
         <div class="card card-secondary">
@@ -21,7 +26,7 @@ export default {
                     </div>
                     <div class="col">
                         <p>Kode Supplier</p>
-                        <p class="text-bold">Kode Supplier</p>
+                        <p class="text-bold">{{ headers.kode }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -30,7 +35,7 @@ export default {
                     </div>
                     <div class="col">
                         <p>Jenis Supplier</p>
-                        <p class="text-bold">Jenis Supplier</p>
+                        <p class="text-bold">{{ headers.jenis }}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -39,7 +44,7 @@ export default {
                     </div>
                     <div class="col">
                         <p>Kurs</p>
-                        <p class="text-bold">Kurs Supplier</p>
+                        <p class="text-bold">{{ headers.kurs }}</p>
                     </div>
                 </div>
             </div>
@@ -49,11 +54,11 @@ export default {
                 <p class="text-bold">Kontak</p>
                 <p>
                     <i class="fas fa-mail-bulk"></i>
-                    <span class="ml-2">Email</span>
+                    <span class="ml-2">{{ headers.email }}</span>
                 </p>
                 <p>
                     <i class="fas fa-phone-alt"></i>
-                    <span class="ml-2">Telepon</span>
+                    <span class="ml-2">{{ headers.telepon }}</span>
                 </p>
                 <p>
                     <i class="fa fa-fax" aria-hidden="true"></i>
