@@ -90,8 +90,8 @@ export default {
             </tbody>
             <tfoot class="table-active">
                 <tr>
-                    <td colspan="5" class="text-right">Total Pembelian</td>
-                    <td>{{ calcTotalEstimasiHarga }}</td>
+                    <td colspan="5" class="text-right text-bold">Total Pembelian</td>
+                    <td class="text-bold">{{ calcTotalEstimasiHarga }}</td>
                     <td colspan="4"></td>
                 </tr>
             </tfoot>

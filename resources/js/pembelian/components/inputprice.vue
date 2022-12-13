@@ -21,14 +21,11 @@ export default {
             new RegExp('[0-9]').test(evt.key) || evt.preventDefault()
         },
         changeSplitInt(evt){
-            if(evt.key == 'Backspace'){
-                return;
-            }
-
-            let value = evt.target.value;
-            let newValue = value.replace(/\./g, '').replace(/\,/g, '.');
-            let splitInt = newValue.split('').reverse().join('').match(/\d{1,3}/g).join('.').split('').reverse().join('');
-            evt.target.value = splitInt;
+            var value = evt.target.value;
+            var value = value.replace(/\./g, '');
+            var value = value.replace(/\,/g, '.');
+            var value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+            evt.target.value = value;
         }
     },
     computed: {
