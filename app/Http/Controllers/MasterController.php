@@ -2411,7 +2411,6 @@ class MasterController extends Controller
     }
     public function store_supplier(Request $request)
     {
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'supplier.kode' => 'required|unique:supplier,kode',
             'supplier.nama' => 'required|unique:supplier,nama',

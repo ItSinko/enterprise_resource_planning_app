@@ -4,13 +4,7 @@ export default {
     props: {
         headers: {
             type: Object,
-            default: () => {
-                return {
-                    rencana: 'PP',
-                    tanggal: '2020-01-01',
-                    sisa: 1000000,
-                }
-            }
+            default: () => {}
         }
     },
     methods: {
