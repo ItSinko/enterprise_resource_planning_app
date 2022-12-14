@@ -26,6 +26,7 @@ use Alert;
 use App\Exports\CustomerData;
 use App\Exports\EkspedisiData;
 use App\Exports\ProdukData;
+use App\Models\Aset;
 use App\Models\DetailLogistik;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
@@ -2468,5 +2469,22 @@ class MasterController extends Controller
             $data->save();
             return response()->json(['status' => 'berhasil']);
         }
+    }
+    public function get_data_aset()
+    {
+        $data = array();
+        $aset = Aset::all();
+        foreach ($aset as $key => $d) {
+            $data[$key] = array(
+                'id' => $d->id,
+                'perkiraan' => $d->DaftarPerkiraan->id . '-' . $d->DaftarPerkiraan->nama,
+                'nama' => $d->nama,
+                'merk' => $d->merk,
+                'deskripsi' => $d->deskprisi,
+                'kode' => $d->kode,
+
+            );
+        }
+        return response()->json(['data' => $data]);
     }
 }

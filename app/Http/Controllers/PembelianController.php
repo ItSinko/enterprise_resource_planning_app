@@ -6,54 +6,87 @@ use App\Models\DetailPembelianBarangMasuk;
 use App\Models\DetailPenerimaanBarang;
 use App\Models\DetailPermintaanPembelian;
 use App\Models\DetailPoPembelian;
+use App\Models\Divisi;
 use App\Models\PembelianBarangMasuk;
 use App\Models\PermintaanPembelian;
 use App\Models\PoPembelian;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PembelianController extends Controller
 {
     public function get_data_pp($id)
     {
-        // $data = array();
-        // if ($id != 0) {
-        //     $pp = DetailPermintaanPembelian::where('permintaan_pembelian_id', $id)->get();
-        //     foreach ($pp as $key_p => $p) {
-        //         if ($p->jenis == 'part') {
-        //             $nama = $p->BillOfMaterial->nama;
-        //             $produk = $p->BillOfMaterial->Produk->nama;
+        $data = array();
+        if ($id != 0) {
+            $pp = PermintaanPembelian::find($id);
 
-        //             $data[$key_p] = array(
-        //                 'id' => $p->id,
-        //                 'nama' => $nama,
-        //                 'produk' => $produk,
+            $data[] = array(
+                'id' => $pp->id,
+                'no_pp' => $pp->no_pp,
+                'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
+                'tgl_diminta' => $pp->tgl_diminta,
+                'jenis' => $pp->jenis,
+                'tujuan' => $pp->tujuan,
+            );
 
-        //             );
+            if ($pp->jenis == 'umum') {
+                foreach ($pp->DetailPermintaanPembelian as $key_p => $dp) {
+                    $data['aset'][$key_p] = array(
+                        'id' => $dp->id,
+                        'nama' => $dp->Aset->nama,
+                        'jumlah' => $dp->jumlah,
+                        'es_harga' => $dp->estimasi_harga,
+                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
+                        'link' => $dp->link,
+                        'status' => 'proses'
+                    );
+                }
+            } else {
+                foreach ($pp->DetailPPterdaftar('true') as $key_p => $dp) {
+                    $data['part_terdaftar'][$key_p] = array(
+                        'id' => $dp->id,
+                        'nama' => $dp->Part->nama,
+                        'jumlah' => $dp->jumlah,
+                        'es_harga' => $dp->estimasi_harga,
+                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
+                        'status' => 'proses'
+                    );
+                }
+                foreach ($pp->DetailPPterdaftar('false') as $key_p => $dp) {
+                    $data['part_tidak_terdaftar'][$key_p] = array(
+                        'id' => $dp->id,
+                        'nama' => $dp->Part->nama,
+                        'jumlah' => $dp->jumlah,
+                        'es_harga' => $dp->estimasi_harga,
+                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
+                        'status' => 'proses'
+                    );
+                }
+            }
 
-        //             foreach ($p->DetailPermintaanPembelianProduk as $key_dpp => $dpp) {
+            return response()->json(['data' => $data]);
+        } else {
+            $data = PermintaanPembelian::all();
+        }
 
-        //                 $data[$key_p]['part'][$key_dpp] = array(
-        //                     'id' => $dpp->id,
-        //                     'nama' => $dpp->detail_bom_id == '' ? $dpp->Sparepart->nama : $dpp->DetailBillOfMaterial->Sparepart->nama,
-        //                     'jumlah' => $dpp->jumlah,
-        //                     'harga' => $dpp->harga,
-        //                     'status' => $dpp->detail_bom_id == '' ? 'tidak terdaftar' : 'terdaftar',
-        //                 );
-        //             }
-        //         } else {
-        //             $nama = $p->Aset->nama;
+        return response()->json(['data' => $data]);
+    }
 
-        //             $data[] = array(
-        //                 'id' => $p->id,
-        //                 'nama' => $nama,
-        //             );
-        //         }
-        //     }
-        // } else {
-        //     $data = PermintaanPembelian::all();
-        // }
+    public function get_nourut($divisi_id)
+    {
 
-        // return response()->json(['data' => $data]);
+        $check = PermintaanPembelian::where('divisi_id', $divisi_id)->get();
+        $urut = 1;
+        $divisi = Divisi::find($divisi_id);
+
+        if (count($check) > 0) {
+            $urut =  count($check) + 1;
+            $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
+        } else {
+            $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
+        }
+        return response()->json(['data' => $no]);
     }
 
     public function get_data_po($id)
@@ -69,24 +102,7 @@ class PembelianController extends Controller
     }
     public function get_detail_po($id)
     {
-
-        // $dpp = DetailPermintaanPembelian::with('DetailPermintaanPembelianProduk')->where('permintaan_pembelian_id', 1)->get();
-        // foreach ($dpp as $key_a => $d) {
-        //     $data[$key_a] = array(
-        //         'id' => $d->bom_id
-        //     );
-        //     foreach ($d->DetailPermintaanPembelianProdukPO() as $key_b => $e) {
-        //         $data[$key_a]['detail'][$key_b] = array(
-        //             'id' => $e->id
-        //         );
-        //     }
-        // }
-
-        // return response()->json(['data' => $data]);
-
         $dpp = PoPembelian::find(1);
-
-
         $data[] = array(
             'id' => $dpp->id,
             'nopo' => $dpp->no_po
@@ -96,5 +112,29 @@ class PembelianController extends Controller
         }
 
         return response()->json(['data' => $data]);
+    }
+    function toRomawi($number)
+    {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
+    }
+    function getMonth()
+    {
+        $m = Carbon::now()->format('m');
+        return $this->toRomawi($m);
+    }
+    function getYear()
+    {
+        return  Carbon::now()->format('Y');
     }
 }
