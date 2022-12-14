@@ -1,6 +1,6 @@
 <script>
-import moment from "moment";
-import mix from "../../../mix";
+    import moment from "moment";
+    import mix from "../../../mix";
     export default {
         mixins: [mix],
         props: {
@@ -25,7 +25,7 @@ import mix from "../../../mix";
                 this.$emit('detail', id)
             },
             edit(id) {
-                this.$router.push(`/pembelian/permintaan/dalamproses/${id}/edit`)
+                this.$emit('edit', id)
             },
             hapus(id) {
                 this.$emit('hapus', id)
@@ -34,7 +34,7 @@ import mix from "../../../mix";
                 this.$emit('batal', id)
             },
 
-            jenis(jenis){
+            jenis(jenis) {
                 switch (jenis) {
                     case 'umum':
                         return `<span class="badge badge-info">Umum</span>`
@@ -62,7 +62,7 @@ import mix from "../../../mix";
                         break;
                 }
             },
-            
+
             iconPP(pp) {
                 switch (pp) {
                     case 'upload':
@@ -98,7 +98,7 @@ import mix from "../../../mix";
                 }
             },
 
-            status(status){
+            status(status) {
                 switch (status) {
                     case 'draft':
                         return `<span class="badge badge-info">Draft</span>`
@@ -122,7 +122,85 @@ import mix from "../../../mix";
                         return `<span class="badge badge-success">${status}</span>`
                         break;
                 }
-            }
+            },
+
+            showButtonEdit(status) {
+                switch (status) {
+                    case 'draft':
+                        return true
+                        break;
+                    case 'minta persetujuan':
+                        return false
+                        break;
+                    case 'menunggu persetujuan':
+                        return false
+                        break;
+                    case 'proses pembelian':
+                        return false
+                        break;
+                    case 'batal':
+                        return true
+                        break;
+                    case 'ditolak pembelian':
+                        return true
+                        break;
+                    default:
+                        return false
+                        break;
+                }
+            },
+
+            showButtonBatal(status) {
+                switch (status) {
+                    case 'draft':
+                        return true
+                        break;
+                    case 'minta persetujuan':
+                        return true
+                        break;
+                    case 'menunggu persetujuan':
+                        return false
+                        break;
+                    case 'proses pembelian':
+                        return false
+                        break;
+                    case 'batal':
+                        return false
+                        break;
+                    case 'ditolak pembelian':
+                        return false
+                        break;
+                    default:
+                        return false
+                        break;
+                }
+            },
+
+            showButtonHapus(status) {
+                switch (status) {
+                    case 'draft':
+                        return true
+                        break;
+                    case 'minta persetujuan':
+                        return true
+                        break;
+                    case 'menunggu persetujuan':
+                        return false
+                        break;
+                    case 'proses pembelian':
+                        return false
+                        break;
+                    case 'batal':
+                        return true
+                        break;
+                    case 'ditolak pembelian':
+                        return false
+                        break;
+                    default:
+                        return false
+                        break;
+                }
+            },
         },
         computed: {
             filteredDatatables() {
@@ -131,29 +209,29 @@ import mix from "../../../mix";
                 return this.dataTables.filter((dataTable) => {
                     return (
                         dataIsNotNull(dataTable.no_pp)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(dataTable.jenis_barang)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(dataTable.tanggal_diminta)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(dataTable.tanggal_dibutuhkan)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(dataTable.pp)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase()) ||
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase()) ||
                         dataIsNotNull(dataTable.status)
-                            .toString()
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase())
+                        .toString()
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase())
                     );
                 });
             }
@@ -194,59 +272,54 @@ import mix from "../../../mix";
                 <tr v-for="(data, index) in renderPaginate" :key="data.id">
                     <td>{{ index + 1 }}</td>
                     <td>{{ data.no_pp }}</td>
-                    <td><div v-html="jenis(data.jenis_barang)"></div></td>
+                    <td>
+                        <div v-html="jenis(data.jenis_barang)"></div>
+                    </td>
                     <td>{{ moment(data.tanggal_diminta) }}</td>
                     <td>{{ moment(data.tanggal_dibutuhkan) }}</td>
                     <td>
-                        <button 
-                        class="btn btn-sm" 
-                        :class="classPP(data.pp)"
-                        @click="checkPP(data.pp)"
-                        >
-                        <i :class="iconPP(data.pp)"></i>
-                        {{ data.pp }}</button></td>
-                    <td><div v-html="status(data.status)"></div></td>
-                                            <td>
+                        <button class="btn btn-sm" :class="classPP(data.pp)" @click="checkPP(data.pp)">
+                            <i :class="iconPP(data.pp)"></i>
+                            {{ data.pp }}</button></td>
+                    <td>
+                        <div v-html="status(data.status)"></div>
+                    </td>
+                    <td>
                         <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true"
                             aria-expanded="true">
                             <i class="fas fa-ellipsis-v"></i>
                         </div>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start"
                             style="
-                    position: absolute;
-                    transform: translate3d(-117px, 30px, 0px);
-                    top: 0px;
-                    left: 0px;
-                    will-change: transform;
-                  ">
+                                position: absolute;
+                                transform: translate3d(-117px, 30px, 0px);
+                                top: 0px;
+                                left: 0px;
+                                will-change: transform;
+                            ">
                             <button 
-                            @click="detail(supplier.id)"
-                            class="dropdown-item" 
-                            type="button">
+                            @click="detail(data.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>
 
-                            <button
-                            @click="edit(supplier.id)"
-                             class="dropdown-item" 
-                             type="button">
+                            <button 
+                            v-if="showButtonEdit(data.status)" 
+                            @click="edit(data.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-pencil-alt"></i>
                                 Ubah
                             </button>
 
-                            <button
-                            @click="batal(supplier.id)"
-                             class="dropdown-item" 
-                             type="button">
+                            <button 
+                            v-if="showButtonBatal(data.status)"
+                            @click="batal(data.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-times"></i>
                                 Batal
                             </button>
 
-                            <button
-                            @click="hapus(supplier.id)"
-                             class="dropdown-item" 
-                             type="button">
+                            <button 
+                            v-if="showButtonHapus(data.status)"
+                            @click="hapus(data.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-trash"></i>
                                 Hapus
                             </button>
@@ -260,7 +333,7 @@ import mix from "../../../mix";
                 </tr>
             </tbody>
         </table>
-                <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="d-flex flex-row-reverse bd-highlight">
             <nav aria-label="...">
                 <ul class="pagination">
                     <li class="page-item">
