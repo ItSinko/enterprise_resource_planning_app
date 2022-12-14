@@ -151,6 +151,32 @@ class TeknikController extends Controller
 
         return response()->json(['data' => $data]);
     }
+    public function get_produk($id)
+    {
+        $prd = Produk::has('bom')->get();
+        $data = array();
+
+        foreach ($prd as $key_prd => $b) {
+            $data[$key_prd] = array(
+                'id' => $b->id,
+                'nama' => $b->nama,
+            );
+        }
+
+        if ($id != 0) {
+            $prd = BillOfMaterial::where('produk_id', $id)->get();
+            $data = array();
+
+            foreach ($prd as $key_prd => $b) {
+                $data[$key_prd] = array(
+                    'id' => $b->id,
+                    'nama' => $b->nama,
+                );
+            }
+        }
+
+        return response()->json(['data' => $data]);
+    }
     public function get_detail_bom($id)
     {
         $bom = BillOfMaterial::where('id', $id)->get();

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [App\Http\Controllers\ApiController::class, 'authenticate']);
 
 Route::prefix('/bom')->group(function () {
+    Route::get('/produk/{id}', [App\Http\Controllers\TeknikController::class, 'get_produk']);
     Route::post('/store', [App\Http\Controllers\TeknikController::class, 'store_bom']);
     Route::get('/data', [App\Http\Controllers\TeknikController::class, 'get_data_bom']);
     Route::get('/detail/{id}', [App\Http\Controllers\TeknikController::class, 'get_detail_bom']);
@@ -29,6 +30,11 @@ Route::prefix('/bom')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
     Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
+
+Route::prefix('/aset')->group(function () {
+    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_aset']);
+});
+
 Route::prefix('/supplier')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_supplier']);
@@ -211,6 +217,7 @@ Route::prefix('/laporan')->group(function () {
 Route::prefix('/pembelian')->group(function () {
     Route::prefix('/pp')->group(function () {
         Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+        Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
     });
     Route::prefix('/po')->group(function () {
         Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_po']);

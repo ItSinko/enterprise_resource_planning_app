@@ -26,4 +26,8 @@ class Divisi extends Model
     {
         return $this->hasMany(TFProduksiHistory::class, 'divisi_id', 'id');
     }
+    public function PermintaanPembelian()
+    {
+        return $this->hasMany(PermintaanPembelian::class);
+    }
 }
