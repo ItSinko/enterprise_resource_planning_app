@@ -11,10 +11,120 @@ use App\Models\PembelianBarangMasuk;
 use App\Models\PermintaanPembelian;
 use App\Models\PoPembelian;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PembelianController extends Controller
 {
+    public function ubah_pp($jenis, $id)
+    {
+
+        if ($jenis == 'terima') {
+            $pp =  PermintaanPembelian::find($id);
+            $pp->status_id = 2;
+            $pp->save();
+            return response()->json([
+                'data' => 'berhasil'
+            ]);
+        } elseif ($jenis == 'tolak' || $jenis == 'batal') {
+            $pp =  PermintaanPembelian::find($id);
+            $pp->status_id = 18;
+            $pp->save();
+            return response()->json([
+                'data' => 'berhasil'
+            ]);
+        } elseif ($jenis == 'hapus') {
+
+            $dbom = DetailPermintaanPembelian::whereHas('PermintaanPembelian', function ($q) use ($id) {
+                $q->where('permintaan_pembelian_id', $id);
+            })->get();
+
+            if (count($dbom) > 0) {
+                $deldbom = DetailPermintaanPembelian::whereHas('PermintaanPembelian', function ($q) use ($id) {
+                    $q->where('permintaan_pembelian_id', $id);
+                })->delete();
+                if (!$deldbom) {
+                    $bool = false;
+                }
+            }
+
+            PermintaanPembelian::where('id', $id)->delete();
+            return response()->json([
+                'data' => 'berhasil'
+            ]);
+        }
+    }
+    public function store_data_pp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'no_pp' => 'required|unique:permintaan_pembelian,no_pp',
+            'tgl_dibutuhkan' => 'required',
+            'divisi' => 'required',
+            'tujuan' => 'required',
+            'jenis' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => 'gagal'
+            ]);
+        } else {
+            $pp = PermintaanPembelian::create([
+                'no_pp' => $request->no_pp,
+                'tujuan' => $request->tujuan,
+                'jenis' => $request->jenis,
+                'tgl_dibutuhkan' => $request->tgl_dibutuhkan,
+                'tgl_diminta' => $request->tgl_diminta,
+                'divisi_id' => $request->divisi,
+                'status_id' => 11
+            ]);
+
+            if (isset($request->aset)) {
+                for ($i = 0; $i < count($request->aset); $i++) {
+                    DetailPermintaanPembelian::create([
+                        'permintaan_pembelian_id' => $pp->id,
+                        'aset_id' => $request->aset[$i]['aset_id'],
+                        'jumlah' => $request->aset[$i]['jumlah'],
+                        'harga' => $request->aset[$i]['harga'],
+                        'estimasi_harga' => $request->aset[$i]['es_harga'],
+                        'via' => $request->aset[$i]['via'],
+                        'link' => $request->aset[$i]['link'],
+                    ]);
+                }
+            }
+
+            if (isset($request->terdaftar)) {
+                for ($i = 0; $i < count($request->terdaftar); $i++) {
+                    DetailPermintaanPembelian::create([
+                        'permintaan_pembelian_id' => $pp->id,
+                        'part_id' => $request->terdaftar[$i]['part_id'],
+                        'bom_id' => $request->terdaftar[$i]['bom_id'],
+                        'jumlah' => $request->terdaftar[$i]['jumlah'],
+                        'harga' => $request->terdaftar[$i]['harga'],
+                        'is_terdaftar' => 1,
+                    ]);
+                }
+            }
+
+            if (isset($request->tdk_terdaftar)) {
+                for ($i = 0; $i < count($request->tdk_terdaftar); $i++) {
+                    DetailPermintaanPembelian::create([
+                        'permintaan_pembelian_id' => $pp->id,
+                        'part_id' => $request->tdk_terdaftar[$i]['part_id'],
+                        'bom_id' => $request->tdk_terdaftar[$i]['bom_id'],
+                        'jumlah' => $request->tdk_terdaftar[$i]['jumlah'],
+                        'harga' => $request->tdk_terdaftar[$i]['harga'],
+                        'is_terdaftar' => 0,
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'data' => 'success'
+            ]);
+        }
+    }
+
     public function get_data_pp($id)
     {
         $data = array();
@@ -76,22 +186,26 @@ class PembelianController extends Controller
     public function get_nourut($divisi_id)
     {
 
-        $check = PermintaanPembelian::where('divisi_id', $divisi_id)->get();
-        $urut = 1;
-        $divisi = Divisi::find($divisi_id);
+        try {
+            $divisi = Divisi::find($divisi_id);
+            $check = PermintaanPembelian::where('divisi_id', $divisi_id)->get();
+            $urut = 1;
+            $divisi = Divisi::find($divisi_id);
 
-        if (count($check) > 0) {
-            $urut =  count($check) + 1;
-            $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
-        } else {
-            $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
+            if (count($check) > 0) {
+                $urut =  count($check) + 1;
+                $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
+            } else {
+                $no = $urut . '/PP/' . strtoupper($divisi->kode) . '/' . $this->getMonth() . '/' . $this->getYear();
+            }
+            return response()->json(['data' => $no]);
+        } catch (Exception $th) {
+            return response()->json(['data' => 'error']);
         }
-        return response()->json(['data' => $no]);
     }
 
     public function get_data_po($id)
     {
-
         if ($id != 0) {
             $data = PoPembelian::with(['Supplier', 'Ekspedisi'])->where('permintaan_pembelian_id', $id)->get();
         } else {

@@ -216,8 +216,10 @@ Route::prefix('/laporan')->group(function () {
 });
 Route::prefix('/pembelian')->group(function () {
     Route::prefix('/pp')->group(function () {
+        Route::post('store', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
         Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
         Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
+        Route::post('aksi/{jenis}/{id}', [App\Http\Controllers\PembelianController::class, 'ubah_pp']);
     });
     Route::prefix('/po')->group(function () {
         Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
@@ -230,7 +232,6 @@ Route::prefix('/gbmp')->group(function () {
     Route::get('/data/{divisi}/{id}', [App\Http\Controllers\GudangController::class, 'tfgbmp_detail']);
     Route::post('/store', [App\Http\Controllers\GudangController::class, 'tfgbmp_store']);
 });
-
 Route::prefix('/gbj')->group(function () {
     Route::post('data', [App\Http\Controllers\GudangController::class, 'get_data_barang_jadi']);
     Route::post('/create', [App\Http\Controllers\GudangController::class, 'StoreBarangJadi']);
