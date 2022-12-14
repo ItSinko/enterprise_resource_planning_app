@@ -1,13 +1,16 @@
 <script>
     import HeaderFirst from '../../../../components/header'
     import HeaderSecond from './header.vue'
-    import Table from './table'
+    import Umum from './umum'
+    import Part from './part'
     import moment from 'moment'
+    import axios from 'axios'
     export default {
         components: {
             HeaderFirst,
             HeaderSecond,
-            Table
+            Umum,
+            Part
         },
         data() {
             return {
@@ -27,10 +30,16 @@
                 ],
                 headers: {
                     rencana: 'PP',
-                    tanggal: '2023-01-01',
-                    sisa: 1000000,
+                    tanggal: moment(new Date()).format('YYYY-MM-DD'),
+                    sisa: null,
                 },
-                acceptedParts: [
+                formPermintaan: {
+                    tanggal: null,
+                    kebutuhan: 'umum',
+                    tujuan: null,
+                },
+                umum : {
+                    acceptedParts: [
                     {
                         nama_barang: 'Besi',
                         no_perkiraan: '123',
@@ -70,14 +79,23 @@
                         link: 'https://www.google.com'
                     }  
                 ]
+                }
             }
         },
+        created() {
+            this.getRencana()
+        },
         methods: {
+            async getRencana() {
+                const getDivisi = localStorage.getItem('divisi')
+                const { data } = await axios.get(`/api/pembelian/pp/nourut/${getDivisi}`).then(res => res.data)
+                this.headers.rencana = data
+            },
             trashAccepted(index) {
-                this.acceptedParts.splice(index, 1)
+                this.umum.acceptedParts.splice(index, 1)
             },
             addAccepted() {
-                this.acceptedParts.push({
+                this.umum.acceptedParts.push({
                     nama_barang: 'Besi',
                     no_perkiraan: '123',
                     supplier: 'PT. ABC',
@@ -88,10 +106,10 @@
                 })
             },
             trashNotAccepted(index) {
-                this.notAcceptedParts.splice(index, 1)
+                this.umum.notAcceptedParts.splice(index, 1)
             },
             addNotAccepted() {
-                this.notAcceptedParts.push({
+                this.umum.notAcceptedParts.push({
                     merek: 'Besi',
                     no_perkiraan: '123',
                     supplier: 'PT. ABC',
@@ -164,19 +182,19 @@
                         <div class="card-text">
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Tanggal Dibutuhkan</label>
-                                <div class="col-3"><input type="date" class="form-control" :min="getTwoWeeksDateBefore" :max="headers.tanggal"></div>
+                                <div class="col-3"><input type="date" v-model="formPermintaan.tanggal" class="form-control" :min="getTwoWeeksDateBefore"></div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Kebutuhan Barang</label>
                                 <div class="col-5">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="umum">
+                                            id="inlineRadio1" value="umum" v-model="formPermintaan.kebutuhan">
                                         <label class="form-check-label" for="inlineRadio1">Umum</label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio2" value="part">
+                                            id="inlineRadio2" value="part" v-model="formPermintaan.kebutuhan">
                                         <label class="form-check-label" for="inlineRadio2">Part Produk</label>
                                     </div>
                                 </div>
@@ -184,19 +202,24 @@
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Tujuan</label>
                                 <div class="col-4">
-                                    <textarea name="" id="" cols="2" rows="3" class="form-control"></textarea>
+                                    <textarea name="" id="" cols="2" rows="3" v-model="formPermintaan.tujuan" class="form-control"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <Table 
-                :accepted="acceptedParts" 
-                :notAccepted="notAcceptedParts" 
+                <Umum 
+                v-if="formPermintaan.kebutuhan == 'umum'"
+                :accepted="umum.acceptedParts" 
+                :notAccepted="umum.notAcceptedParts" 
                 @trashAccepted="trashAccepted" 
                 @addAccepted="addAccepted"
                 @trashNotAccepted="trashNotAccepted"
                 @addNotAccepted="addNotAccepted"
+                />
+
+                <Part
+                v-else
                 />
             </div>
             <div class="card-footer">

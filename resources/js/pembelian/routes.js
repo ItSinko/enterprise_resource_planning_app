@@ -50,7 +50,7 @@ const routes = [
     },
     // Dalam Proses
     {
-        path: "/pembelian/permintaan/dalamproses/create",
+        path: "/pembelian/create",
         component: PermintaanTambahDalamProses,
         name: "permintaanTambahDalamProses",
     }
