@@ -12,6 +12,8 @@ class DetailPermintaanPembelian extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'detail_permintaan_pembelian';
+    protected $fillable = ['permintaan_pembelian_id', 'bom_id', 'part_id', 'aset_id', 'jumlah', 'harga', 'estimasi_harga', 'via', 'link', 'is_terdaftar'];
+
 
     public function PermintaanPembelian()
     {

@@ -10,6 +10,8 @@ class PermintaanPembelian extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'permintaan_pembelian';
+    protected $fillable = ['no_pp', 'tujuan', 'jenis', 'tgl_dibutuhkan', 'tgl_diminta', 'divisi_id', 'status_id'];
+
 
     public function DetailPermintaanPembelian()
     {
