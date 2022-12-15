@@ -8,6 +8,10 @@ export default {
         dataTable: {
             type: Array,
             default: () => []
+        },
+        nopp: {
+            type: String,
+            default: ''
         }
     },
     methods: {
@@ -19,7 +23,7 @@ export default {
 </script>
 <template>
     <div class="card">
-        <Modal />
+        <Modal/>
         <div class="card-body">
             <h4 class="card-title text-bold">Daftar Part</h4>
             <div class="card-text">

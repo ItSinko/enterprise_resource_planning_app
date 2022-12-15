@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios'
     export default {
         data() {
             return {
@@ -6,10 +7,42 @@
                     produk: null,
                     versi: null,
                     jumlah: null,
-                }
+                },
+                produk: [],
+                bom: [],
+                detailBom: null
             }
         },
+        created() {
+            this.getProduk()
+        },
         methods: {
+            async getProduk() {
+                try {
+                    const { data } = await axios.get('/api/bom/produk/0').then(res => res.data)
+                    this.produk = data
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async getBom(produk) {
+                const id = produk.value
+                try {
+                    const { data } = await axios.get(`/api/bom/produk/${id}`).then(res => res.data)
+                    this.bom = data
+                } catch (error) {
+                    console.log(error)
+                }
+            },
+            async getDetailBom() {
+                const id = this.form.produk.value
+                try {
+                    const { data } = await axios.get(`/api/bom/detail/${id}`).then(res => res.data)
+                    this.detailBom = data[0].data_tabel
+                } catch (error) {
+                    console.log(error)
+                }
+            },
             isNumber(event) {
                 return new RegExp('[0-9]').test(event.key) || event.preventDefault()
             }
@@ -34,14 +67,14 @@
                             <div class="card-text">
                                 <div class="form-group row">
                                     <label for="" class="col-1 text-center">Nama Produk</label>
-                                    <v-select v-model="form.produk" class="col-2"></v-select>
+                                    <v-select v-model="form.produk" :options="produk" class="col-2" @input="getBom($event)"></v-select>
                                     <label for="" class="col-1 text-center">Versi BOM</label>
-                                    <v-select v-model="form.versi" class="col-2"></v-select>
+                                    <v-select v-model="form.versi" :options="bom" class="col-2"></v-select>
                                     <label for="" class="col-1 text-center">Jumlah</label>
                                     <input type="text" v-model="form.jumlah" class="form-control col-1"
                                         @keypress="isNumber($event)">
                                     <div class="col-2">
-                                        <button class="btn btn-primary">Cari</button>
+                                        <button class="btn btn-primary" @click="getDetailBom">Cari</button>
                                     </div>
                                 </div>
 
@@ -51,10 +84,10 @@
                                         <div class="card-text mt-5">
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <p>No PP</p>
+                                                    <p>Nama Produk</p>
                                                 </div>
                                                 <div class="col-5 text-bold">
-                                                    <p>PP/2020/0001</p>
+                                                    <p>{{ form.produk ? form.produk.label : '-' }}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -62,7 +95,7 @@
                                                     <p>Versi BOM</p>
                                                 </div>
                                                 <div class="col-5 text-bold">
-                                                    <p>1</p>
+                                                    <p>{{ form.versi ? form.versi.label : '-' }}</p>
                                                 </div>
                                             </div>
                                             <div class="row">

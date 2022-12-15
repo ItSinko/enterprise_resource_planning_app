@@ -7,7 +7,9 @@ import SupplierDetail from "./page/supplier/detail";
 // Permintaan
 import Permintaan from "./page/permintaan";
 import PermintaanTambahDalamProses from "./page/permintaan/dalamproses/tambah";
-
+// Purchase Order
+import PurchaseOrder from "./page/purchaseorder";
+import PurchaseOrderDetail from "./page/purchaseorder/detail";
 const routes = [
     // Supplier
     {
@@ -48,11 +50,21 @@ const routes = [
         component: Permintaan,
         name: "permintaan",
     },
-    // Dalam Proses
     {
-        path: "/pembelian/create",
+        path: "/pembelian/permintaan/dalamproses/create",
         component: PermintaanTambahDalamProses,
         name: "permintaanTambahDalamProses",
+    },
+    // Purchase Order
+    {
+        path: "/pembelian/po",
+        component: PurchaseOrder,
+        name: "purchaseorder",
+    },
+    {
+        path: "/pembelian/detail",
+        component: PurchaseOrderDetail,
+        name: "purchaseorder",
     }
 ];
 

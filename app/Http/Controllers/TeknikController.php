@@ -158,8 +158,8 @@ class TeknikController extends Controller
 
         foreach ($prd as $key_prd => $b) {
             $data[$key_prd] = array(
-                'id' => $b->id,
-                'nama' => $b->nama,
+                'value' => $b->id,
+                'label' => $b->nama,
             );
         }
 
@@ -169,8 +169,8 @@ class TeknikController extends Controller
 
             foreach ($prd as $key_prd => $b) {
                 $data[$key_prd] = array(
-                    'id' => $b->id,
-                    'nama' => $b->nama,
+                    'value' => $b->id,
+                    'label' => $b->nama,
                 );
             }
         }

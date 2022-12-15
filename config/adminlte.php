@@ -256,6 +256,12 @@ return [
             'url' => '/pembelian/permintaan',
             'auth' => [7],
         ],
+        [
+            'text' => 'Purchase Order',
+            'icon' => 'fas fa-file-invoice-dollar',
+            'url' => '/pembelian/po',
+            'auth' => [7],
+        ],
         // PPIC (24)
         [
             'header' => 'Data',
