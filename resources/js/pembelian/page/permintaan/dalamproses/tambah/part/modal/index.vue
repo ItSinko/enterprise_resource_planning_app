@@ -1,6 +1,12 @@
 <script>
 import axios from 'axios'
+import Terdaftar from './terdaftar'
+import TidakTerdaftar from './tidakterdaftar'
     export default {
+        components: {
+            Terdaftar,
+            TidakTerdaftar
+        },
         data() {
             return {
                 form: {
@@ -10,7 +16,7 @@ import axios from 'axios'
                 },
                 produk: [],
                 bom: [],
-                detailBom: null
+                detailBom: []
             }
         },
         created() {
@@ -27,6 +33,8 @@ import axios from 'axios'
             },
             async getBom(produk) {
                 const id = produk.value
+                this.bom = []
+                this.form.versi = null
                 try {
                     const { data } = await axios.get(`/api/bom/produk/${id}`).then(res => res.data)
                     this.bom = data
@@ -34,17 +42,47 @@ import axios from 'axios'
                     console.log(error)
                 }
             },
-            async getDetailBom() {
-                const id = this.form.produk.value
-                try {
-                    const { data } = await axios.get(`/api/bom/detail/${id}`).then(res => res.data)
-                    this.detailBom = data[0].data_tabel
-                } catch (error) {
-                    console.log(error)
+            getDetailBom() {
+                const alert = (alert) => {
+                    return this.$swal('Peringatan', `${alert}`, 'warning')
                 }
+
+                const getData = async () => {
+                const id = this.form.produk.value
+                    try {
+                        const { data } = await axios.get(`/api/bom/detail/${id}`).then(res => res.data)
+                        const checkData = data.length > 0 ? true : false
+                        if (checkData) {
+                            this.detailBom = []
+                            data[0].data_tabel.forEach(item => {
+                                this.detailBom.push({
+                                    id: item.id,
+                                    kode: item.kode,
+                                    nama: item.nama,
+                                    jumlah_per_set: item.jumlah,
+                                    jumlah_kebutuhan: item.jumlah * this.form.jumlah,
+                                    harga: 0
+                                })
+                            })
+                        } else {
+                            this.detailBom = []
+                            alert('Data masih kosong')
+                        }
+                        console.log(data)
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+
+                this.checkFormNull ? alert('Silahkan pilih produk dan versi BOM dan jumlah terlebih dahulu') : getData()
             },
             isNumber(event) {
                 return new RegExp('[0-9]').test(event.key) || event.preventDefault()
+            }
+        },
+        computed: {
+            checkFormNull() {
+                return Object.values(this.form).some(item => item === null)
             }
         }
     }
@@ -71,14 +109,14 @@ import axios from 'axios'
                                     <label for="" class="col-1 text-center">Versi BOM</label>
                                     <v-select v-model="form.versi" :options="bom" class="col-2"></v-select>
                                     <label for="" class="col-1 text-center">Jumlah</label>
-                                    <input type="text" v-model="form.jumlah" class="form-control col-1"
+                                    <input type="text" v-model.number="form.jumlah" class="form-control col-1"
                                         @keypress="isNumber($event)">
                                     <div class="col-2">
                                         <button class="btn btn-primary" @click="getDetailBom">Cari</button>
                                     </div>
                                 </div>
-
-                                <div class="card">
+ 
+                                <div class="card" v-if="!checkFormNull">
                                     <div class="card-body">
                                         <h4 class="card-title text-bold">Detail Produk dan Part</h4>
                                         <div class="card-text mt-5">
@@ -119,9 +157,13 @@ import axios from 'axios'
                                             </ul>
                                             <div class="tab-content" id="pills-tabContent">
                                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                                                    aria-labelledby="pills-home-tab">...</div>
+                                                    aria-labelledby="pills-home-tab">
+                                                    <terdaftar v-if="detailBom.length > 0" :dataTable="detailBom"/>
+                                                    </div>
                                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel"
-                                                    aria-labelledby="pills-profile-tab">...</div>
+                                                    aria-labelledby="pills-profile-tab">
+                                                    <tidak-terdaftar />
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
