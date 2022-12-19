@@ -51,7 +51,7 @@ const routes = [
         name: "permintaan",
     },
     {
-        path: "/pembelian/permintaan/dalamproses/create",
+        path: "/pembelian/create",
         component: PermintaanTambahDalamProses,
         name: "permintaanTambahDalamProses",
     },

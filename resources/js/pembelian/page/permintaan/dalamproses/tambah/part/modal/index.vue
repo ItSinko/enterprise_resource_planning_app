@@ -3,6 +3,12 @@ import axios from 'axios'
 import Terdaftar from './terdaftar'
 import TidakTerdaftar from './tidakterdaftar'
     export default {
+        props: {
+            detail: {
+                type: Object,
+                default: () => {}
+            }
+        },
         components: {
             Terdaftar,
             TidakTerdaftar
@@ -19,10 +25,33 @@ import TidakTerdaftar from './tidakterdaftar'
                 detailBom: []
             }
         },
-        created() {
+        mounted(){
+            if(this.detail){
+                this.getDetail()
+            }
             this.getProduk()
         },
+        destroyed(){
+            this.resetData()
+        },
         methods: {
+            resetData(){
+                this.form = {
+                    produk: null,
+                    versi: null,
+                    jumlah: null,
+                }
+                this.bom = []
+                this.detailBom = []
+            },
+            getDetail(){
+                console.log("detail", this.detail)
+                const { produk, versi, jumlah, detail } = this.detail
+                    this.form.produk = produk
+                    this.form.versi = versi
+                    this.form.jumlah = jumlah
+                    this.getDetailBom()
+            },
             async getProduk() {
                 try {
                     const { data } = await axios.get('/api/bom/produk/0').then(res => res.data)
@@ -78,6 +107,34 @@ import TidakTerdaftar from './tidakterdaftar'
             },
             isNumber(event) {
                 return new RegExp('[0-9]').test(event.key) || event.preventDefault()
+            },
+            close(){
+                this.$emit('close')
+            },
+            simpan(){
+                const data = {
+                    form : this.form,
+                    detail : {
+                        terdaftar : this.$refs.terdaftar.formPart,
+                    tidakTerdaftar : this.$refs.tidakterdaftar.formPartNotRegistered[0].nama === null
+                        ? []
+                        : this.$refs.tidakterdaftar.formPartNotRegistered
+                    ,
+                    },
+                    idx: this.detail ? this.detail.idx : null
+                }
+                this.$emit('simpan', data)
+                this.form = {
+                    produk: null,
+                    versi: null,
+                    jumlah: null,
+                },
+                this.$refs.terdaftar.formPart = []
+                this.$refs.tidakterdaftar.formPartNotRegistered = [{
+                    nama: null,
+                    jumlah: 0,
+                    harga: 0,
+                }]
             }
         },
         computed: {
@@ -90,12 +147,12 @@ import TidakTerdaftar from './tidakterdaftar'
 </script>
 <template>
     <div class="modal fade modalPart" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-        aria-hidden="true">
+        aria-hidden="true" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-bold">Tambah Part</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" @click="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -158,11 +215,14 @@ import TidakTerdaftar from './tidakterdaftar'
                                             <div class="tab-content" id="pills-tabContent">
                                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                                                     aria-labelledby="pills-home-tab">
-                                                    <terdaftar v-if="detailBom.length > 0" :dataTable="detailBom"/>
+                                                    <terdaftar ref="terdaftar" v-if="detailBom.length > 0" 
+                                                        :detailSelected="detail ?
+                                                        detail.detail.terdaftar : []"
+                                                        :dataTable="detailBom"/>
                                                     </div>
                                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                                                     aria-labelledby="pills-profile-tab">
-                                                    <tidak-terdaftar />
+                                                    <tidak-terdaftar ref="tidakterdaftar" />
                                                     </div>
                                             </div>
                                         </div>
@@ -173,8 +233,8 @@ import TidakTerdaftar from './tidakterdaftar'
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-danger" @click="close">Batal</button>
+                    <button type="button" class="btn btn-warning" @click="simpan">Tambah Ke Daftar Pembelian</button>
                 </div>
             </div>
         </div>

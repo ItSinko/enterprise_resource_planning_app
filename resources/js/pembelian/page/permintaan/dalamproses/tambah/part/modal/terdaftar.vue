@@ -9,6 +9,10 @@
                 type: Array,
                 default: () => []
             },
+            detailSelected: {
+                type: Array,
+                default: () => []
+            }
         },
         data() {
             return {
@@ -19,18 +23,32 @@
         components: {
             inputprice
         },
+        mounted() {
+            if(this.detailSelected.length > 0) {
+                this.getDetail()
+            }
+        },
         methods: {
+            getDetail() {
+                this.detailSelected.forEach(item => {
+                    this.formPart.push(item)
+                })
+                this.$refs.checked.forEach(item => {
+                    this.formPart.find(data => data.id == item.value) ? item.checked = true : item.checked = false
+                })
+            },
             checkedAll() {
                 this.formPart != this.dataTable ? this.formPart = this.dataTable : this.formPart = []
                 this.$refs.checked.forEach(item => {
                     item.checked = this.formPart.length > 0
                 })
             },
-            checked(idx) {
-                if (this.formPart.find(item => item.id === this.dataTable[idx].id)) {
-                    this.formPart.splice(this.formPart.indexOf(this.dataTable[idx]), 1)
+            checked(item) {
+                const id = item.id
+                if (this.formPart.find(item => item.id === id)) {
+                    this.formPart.splice(this.formPart.findIndex(item => item.id === id), 1)
                 } else {
-                    this.formPart.push(this.dataTable[idx])
+                    this.formPart.push(item)
                 }
             },
         },
@@ -84,7 +102,7 @@
             <tbody v-if="filteredDatatables.length > 0">
                 <tr v-for="(item, idx) in filteredDatatables" :key="idx">
                     <td>
-                        <input type="checkbox" ref="checked" @click="checked(idx)">
+                        <input type="checkbox" :value="item.id" ref="checked" @click="checked(item)">
                     </td>
                     <td>
                         {{ item.kode }} - {{ item.nama }}
