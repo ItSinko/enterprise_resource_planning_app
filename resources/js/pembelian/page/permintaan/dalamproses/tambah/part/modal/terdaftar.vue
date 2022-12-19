@@ -28,6 +28,9 @@
                 this.getDetail()
             }
         },
+        updated() {
+            this.updatedFormDataWithFilteredData()
+        },
         methods: {
             getDetail() {
                 this.detailSelected.forEach(item => {
@@ -51,6 +54,12 @@
                     this.formPart.push(item)
                 }
             },
+            updatedFormDataWithFilteredData() {
+                this.formPart.filter(item => {
+                    return this.filteredDatatables.find(data => data.id === item.id)
+                })
+                console.log("updated")
+            },
         },
         computed: {
             filteredDatatables() {
@@ -64,7 +73,18 @@
                         dataIsNotNull(item.harga) && item.harga.toString().toLowerCase().includes(this.search.toLowerCase())
                     )
                 })
-            }
+            },
+            mergeFilteredAndFormPart() {
+                const formPart = this.formPart.length > 0 ? this.formPart : []
+                const filtered = this.filteredDatatables.length > 0 ? this.filteredDatatables : []
+                if (formPart.length > 0 && filtered.length > 0) {
+                    return formPart.concat(filtered.filter(item => {
+                        return !formPart.find(data => data.id === item.id)
+                    }))
+                } else {
+                    return formPart.concat(filtered)
+                }
+            },
         }
     }
 
@@ -111,7 +131,7 @@
                         {{ item.jumlah_per_set }}
                     </td>
                     <td>
-                        <input type="text" class="form-control" v-model="item.jumlah_kebutuhan" @keypress="onlyNumber($event)">
+                        <input type="text" class="form-control" v-model.number="item.jumlah_kebutuhan" @keypress="onlyNumber($event)">
                     </td>
                     <td>
                         <inputprice :nilai="item.harga" v-model="item.harga" @keypress="onlyNumber($event)">
