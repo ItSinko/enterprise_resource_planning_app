@@ -28,9 +28,6 @@
                 this.getDetail()
             }
         },
-        updated() {
-            this.updatedFormDataWithFilteredData()
-        },
         methods: {
             getDetail() {
                 this.detailSelected.forEach(item => {
@@ -53,12 +50,6 @@
                 } else {
                     this.formPart.push(item)
                 }
-            },
-            updatedFormDataWithFilteredData() {
-                this.formPart.filter(item => {
-                    return this.filteredDatatables.find(data => data.id === item.id)
-                })
-                console.log("updated")
             },
         },
         computed: {
@@ -119,8 +110,8 @@
                     </th>
                 </tr>
             </thead>
-            <tbody v-if="filteredDatatables.length > 0">
-                <tr v-for="(item, idx) in filteredDatatables" :key="idx">
+            <tbody v-if="mergeFilteredAndFormPart.length > 0">
+                <tr v-for="(item, idx) in mergeFilteredAndFormPart" :key="idx">
                     <td>
                         <input type="checkbox" :value="item.id" ref="checked" @click="checked(item)">
                     </td>

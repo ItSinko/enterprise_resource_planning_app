@@ -98,7 +98,9 @@ export default {
                                 </button>
                             </td>
                             <td>
-                                <i class="fa fa-minus text-danger" aria-hidden="true"></i>
+                                <i class="fa fa-minus text-danger"
+                                @click="formPart.splice(idx, 1)"
+                                 aria-hidden="true"></i>
                             </td>
                         </tr>
                     </tbody>

@@ -6,29 +6,41 @@ export default {
     components: {
         inputprice
     },
-    data() {
-        return {
-            formPartNotRegistered: [
-                {
-                    nama: null,
-                    jumlah: 0,
-                    harga: 0,
-                }
-            ]
+    props: {
+        detailSelected: {
+            type: Array,
+            default: () => []
         }
     },
+    data() {
+        return {
+            formPartNotRegistered: []
+        }
+    },
+    created() {
+        this.checkDetail()
+    },
     methods: {
-            tambahPart() {
+    tambahPart() {
         this.formPartNotRegistered.push({
             nama: null,
             jumlah: 0,
             harga: 0,
         })
     },
+    checkDetail() {
+        if (this.detailSelected.length > 0) {
+            this.detailSelected.forEach(item => {
+                this.formPartNotRegistered.push(item)
+            })
+        } else {
+            this.tambahPart()
+        }
+    },
     hapus(idx) {
         this.formPartNotRegistered.splice(idx, 1)
     },
-    }
+    },
 }
 </script>
 <template>

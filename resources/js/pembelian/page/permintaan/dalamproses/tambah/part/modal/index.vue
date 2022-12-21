@@ -63,6 +63,7 @@ import TidakTerdaftar from './tidakterdaftar'
             async getBom(produk) {
                 const id = produk.value
                 this.bom = []
+                this.detailBom = []
                 this.form.versi = null
                 try {
                     const { data } = await axios.get(`/api/bom/produk/${id}`).then(res => res.data)
@@ -112,11 +113,13 @@ import TidakTerdaftar from './tidakterdaftar'
                 this.$emit('close')
             },
             simpan(){
-                const data = {
+                const save = () => {
+                    const data = {
                     form : this.form,
                     detail : {
-                        terdaftar : this.$refs.terdaftar.formPart,
-                    tidakTerdaftar : this.$refs.tidakterdaftar.formPartNotRegistered[0].nama === null
+                        terdaftar : this.detailBom.length == 0
+                        ? [] : this.$refs.terdaftar.formPart,
+                        tidakTerdaftar : this.$refs.tidakterdaftar.formPartNotRegistered.length == 0
                         ? []
                         : this.$refs.tidakterdaftar.formPartNotRegistered
                     ,
@@ -135,6 +138,8 @@ import TidakTerdaftar from './tidakterdaftar'
                     jumlah: 0,
                     harga: 0,
                 }]
+                }
+                this.checkFormNull ? this.$swal('Peringatan', 'Silahkan pilih produk dan versi BOM dan jumlah terlebih dahulu', 'warning') : save()
             }
         },
         computed: {
@@ -222,7 +227,10 @@ import TidakTerdaftar from './tidakterdaftar'
                                                     </div>
                                                 <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                                                     aria-labelledby="pills-profile-tab">
-                                                    <tidak-terdaftar ref="tidakterdaftar" />
+                                                    <tidak-terdaftar 
+                                                    :detailSelected="detail ?
+                                                    detail.detail.tidakTerdaftar : []"
+                                                    ref="tidakterdaftar" />
                                                     </div>
                                             </div>
                                         </div>
