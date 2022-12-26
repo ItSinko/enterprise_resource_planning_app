@@ -57,6 +57,7 @@ class PembelianController extends Controller
     }
     public function store_data_pp(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'no_pp' => 'required|unique:permintaan_pembelian,no_pp',
             'tgl_dibutuhkan' => 'required',

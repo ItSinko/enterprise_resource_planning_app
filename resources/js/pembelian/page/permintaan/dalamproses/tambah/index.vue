@@ -123,49 +123,41 @@
                 this.$router.push('/pembelian/permintaan')
             },
             save() {
+                const isConditional  = () => {
+                    if (this.formPermintaan.kebutuhan === 'umum') {
+                    const umum = {
+                        terdaftar: this.$refs.umum.accepted,
+                        tidak_terdaftar: this.$refs.umum.notAccepted
+                    }
+                    isSendData(umum)
+                    }else{
+                        const part = this.$refs.part.formPart
+                        isSendData(part)
+                    }   
+                }
+
                 const isFailed = (error) => {
                     this.$swal('Gagal!', error, 'error')
                 }
 
                 const isSuccess = () => {
-                    // const umum = {
-                    //     terdaftar: this.$refs.umum.accepted,
-                    //     tidak_terdaftar: this.$refs.umum.notAccepted
-                    // }
-                    // const part = this.$refs.part.formPart
-                    const berhasil = (data) => {
-                            this.$swal('Berhasil!', 'Permintaan Pembelian berhasil disimpan', 'success').then(() => {
-                            this.$router.push('/pembelian/permintaan')
-                            console.log("headers", this.headers.rencana)
-                            console.log("detailminta", this.formPermintaan)
-                            console.log("dataSend", data)
-                        })
-                    }
-                    if (this.formPermintaan.kebutuhan === 'umum') {
-                        const umum = {
-                            terdaftar: this.$refs.umum.accepted,
-                            tidak_terdaftar: this.$refs.umum.notAccepted
-                        }
-                        berhasil(umum)
-                    }else{
-                        const part = this.$refs.part.formPart
-                        berhasil(part)
-                    }   
+                    this.$swal('Berhasil!', 'Permintaan Pembelian berhasil disimpan', 'success').then(() => {
+                        this.$router.push('/pembelian/permintaan')
+                    })
                 }
 
-                const isSendData = async () => {
-                    // try {
-                    //     const { data } = await this.$http.post('/pembelian/permintaan/dalamproses/tambah', {
-                    //         headers: this.headers,
-                    //         acceptedParts: this.acceptedParts,
-                    //         notAcceptedParts: this.notAcceptedParts
-                    //     }).then((response) => {
-                    //         isSuccess()
-                    //     })
-                    // } catch (error) {
-                    //     isFailed(error.response.data.message)
-                    // }
-                    isSuccess()
+                const isSendData = async (form) => {
+                    try {
+                        const { data } = await axios.post('/api/pembelian/pp/store', {
+                            headers: this.headers.rencana,
+                            detail: this.formPermintaan,
+                            daftar: form
+                        }).then((response) => {
+                            isSuccess()
+                        })
+                    } catch (error) {
+                        isFailed(error.response.data.message)
+                    }
                 }
 
                 this.$swal({
@@ -178,7 +170,7 @@
                     confirmButtonText: 'Ya, simpan!',
                     cancelButtonText: 'Tidak'
                 }).then((result) => {
-                    result.value ? isSendData() : ''
+                    result.value ? isConditional() : ''
                 })
             }
         },
