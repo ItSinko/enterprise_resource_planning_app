@@ -128,9 +128,29 @@
                 }
 
                 const isSuccess = () => {
-                    this.$swal('Berhasil!', 'Permintaan Pembelian berhasil disimpan', 'success').then(() => {
-                        this.$router.push('/pembelian/permintaan')
-                    })
+                    // const umum = {
+                    //     terdaftar: this.$refs.umum.accepted,
+                    //     tidak_terdaftar: this.$refs.umum.notAccepted
+                    // }
+                    // const part = this.$refs.part.formPart
+                    const berhasil = (data) => {
+                            this.$swal('Berhasil!', 'Permintaan Pembelian berhasil disimpan', 'success').then(() => {
+                            this.$router.push('/pembelian/permintaan')
+                            console.log("headers", this.headers.rencana)
+                            console.log("detailminta", this.formPermintaan)
+                            console.log("dataSend", data)
+                        })
+                    }
+                    if (this.formPermintaan.kebutuhan === 'umum') {
+                        const umum = {
+                            terdaftar: this.$refs.umum.accepted,
+                            tidak_terdaftar: this.$refs.umum.notAccepted
+                        }
+                        berhasil(umum)
+                    }else{
+                        const part = this.$refs.part.formPart
+                        berhasil(part)
+                    }   
                 }
 
                 const isSendData = async () => {
@@ -208,7 +228,9 @@
                         </div>
                     </div>
                 </div>
-                <Umum 
+
+                <Umum
+                ref="umum" 
                 v-if="formPermintaan.kebutuhan == 'umum'"
                 :accepted="umum.acceptedParts" 
                 :notAccepted="umum.notAcceptedParts" 
@@ -219,6 +241,7 @@
                 />
 
                 <Part
+                ref="part"
                 v-else
                 />
             </div>

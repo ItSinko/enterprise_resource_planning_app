@@ -45,6 +45,7 @@
             },
             checked(item) {
                 const id = item.id
+                console.log(id)
                 if (this.formPart.find(item => item.id === id)) {
                     this.formPart.splice(this.formPart.findIndex(item => item.id === id), 1)
                 } else {
@@ -64,17 +65,6 @@
                         dataIsNotNull(item.harga) && item.harga.toString().toLowerCase().includes(this.search.toLowerCase())
                     )
                 })
-            },
-            mergeFilteredAndFormPart() {
-                const formPart = this.formPart.length > 0 ? this.formPart : []
-                const filtered = this.filteredDatatables.length > 0 ? this.filteredDatatables : []
-                if (formPart.length > 0 && filtered.length > 0) {
-                    return formPart.concat(filtered.filter(item => {
-                        return !formPart.find(data => data.id === item.id)
-                    }))
-                } else {
-                    return formPart.concat(filtered)
-                }
             },
         }
     }
@@ -110,8 +100,8 @@
                     </th>
                 </tr>
             </thead>
-            <tbody v-if="mergeFilteredAndFormPart.length > 0">
-                <tr v-for="(item, idx) in mergeFilteredAndFormPart" :key="idx">
+            <tbody v-if="filteredDatatables.length > 0">
+                <tr v-for="(item, idx) in filteredDatatables" :key="idx">
                     <td>
                         <input type="checkbox" :value="item.id" ref="checked" @click="checked(item)">
                     </td>
