@@ -24,7 +24,7 @@ export default {
     tambahPart() {
         this.formPartNotRegistered.push({
             nama: null,
-            jumlah: 0,
+            jumlah: 1,
             harga: 0,
         })
     },

@@ -42,6 +42,7 @@
                     email: '',
                     fax: '',
                 },
+                country: [],
                 id: this.$route.params.id || null,
             }
         },
@@ -64,6 +65,11 @@
                         telepon,
                     }
                 }
+                const { data } = await axios.get('https://restcountries.com/v3.1/all').then(res => res)
+                const country = data.map(item => {
+                    return item.name.common
+                })
+                this.country = country.sort()
             },
             batal() {
                 this.$router.push('/pembelian/supplier')
@@ -82,6 +88,15 @@
                     }
                     return true
                 }
+
+                const isValidSupplier = (supplier) => {
+                    let isValid = Object.keys(supplier).every(key => {
+                        return key === 'fax' || supplier[key] !== '';
+                    });
+
+                    return isValid;
+                }
+
                 const checkEmailIsValid = (email) => {
                     let regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
                     return regex.test(email)
@@ -126,7 +141,7 @@
                     this.id ? isUpdated() : isAdd()
                 }
 
-                if (checkIsNotNull(data.supplier) && checkIsNotNull(data.alamat_supplier) && checkIsNotNull(data.kontak_supplier)) {
+                if (checkIsNotNull(data.supplier) && checkIsNotNull(data.alamat_supplier) && isValidSupplier(data.kontak_supplier)) {
                     checkEmailIsValid(data.kontak_supplier.email) ? saveData() : this.$swal('Gagal', 'Email tidak valid', 'error')
                 } else {
                     this.$swal('Gagal', 'Data tidak boleh kosong', 'error')
@@ -204,12 +219,12 @@
                                                 rows="5" v-model="alamat_supplier.alamat"></textarea>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="" class="col-2">Kode Pos</label>
+                                            <label for="" class="col-2">Postal Code</label>
                                             <input type="text" class="form-control col-3" v-model="alamat_supplier.kode_pos" @keypress="isNumber($event)">
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Negara</label>
-                                            <input type="text" class="form-control col-5" v-model="alamat_supplier.negara">
+                                            <v-select class="col-8 ml-n2" :options="country" v-model="alamat_supplier.negara"></v-select>
                                         </div>
                                     </div>
                                 </div>

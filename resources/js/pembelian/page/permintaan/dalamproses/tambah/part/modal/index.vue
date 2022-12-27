@@ -96,7 +96,7 @@ import TidakTerdaftar from './tidakterdaftar'
                             })
                         } else {
                             this.detailBom = []
-                            alert('Data masih kosong')
+                            !this.detail ? alert('Data masih kosong') : null
                         }
                         console.log(data)
                     } catch (error) {

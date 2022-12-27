@@ -1,6 +1,8 @@
 <script>
 import inputPrice from '../../../../../components/inputprice'
+import mix from './mix'
 export default {
+    mixins: [mix],
     components: {
         inputPrice
     },
@@ -9,14 +11,6 @@ export default {
             type: Array,
             default: () => []
         },
-    },
-    data() {
-        return {
-            jenisPembelian: [
-                'Online',
-                'Offline'
-            ]
-        }
     },
     methods: {
         handleDelete(index) {
@@ -82,7 +76,7 @@ export default {
                     <td><input type="text" @keypress="isNumber($event)" v-model="data.jumlah" class="form-control"></td>
                     <td><input-price :nilai="data.estimasi_harga" v-model="data.estimasi_harga" /></td>
                     <td><v-select v-model="data.pembelian_via" :options="jenisPembelian"></v-select></td>
-                    <td><input type="text" v-model="data.link" class="form-control"></td>
+                    <td><input type="text" v-model="data.link" class="form-control" :disabled="validationLink(data.pembelian_via)"></td>
                     <td>
                         <i class="fa fa-minus" @click="trash(index)" style="color: red" aria-hidden="true"></i>
                     </td>

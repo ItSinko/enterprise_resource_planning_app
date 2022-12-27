@@ -175,8 +175,8 @@
             }
         },
         computed: {
-            getTwoWeeksDateBefore() {
-                return moment(this.headers.tanggal).subtract(2, 'weeks').format('YYYY-MM-DD')
+            getTwoWeeksDateAfter() {
+                return moment(this.headers.tanggal).add(2, 'weeks').format('YYYY-MM-DD')
             }
         }
     }
@@ -194,7 +194,11 @@
                         <div class="card-text">
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Tanggal Dibutuhkan</label>
-                                <div class="col-3"><input type="date" v-model="formPermintaan.tanggal" class="form-control" :min="getTwoWeeksDateBefore"></div>
+                                <div class="col-3"><input type="date" 
+                                v-model="formPermintaan.tanggal" 
+                                class="form-control" 
+                                :min="this.headers.tanggal"
+                                :max="getTwoWeeksDateAfter"></div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Kebutuhan Barang</label>
