@@ -1,8 +1,10 @@
 <script>
     import Table from './table.vue'
+    import Detail from './detail'
     export default {
         components: {
-            Table
+            Table,
+            Detail
         },
         data() {
             return {
@@ -60,12 +62,20 @@
                         pp: 'upload',
                         status: 'ditolak pembelian',
                     }
-                ]
+                ],
+                modalDetail: false,
             }
         },
         methods: {
             detail(id) {
-                console.log(id)
+                this.modalDetail = true
+                setTimeout(() => {
+                    $('.modalDetail').modal('show')
+                }, 100);
+            },
+            closeDetail() {
+                this.modalDetail = false
+                $('.modalDetail').modal('hide')
             },
             hapus(id) {
                 const deletePermintaan = async () => {
@@ -90,6 +100,9 @@
                 }).then((result) => {
                     result.value ? deletePermintaan() : ''
                 })
+            },
+            edit(id){
+
             },
             batal(id) {
                 const batalPermintaan = async () => {
@@ -121,7 +134,8 @@
 </script>
 <template>
     <div>
-        <Table 
+    <Detail v-if="modalDetail" @close="closeDetail"/>
+    <Table
         :dataTables="dataTables" 
         @edit="edit" 
         @detail="detail" 
