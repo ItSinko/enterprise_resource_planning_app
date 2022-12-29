@@ -77,13 +77,14 @@
                 }
             },
 
-            checkPP(pp) {
+            checkPP(id, no_pp, pp) {
                 const upload = () => {
-                    alert('Upload PP')
+                    console.log('upload')
+                    this.$emit('upload', id, no_pp)
                 }
 
                 const lihat = () => {
-                    alert('Lihat PP')
+                    this.$emit('lihat', pp)
                 }
                 switch (pp) {
                     case 'upload':
@@ -278,7 +279,7 @@
                     <td>{{ moment(data.tanggal_diminta) }}</td>
                     <td>{{ moment(data.tanggal_dibutuhkan) }}</td>
                     <td>
-                        <button class="btn btn-sm" :class="classPP(data.pp)" @click="checkPP(data.pp)">
+                        <button class="btn btn-sm" :class="classPP(data.pp)" @click="checkPP(data.id, data.no_pp, data.pp)">
                             <i :class="iconPP(data.pp)"></i>
                             {{ data.pp }}</button></td>
                     <td>

@@ -1,10 +1,12 @@
 <script>
     import Table from './table.vue'
     import Detail from './detail'
+    import Upload from './upload'
     export default {
         components: {
             Table,
-            Detail
+            Detail,
+            Upload
         },
         data() {
             return {
@@ -64,6 +66,8 @@
                     }
                 ],
                 modalDetail: false,
+                modalUpload: false,
+                detailUpload: null,
             }
         },
         methods: {
@@ -127,6 +131,17 @@
                 }).then((result) => {
                     result.value ? batalPermintaan() : ''
                 })
+            },
+            upload(id, no_pp){
+                console.log(id, no_pp)
+                this.modalUpload = true
+                this.detailUpload = {
+                    id,
+                    no_pp
+                }
+                setTimeout(() => {
+                    $('.modalUpload').modal('show')
+                }, 100);
             }
         }
     }
@@ -135,11 +150,17 @@
 <template>
     <div>
     <Detail v-if="modalDetail" @close="closeDetail"/>
+    <Upload 
+    v-if="modalUpload"
+    :dataUpload="detailUpload"
+    />
     <Table
         :dataTables="dataTables" 
         @edit="edit" 
         @detail="detail" 
         @hapus="hapus" 
-        @batal="batal" />
+        @batal="batal" 
+        @upload="upload"
+        />
     </div>
 </template>
