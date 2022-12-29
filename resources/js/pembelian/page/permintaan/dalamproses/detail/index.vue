@@ -97,10 +97,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @click="close">Keluar</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
-                </div>
             </div>
         </div>
     </div>
