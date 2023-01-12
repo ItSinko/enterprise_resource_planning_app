@@ -31,7 +31,7 @@
                 headers: {
                     rencana: 'PP',
                     tanggal: moment(new Date()).format('YYYY-MM-DD'),
-                    sisa: null,
+                    sisa: 30000000,
                 },
                 formPermintaan: {
                     tanggal: null,
@@ -125,11 +125,12 @@
             save() {
                 const isConditional  = () => {
                     if (this.formPermintaan.kebutuhan === 'umum') {
+                    const checkUmum = Object.values(this.calcSisaUmum).every((item) => item === false)
                     const umum = {
                         terdaftar: this.$refs.umum.accepted,
                         tidak_terdaftar: this.$refs.umum.notAccepted
                     }
-                    isSendData(umum)
+                    checkUmum ? isSendData(umum) : isFailed('Total Pembelian Melebihi Sisa Budget');
                     }else{
                         const part = this.$refs.part.formPart
                         isSendData(part)
@@ -177,7 +178,26 @@
         computed: {
             getTwoWeeksDateAfter() {
                 return moment(this.headers.tanggal).add(2, 'weeks').format('YYYY-MM-DD')
-            }
+            },
+            calcSisaUmum() {
+                let totalAccepted = 0
+                this.umum.acceptedParts.forEach((item) => {
+                    totalAccepted += item.jumlah * item.estimasi_harga
+                })
+                const sisaAccepted = this.headers.sisa - totalAccepted
+
+                let totalNotAccepted = 0
+                this.umum.notAcceptedParts.forEach((item) => {
+                    totalNotAccepted += item.jumlah * item.estimasi_harga
+                })
+
+                const sisaNotAccepted = this.headers.sisa - totalNotAccepted
+
+                return {
+                    accepted: sisaAccepted < 0 ? true : false,
+                    notAccepted: sisaNotAccepted < 0 ? true : false
+                }
+            },
         }
     }
 
@@ -228,6 +248,7 @@
                 <Umum
                 ref="umum" 
                 v-if="formPermintaan.kebutuhan == 'umum'"
+                :sisa="calcSisaUmum"
                 :accepted="umum.acceptedParts" 
                 :notAccepted="umum.notAcceptedParts" 
                 @trashAccepted="trashAccepted" 

@@ -7,7 +7,7 @@
             dataTables: {
                 type: Array,
                 default: () => []
-            }
+            },
         },
         data() {
             return {

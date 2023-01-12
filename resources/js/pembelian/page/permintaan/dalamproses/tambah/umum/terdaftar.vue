@@ -11,6 +11,10 @@ export default {
             type: Array,
             default: () => []
         },
+        sisa: {
+            type: Boolean,
+            default: false
+        }
     },
     methods: {
         handleDelete(index) {
@@ -39,7 +43,7 @@ export default {
                 style: 'currency',
                 currency: 'IDR'
             }).format(total)
-        }
+        },
     }
 }
 </script>
@@ -85,7 +89,10 @@ export default {
             <tfoot class="table-active">
                 <tr>
                     <td colspan="5" class="text-right text-bold">Total Pembelian</td>
-                    <td class="text-bold">{{ calcTotalEstimasiHarga }}</td>
+                    <td class="text-bold" 
+                    :class="sisa ? 'text-danger' : ''">
+                    {{ calcTotalEstimasiHarga }}
+                    </td>
                     <td colspan="4"></td>
                 </tr>
             </tfoot>

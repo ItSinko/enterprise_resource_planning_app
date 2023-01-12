@@ -6,6 +6,7 @@ import SupplierTambah from "./page/supplier/tambahedit.vue";
 import SupplierDetail from "./page/supplier/detail";
 // Permintaan
 import Permintaan from "./page/permintaan";
+import PermintaanAdmin from './page/permintaanAdmin'
 import PermintaanTambahDalamProses from "./page/permintaan/dalamproses/tambah";
 // Purchase Order
 import PurchaseOrder from "./page/purchaseorder";
@@ -65,6 +66,11 @@ const routes = [
         path: "/pembelian/detail",
         component: PurchaseOrderDetail,
         name: "purchaseorder",
+    },
+    {
+        path: "/pembelian/admin",
+        component: PermintaanAdmin,
+        name: "pembelianAdmin"
     }
 ];
 

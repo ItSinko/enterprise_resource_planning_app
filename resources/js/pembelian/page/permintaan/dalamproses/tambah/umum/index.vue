@@ -15,6 +15,10 @@ import TidakTerdaftar from './tidakterdaftar'
                 type: Array,
                 default: () => []
             },
+            sisa: {
+                type: Object,
+                default: () => {}
+            }
         },
         methods: {
             trashAccepted(index) {
@@ -49,10 +53,10 @@ import TidakTerdaftar from './tidakterdaftar'
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                <terdaftar :dataTable="accepted" @trash="trashAccepted" @add="addAccepted"/>
+                <terdaftar :dataTable="accepted" :sisa="sisa.accepted" @trash="trashAccepted" @add="addAccepted"/>
             </div>
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <tidak-terdaftar :dataTable="notAccepted" @add="addNotAccepted" @trash="trashNotAccepted"/>
+                <tidak-terdaftar :dataTable="notAccepted" :sisa="sisa.notAccepted" @add="addNotAccepted" @trash="trashNotAccepted"/>
             </div>
         </div>
         </div>
