@@ -1,5 +1,7 @@
 <script>
+import mix from './mix'
 export default {
+    mixins: [mix],
     props: {
         dataTables: {
             type: Array,
@@ -9,6 +11,7 @@ export default {
     data() {
         return {
             search: '',
+            filterstatus: [],
         }
     },
     methods: {
@@ -31,14 +34,48 @@ export default {
                     return `<span class="badge badge-info">${status}</span>`
             }
         },
+        clickFilterStatus(status) {
+            if (this.filterstatus.includes(status)) {
+                this.filterstatus = this.filterstatus.filter((data) => {
+                    return data != status
+                })
+            } else {
+                this.filterstatus.push(status)
+            }
+        },
         detail(id){
             this.$emit('detail', id)
         },
         tambah() {
             this.$router.push('/pembelian/permintaan/dalamproses/create')
         },
+    },
+    computed: {
+        filteredDatatables(){
+            let filtered = []
+            if (this.filterstatus.length == 0) {
+                filtered = this.dataTables
+            } else {
+                this.filterstatus.forEach(filter => {
+                    filtered = filtered.concat(this.dataTables.filter(data => data.status == filter))
+                })
+            }
+            return filtered.filter((data) => {
+                return data.no_pp.toLowerCase().includes(this.search.toLowerCase()) ||
+                    data.jenis_barang.toLowerCase().includes(this.search.toLowerCase()) ||
+                    data.pp.toLowerCase().includes(this.search.toLowerCase()) ||
+                    data.status.toLowerCase().includes(this.search.toLowerCase())
+            })
+        },
+        getAllStatusUnique() {
+            return this.dataTables.map((data) => {
+                return data.status
+            }).filter((value, index, self) => {
+                return self.indexOf(value) === index
+            })
+        },
     }
-}
+}   
 </script>
 <template>
     <div>
@@ -50,11 +87,30 @@ export default {
                 </button>
             </div>
             <div class="p-2 bd-highlight">
-                <button class="btn btn-outline-info">
-                    <i class="fa fa-filter" aria-hidden="true"></i>
-                    Filter
-                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                </button>
+                                <span class="float-left filter">
+                    <button class="btn btn-outline-info" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <form id="filter_ekat">
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-3">
+                                <div class="form-group">
+                                    <label for="jenis_penjualan">Status</label>
+                                </div>
+                                <div class="form-group" v-for="status in getAllStatusUnique" :key="status">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" :ref="status" :value="status"
+                                            id="status1" @click="clickFilterStatus(status)" />
+                                        <label class="form-check-label" for="status1">
+                                            {{ status }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </span>
             </div>
             <div class="ml-auto p-2 bd-highlight">
                 <div class="form-group row">
@@ -76,8 +132,8 @@ export default {
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(data, index) in dataTables" :key="index">
+            <tbody v-if="filteredDatatables.length > 0">
+                <tr v-for="(data, index) in filteredDatatables" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ data.no_pp }}</td>
                     <td>{{ data.jenis_barang }}</td>
@@ -104,6 +160,28 @@ export default {
                     </td>
                 </tr>
             </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="8" class="text-center">Tidak ada data</td>
+                </tr>
+            </tbody>
         </table>
+                <div class="d-flex flex-row-reverse bd-highlight">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
+                    </li>
+                    <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
+                        :key="paginate">
+                        <a class="page-link" @click="nowPage(paginate)">{{paginate}}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
+                            @click="nextPage">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </template>

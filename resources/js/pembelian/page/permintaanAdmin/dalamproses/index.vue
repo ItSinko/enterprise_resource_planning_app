@@ -1,11 +1,14 @@
 <script>
 import Table from './table.vue'
+import Detail from './detail'
 export default {
     components: {
-        Table
+        Table,
+        Detail
     },
     data() {
         return {
+            modal: false,
             dalamProses: [
                 {
                     id: 1,
@@ -46,10 +49,19 @@ export default {
             ]
         }
     },
+    methods: {
+        detail(id) {
+            this.modal = true
+            setTimeout(() => {
+                $('.modalDetail').modal('show')
+            }, 100);
+        }
+    }
 }
 </script>
 <template>
     <div>
-        <Table :dataTables="dalamProses"/>
+        <Detail v-show="modal" @close="modal = false"/>
+        <Table :dataTables="dalamProses" @detail="detail"/>
     </div>
 </template>
