@@ -85,7 +85,7 @@
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
                         <div class="box-ket box-grey"></div>
-                        <p class="pr-2">Jumlah Barang yang <strong>belum</strong> diperiksa</p>
+                        <p class="pr-2">Jumlah Barang yang <strong>belum</strong> diterima Gudang</p>
                     </div>
                     <div class="d-flex">
                         <div class="box-ket box-orange"></div>
