@@ -22,7 +22,8 @@ import TidakTerdaftar from './tidakterdaftar'
                 },
                 produk: [],
                 bom: [],
-                detailBom: []
+                detailBom: [],
+                showTerdaftar: false
             }
         },
         mounted(){
@@ -79,6 +80,7 @@ import TidakTerdaftar from './tidakterdaftar'
 
                 const getData = async () => {
                 const id = this.form.produk.value
+                this.showTerdaftar = false
                     try {
                         const { data } = await axios.get(`/api/bom/detail/${id}`).then(res => res.data)
                         const checkData = data.length > 0 ? true : false
@@ -94,6 +96,7 @@ import TidakTerdaftar from './tidakterdaftar'
                                     harga: 0
                                 })
                             })
+                            this.showTerdaftar = true
                         } else {
                             this.detailBom = []
                             !this.detail ? alert('Data masih kosong') : null
@@ -220,7 +223,7 @@ import TidakTerdaftar from './tidakterdaftar'
                                             <div class="tab-content" id="pills-tabContent">
                                                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                                                     aria-labelledby="pills-home-tab">
-                                                    <terdaftar ref="terdaftar" v-if="detailBom.length > 0" 
+                                                    <terdaftar ref="terdaftar" v-if="showTerdaftar" 
                                                         :detailSelected="detail ?
                                                         detail.detail.terdaftar : []"
                                                         :dataTable="detailBom"/>
