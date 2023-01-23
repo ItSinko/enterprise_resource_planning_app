@@ -25,7 +25,7 @@
                         jenis_barang: 'part',
                         tanggal_diminta: '2021-01-01',
                         tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'lihat',
+                        pp: 'lihat PP',
                         status: 'minta persetujuan',
                     },
                     {
@@ -52,7 +52,7 @@
                         jenis_barang: 'umum',
                         tanggal_diminta: '2021-01-01',
                         tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'lihat',
+                        pp: 'lihat PP',
                         status: 'batal',
                     },
                     {

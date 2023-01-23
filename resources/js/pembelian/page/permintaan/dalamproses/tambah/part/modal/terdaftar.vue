@@ -17,7 +17,8 @@
         data() {
             return {
                 search: '',
-                formPart: []
+                formPart: [],
+                tableMerged: [],
             }
         },
         components: {
@@ -27,15 +28,30 @@
             if(this.detailSelected.length > 0) {
                 this.getDetail()
             }
+            this.mergedTable()
         },
         methods: {
             getDetail() {
                 this.detailSelected.forEach(item => {
                     this.formPart.push(item)
                 })
-                this.$refs.checked.forEach(item => {
-                    this.formPart.find(data => data.id == item.value) ? item.checked = true : item.checked = false
+                
+            },
+            mergedTable(){
+                const filtered = this.dataTable.map(data => {
+                    const selectedData = this.formPart.find(item => item.id == data.id)
+                    if (selectedData){
+                        return { ...data, ...selectedData }
+                    }
+                    return data
                 })
+                this.tableMerged = filtered
+
+                setTimeout(() => {
+                    this.$refs.checked.forEach(item => {
+                        this.formPart.find(data => data.id == item.value) ? item.checked = true : item.checked = false
+                    })
+                }, 100);
             },
             checkedAll() {
                 this.formPart != this.dataTable ? this.formPart = this.dataTable : this.formPart = []
@@ -56,7 +72,7 @@
         computed: {
             filteredDatatables() {
                 const dataIsNotNull = (data) => data !== null && data !== undefined && data !== ''
-                return this.dataTable.filter(item => {
+                return this.tableMerged.filter(item => {
                     return (
                         dataIsNotNull(item.kode) && item.kode.toLowerCase().includes(this.search.toLowerCase()) ||
                         dataIsNotNull(item.nama) && item.nama.toLowerCase().includes(this.search.toLowerCase()) ||

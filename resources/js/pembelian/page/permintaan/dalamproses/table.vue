@@ -54,7 +54,7 @@
                     case 'upload':
                         return 'btn-warning'
                         break;
-                    case 'lihat':
+                    case 'lihat PP':
                         return 'btn-outline-primary'
                         break;
                     default:
@@ -68,7 +68,7 @@
                     case 'upload':
                         return 'fas fa-upload'
                         break;
-                    case 'lihat':
+                    case 'lihat PP':
                         return 'fas fa-eye'
                         break;
                     default:
@@ -90,7 +90,7 @@
                     case 'upload':
                         return upload()
                         break;
-                    case 'lihat':
+                    case 'lihat PP':
                         return lihat()
                         break;
                     default:
