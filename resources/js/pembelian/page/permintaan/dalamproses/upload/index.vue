@@ -18,7 +18,7 @@
         methods: {
             uploadFiles(files) {
                 this.files = files[0]
-                console.log(this.files)
+                console.log("files", files)
             },
         }
     }
@@ -36,7 +36,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <upload-files @change="uploadFiles" :max="1"></upload-files>
+                    <upload-files @changed="uploadFiles" :max="1"></upload-files>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
