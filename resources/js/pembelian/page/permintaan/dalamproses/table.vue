@@ -16,7 +16,12 @@
         },
         methods: {
             tambah() {
-                this.$router.push('/pembelian/permintaan/dalamproses/create')
+                this.$router.push({
+                    name: 'permintaanTambahDalamProses',
+                    params: {
+                        currentRoute: this.$route.name
+                    }
+                })
             },
             moment(date) {
                 return moment(date).lang('id').format('LL')
@@ -279,7 +284,8 @@
                     <td>{{ moment(data.tanggal_diminta) }}</td>
                     <td>{{ moment(data.tanggal_dibutuhkan) }}</td>
                     <td>
-                        <button class="btn btn-sm" :class="classPP(data.pp)" @click="checkPP(data.id, data.no_pp, data.pp)">
+                        <button class="btn btn-sm" :class="classPP(data.pp)"
+                            @click="checkPP(data.id, data.no_pp, data.pp)">
                             <i :class="iconPP(data.pp)"></i>
                             {{ data.pp }}</button></td>
                     <td>
@@ -298,29 +304,25 @@
                                 left: 0px;
                                 will-change: transform;
                             ">
-                            <button 
-                            @click="detail(data.id)" class="dropdown-item" type="button">
+                            <button @click="detail(data.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>
 
-                            <button 
-                            v-if="showButtonEdit(data.status)" 
-                            @click="edit(data.id)" class="dropdown-item" type="button">
+                            <button v-if="showButtonEdit(data.status)" @click="edit(data.id)" class="dropdown-item"
+                                type="button">
                                 <i class="fas fa-pencil-alt"></i>
                                 Ubah
                             </button>
 
-                            <button 
-                            v-if="showButtonBatal(data.status)"
-                            @click="batal(data.id)" class="dropdown-item" type="button">
+                            <button v-if="showButtonBatal(data.status)" @click="batal(data.id)" class="dropdown-item"
+                                type="button">
                                 <i class="fas fa-times"></i>
                                 Batal
                             </button>
 
-                            <button 
-                            v-if="showButtonHapus(data.status)"
-                            @click="hapus(data.id)" class="dropdown-item" type="button">
+                            <button v-if="showButtonHapus(data.status)" @click="hapus(data.id)" class="dropdown-item"
+                                type="button">
                                 <i class="fas fa-trash"></i>
                                 Hapus
                             </button>

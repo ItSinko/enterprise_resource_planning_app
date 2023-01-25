@@ -257,6 +257,12 @@ return [
             'auth' => [7],
         ],
         [
+            'text' => 'Permintaan Pembelian Admin',
+            'icon' => 'fas fa-shopping-cart',
+            'url' => '/pembelian/admin',
+            'auth' => [7],
+        ],
+        [
             'text' => 'Purchase Order',
             'icon' => 'fas fa-file-invoice-dollar',
             'url' => '/pembelian/po',

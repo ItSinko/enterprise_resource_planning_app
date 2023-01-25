@@ -43,11 +43,54 @@ export default {
                 this.filterstatus.push(status)
             }
         },
-        detail(id){
-            this.$emit('detail', id)
+        detail(id, jenis){
+            this.$emit('detail', id, jenis)
         },
         tambah() {
-            this.$router.push('/pembelian/permintaan/dalamproses/create')
+            this.$router.push({
+                name: 'permintaanTambahDalamProses',
+                params: {
+                    currentRoute: this.$route.name
+                }
+            })
+        },
+        terima(){
+            this.$swal({
+                title: 'Apakah anda yakin?',
+                text: "Data yang sudah diterima tidak dapat diubah kembali!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Terima!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.$swal(
+                        'Terima!',
+                        'Data berhasil diterima.',
+                        'success'
+                    )
+                }
+            })
+        },
+        tolak(){
+            this.$swal({
+                title: 'Apakah anda yakin?',
+                text: "Data yang sudah ditolak tidak dapat diubah kembali!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Tolak!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.$swal(
+                        'Tolak!',
+                        'Data berhasil ditolak.',
+                        'success'
+                    )
+                }
+            })
         },
     },
     computed: {
@@ -145,16 +188,16 @@ export default {
                     <td>
                         <span v-html="status(data.status, data.persentase)" v-if="data.status !== 'minta persetujuan'"></span>
                         <span v-if="data.status === 'minta persetujuan'">
-                            <button class="btn btn-success btn-sm">
+                            <button class="btn btn-success btn-sm" @click="terima">
                                 Terima
                             </button>
-                            <button class="btn btn-danger btn-sm">
+                            <button class="btn btn-danger btn-sm" @click="tolak">
                                 Tolak
                             </button>
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-outline-primary btn-sm" @click="detail(data.id)">
+                        <button class="btn btn-outline-primary btn-sm" @click="detail(data.id, data.jenis_barang)">
                             <i class="fa fa-eye"></i>
                         </button>
                     </td>

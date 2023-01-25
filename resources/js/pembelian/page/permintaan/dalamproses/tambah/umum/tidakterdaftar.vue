@@ -74,9 +74,9 @@ export default {
             <tbody>               
                 <tr v-for="(data, index) in dataTable" :key="index">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ data.merek }}</td>
-                    <td>{{ data.no_perkiraan }}</td>
-                    <td>{{ data.supplier }}</td>
+                    <td><input type="text" class="form-control" v-model="data.merek"></td>
+                    <td><input type="text" class="form-control" v-model="data.no_perkiraan"></td>
+                    <td><input type="text" class="form-control" v-model="data.supplier"></td>
                     <td><input type="text" @keypress="isNumber($event)" v-model="data.jumlah" class="form-control"></td>
                     <td><input-price :nilai="data.estimasi_harga" v-model="data.estimasi_harga" /></td>
                     <td><v-select v-model="data.pembelian_via" :options="jenisPembelian"></v-select></td>

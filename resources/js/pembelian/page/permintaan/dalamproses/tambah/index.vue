@@ -120,7 +120,9 @@
                 })
             },
             back() {
-                this.$router.push('/pembelian/permintaan')
+                this.$router.push({
+                    name: this.$route.params.currentRoute
+                })
             },
             save() {
                 const isConditional  = () => {

@@ -1,15 +1,26 @@
 <script>
+import daftarBarang from './daftarbarang.vue'
+import daftarPO from './daftarpo.vue'
 export default {
-    
+    components: {
+        daftarBarang,
+        daftarPO
+    },
+    methods: {
+        closeModal() {
+            this.$emit('close')
+        }
+    },
 }
 </script>
 <template>
-    <div class="modal fade modalDetail" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade modalDetail" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Detail Permintaan Pembelian</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="closeModal">
                             <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
@@ -29,7 +40,7 @@ export default {
                                     <div class="card">
                                         <div class="card-body">
                                             <p>Jenis Barang</p>
-                                            <h5 class="text-bold">Barang 1</h5>
+                                            <h5 class="text-bold text-capitalize">umum</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -70,6 +81,7 @@ export default {
                             </div>
                         </div>
                     </div>
+
                     <div class="card card-secondary">
             <div class="card-body">
                 <div class="row">
@@ -85,10 +97,27 @@ export default {
                 </div>
             </div>
                     </div>
+
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="pills-daftarBrg-tab" data-toggle="pill" data-target="#pills-daftarBrg" type="button" role="tab" aria-controls="pills-daftarBrg" aria-selected="false">Daftar Barang</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="pills-daftarPO-tab" data-toggle="pill" data-target="#pills-daftarPO" type="button" role="tab" aria-controls="pills-daftarPO" aria-selected="true">Daftar PO</a>
+                        </li>
+                        </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-daftarBrg" role="tabpanel" aria-labelledby="pills-daftarBrg-tab">
+                            <daftarBarang></daftarBarang>
+                        </div>
+                        <div class="tab-pane fade" id="pills-daftarPO" role="tabpanel" aria-labelledby="pills-daftarPO-tab">
+                            <daftarPO></daftarPO>
+                        </div>
+                    </div>  
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" @click="closeModal">Keluar</button>
+                    <button type="button" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
         </div>
