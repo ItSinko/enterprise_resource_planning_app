@@ -68,15 +68,11 @@ export default {
         },
         closeModal() {
             this.modal = false
-            setTimeout(() => {
-                $('.modalDetail').modal('hide')
-            }, 100);
+            $('.modalDetail').modal('hide')
         },
         closeModalPart() {
             this.modalPart = false
-            setTimeout(() => {
-                $('.modalDetailPart').modal('hide')
-            }, 100);
+            $('.modalDetailPart').modal('hide')
         }
     }
 }

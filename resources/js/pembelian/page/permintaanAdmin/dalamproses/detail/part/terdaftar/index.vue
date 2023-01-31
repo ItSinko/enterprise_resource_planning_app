@@ -56,23 +56,24 @@
                 const subtotal = this.subtotal(item)
                 const kurs = item.kurs
 
-                const convert = (price, kurs) => {
-                    let kursToRupiah = 0
+                const convert = async (price, kurs) => {
                     try {
-                        axios.get(`${this.link}/${kurs.toLowerCase()}/idr.json`).then((response) => {
-                            kursToRupiah = response.data.idr
-                            this.showTable = true
+                        await axios.get(`${this.link}/${kurs.toLowerCase()}/idr.json`).then((response) => {
+                            // return price * response.data.idr.toString().split('.')[0]
+                            console.log("price: " + price)
+                            console.log("kurs: " + kurs)
+                            console.log("hasil: " + price * response.data.idr.toString().split('.')[0])
+                            return 71688000 * price
                         })
                     } catch (error) {
                         console.log(error)
                     }
-                    return price * kursToRupiah
                 }
-                return this.dataTable.map((item) => {
-                    return this.formatHarga(convert(subtotal, kurs), 'IDR')
-                })
-                
+                return this.formatHarga(convert(subtotal, kurs), 'IDR')
             }
+        },
+        updated() {
+            this.showTable = true
         },
 
         computed: {

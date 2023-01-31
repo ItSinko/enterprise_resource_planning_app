@@ -43,11 +43,13 @@
                     fax: '',
                 },
                 country: [],
+                getKurs: [],
                 id: this.$route.params.id || null,
+                api: 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies.json'
             }
         },
         created() {
-                this.getSupplier()
+            this.getSupplier()
         },
         methods: {
             async getSupplier() {
@@ -70,6 +72,13 @@
                     return item.name.common
                 })
                 this.country = country.sort()
+                const { data: kurs } = await axios.get(this.api).then(res => res)
+                Object.entries(kurs).forEach(key => {
+                    this.getKurs.push({
+                        value: Object.values(key)[0],
+                        label: `${Object.values(key)[1]} (${Object.values(key)[0]})`
+                    })
+                })
             },
             batal() {
                 this.$router.push('/pembelian/supplier')
@@ -156,6 +165,10 @@
                     return true;
                 }
             },
+            kursChanged(val) {
+                const { value } = val
+                this.supplier.kurs = value
+            },
         },
     }
 
@@ -184,7 +197,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-4 text-right">Kurs</label>
                                 <div class="col-4">
-                                    <input type="text" class="form-control" v-model="supplier.kurs">
+                                    <v-select :options="getKurs" @input="kursChanged($event)"></v-select>
                                 </div>
                             </div>
                             <div class="form-group row">

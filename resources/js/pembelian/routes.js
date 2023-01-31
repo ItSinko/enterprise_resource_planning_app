@@ -56,6 +56,12 @@ const routes = [
         component: PermintaanTambahDalamProses,
         name: "permintaanTambahDalamProses",
     },
+    // Admin Pembelian
+    {
+        path: "/pembelian/admin",
+        component: PermintaanAdmin,
+        name: "pembelianAdmin"
+    },
     // Purchase Order
     {
         path: "/pembelian/po",
@@ -67,11 +73,6 @@ const routes = [
         component: PurchaseOrderDetail,
         name: "purchaseorder",
     },
-    {
-        path: "/pembelian/admin",
-        component: PermintaanAdmin,
-        name: "pembelianAdmin"
-    }
 ];
 
 const router = new VueRouter({

@@ -1,0 +1,148 @@
+<p>For a sequence of integers [<em>a<sub>1</sub>,a<sub>2</sub>, ... a<sub>n</sub></em>], define the function <em>f(i)</em> as follows:</p>
+
+<p> </p>
+
+<ul>
+	<li>Take the first <em>i</em> elements of <em>a</em> <em>(a<sub>1</sub>, a<sub>2</sub>, ... a<sub>i</sub>)</em> and sort them in non-descending order. Call this new sequence <em>s<sub>i</sub>.</em>
+</li>
+	<li>Let<em> f(i)</em> = 1*<em>s<sub>1</sub> </em>+ 2*<em>s<sub>2</sub></em> + ... <em>i*s<sub>i</sub></em>
+</li>
+</ul>
+
+<p> </p>
+
+<p>Given a sequence of <em>n </em>integers, sort them in non-descending order then compute <em>f(1)</em>+<em>f(2)</em>+<em>f(3)</em>+... <em>f(n)</em>. As the result may be very large, return it modulo<strong> </strong><em>(10<sup>9</sup> + 7)</em>.</p>
+
+<p> </p>
+
+<p><strong>Example</strong></p>
+
+<p><em>n = 4</em></p>
+
+<p><em>a = [ 4, 3, 2, 1]</em></p>
+
+<p> </p>
+
+<p><em>s<sub>1</sub></em> = [4],    <em>f(1)</em> = 1*4 = 4</p>
+
+<p><em>s<sub>2</sub></em> = [3,4],    <em>f(2)</em> = 1*3+2*4 = 11</p>
+
+<p><em>s<sub>3</sub></em> = [2,3,4],    <em>f(3)</em> = 1*2+2*3+3*4 = 20</p>
+
+<p><em>s<sub>4</sub></em> = [1,2,3,4],    <em>f(4)</em> = 1*1+2*2+3*3+4*4 = 30</p>
+
+<p><em>f(1)+f(2)+..f(n) = </em>4+11+20+30 = 65 and <em>65 </em>modulo<em> (10<sup>9</sup> + 7) = 65</em></p>
+
+<p> </p>
+
+<p class="section-title">Function Description</p>
+
+<p>Complete the function <em>sortedSum</em> in the editor below. The function should return the value of <em>f</em>(1)+<em>f</em>(2)+....<em>f</em>(<em>n</em>) modulo <em>(10<sup>9</sup> + 7)</em>.</p>
+
+<p> </p>
+
+<p><em>sortedSum</em> has the following parameter(s):</p>
+
+<p>    <em>a:</em> a sequence of integers</p>
+
+<p> </p>
+
+<p class="section-title">Constraints</p>
+
+<ul>
+	<li>1 ≤ <em>n </em>≤ 10<sup>5</sup><em> </em>
+</li>
+	<li>1 ≤ <em>a[i]</em><em> </em>≤ 10<sup>6</sup>
+</li>
+</ul>
+
+<p> </p>
+<!-- <StartOfInputFormat> DO NOT REMOVE THIS LINE-->
+
+<details><summary class="section-title">Input Format For Custom Testing</summary>
+
+<div class="collapsable-details">
+<p>The first line contains an integer, <em>n</em>, denoting the number of elements in <em>a</em>.<br>
+Each line <em>i</em> of the <em>n</em> subsequent lines (where <em>1 ≤ i ≤ n</em>) contains an integer describing <em>a[i]</em>.</p>
+</div>
+</details>
+<!-- </StartOfInputFormat> DO NOT REMOVE THIS LINE-->
+
+<details open="open"><summary class="section-title">Sample Case 0</summary>
+
+<div class="collapsable-details">
+<p class="section-title">Sample Input For Custom Testing</p>
+
+<pre>
+3 
+9 
+5 
+8</pre>
+
+<p class="section-title">Sample Output</p>
+
+<pre>
+80
+</pre>
+
+<p class="section-title">Explanation</p>
+
+<p><em>n = 3</em></p>
+
+<p><em>a = [9, 5, 8]</em></p>
+
+<p> </p>
+
+<ul>
+	<li>
+<em>s<sub>1</sub> = </em>[9];   <em>f</em>(1) =<em><sub> </sub>1*9 =</em> 9</li>
+	<li>
+<em>s<sub>2</sub> = </em>[5,9];   <em>f</em>(2) = 1*5 + 2*9 = 23</li>
+	<li>
+<em>s<sub>3</sub> = </em>[5,8,9];   <em>f</em>(3) = 1*5 + 2*8 +3*9 = 48</li>
+	<li>
+<em>f</em>(1)+<em>f</em>(2)+....<em>f</em>(<em>n</em>) = <em>f</em>(1)+<em>f</em>(2)+<em>f</em>(3) = 9 + 23 + 48 = 80</li>
+</ul>
+
+<p><em>80 </em>modulo<em> (10<sup>9</sup> + 7) = 80</em></p>
+</div>
+</details>
+
+<details><summary class="section-title">Sample Case 1</summary>
+
+<div class="collapsable-details">
+<p class="section-title">Sample Input For Custom Testing</p>
+
+<pre>
+2 
+5 
+9</pre>
+
+<p class="section-title">Sample Output</p>
+
+<pre>
+28</pre>
+
+<p class="section-title">Explanation</p>
+
+<p><em>n = 2</em></p>
+
+<p><em>a = [5, 9]</em></p>
+
+<p> </p>
+
+<ul>
+	<li>
+<em>f</em>(1) = 1*5<sub><em> </em></sub>= 5</li>
+	<li>
+<em>f</em>(2) = 1*5+2*9 = 23</li>
+	<li>
+<em>f</em>(1)+<em>f</em>(2)+....<em>f</em>(<em>n</em>) = <em>f</em>(1)+<em>f</em>(2)<em> </em>= 5 + 23 = 28</li>
+</ul>
+
+<p><em>28 </em>modulo<em> (10<sup>9</sup> + 7) = 28</em></p>
+</div>
+</details>
+</div>
+</div></div></section></div></div></div><div aria-grabbed="false" aria-controls="main-splitpane-left main-splitpane-right" aria-label="Width of problem statement column" role="slider" aria-valuenow="30" aria-valuemin="4" aria-valuemax="55" tabindex="0" draggable="true" aria-orientation="vertical" class="pane-splitter coding-question__main-splitter pane-splitter--horizontal"><div class="pane-splitter__drag-icon" style="top:calc(50% + -18px)"><svg viewBox="0 0 6 30" width="1em" height="1em" class=" ui-svg-icon" fill="currentColor"><path d="M0 0h2v2H0zm4 0h2v2H4zM0 4h2v2H0zm4 0h2v2H4zM0 8h2v2H0zm4 0h2v2H4zm-4 4h2v2H0zm4 0h2v2H4zm-4 4h2v2H0zm4 0h2v2H4zm-4 4h2v2H0zm4 0h2v2H4zm-4 4h2v2H0zm4 0h2v2H4zm-4 4h2v2H0zm4 0h2v2H4z"></path></svg></div></div><div class="layout-pane coding-question__editor-pane layout-pane--smooth" style="width:70%"><div class="layout-pane__container"><div id="main-splitpane-right" class="d-flex flex-column coding-question__right-pane"><div class="d-flex coding-question__editor-area"><div class="d-flex flex-column split-pane coding-question__solution-split"><div class="layout-pane layout-pane--primary layout-pane--smooth layout-pane--vertical"><div class="layout-pane__container"><div id="solution-splitpane-top" class="candidate-site-editor hr-monaco-editor-wrapper"><div class="d-flex justify-content-center align-items-center candidate-site-editor__loader"></div></div></div></div><div aria-grabbed="false" aria-controls="solution-splitpane-top solution-splitpane-bottom" aria-label="Height of coding area" role="slider" aria-valuenow="94" aria-valuemin="44" aria-valuemax="94" tabindex="0" draggable="true" aria-orientation="horizontal" class="pane-splitter pane-splitter--vertical"><div class="pane-splitter-button" style="left:calc(50% + -18px)" role="button"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-label="Resize layout vertically" class="icon-button svg-length-icon ui-svg-icon" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.293 8.293a1 1 0 0 1 1.414 0l6 6a1 1 0 0 1-1.414 1.414L12 10.414l-5.293 5.293a1 1 0 0 1-1.414-1.414l6-6z"></path></svg></div></div><div class="layout-pane layout-pane--smooth layout-pane--vertical" style="height:6%"><div class="layout-pane__container"><section id="coding-question-footer" class="coding-question-footer"><div class="coding-question-footer__tabs"><div class="coding-question-footer__tab-wrapper"><div class="d-flex coding-question-footer__tab-header" role="tablist"><button class="ui-btn ui-btn-normal ui-btn-plain d-flex justify-content-center align-items-center coding-question-footer__tab-item" tabindex="0" role="tab" id="tab_test_output" aria-selected="false" aria-controls="solution-splitpane-bottom" aria-setsize="2" aria-posinset="1"><div class="ui-content align-icon-right"><span class="ui-text" aria-hidden="false">Test Results</span></div></button><button class="ui-btn ui-btn-normal ui-btn-plain d-flex justify-content-center align-items-center coding-question-footer__tab-item" tabindex="-1" role="tab" id="tab_test_input" aria-selected="false" aria-controls="solution-splitpane-bottom" aria-setsize="2" aria-posinset="2"><div class="ui-content align-icon-right"><span class="ui-text" aria-hidden="false">Custom Input</span></div></button></div></div><div style="order:2;position:sticky;top:0" class="d-flex justify-content-end"><div class="d-flex coding-question-footer__run"><button class="ui-btn ui-btn-normal ui-btn-primary inset-outline-style coding-question-footer__run-code ui-btn-styled"><div class="ui-content align-icon-right"><span class="ui-text" aria-hidden="false">Run Code</span></div></button><button class="ui-btn ui-btn-normal ui-btn-primary inset-outline-style coding-question-footer__run-test ui-btn-styled"><div class="ui-content align-icon-right"><span class="ui-text" aria-hidden="false">Run Tests</span></div></button></div><button class="ui-btn ui-btn-normal ui-btn-primary coding-question-footer__submit-btn inset-outline-style ui-btn-styled"><div class="ui-content align-icon-right"><span class="ui-text" aria-hidden="false">Submit</span></div></button></div></div></section></div></div></div></div></div></div></div></div></div></main></div></div></div></div></div></div><!--Required to handle event bubbling of click in ios safari -->
+
