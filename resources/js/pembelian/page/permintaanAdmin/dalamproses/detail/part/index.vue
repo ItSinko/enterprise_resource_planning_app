@@ -1,7 +1,7 @@
 <script>
 import Terdaftar from './terdaftar'
 import TidakTerdaftar from './tidakterdaftar'
-    export default {
+    export default { 
         components: {
             Terdaftar,
             TidakTerdaftar

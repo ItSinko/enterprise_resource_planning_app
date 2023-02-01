@@ -1,4 +1,5 @@
 <script>
+    import Status from '../../../components/status'
     import moment from 'moment'
     import mix from '../../../mix'
     export default {
@@ -9,20 +10,12 @@
                 required: true
             }
         },
+        components: {
+            Status
+        },
         methods: {
             formatDateIndonesia(date) {
                 return moment(date).lang('id').format('LL')
-            },
-            status(status) {
-                if (status == 'proses po') {
-                    return '<span class="badge badge-primary">Proses PO</span>'
-                } else if (status == 'menunggu permintaan') {
-                    return '<span class="badge badge-warning">Menunggu Permintaan</span>'
-                } else if (status == 'batal') {
-                    return '<span class="badge badge-danger">Batal</span>'
-                } else if (status == 'selesai') {
-                    return '<span class="badge badge-light">Selesai</span>'
-                }
             },
             detail(id) {
                 
@@ -67,7 +60,7 @@
                         <div class="progress" v-if="purchaseorder.status === 'selesai'">
                             <div class="progress-bar bg-success" role="progressbar" :style="{width: purchaseorder.progress + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ purchaseorder.progress }}%</div>
                         </div>
-                        <span v-html="status(purchaseorder.status)"></span>
+                        <status :status="purchaseorder.status" />
                     </td>
                     <td>
                                                 <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true"
