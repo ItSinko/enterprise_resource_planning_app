@@ -1138,15 +1138,15 @@ return [
             'url'  => '/lab/alatuji/show',
             'auth' => [22],
         ],
+        // [
+        //     'icon' => 'fa fa-plus-circle',
+        //     'text' => 'Tambah Jenis Alat Uji',
+        //     'url'  => '/lab/alatuji/create',
+        //     'auth' => [22],
+        // ],
         [
             'icon' => 'fa fa-plus-circle',
-            'text' => 'Tambah Jenis Alat Uji',
-            'url'  => '/lab/alatuji/create',
-            'auth' => [22],
-        ],
-        [
-            'icon' => 'fa fa-plus-circle',
-            'text' => 'Tambah Serial Number',
+            'text' => 'Tambah Alat Uji',
             'url'  => '/lab/alatuji/barang/create',
             'auth' => [22],
         ],
@@ -1230,6 +1230,13 @@ return [
             'icon' => 'fas fa-box-open',
             'auth' => [13],
         ],
+        [
+            'text' => 'Lacak',
+            'url'  => '/penjualan/lacak/show',
+            'icon' => 'fas fa-search',
+            'auth' => [13]
+        ],
+
         [
             'header' => 'Penjualan',
             'auth' => [13, 17, 31]

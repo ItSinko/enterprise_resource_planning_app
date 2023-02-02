@@ -139,29 +139,61 @@ class SheetBerdasarkanPaket implements WithTitle, FromView, ShouldAutoSize, With
 
     public function view(): View
     {
+        $distributor = $this->distributor;
         $jenis_laporan = $this->jenis_laporan;
         $seri = $this->seri;
         $x = explode(',', $this->jenis_penjualan);
         $tanggal_awal = $this->tgl_awal;
         $tanggal_akhir = $this->tgl_akhir;
 
-        $ekat  = Pesanan::wherenotnull('no_po')
-            ->orderby('so', 'ASC')
-            ->where('so', 'LIKE', '%EKAT%')
-            ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
-            ->get();
+        if ($distributor == 'semua') {
+            $ekat  = Pesanan::wherenotnull('no_po')
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%EKAT%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
 
-        $spa  = Pesanan::wherenotnull('no_po')
-            ->orderby('so', 'ASC')
-            ->where('so', 'LIKE', '%SPA%')
-            ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
-            ->get();
+            $spa  = Pesanan::wherenotnull('no_po')
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%SPA%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
 
-        $spb  = Pesanan::wherenotnull('no_po')
-            ->orderby('so', 'ASC')
-            ->where('so', 'LIKE', '%SPB%')
-            ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
-            ->get();
+            $spb  = Pesanan::wherenotnull('no_po')
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%SPB%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
+        } else {
+            $ekat  = Pesanan::wherenotnull('no_po')
+                ->whereHas('Ekatalog', function ($q) use ($distributor) {
+                    $q->where('customer_id', $distributor);
+                })
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%EKAT%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
+
+            $spa  = Pesanan::wherenotnull('no_po')
+                ->whereHas('Spa', function ($q) use ($distributor) {
+                    $q->where('customer_id', $distributor);
+                })
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%SPA%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
+
+            $spb  = Pesanan::wherenotnull('no_po')
+                ->whereHas('Spb', function ($q) use ($distributor) {
+                    $q->where('customer_id', $distributor);
+                })
+                ->orderby('so', 'ASC')
+                ->where('so', 'LIKE', '%SPB%')
+                ->whereBetween('tgl_po', [$tanggal_awal, $tanggal_akhir])
+                ->get();
+        }
+
+
 
 
         if ($x == ['ekatalog', 'spa', 'spb']) {

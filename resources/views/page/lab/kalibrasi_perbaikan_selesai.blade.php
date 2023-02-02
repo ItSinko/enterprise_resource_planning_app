@@ -7,6 +7,39 @@
 @stop
 
 @section('content')
+<style>
+    .ui-autocomplete-input {
+    z-index: 1511;
+    }
+    .ui-autocomplete {
+    z-index: 1510 !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 350px;
+    }
+    .ui-menu-item > a.ui-corner-all {
+        display: block;
+        padding: 3px 15px;
+        clear: both;
+        font-weight: normal;
+        line-height: 18px;
+        color: #555555;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+    .ui-state-hover, .ui-state-active {
+        color: #ffffff;
+        text-decoration: none;
+        background-color: #0088cc;
+        border-radius: 0px;
+        -webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        background-image: none;
+    }
+    #modalIns{
+        width: 500px;
+    }
+</style>
 
 <div class="container-fluid">
 
@@ -85,13 +118,14 @@
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Perusahaan</span></div>
                     <div class="col">
-                        <select name="perusahaan" id="selectPerusahaan" class="form-control form-control-sm">
+                        <!-- <select name="perusahaan" id="selectPerusahaan" class="form-control form-control-sm">
                         <option value="" disabled hidden {{ (old('perusahaan') == null ? 'SELECTED' : '') }}>Pilih Perusahaan</option>
                             <option value="0">Tidak di ketahui</option>
-                            @foreach($perusahaan as $p)
-                            <option value="{{ $p->id_merk }}" {{ (old('perusahaan') == $p->id_merk ? "SELECTED" : '') }}>{{ $p->nama_merk }}</option>
-                            @endforeach
-                        </select>
+                        
+                        </select> -->
+                        <div class="form-group">
+                            <input type="text" name="perusahaan" id="perusahaan" class="form-control" placeholder="Nama Perusahaan" value="{{ old('perusahaan') }}">
+                        </div>
                     </div>
                 </div>
 
@@ -213,7 +247,7 @@
         <div class="card-body">
             <div class="row float-right">
                 <div class="col-auto">
-                    <a href="{{ route('alatuji.detail', ['id' => $id, $jenis == 'kaibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
+                    <a href="{{ route('alatuji.detail', ['id' => $data->id_serial_number, $jenis == 'kalibrasi' ? '4' : '5']) }}" class="btn btn-danger float-right">Batal</a>
                 </div>
                 <div class="col-auto">
                     <input type="submit" value="Simpan" class="btn btn-warning float-right">
@@ -224,13 +258,37 @@
         </form>
 
     </div>
-
 </div>
 @stop
 @section('adminlte_js')
 <script>
     $(document).ready(function(){
-        $('#selectPerusahaan').select2();
+    //     $('#selectPerusahaan').select2();
+    // auto complete perusahaan
+    $(function() {
+        $.ajax({
+            type:'GET',
+            url:'{{ url("/api/kalibrasiperbaikan/get_data_perusahaan/$jenis") }}'+'/',
+            success:function(data) {
+                autoComp(data);
+            }
+        });
+    });
+
+    function autoComp(data){
+        //hapus value jika ada yang null
+        for(let i = 0; i<data.length;i++){
+            if ( data[i] == null) { 
+                data.splice(i, 1); 
+            }
+        }
+        console.log(data);
+        $('#perusahaan').autocomplete({
+            source: data,
+            autofocus: true,
+        });
+    }
+    // auto complete penanggung jawab end
     });
 </script>
 

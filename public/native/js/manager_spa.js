@@ -19112,11 +19112,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               }).then(function (response) {
                 _this.rencana_jadwal = response.data;
+
+                _this.$store.commit("setIsLoading", false);
               });
 
             case 7:
-              _this.$store.commit("setIsLoading", false);
-
               date = new Date();
 
               if (_this.status === "pelaksanaan") {
@@ -19141,7 +19141,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 if (date.getDay() == 6 || date.getDay() == 0) _this.weekend_date.push(i);
               }
 
-            case 14:
+            case 13:
             case "end":
               return _context.stop();
           }
@@ -20171,8 +20171,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     events: function events() {
-      var data = _mixins__WEBPACK_IMPORTED_MODULE_4__["default"].convertJadwal(this.$store.state.jadwal);
-      return data;
+      if (this.$store.state.jadwal.length > 0) {
+        var data = _mixins__WEBPACK_IMPORTED_MODULE_4__["default"].convertJadwal(this.$store.state.jadwal);
+        return data;
+      }
+
+      return [];
     }
   },
   updated: function updated() {
@@ -20238,12 +20242,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.$store.commit("setJadwal", response.data.data);
 
                   _this.$store.commit("setIsLoading", false);
+
+                  _this.$store.commit("setStatus", "pelaksanaan");
                 });
 
               case 3:
-                _this.$store.commit("setStatus", "pelaksanaan");
-
-              case 4:
               case "end":
                 return _context.stop();
             }
@@ -20356,7 +20359,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     Authorization: 'Bearer ' + localStorage.getItem('lokal_token')
                   }
                 }).then(function (response) {
-                  _this.$store.commit("setJadwal", response.data);
+                  _this.$store.commit("setJadwal", response.data.data);
                 });
 
               case 3:
@@ -20997,7 +21000,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       showModal: false,
       showModalSO: false,
-      tabs: false
+      tabs: false,
+      produks: [],
+      salesOrder: [],
+      nama_produk: ""
     };
   },
   methods: (_methods = {
@@ -21033,7 +21039,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     Authorization: 'Bearer ' + localStorage.getItem('lokal_token')
                   }
                 }).then(function (response) {
-                  _this.data = response.data.data;
+                  _this.produks = response.data.data;
                 }).then(function () {
                   return jquery__WEBPACK_IMPORTED_MODULE_0___default()("#table_produk").DataTable({
                     pagingType: "simple_numbers_no_ellipses"
@@ -21041,6 +21047,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 6:
+                _this.$store.commit("setIsLoading", false);
+
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -21168,8 +21177,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }, _callee4, null, [[2, 7]]);
     }))();
-  }), _methods),
-  checkToken: function checkToken() {
+  }), _defineProperty(_methods, "checkToken", function checkToken() {
     var _this5 = this;
 
     if (localStorage.getItem('lokal_token') == null) {
@@ -21188,8 +21196,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     }
-  },
-  logout: function logout() {
+  }), _defineProperty(_methods, "logout", function logout() {
     return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
@@ -21208,7 +21215,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }, _callee5);
     }))();
-  },
+  }), _methods),
   created: function created() {
     this.checkToken();
   },
@@ -24426,10 +24433,10 @@ var render = function render() {
     attrs: {
       id: "table_produk"
     }
-  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item) {
+  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.produks, function (item, index) {
     return _c("tr", {
-      key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item.DT_RowIndex))]), _vm._v(" "), _c("td", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", {
       domProps: {
         innerHTML: _vm._s(item.nama_produk)
       }
@@ -24443,7 +24450,7 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "fas fa-search"
     })])])]);
-  }), 0)])])])]), _vm._v(" "), _c("div", {
+  }), 0)])])])]), _vm._v(" "), _vm.showModal ? _c("div", {
     staticClass: "modal",
     "class": {
       "is-active": _vm.showModal
@@ -24498,7 +24505,7 @@ var render = function render() {
     }), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.customer))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.jenis))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.status))])]);
   }), 0)])]), _vm._v(" "), _c("footer", {
     staticClass: "modal-card-foot"
-  })])]), _vm._v(" "), _c("div", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.showModalSO ? _c("div", {
     staticClass: "modal",
     "class": {
       "is-active": _vm.showModalSO
@@ -24545,7 +24552,7 @@ var render = function render() {
         textContent: _vm._s(item.jumlah_kirim)
       }
     })]);
-  }), 0)])])])])]);
+  }), 0)])])])]) : _vm._e()]);
 };
 
 var staticRenderFns = [function () {

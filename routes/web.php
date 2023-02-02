@@ -213,9 +213,9 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
 
         Route::group(['middleware' => ['divisi:jual,dirut,ppic']], function () {
             Route::view('/show', 'page.penjualan.penjualan.show')->name('penjualan.penjualan.show');
-            Route::post('/ekatalog/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog']);
-            Route::post('/spa/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa']);
-            Route::post('/spb/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_spb']);
+            Route::post('/ekatalog/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog']);
+            Route::post('/spa/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa']);
+            Route::post('/spb/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_spb']);
         });
         Route::group(['middleware' => ['divisi:jual,ppic']], function () {
             Route::get('/export/{jenis}/{customer_id}/{tgl_awal}/{tgl_akhir}/{seri}/{tampilan}', [App\Http\Controllers\PenjualanController::class, 'export_laporan'])->name('penjualan.penjualan.export');
@@ -246,7 +246,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
         Route::view('/edit/{id}/{jenis}', 'page.penjualan.edit_so')->name('penjualan.so.edit');
     });
 
-    Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,qc,log,dc,asp,dirut']], function () {
+    Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,gbj,qc,log,dc,asp,dirut']], function () {
         Route::view('/show', 'page.penjualan.lacak.show')->name('penjualan.lacak.show');
     });
 

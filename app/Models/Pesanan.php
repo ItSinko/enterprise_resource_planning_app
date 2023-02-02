@@ -239,6 +239,7 @@ class Pesanan extends Model
         return $jumlah;
     }
 
+
     public function getJumlahPesananPartNonJasa()
     {
         $id = $this->id;
@@ -289,6 +290,27 @@ class Pesanan extends Model
         return $s;
     }
 
+
+    public function getSuratJalan()
+    {
+        $id = $this->id;
+
+        $data = Logistik::select('logistik.nosurat', 'logistik.tgl_kirim')
+            ->leftJoin('detail_logistik_part',  'detail_logistik_part.logistik_id',  '=',  'logistik.id')
+            ->leftJoin('detail_logistik',  'detail_logistik.logistik_id',  '=',  'logistik.id')
+            ->leftJoin('detail_pesanan_produk',  'detail_pesanan_produk.id',  '=',  'detail_logistik.detail_pesanan_produk_id')
+            ->leftJoin('detail_pesanan',  'detail_pesanan.id',  '=',  'detail_pesanan_produk.detail_pesanan_id')
+            ->leftJoin('pesanan',  'pesanan.id',  '=',  'detail_pesanan.pesanan_id')
+            ->leftJoin('detail_pesanan_part',  'detail_pesanan_part.pesanan_id',  '=',  'pesanan.id')
+            ->where('pesanan.id', $id)->groupby('logistik.nosurat')->get();
+
+        $value = array();
+        foreach ($data as $d) {
+            $value[] = $d->nosurat . '(' . $d->tgl_kirim . ')';
+        }
+
+        return implode(',', $value);
+    }
 
     public function getJumlahKirimPart()
     {
@@ -407,7 +429,6 @@ class Pesanan extends Model
                 $q->where('pesanan_id', $id);
             })->count();
         }
-
         return $prd + $part;
     }
 

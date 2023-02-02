@@ -82,6 +82,25 @@
                     </div>
                 </div>
 
+                <div class="row mb-2">
+                    <div class="col"><span class="float-right">Satuan Pengukuran</span></div>
+                    <div class="col">
+                        <select class="form-control form-control-sm" name="satuan" id="selectSatuan">
+                            <option value="" disabled selected hidden>Pilih Satuan Pengukuran</option>
+                            @foreach($satuan as $s)
+                            <option value="{{ $s->id }}" {{ $s->id == $data->satuan_alatuji ? 'SELECTED' : ''}}>{{ $s->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>{{ old('satuan') == $s->id ? 'selected' : '' }}
+
+                <div class="row mb-2">
+                    <div class="col"><span class="float-right">Kode Alat Uji</span></div>
+                    <div class="col">
+                        <input class="form-control" type="text" name="kode_alat" value="{{ $data->kd_alatuji }}" id="">
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -125,6 +144,12 @@
                     </div>
                 </div>
 
+                @error('noUrut')
+                    <div class="row mb-0">
+                        <div class="col"></div>
+                        <div class="col alert bc-danger text-danger border border-danger p-1">{{ $message }}</div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Nomor urut</span></div>
                     <div class="col">
@@ -194,7 +219,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="sop" class="form-control-file">
-                            <small class="text-muted">File berupa pdf maksimal 10mb</small>
+                            <small class="text-muted">File berupa pdf maksimal 8mb</small>
                         </div>
                     </div>
                 </div>
@@ -210,7 +235,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="manual" class="form-control-file">
-                            <small class="text-muted">File berupa pdf maksimal 10mb</small>
+                            <small class="text-muted">File berupa pdf maksimal 8mb</small>
                         </div>
                     </div>
                 </div>
@@ -273,6 +298,7 @@
         $('#selectNama').select2();
         $('#selectMerk').select2();
         $('#selectlokasi').select2();
+        $('#selectSatuan').select2();
 
         // auto complete tipe
         $(function() {

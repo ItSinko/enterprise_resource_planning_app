@@ -169,8 +169,11 @@ export default {
       );
     },
     events() {
-      let data = mixins.convertJadwal(this.$store.state.jadwal);
-      return data;
+      if(this.$store.state.jadwal.length > 0){
+        let data = mixins.convertJadwal(this.$store.state.jadwal);
+        return data;
+      }
+      return [];
     },
   },
 

@@ -61,6 +61,8 @@
 
         updated() {
             if(this.penjualans.length > 0){
+                const table = $('.penjualantable').DataTable();
+                table.destroy();
                 $('.penjualantable').DataTable();
             }
         }

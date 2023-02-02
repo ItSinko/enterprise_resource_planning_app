@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Jadwal :status="'penyusunan'" />
+    <Jadwal :status="'penyusunan'" /> 
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
             }
         })
         .then((response) => {
-          this.$store.commit("setJadwal", response.data);
+          this.$store.commit("setJadwal", response.data.data);
         });
 
       this.$store.commit("setStatus", "perencanaan");

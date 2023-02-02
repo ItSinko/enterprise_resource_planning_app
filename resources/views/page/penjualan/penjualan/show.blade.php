@@ -204,9 +204,9 @@
         }
 
         /* .overflowcard {
-                            max-height:
-                            700px;
-                        } */
+                                                                                                                                                                                                                                                                                                                        max-height:
+                                                                                                                                                                                                                                                                                                                        700px;
+                                                                                                                                                                                                                                                                                                                    } */
 
         .bg-chart-light {
             background: rgba(192, 192, 192, 0.2);
@@ -328,6 +328,15 @@
                             <div class="tab-pane fade show active card-body" id="ekatalog" role="tabpanel"
                                 aria-labelledby="ekatalog-tab">
                                 <div class="row">
+                                    {{-- <div class="col-4">
+                                        <span class="float-left filter">
+                                            <select class="form-control jenis_paket" name="jenis_paket" id="jenis_paket">
+                                                <option value="AK1-" selected>AK1-
+                                                </option>
+                                                <option value="FKS-">FKS-</option>
+                                            </select>
+                                        </span>
+                                    </div> --}}
                                     <div class="col-12">
                                         @if (Auth::user()->Karyawan->divisi_id == '26')
                                             <span class="float-right filter">
@@ -346,6 +355,26 @@
                                             <form id="filter_ekat">
                                                 <div class="dropdown-menu">
                                                     <div class="px-3 py-3">
+                                                        <div class="form-group">
+                                                            <label for="jenis_penjualan">Database</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2023" id="status2" name="data_tahun"
+                                                                    checked />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2023
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2022" id="status2" name="data_tahun" />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2022
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="jenis_penjualan">Status</label>
                                                         </div>
@@ -451,6 +480,27 @@
                                                 <div class="dropdown-menu">
                                                     <div class="px-3 py-3">
                                                         <div class="form-group">
+                                                            <label for="jenis_penjualan">Database</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2023" id="status2" name="data_tahun_spa"
+                                                                    checked />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2023
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2022" id="status2"
+                                                                    name="data_tahun_spa" />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2022
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <label for="jenis_penjualan">Status</label>
                                                         </div>
                                                         <div class="form-group">
@@ -555,6 +605,27 @@
                                             <form id="filter_spb">
                                                 <div class="dropdown-menu">
                                                     <div class="px-3 py-3">
+                                                        <div class="form-group">
+                                                            <label for="jenis_penjualan">Database</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2023" id="status2" name="data_tahun_spb"
+                                                                    checked />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2023
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2022" id="status2"
+                                                                    name="data_tahun_spb" />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2022
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="jenis_penjualan">Status</label>
                                                         </div>
@@ -668,6 +739,27 @@
                                             <form id="filter_penjualan">
                                                 <div class="dropdown-menu">
                                                     <div class="px-3 py-3">
+                                                        <div class="form-group">
+                                                            <label for="jenis_penjualan">Database</label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2023" id="status2" name="data_tahun_pen"
+                                                                    checked />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2023
+                                                                </label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    value="2022" id="status2"
+                                                                    name="data_tahun_pen" />
+                                                                <label class="form-check-label" for="status2">
+                                                                    2022
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label for="jenis_penjualan">Jenis Penjualan</label>
                                                         </div>
@@ -885,7 +977,8 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        'url': "/api/penjualan/penjualan/data/semua/semua",
+                        'url': "/api/penjualan/penjualan/data/semua/semua/" +
+                            {{ \Carbon\Carbon::now()->year }},
                         "dataType": "json",
                         'type': 'POST',
                         "headers": {
@@ -928,7 +1021,8 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        'url': '/penjualan/penjualan/ekatalog/data/semua',
+                        'url': '/penjualan/penjualan/ekatalog/data/semua/' +
+                            {{ \Carbon\Carbon::now()->year }},
                         "dataType": "json",
                         'type': 'POST',
                         'headers': {
@@ -995,7 +1089,8 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        'url': '/penjualan/penjualan/spa/data/semua',
+                        'url': '/penjualan/penjualan/spa/data/semua/' +
+                            {{ \Carbon\Carbon::now()->year }},
                         "dataType": "json",
                         'type': 'POST',
                         'headers': {
@@ -1043,7 +1138,8 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        'url': '/penjualan/penjualan/spb/data/semua',
+                        'url': '/penjualan/penjualan/spb/data/semua/' +
+                            {{ \Carbon\Carbon::now()->year }},
                         "dataType": "json",
                         'type': 'POST',
                         'headers': {
@@ -1857,6 +1953,7 @@
             $('#filter_penjualan').submit(function() {
                 var jenis_penjualan = [];
                 var status_penjualan = [];
+                var data_tahun = $('input[name="data_tahun_pen"]:checked').val();
 
                 $('input[name="jenis_penjualan[]"]:checked').each(function() {
                     jenis_penjualan.push($(this).val());
@@ -1878,13 +1975,16 @@
                     var x = ['semua'];
                     var y = ['semua'];
                 }
-                $('#penjualantable').DataTable().ajax.url('/api/penjualan/penjualan/data/' + x + '/' + y)
+                $('#penjualantable').DataTable().ajax.url('/api/penjualan/penjualan/data/' + x + '/' + y +
+                        '/' + data_tahun)
                     .load();
                 return false;
             });
 
             $('#filter_ekat').submit(function() {
                 var values_ekat = [];
+                var data_tahun = $('input[name="data_tahun"]:checked').val();
+
                 $('input[name="status_ekatalog[]"]:checked').each(function() {
                     values_ekat.push($(this).val());
                 });
@@ -1894,13 +1994,16 @@
                 } else {
                     var x = ['semua'];
                 }
-                console.log(x);
-                $('#ekatalogtable').DataTable().ajax.url('/penjualan/penjualan/ekatalog/data/' + x).load();
+
+                $('#ekatalogtable').DataTable().ajax.url('/penjualan/penjualan/ekatalog/data/' + x + '/' +
+                    data_tahun).load();
                 return false;
             });
 
             $('#filter_spa').submit(function() {
                 var values_spa = [];
+                var values_ekat = [];
+                var data_tahun = $('input[name="data_tahun_spa"]:checked').val();
                 $('input[name="status_spa[]"]:checked').each(function() {
                     values_spa.push($(this).val());
                 });
@@ -1910,13 +2013,15 @@
                 } else {
                     var x = ['semua'];
                 }
-                $('#spatable').DataTable().ajax.url('/penjualan/penjualan/spa/data/' + x).load();
+                $('#spatable').DataTable().ajax.url('/penjualan/penjualan/spa/data/' + x + '/' +
+                    data_tahun).load();
                 return false;
 
             });
 
             $('#filter_spb').submit(function() {
                 var values_spb = [];
+                var data_tahun = $('input[name="data_tahun_spb"]:checked').val();
                 $('input[name="status_spb[]"]:checked').each(function() {
                     values_spb.push($(this).val());
                 });
@@ -1928,7 +2033,8 @@
                     var x = ['semua'];
                 }
 
-                $('#spbtable').DataTable().ajax.url('/penjualan/penjualan/spb/data/' + x).load();
+                $('#spbtable').DataTable().ajax.url('/penjualan/penjualan/spb/data/' + x + '/' +
+                    data_tahun).load();
                 return false;
             });
 

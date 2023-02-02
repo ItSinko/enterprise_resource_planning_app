@@ -1,6 +1,13 @@
 <template>
     <div>
-        <h1 class="title">Penjualan</h1>
+        <div class="columns">
+            <div class="column is-four-fifths">
+                <h1 class="title">Penjualan</h1>
+            </div>
+            <div class="column">
+                <v-select :options="getFiveYearsBeforeNow" @input="changeYear($event)" v-model="yearsSelected"/>
+            </div>
+        </div>
         <div class="tabs is-centered">
             <ul>
                 <li :class="{'is-active': tabs == 'ekatalog'}" @click="category('ekatalog')">
@@ -42,7 +49,8 @@
                 penjualanspas: [],
                 penjualanspbs: [],
                 penjualans: [],
-                tabs: 'ekatalog'
+                tabs: 'ekatalog',
+                yearsSelected: new Date().getFullYear()
             }
         },
         methods: {
@@ -71,10 +79,9 @@
             async getPenjualan(category) {
                 switch (category) {
                     case 'ekatalog':
-                        if (this.penjualanekatalogs.length == 0) {
                             try {
                                 this.$store.commit('setIsLoading', true);
-                                await axios.post('/penjualan/penjualan/ekatalog/data/semua')
+                                await axios.post(`/penjualan/penjualan/ekatalog/data/semua/${this.yearsSelected}`)
                                     .then(response => {
                                         this.penjualanekatalogs = response.data.data;
                                     })
@@ -85,13 +92,11 @@
                             } catch (error) {
                                 console.log(error);
                             }
-                        }
                         break;
                     case 'spa':
-                        if (this.penjualanspas.length == 0) {
                             try {
                                 this.$store.commit('setIsLoading', true);
-                                await axios.post('/penjualan/penjualan/spa/data/semua')
+                                await axios.post(`/penjualan/penjualan/spa/data/semua/${this.yearsSelected}`)
                                     .then(response => {
                                         this.penjualanspas = response.data.data;
                                     })
@@ -102,14 +107,12 @@
                             } catch (error) {
                                 console.log(error);
                             }
-                        }
                         break;
 
                     case 'spb':
-                        if(this.penjualanspbs.length == 0){
                             try {
                                 this.$store.commit('setIsLoading', true);
-                                await axios.post('/penjualan/penjualan/spb/data/semua')
+                                await axios.post(`/penjualan/penjualan/spb/data/semua/${this.yearsSelected}`)
                                     .then(response => {
                                         this.penjualanspbs = response.data.data;
                                     })
@@ -120,13 +123,11 @@
                             } catch (error) {
                                 console.log(error);
                             }
-                        }
 
                     case 'penjualan':
-                        if(this.penjualans.length == 0){
                             try {
                                 this.$store.commit('setIsLoading', true);
-                                await axios.post('/api/penjualan/penjualan/data/semua/semua')
+                                await axios.post(`/api/penjualan/penjualan/data/semua/semua/${this.yearsSelected}`)
                                     .then(response => {
                                         this.penjualans = response.data.data;
                                     })
@@ -137,12 +138,25 @@
                             } catch (error) {
                                 console.log(error);
                             }
-                        }
                     default:
                         break;
                 }
             },
-            
+            changeYear(year) {
+                this.yearsSelected = year;
+                this.getPenjualan(this.tabs);
+            }
+        },
+        computed: {
+            getFiveYearsBeforeNow() {
+                let date = new Date();
+                let year = date.getFullYear();
+                let years = [];
+                for (let i = 0; i < 5; i++) {
+                    years.push(year - i);
+                }
+                return years;
+            }
         },
         mounted() {
             this.getPenjualan('ekatalog')

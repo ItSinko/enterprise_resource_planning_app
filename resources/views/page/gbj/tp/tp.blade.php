@@ -163,10 +163,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>Tanggal Masuk</th>
-                                                    {{-- <th>Tanggal Keluar</th> --}}
+                                                    <th>Tanggal Keluar</th>
                                                     <th>Dari</th>
-                                                    {{-- <th>Tujuan</th> --}}
-                                                    {{-- <th>Nomor SO</th> --}}
+                                                    <th>Tujuan</th>
+                                                    <th>Nomor PO</th>
                                                     {{-- <th>Nomor PO</th> --}}
                                                     <th>Produk</th>
                                                     <th>Jumlah</th>
@@ -240,7 +240,7 @@
                                                     <th>Nomor SO</th>
                                                     <th>Nomor PO</th>
                                                     <th>Customer</th>
-                                                    <th>Batas Transfer</th>
+                                                    <th>Tgl Transfer</th>
                                                     <th>Status</th>
                                                     <th>Aksi</th>
                                                 </tr>
@@ -286,11 +286,11 @@
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
-                                                    {{-- <th>Tanggal Keluar</th> --}}
-                                                    {{-- <th>Divisi</th> --}}
-                                                    <th>Produk</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Aksi</th>
+                                                    <th>Deskripsi</th>
+                                                    <th>Tgl Masuk</th>
+                                                    <th>Dari</th>
+                                                    <th>Tgl Keluar</th>
+                                                    <th>Ke</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -327,6 +327,18 @@
                         <tbody>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewDetailBrgSO" data-keyboard="false" tabindex="-1" aria-labelledby=""
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-body" id="viewDetailBrgSObody">
+
                 </div>
             </div>
         </div>
@@ -475,12 +487,22 @@
                     data: 'date_in',
                     name: 'date_in'
                 },
-                // { data: 'date_out', name: 'date_out'},
+                {
+                    data: 'date_out',
+                    name: 'date_out'
+                },
                 {
                     data: 'divisi',
                     name: 'divisi'
                 },
-                // { data: 'tujuan', name: 'tujuan'},
+                {
+                    data: 'tujuan',
+                    name: 'tujuan'
+                },
+                {
+                    data: 'po',
+                    name: 'po  '
+                },
                 // { data: 'so', name: 'so'},
                 // { data: 'po', name: 'po'},
                 {
@@ -501,8 +523,8 @@
             "language": {
                 // "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                 processing: "<span class='fa-stack fa-md'>\n\
-                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                    </span>&emsp;Mohon Tunggu ...",
+                                                                                                                                                                                                                                                                                                                                                                                                                                <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                                                                                                                                                                                                                                                                                                                                                        </span>&emsp;Mohon Tunggu ...",
             },
             order: [
                 [0, 'desc']
@@ -603,8 +625,8 @@
                 "language": {
                     // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                     processing: "<span class='fa-stack fa-md'>\n\
-                                                <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                        </span>&emsp;Mohon Tunggu ...",
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                                                                                                                                                                                                                                                                                                                                                            </span>&emsp;Mohon Tunggu ...",
                 },
             });
             $(document).on("click", "#semua-produk-tab", function() {
@@ -685,7 +707,7 @@
                     data: 'customer'
                 },
                 {
-                    data: 'tgl_kontrak'
+                    data: 'tgl_keluar'
                 },
                 {
                     data: 'logs'
@@ -697,7 +719,9 @@
                             // return
                             return `<td><a href="export_spb/` + data.id + `">
                         <button class="btn btn-outline-primary"><i class="fas fa-print"></i> Cetak</button>
-                        </a></td>`
+                        </a>
+                        <button class="btn btn-outline-primary" data-id="` + data.id + `" id="detail-so"><i class="fas fa-eye"></i> Detail</button>
+                       </td>`
                         } else {
                             return '';
                         }
@@ -707,8 +731,8 @@
             ],
             language: {
                 processing: "<span class='fa-stack fa-md'>\n\
-                                                <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                        </span>&emsp;Mohon Tunggu ...",
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                                                                                                                                                                                                                                                                                                                                                            </span>&emsp;Mohon Tunggu ...",
             }
         });
         // Sales Order Cetak
@@ -745,20 +769,40 @@
             lengthChange: false,
             ordering: false,
             ajax: {
-                url: "/api/v2/gbj/show_nonso",
+                url: "/api/v2/gbj/show_nonso_new",
             },
             columns: [{
                     data: 'DT_RowIndex'
                 },
                 {
-                    data: 'produkk'
+                    data: 'deskripsi'
                 },
                 {
-                    data: 'qty'
+                    data: 'tgl_masuk'
                 },
                 {
-                    data: 'aksi'
+                    data: 'dari'
                 },
+                {
+                    data: 'tgl_keluar'
+                },
+                {
+                    data: 'ke'
+                },
+                {
+                    data: function(data) {
+                        if (userid != 2) {
+                            // console.log(data)
+                            // return
+                            return `<td>
+                        <button class="btn btn-outline-primary" data-id="` + data.id + `" id="detail-nonso"><i class="fas fa-eye"></i> Detail</button>
+                       </td>`
+                        } else {
+                            return '';
+                        }
+
+                    }
+                }
                 // {data: function(data){
                 //     return `<td><a href="export_nonso/`+data.deskripsi+`">
             //                 <button class="btn btn-outline-primary"><i class="fas fa-eye"></i> Detail</button>
@@ -766,10 +810,92 @@
                 // }},
             ],
             language: {
-                processing: "<span class='fa-stack fa-md'>\n\
-                                                <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                        </span>&emsp;Mohon Tunggu ...",
+                processing: "<span class='fa-stack fa-md'>\n\                                                                                                                                                                                                                                                              </span>&emsp;Mohon Tunggu ...",
             }
         })
+
+
+
+        function view_seri(id) {
+            $('#view-seritf').DataTable({
+                destroy: true,
+                processing: true,
+                responsive: true,
+                autoWidth: false,
+                lengthChange: false,
+                ordering: false,
+                ajax: {
+                    url: "/api/gbj/modal_data_seri/" + id,
+                },
+                columns: [{
+                        data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'produk'
+                    },
+                    {
+                        data: 'seri'
+                    }
+                ],
+            })
+        }
+
+        function view_serinon(id) {
+            $('#view-seritfnon').DataTable({
+                destroy: true,
+                processing: true,
+                responsive: true,
+                autoWidth: false,
+                lengthChange: false,
+                ordering: false,
+                ajax: {
+                    url: "/api/gbj/modal_data_seri_non/" + id,
+                },
+                columns: [{
+                        data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'produk'
+                    },
+                    {
+                        data: 'seri'
+                    }
+                ],
+            })
+        }
+        $(document).on('click', '#detail-so', function(event) {
+            // alert('ok')
+            event.preventDefault();
+            var data_id = $(this).attr('data-id');
+
+            $.ajax({
+                url: "/api/gbj/modal_data/" + data_id,
+                // return the result
+                success: function(result) {
+                    $('#viewDetailBrgSO').modal("show");
+                    $('#viewDetailBrgSOtitle').text("Detail Status : ");
+
+                    $('#viewDetailBrgSObody').html(result).show();
+                    view_seri(data_id)
+                },
+            })
+        });
+
+        $(document).on('click', '#detail-nonso', function(event) {
+            event.preventDefault();
+            var data_id = $(this).attr('data-id');
+
+            $.ajax({
+                url: "/api/gbj/modal_data_non/" + data_id,
+                // return the result
+                success: function(result) {
+                    $('#viewDetailBrgSO').modal("show");
+                    $('#viewDetailBrgSOtitle').text("Detail Status : ");
+
+                    $('#viewDetailBrgSObody').html(result).show();
+                    view_serinon(data_id)
+                },
+            })
+        });
     </script>
 @stop

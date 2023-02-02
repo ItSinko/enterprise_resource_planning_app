@@ -63,6 +63,8 @@
 
         updated() {
             if (this.penjualanekatalogs.length > 0) {
+                const table = $('.ekatalogtable').DataTable();
+                table.destroy();
                 $('.ekatalogtable').DataTable();
             }
         }

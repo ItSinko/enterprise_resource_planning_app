@@ -85,8 +85,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in data" :key="item.id">
-                                <td>{{ item.DT_RowIndex }}</td>
+                            <tr v-for="(item, index) in produks" :key="index">
+                                <td>{{ index + 1 }}</td>
                                 <td v-html="item.nama_produk"></td>
                                 <td>{{ item.stok }}</td>
                                 <td>{{ item.jumlah }}</td>
@@ -109,7 +109,7 @@
             </div>
         </div>
         <!-- modal -->
-        <div class="modal" :class="{ 'is-active': showModal }">
+        <div class="modal" v-if="showModal" :class="{ 'is-active': showModal }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -154,7 +154,7 @@
             </div>
         </div>
 
-        <div class="modal" :class="{ 'is-active': showModalSO }">
+        <div class="modal" v-if="showModalSO" :class="{ 'is-active': showModalSO }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -213,6 +213,9 @@ export default {
             showModal: false,
             showModalSO: false,
             tabs: false,
+            produks: [],
+            salesOrder: [],
+            nama_produk: "",
         };
     },
 
@@ -235,11 +238,12 @@ export default {
                 Authorization: 'Bearer ' + localStorage.getItem('lokal_token')
             }
         }).then((response) => {
-        this.data = response.data.data;
+            this.produks = response.data.data;
         }).then(() => ($("#table_produk").DataTable({
             pagingType: "simple_numbers_no_ellipses",
             })
         ));
+        this.$store.commit("setIsLoading", false);
     },
         async getDetail(id, nama) {
             this.$store.commit("setIsLoading", true);
@@ -308,12 +312,7 @@ export default {
             this.$store.commit("setIsLoading", false);
             this.showModalSO = true;
         },
-        //    "columnDefs":[
-        //         {"targets": [0], "visible": false},
-        //     ],
-        //   });
-    },
-    checkToken(){
+            checkToken(){
         if(localStorage.getItem('lokal_token') == null){
             // event.preventDefault();
             this.$swal({
@@ -335,6 +334,7 @@ export default {
     async logout() {
       await axios.post("/logout");
       document.location.href = "/";
+    },
     },
 
   created() {

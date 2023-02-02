@@ -12,7 +12,7 @@ class NoseriBarangJadi extends Model
     protected $connection = 'erp';
     protected $table = "noseri_barang_jadi";
 
-    protected $fillable = ['is_aktif', 'is_ready', 'is_delete' ,'used_by', 'layout_id', 'gdg_barang_jadi_id', 'dari', 'noseri', 'jenis', 'created_by', 'is_change'];
+    protected $fillable = ['is_aktif', 'is_ready', 'is_delete', 'used_by', 'layout_id', 'gdg_barang_jadi_id', 'dari', 'noseri', 'jenis', 'created_by', 'is_change'];
 
     function from()
     {
@@ -28,7 +28,7 @@ class NoseriBarangJadi extends Model
     }
     function NoseriTGbj()
     {
-        return $this->hasMany(NoseriTGbj::class);
+        return $this->hasMany(NoseriTGbj::class, 'noseri_id');
     }
 
     function layout()
@@ -45,6 +45,4 @@ class NoseriBarangJadi extends Model
     {
         return $this->hasOne(NoseriBrgJadiLog::class, 'noseri_id');
     }
-
-
 }

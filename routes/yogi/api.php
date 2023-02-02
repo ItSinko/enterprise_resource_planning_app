@@ -5,16 +5,17 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\SparepartController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/v2')->group(function() {
+Route::prefix('/v2')->group(function () {
     // produksi
-    Route::prefix('/prd')->group(function() {
+    Route::prefix('/prd')->group(function () {
         Route::get('/produk-so', [ProduksiController::class, 'getCountProdukBySO']);
         Route::get('/data-so/{id}', [ProduksiController::class, 'detailCountProdukBySO']);
         Route::post('/telat_rakit', [ProduksiController::class, 'storeTelatRakit']);
     });
 
-    Route::prefix('/gbj')->group(function() {
+    Route::prefix('/gbj')->group(function () {
         Route::get('show_nonso', [GudangController::class, 'getNonSODone']);
+        Route::get('show_nonso_new', [GudangController::class, 'getNonSODone_new']);
         Route::get('template_noseri', [GudangController::class, 'download_template_noseri']);
         Route::post('import-noseri', [GudangController::class, 'import_noseri']);
         Route::post('store-importseri', [GudangController::class, 'import_noseri_to_db']);
@@ -27,7 +28,7 @@ Route::prefix('/v2')->group(function() {
         Route::post('detail-delete-noseri', [GudangController::class, 'detail_list_delete_noseri'])->middleware('jwt.verify');
         Route::post('proses-delete-noseri', [GudangController::class, 'proses_delete_noseri']);
         Route::post('proses-update-noseri', [GudangController::class, 'proses_update_noseri']);
-        Route::post('tets',[GudangController::class, 'updateStokGudang']);
+        Route::post('tets', [GudangController::class, 'updateStokGudang']);
         Route::post('riwayat_perubahan_noseri', [GudangController::class, 'getNoseriHistoryPerubahan'])->middleware('jwt.verify');
         Route::post('alasan_edit_noseri_staff', [GudangController::class, 'get_alasan_from_staff'])->middleware('jwt.verify');
         Route::post('detail_riwayat_perubahan_noseri', [GudangController::class, 'detailNoseriHistoryPerubahan'])->middleware('jwt.verify');
@@ -48,9 +49,8 @@ Route::prefix('/v2')->group(function() {
         Route::post('proses_so_batal', [GudangController::class, 'proses_so_batal']);
     });
 
-    Route::prefix('gk')->group(function(){
+    Route::prefix('gk')->group(function () {
         Route::get('getNoseriGudang', [SparepartController::class, 'getNoseriGudang'])->name('autocom');
         Route::post('/checkSeriNew', [SparepartController::class, 'checkNoseriNew']);
     });
-
 });

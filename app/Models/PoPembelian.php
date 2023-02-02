@@ -19,6 +19,14 @@ class PoPembelian extends Model
     {
         return $this->hasMany(DetailPoPembelian::class);
     }
+    public function DetailPPterdaftar($bool)
+    {
+        $id = $this->id;
+
+        $data = DetailPoPembelian::where(['po_pembelian_id' => $id, 'is_terdaftar' => 1])->get();
+
+        return $data;
+    }
     public function Ekspedisi()
     {
         return $this->belongsTo(Ekspedisi::class, 'ekspedisi_id');

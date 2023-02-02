@@ -36,6 +36,9 @@ Route::group(['prefix' => 'lab'], function () {
                 Route::get('/detail/{id}', [PerawatanController::class, 'index'])->name('alatuji.perawatan.detail');
                 Route::post('/store', [PerawatanController::class, 'store'])->name('alatuji.perawatan.store');
             });
+            Route::group(['prefix' => 'target'], function () {
+                Route::post('/store', [AlatujiController::class, 'store_target'])->name('alatuji.target.store');
+            });
 
             Route::group(['prefix' => 'verifikasi'], function () {
                 Route::get('/detail/{id}', [VerifikasiController::class, 'index'])->name('alatuji.verifikasi.detail');

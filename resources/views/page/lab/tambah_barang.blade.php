@@ -3,7 +3,7 @@
 @section('title', 'ERP')
 
 @section('content_header')
-<h1 class="m-0 text-dark">Tambah Brang Uji</h1>
+<h1 class="m-0 text-dark">Tambah Data Alat Uji</h1>
 @stop
 
 @section('content')
@@ -16,6 +16,9 @@ z-index: 1511;
 }
 .ui-autocomplete {
 z-index: 1510 !important;
+overflow-y: scroll;
+overflow-x: hidden;
+max-height: 350px;
 }
 .ui-menu-item > a.ui-corner-all {
     display: block;
@@ -47,7 +50,153 @@ z-index: 1510 !important;
         @csrf
 
         <!-- card informasi umum alat -->
+        
         <div class="card border-primary border-top-w3 shadow">
+            <div class="card-body">
+
+                <div class="row">
+                    <h3 class="card-title">Informasi Umum Alat Uji</h3>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col"><span class="float-right">Data Alat Uji</span></div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jenisAlat" id="terdaftar" value="terdaftar" {{ old('jenisAlat') == null ? 'checked' : (old('jenisAlat') == 'terdaftar' ? 'checked' : '') }}>
+                                    <label class="form-check-label" for="terdaftar">Terdaftar</label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jenisAlat" id="belumTerdaftar" value="belumTerdaftar" {{ old('jenisAlat') == 'belumTerdaftar' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="belumTerdaftar">Belum Terdaftar</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- kolom alat uji tidak ada -->
+                <div id="container_jenis_alat_tidakada">
+                    @error('klasifikasi')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Klasifikasi</span></div>
+                        <div class="col">
+                            <select class="form-control form-control-sm" name="klasifikasi" id="selectKlasifikasi">
+                                <option value="" disabled selected hidden>Pilih Klasifikasi</option>
+                                @foreach($klasifikasi as $k)
+                                <option value="{{ $k->id_klasifikasi }}" {{ old('klasifikasi') == $k->id_klasifikasi ? 'selected' : '' }}>{{ $k->nama_klasifikasi }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    @error('satuan')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Satuan Pengukuran</span></div>
+                        <div class="col">
+                            <select class="form-control form-control-sm" name="satuan" id="selectSatuan">
+                                <option value="" disabled selected hidden>Pilih Satuan Pengukuran</option>
+                                @foreach($satuan as $s)
+                                <option value="{{ $s->id }}" {{ old('satuan') == $s->id ? 'selected' : '' }}>{{ $s->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    @error('nama_alat')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Nama Alat Uji</span></div>
+                        <div class="col">
+                            <input class="form-control" type="text" name="nama_alat" value="{{ old('nama_alat') }}" id="">
+                        </div>
+                    </div>
+
+                    @error('kode_alat')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Kode Alat Uji</span></div>
+                        <div class="col">
+                            <input class="form-control" type="text" name="kode_alat" value="{{ old('kode_alat') }}" id="">
+                            <small><span>Pengisian: <strong>TOCO</strong>-<span class="text-muted">01</span></span></small>
+                        </div>
+                    </div>
+
+                    @error('fungsi_alat')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Fungsi</span></div>
+                        <div class="col">
+                            <textarea class="form-control" name="fungsi_alat" value="{{ old('fungsi_alat') }}" id="" cols="30" rows="1">{{ old('fungsi_alat') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- kolom alat uji tidak ada end -->
+
+                <!-- kolom alat uji ada -->
+                <div id="container_jenis_alat_ada">
+    
+                    @error('nama')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Nama Alat Uji</span></div>
+                        <div class="col">
+                            <select class="form-control form-control-sm" name="nama" id="selectNama">
+                                <option value="" disabled hidden {{ (old('nama') == null ? 'SELECTED' : '') }}>Pilih Nama Alat</option>
+                                @foreach($nama as $n)
+                                <option value="{{ $n->id_alatuji }}" {{ (old('nama') == $n->id_alatuji ? "SELECTED" : '') }}>{{ $n->nm_alatuji }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- kolom alat uji ada -->
+            </div>
+        </div>
+
+        <!-- <div class="card border-primary border-top-w3 shadow">
             <div class="card-body">
 
                 <div class="row">
@@ -95,7 +244,7 @@ z-index: 1510 !important;
                 </div>
 
             </div>
-        </div>
+        </div> -->
         <!-- card informasi umum alat end -->
 
         <!-- card informasi detail alat -->
@@ -143,7 +292,7 @@ z-index: 1510 !important;
                         <div id="col_merkAda">
                         <select class="form-control form-control-sm" name="merk" id="selectMerk">
                             <option value="" disabled hidden {{ (old('merk') == null ? 'SELECTED' : '') }} >Pilih merk</option>
-                            <option value="0">Tidak di ketahui</option>
+                            <!-- <option value="0">Tidak di ketahui</option> -->
                             @foreach($merk as $sp)
                             <option value="{{ $sp->id_merk }}" {{ (old('merk') == $sp->id_merk ? "SELECTED" : '') }}>{{ $sp->nama_merk }}</option>
                             @endforeach
@@ -169,6 +318,7 @@ z-index: 1510 !important;
                     <div class="col"><span class="float-right">Serial Number</span></div>
                     <div class="col">
                         <input class="form-control" type="text" name="serial_number" value="{{ old('serial_number') }}" id="">
+                        <small class="text-muted">Isi ' - ' jika tidak memiliki serial number</small>
                     </div>
                 </div>
 
@@ -207,7 +357,8 @@ z-index: 1510 !important;
                                 </div>
                             </div>
                         </div>
-                        <small class="text-muted">Nomor Urut akan di tampilkan dari nilai terbesar +1</small>
+                        <small class="text-muted">Nomor Urut akan di tampilkan dari nilai terbesar +1 | </small>
+                        <small><span>Pengisian: <span class="text-muted">TOCO</span>-<strong>01</strong></span></small>
                     </div>
                 </div>
 
@@ -262,15 +413,44 @@ z-index: 1510 !important;
                         </div>
                     </div>
                 @enderror
+                @error('lokasibaru')
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col">
+                            <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                        </div>
+                    </div>
+                @enderror
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Lokasi</span></div>
                     <div class="col">
+                        <!-- <div class="row">
+                            <div class="col-auto">
+                                <div class="form-check"> -->
+                                    <input class="form-check-input" type="radio" style="display:none" name="checklokasi" id="lokasi_ada" value="ada" {{ old('checklokasi') == null ? 'checked' : (old('checklokasi') == 'ada' ? 'checked' : '') }}>
+                                    <!-- <label class="form-check-label" for="lokasi_ada">Lokasi Terdaftar</label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="checklokasi" id="lokasi_tidak" value="tidak" {{ old('checklokasi') == 'tidak' ? 'checked' : ''}}>
+                                    <label class="form-check-label" for="lokasi_tidak">Lokasi Baru</label>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div id="col_lokasi_ada">
                         <select class="form-control form-control-sm" name="lokasi" id="selectLokasi">
                             <option value="" disabled hidden {{ (old('lokasi') == null ? 'SELECTED' : '') }} >Pilih Lokasi Penyimpanan</option>
                             @foreach($lokasi as $l)
                             <option value="{{ $l->id }}" {{ (old('lokasi') == $l->id ? "SELECTED" : '') }} >{{ $l->ruang }}</option>
                             @endforeach
                         </select>
+                        </div>
+
+                        <!-- <div id="col_lokasi_tidak">
+                        <input class="form-control mt-2" type="text" name="lokasibaru" placeholder="Lokasi Baru" value="{{ old('lokasibaru') }}" id="lokasibaru">
+                        </div> -->
                     </div>
                 </div>
 
@@ -299,7 +479,63 @@ z-index: 1510 !important;
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="sert_kalibrasi" class="form-control-file">
-                            <small><small class="text-muted">Dokumen Berupa Gambar berukuran maksimal 2 MB</small></small>
+                            <small><small class="text-muted">Dokumen Berupa PDF berukuran maksimal 8 MB</small></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dokumenJenisAlat">
+                    @error('gambar')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Gambar</span></div>
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="file" name="gambar" class="form-control-file">
+                                <small class="text-muted">Gambar berupa jpg/jpeg/png maksimal 2mb</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    @error('manual_book')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">Manual Book</span></div>
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="file" name="manual_book" class="form-control-file">
+                                <small class="text-muted">Dokumen berupa pdf maksimal 8mb</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    @error('sop')
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col">
+                                <div class="alert bc-danger text-danger border border-danger py-0 mb-0 mt-1">{{ $message }}</div>
+                            </div>
+                        </div>
+                    @enderror
+                    <div class="row mb-2">
+                        <div class="col"><span class="float-right">SOP</span></div>
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="file" name="sop" class="form-control-file">
+                                <small class="text-muted">Dokumen berupa pdf maksimal 8mb</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,8 +572,38 @@ z-index: 1510 !important;
         $('#selectKlasifikasi').select2();
         $('#selectNama').select2();
         $('#selectMerk').select2();
+        $('#selectSatuan').select2();
+        $('#selectLokasi').select2();
 
-        // auto complete tipe
+        // laravel old internal external show/hide
+        @if(old('jenisAlat') == 'terdaftar')
+            $('#container_jenis_alat_tidakada').hide();
+            $('#dokumenJenisAlat').hide();
+        @elseif(old('jenisAlat') == 'belumTerdaftar')
+            $('#container_jenis_alat_ada').hide();
+        @else
+            $('#container_jenis_alat_tidakada').hide();
+        @endif
+        // laravel old internal external show/hide
+
+        // interval external show/hide
+        $("input[name$='jenisAlat']").click(function(){
+            if($("#belumTerdaftar").is(":checked"))
+            {
+                $('#container_jenis_alat_ada').hide();
+                $('#container_jenis_alat_tidakada').show();
+                $('#dokumenJenisAlat').show();
+            }
+            if($("#terdaftar").is(":checked"))
+            {
+                $('#container_jenis_alat_ada').show();
+                $('#container_jenis_alat_tidakada').hide();
+                $('#dokumenJenisAlat').hide();
+            }
+        })
+        // internal external show/hide
+
+        // auto complete, kolom tipe 
         $(function() {
             $.ajax({
                 type:'GET',
@@ -355,7 +621,7 @@ z-index: 1510 !important;
                     data.splice(i, 1); 
                 }
             }
-            console.log(data);
+            //console.log(data);
             $('#tipe').autocomplete({
                 source: data,
                 autofocus: true,
@@ -394,6 +660,7 @@ z-index: 1510 !important;
         // get data nomor urut end
     });
 
+    // disable / enable kolom merek
     @if(old('checkmerk') == null OR old('checkmerk') == 'ada')
         $( "#merkbaru" ).prop( "disabled", true );
         $( "#selectMerk" ).prop( "disabled", false );
@@ -434,6 +701,32 @@ z-index: 1510 !important;
             $("#form_nourut").prop( "readonly", false );
         }
     });
+    // disable / enable kolom merek end
+
+    // disable / enable kolom lokasi
+    @if(old('checklokasi') == null OR old('checklokasi') == 'ada')
+        $('#col_lokasi_ada').show();
+        $('#col_lokasi_tidak').hide();
+    @endif
+    @if(old('checklokasi') == 'tidak')
+        $('#col_lokasi_ada').hide();
+        $('#col_lokasi_tidak').show();
+    @endif
+
+    $("input[name$='checklokasi']").click(function(){
+        if($("#lokasi_ada").is(":checked"))
+        {
+            $('#col_lokasi_tidak').hide();
+            $('#col_lokasi_ada').show();
+        }
+        if($("#lokasi_tidak").is(":checked"))
+        {
+            $('#col_lokasi_ada').hide();
+            $('#col_lokasi_tidak').show();
+        }
+    });
+    // disable / enable kolom lokasi end
+
 
     @if(session()->has('success'))
         Swal.fire({

@@ -13,6 +13,9 @@
         }
         .ui-autocomplete {
         z-index: 1510 !important;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 350px;
         }
         .ui-menu-item > a.ui-corner-all {
             display: block;
@@ -265,13 +268,14 @@
                             <table class="table table-sm border text-center w-100" id="tabelPerawatan">
                                 <thead class="bc-grey">
                                     <tr class="">
-                                        <th colspan="5" class="border-top-0 border-bottom-0 border-end"></th>
+                                        <th colspan="6" class="border-top-0 border-bottom-0 border-end"></th>
                                         <th colspan="2" class="border-top-0 border-bottom-0 border-start border-end">Hasil</th>
                                         <th colspan="2" class="border-top-0 border-bottom-0 border-start"></th>
                                     </tr>
                                     <tr>
                                         <th class="border-top-0 border-bottom-0">No</th>
-                                        <th class="border-top-0 border-bottom-0">Tanggal</th>
+                                        <th class="border-top-0 border-bottom-0">Tgl Perawatan</th>
+                                        <th class="border-top-0 border-bottom-0">Tgl Berikutnya</th>
                                         <th class="border-top-0 border-bottom-0">Operator</th>
                                         <th class="border-top-0 border-bottom-0">Cek kelengkapan</th>
                                         <th class="border-top-0 border-bottom-0 border-end">Cek Fungsi</th>
@@ -322,13 +326,14 @@
                             <table class="table table-sm border text-center w-100" id="tabelVerifikasi">
                                 <thead class="bc-grey">
                                     <tr class="">
-                                        <th colspan="4" class="border-top-0 border-bottom-0 border-end"></th>
+                                        <th colspan="5" class="border-top-0 border-bottom-0 border-end"></th>
                                         <th colspan="2" class="border-top-0 border-bottom-0 border-start border-end">Cek</th>
                                         <th colspan="2" class="border-top-0 border-bottom-0 border-start"></th>
                                     </tr>
                                     <tr>
                                         <th class="border-top-0 border-bottom-0">No</th>
-                                        <th class="border-top-0 border-bottom-0">Tanggal</th>
+                                        <th class="border-top-0 border-bottom-0">Tgl Verifikasi</th>
+                                        <th class="border-top-0 border-bottom-0">Tgl Berikutnya</th>
                                         <th class="border-top-0 border-bottom-0">Pelaksanaan Pengandalian</th>
                                         <th class="border-top-0 border-bottom-0 border-end">Keputusan</th>
                                         <th class="border-top-0 border-bottom-0 border-start">Fisik</th>
@@ -1173,7 +1178,7 @@
         $(function() {
             $.ajax({
                 type:'GET',
-                url:'{{ url("/api/inventory/get_data_pj") }}',
+                url:'{{ url("/api/inventory/get_data_pj/peminjaman") }}',
                 success:function(data) {
                     autoComp(data);
                 }
@@ -1241,7 +1246,8 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_perawatan', name: 'tgl_perawatan'},
-                {data: 'nama', name: 'operator'},
+                {data: 'jadwal_perawatan', name: 'jadwal_perawatan'},
+                {data: 'penanggung_jawab', name: 'operator'},
                 {data: 'kelengkapan', name: 'kelengkapan'},
                 {data: 'fungsi', name: 'fungsi'},
                 {data: 'hasil_fisik', name: 'hasil_fisik'},
@@ -1264,6 +1270,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'tgl_perawatan', name: 'tanggal'},
+                {data: 'jadwal_perawatan', name: 'berikutnya'},
                 {data: 'pengendalian', name: 'pengendalian'},
                 {data: 'keputusan', name: 'Keputusan'},
                 {data: 'hasil_fisik', name: 'cek_fisik'},
@@ -1305,7 +1312,7 @@
                     $('#mt_data_memo').attr("href", data.memo);
                     $('#mt_data_suratjalan').attr("href", data.surat_jalan);
                     $('#mt_data_tanggalTerima').text(data.tgl_terima);
-                    $('#mt_data_perusahaan').text(data.nama_merk);
+                    $('#mt_data_perusahaan').text(data.perusahaan);
                     $('#mt_data_biaya').text(data.biaya);
                     $('#mt_data_tindak_lanjut').text(data.tindak_lanjut);
                     $('#mt_data_operator').text(data.nama);
