@@ -13,6 +13,10 @@ export default {
         disabled: {
             type: Boolean,
             default: false
+        },
+        kurs: {
+            type: String,
+            default: 'Rp.'
         }
     },
     data() {

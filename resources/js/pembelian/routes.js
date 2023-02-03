@@ -11,6 +11,7 @@ import PermintaanTambahDalamProses from "./page/permintaan/dalamproses/tambah";
 // Purchase Order
 import PurchaseOrder from "./page/purchaseorder";
 import PurchaseOrderDetail from "./page/purchaseorder/detail";
+import PurchaseOrderCreateEdit from "./page/purchaseorder/createedit";
 const routes = [
     // Supplier
     {
@@ -69,7 +70,12 @@ const routes = [
         name: "purchaseorder",
     },
     {
-        path: "/pembelian/detail",
+        path: "/pembelian/createPO",
+        component: PurchaseOrderCreateEdit,
+        name: "purchaseorderCreate",
+    },
+    {
+        path: "/pembelian/po/detail",
         component: PurchaseOrderDetail,
         name: "purchaseorder",
     },
