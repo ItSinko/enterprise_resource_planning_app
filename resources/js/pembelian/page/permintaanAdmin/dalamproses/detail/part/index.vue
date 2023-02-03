@@ -1,10 +1,12 @@
 <script>
 import Terdaftar from './terdaftar'
 import TidakTerdaftar from './tidakterdaftar'
+import daftarpo from '../daftarpo'
     export default { 
         components: {
             Terdaftar,
-            TidakTerdaftar
+            TidakTerdaftar,
+            daftarpo
         },
         methods: {
             closeModal() {
@@ -138,12 +140,10 @@ import TidakTerdaftar from './tidakterdaftar'
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-daftarbarang" role="tabpanel"
-                            aria-labelledby="pills-daftarbarang-tab">...</div>
+                            aria-labelledby="pills-daftarbarang-tab">
+                        <daftarpo />    
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @click="closeModal">Keluar</button>
-                    <button type="button" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
         </div>

@@ -1,60 +1,55 @@
 <script>
-import mix from './mix'
 import status from '../../../../../components/status'
+import moment from 'moment'
 export default {
-    mixins: [mix],
     components: {
         status
     },
     data() {
         return {
-            dataTable: [
+            dataTables: [
                 {
-                    id: 1,
                     no_po: 'PO-001',
                     tanggal_po: '2020-01-01',
                     estimasi_kedatangan: '2020-01-01',
                     tanggal_kedatangan: '2020-01-01',
-                    status: 'selesai'
+                    status: 'menunggu permintaan',
                 },
                 {
-                    id: 2,
-                    no_po: 'PO-001',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'menunggu permintaan'
-                },
-                {
-                    id: 3,
-                    no_po: 'PO-001',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'selesai',
-                    persentase: 50,
-                },
-                {
-                    id: 4,
-                    no_po: 'PO-001',
+                    no_po: 'PO-002',
                     tanggal_po: '2020-01-01',
                     estimasi_kedatangan: '2020-01-01',
                     tanggal_kedatangan: '2020-01-01',
                     status: 'proses po',
                 },
-            ]
+                {
+                    no_po: 'PO-003',
+                    tanggal_po: '2020-01-01',
+                    estimasi_kedatangan: '2020-01-01',
+                    tanggal_kedatangan: '2020-01-01',
+                    status: 'selesai',
+                    persentase: 50
+                },
+                {
+                    no_po: 'PO-004',
+                    tanggal_po: '2020-01-01',
+                    estimasi_kedatangan: '2020-01-01',
+                    tanggal_kedatangan: '2020-01-01',
+                    status: 'selesai',
+                }
+            ],
         }
     },
     methods: {
-        checkEdit(data) {
-            switch (data) {
-                case 'menunggu permintaan':
-                    return true
-                case 'proses po':
-                    return true
-                default:
-                    return false
+        checkStatusForEdit(data) {
+            if (data.status == 'menunggu permintaan' || data.status == 'proses po') {
+                return true
+            } else {
+                return false
             }
+        },
+        moment(date){
+            return moment(date).lang('id').format('LL')
         }
     },
 }
@@ -62,7 +57,7 @@ export default {
 <template>
     <div>
         <table class="table">
-            <thead class="thead">
+            <thead class="thead-light">
                 <tr>
                     <th>No</th>
                     <th>No PO</th>
@@ -74,21 +69,21 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(data, index) in dataTable" :key="data.id">
+                <tr v-for="(data, index) in dataTables" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ data.no_po }}</td>
                     <td>{{ moment(data.tanggal_po) }}</td>
                     <td>{{ moment(data.estimasi_kedatangan) }}</td>
                     <td>{{ moment(data.tanggal_kedatangan) }}</td>
                     <td>
-                        <status :status="data.status" :persentase="data.persentase"></status>
+                        <status :status="data.status" :persentase="data.persentase" />
                     </td>
                     <td>
-                        <button class="btn btn-outline-info">
-                            <i class="fa fa-eye"></i>
+                        <button class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn btn-outline-warning" v-if="checkEdit(data.status)">
-                            <i class="fa fa-edit"></i>
+                        <button class="btn btn-outline-warning btn-sm" v-if="checkStatusForEdit(data)">
+                            <i class="fas fa-edit"></i>
                         </button>
                     </td>
                 </tr>

@@ -1,9 +1,12 @@
 <script>
     import lodash from 'lodash'
-    import axios from 'axios'
+import Status from '../../../../../../components/status.vue'
     export default {
+        components: {
+            Status
+        },
         data() {
-            return {
+        return {
                 dataTable: [{
                         kode: 'P-0001',
                         nama: 'Part 1',
@@ -13,6 +16,7 @@
                         harga: 50,
                         ongkir: 50,
                         lain: 50,
+                        konversi: 1000,
                         status: 'belum proses',
                     },
                     {
@@ -24,6 +28,7 @@
                         harga: 100,
                         ongkir: 100,
                         lain: 100,
+                        konversi: 1000,
                         status: 'selesai',
                     },
                     {
@@ -35,6 +40,7 @@
                         harga: 150,
                         ongkir: 150,
                         lain: 150,
+                        konversi: 1000,
                         status: 'belum proses',
                     }
                 ],
@@ -52,25 +58,6 @@
             subtotal(item) {
                 return item.jumlah * item.harga + item.ongkir + item.lain
             },
-            changeToRupiah(item) {
-                const subtotal = this.subtotal(item)
-                const kurs = item.kurs
-
-                const convert = async (price, kurs) => {
-                    try {
-                        await axios.get(`${this.link}/${kurs.toLowerCase()}/idr.json`).then((response) => {
-                            // return price * response.data.idr.toString().split('.')[0]
-                            console.log("price: " + price)
-                            console.log("kurs: " + kurs)
-                            console.log("hasil: " + price * response.data.idr.toString().split('.')[0])
-                            return 71688000 * price
-                        })
-                    } catch (error) {
-                        console.log(error)
-                    }
-                }
-                return this.formatHarga(convert(subtotal, kurs), 'IDR')
-            }
         },
         updated() {
             this.showTable = true
@@ -114,8 +101,8 @@
                             <td>{{ formatHarga(item2.ongkir, item2.kurs) }}</td>
                             <td>{{ formatHarga(item2.lain, item2.kurs) }}</td>
                             <td>{{ formatHarga(subtotal(item2), item2.kurs) }}</td>
-                            <td>{{ changeToRupiah(item2) }}</td>
-                            <td>{{ item2.status }}</td>
+                            <td>{{ formatHarga(item2.konversi, 'idr') }}</td>
+                            <td><status :status="item2.status" /></td>
                         </tr>
                     </template>
                 </template>

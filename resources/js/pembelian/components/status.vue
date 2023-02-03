@@ -5,6 +5,10 @@ export default {
             type: String,
             required: true
         },
+        persentase: {
+            type: Number,
+            required: false
+        }
     },
     methods: {
         statusCheck(status){
@@ -21,6 +25,8 @@ export default {
                     return 'badge badge-warning';
                 case 'proses po':
                     return 'badge badge-primary';
+                case 'proses':
+                    return 'badge badge-warning';
                 case 'selesai':
                     return 'badge badge-success';
                 default:
@@ -31,7 +37,16 @@ export default {
 }
 </script>
 <template>
-    <div>
-        <span :class="statusCheck(status)">{{ status }}</span>
+    <div>       
+        <div v-if="persentase">
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" :style="`width: ${persentase}%`" 
+                :aria-valuenow="persentase" aria-valuemin="0" aria-valuemax="100">{{ persentase }}%</div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <span class="text-bold">Selesai</span>
+            </div>
+        </div>
+        <span v-else :class="statusCheck(status)">{{ status }}</span>
     </div>
 </template>

@@ -188,16 +188,7 @@ export default {
                         <i class="fa fa-file" aria-hidden="true"></i>
                         </button></td>
                     <td>
-                    <status :status="data.status" v-if="data.status !== 'minta persetujuan' && !data.persentase"></status>
-                    <div v-if="data.persentase">
-                        <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar" :style="`width: ${data.persentase}%`" 
-                            :aria-valuenow="data.persentase" aria-valuemin="0" aria-valuemax="100">{{ data.persentase }}%</div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <span class="text-bold">Selesai</span>
-                        </div>
-                    </div>
+                    <status :status="data.status" :persentase="data.persentase" v-if="data.status !== 'minta persetujuan'"></status>
                         <span v-if="data.status === 'minta persetujuan'">
                             <button class="btn btn-success btn-sm" @click="terima">
                                 Terima

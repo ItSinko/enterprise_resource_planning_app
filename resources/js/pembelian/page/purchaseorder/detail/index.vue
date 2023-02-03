@@ -3,13 +3,15 @@ import HeaderMaster from '../../../components/header.vue'
 import Header from './header.vue'
 import daftarBarang from './daftarbarang'
 import dokumen from './dokumen'
+import hasilpengecekan from './hasilpengecekan'
 
 export default {
     components: {
         HeaderMaster,
         Header,
         daftarBarang,
-        dokumen
+        dokumen,
+        hasilpengecekan
     },
     data() {
         return {
@@ -46,12 +48,18 @@ export default {
     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" data-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Daftar Barang</a>
   </li>
   <li class="nav-item" role="presentation">
+    <a class="nav-link" id="pills-hasilpengecekan-tab" data-toggle="pill" data-target="#pills-hasilpengecekan" type="button" role="tab" aria-controls="pills-hasilpengecekan" aria-selected="false">Hasil Pengecekan</a>
+  </li>
+  <li class="nav-item" role="presentation">
     <a class="nav-link" id="pills-contact-tab" data-toggle="pill" data-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Dokumen</a>
   </li>
 </ul>
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
         <daftar-barang :kurs="kurs"/>
+  </div>
+  <div class="tab-pane fade" id="pills-hasilpengecekan" role="tabpanel" aria-labelledby="pills-hasilpengecekan-tab">
+        <hasilpengecekan />
   </div>
   <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
         <dokumen />

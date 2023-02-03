@@ -1,6 +1,10 @@
 <script>
 import mix from './mix'
+import status from '../../../../../components/status'
 export default {
+    components: {
+        status
+    },
     mixins: [mix],
     data() {
         return {
@@ -30,20 +34,6 @@ export default {
                     status: 'selesai'
                 },
             ],
-        }
-    },
-        methods: {
-        status(status) {
-            switch (status) {
-                case 'selesai':
-                    return '<span class="badge badge-success">Selesai</span>'
-                case 'proses':
-                    return '<span class="badge badge-warning">Proses</span>'
-                case 'batal':
-                    return '<span class="badge badge-danger">Batal</span>'
-                default:
-                    return `<span class="badge badge-secondary">${status}</span>`
-            }
         }
     },
 }
@@ -78,7 +68,9 @@ export default {
                         <a v-if="data.link" :href="data.link" target="_blank">{{ data.link }}</a>
                         <span v-else class="text-muted">OFFLINE</span>
                     </td>
-                    <td v-html="status(data.status)"></td>
+                    <td>
+                        <status :status="data.status" />
+                    </td>
                 </tr>
             </tbody>
         </table>
