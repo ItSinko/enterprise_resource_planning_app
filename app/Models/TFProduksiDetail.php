@@ -11,7 +11,7 @@ class TFProduksiDetail extends Model
     protected $connection = 'erp';
     protected $table = 't_gbj_detail';
 
-    protected $fillable = ['status_id', 'state_id', 'detail_stok_divisi_part_id', 'gdg_brg_jadi_id', 'detail_pesanan_produk_id', 't_gbj_id', 'qty', 'jenis', 'created_by', 'created_at'];
+    protected $fillable = ['status_id', 'state_id', 'm_sparepart_id', 'gdg_brg_jadi_id', 'detail_pesanan_produk_id', 't_gbj_id', 'qty', 'jenis', 'created_by', 'created_at'];
 
     function header()
     {
@@ -25,7 +25,6 @@ class TFProduksiDetail extends Model
     {
         return $this->hasMany(NoseriTGbj::class, 't_gbj_detail_id');
     }
-
     function seri1()
     {
         return $this->has(NoseriTGbj::class, 't_gbj_detail_id');
@@ -34,6 +33,11 @@ class TFProduksiDetail extends Model
     function noseri()
     {
         return $this->hasMany(NoseriTGbj::class, 't_gbj_detail_id');
+    }
+
+    function Sparepart()
+    {
+        return $this->belongsTo(Sparepart::class, 'm_sparepart_id');
     }
 
     function paket()

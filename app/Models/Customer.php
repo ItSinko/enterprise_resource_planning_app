@@ -44,4 +44,12 @@ class Customer extends Model
         }
         return $total;
     }
+    public function ReturPenjualan()
+    {
+        return $this->hasMany(ReturPenjualan::class);
+    }
+    public function Pengiriman()
+    {
+        return $this->hasMany(Pengiriman::class, 'created_by');
+    }
 }

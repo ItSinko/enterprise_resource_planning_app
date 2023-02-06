@@ -1274,7 +1274,7 @@
                         var value = kode + val;
                         $.ajax({
                             type: "POST",
-                            url: '/api/logistik/cek/no_sj/0/' + value + '/' + jenis_penjualan,
+                            url: '/api/logistik/cek/no_sj/0/' + value,
                             dataType: 'json',
                             success: function(data) {
                                 if (data > 0) {
@@ -1301,7 +1301,7 @@
                     var value = kode + val;
                     $.ajax({
                         type: "POST",
-                        url: '/api/logistik/cek/no_sj/0/' + value + '/' + jenis_penjualan,
+                        url: '/api/logistik/cek/no_sj/0/' + value,
                         dataType: 'json',
                         success: function(data) {
                             if (data > 0) {

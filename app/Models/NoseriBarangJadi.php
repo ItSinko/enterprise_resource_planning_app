@@ -12,7 +12,7 @@ class NoseriBarangJadi extends Model
     protected $connection = 'erp';
     protected $table = "noseri_barang_jadi";
 
-    protected $fillable = ['is_aktif', 'is_ready', 'is_delete', 'used_by', 'layout_id', 'gdg_barang_jadi_id', 'dari', 'noseri', 'jenis', 'created_by', 'is_change'];
+    protected $fillable = ['is_aktif', 'is_ready', 'is_delete' ,'used_by', 'layout_id', 'gdg_barang_jadi_id', 'dari', 'noseri', 'jenis', 'created_by', 'is_change'];
 
     function from()
     {
@@ -44,5 +44,12 @@ class NoseriBarangJadi extends Model
     function noseri_log()
     {
         return $this->hasOne(NoseriBrgJadiLog::class, 'noseri_id');
+    }
+    public function NoseriPerbaikan(){
+        return $this->hasMany(NoseriPerbaikan::class, 'noseri_barang_jadi_id');
+    }
+
+    public function PengirimanNoseri(){
+        return $this->hasMany(PengirimanNoseri::class, 'noseri_barang_jadi_id');
     }
 }

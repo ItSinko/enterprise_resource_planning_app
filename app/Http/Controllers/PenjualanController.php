@@ -1632,8 +1632,35 @@ class PenjualanController extends Controller
                 ->orderBy('noseri_barang_jadi.noseri', 'ASC')
                 ->get();
 
+                $noseriretur = NoseriBarangJadi::selectRaw(
+                    'noseri_barang_jadi.noseri,
+                    retur_penjualan.no_retur as no_po,
+                    pengiriman.tanggal as tgl_sj,
+                    retur_penjualan.tgl_retur as tgl_uji,
+                    pengiriman.no_pengiriman as no_sj,
+                    produk.nama as p_nama,
+                    customer.nama as c_ekat_nama,
+                    m_state.nama as state_nama'
+                )
+                ->leftjoin('gdg_barang_jadi', 'gdg_barang_jadi.id', '=', 'noseri_barang_jadi.gdg_barang_jadi_id')
+                ->leftjoin('produk', 'produk.id', '=', 'gdg_barang_jadi.produk_id')
+                ->leftjoin('t_gbj_noseri', 't_gbj_noseri.noseri_id', '=', 'noseri_barang_jadi.id')
+                ->leftjoin('t_gbj_detail', 't_gbj_detail.id', '=', 't_gbj_noseri.t_gbj_detail_id')
+                ->leftjoin('t_gbj', 't_gbj.id', '=', 't_gbj_detail.t_gbj_id')
+                ->leftjoin('retur_penjualan', 'retur_penjualan.id', '=', 't_gbj.retur_penjualan_id')
+                ->leftjoin('pengiriman_noseri', 'pengiriman_noseri.noseri_barang_jadi_id', '=', 'noseri_barang_jadi.id')
+                ->leftjoin('pengiriman', 'pengiriman.id', '=', 'pengiriman_noseri.pengiriman_id')
+                ->leftjoin('pengiriman as pn', 'pn.retur_penjualan_id', '=', 'retur_penjualan.id')
+                ->leftJoin('m_state', 'm_state.id', '=', 'retur_penjualan.state_id')
+                ->leftJoin('customer', 'customer.id', '=', 'retur_penjualan.customer_id')
+                ->where('noseri_barang_jadi.noseri', 'LIKE', '%' . $value . '%')
+                ->whereNotNull('t_gbj.retur_penjualan_id')
+                ->orderBy('noseri_barang_jadi.noseri', 'ASC')
+                ->groupBy('retur_penjualan.id')
+                ->get();
 
-            $data = $si_spa21->merge($si_spa20)->merge($si_spb20)->merge($si_spb21)->merge($si_ekat20)->merge($si_ekat21)->merge($spa);
+
+            $data = $si_spa21->merge($si_spa20)->merge($si_spb20)->merge($si_spb21)->merge($si_ekat20)->merge($si_ekat21)->merge($spa)->merge($noseriretur);
 
 
             return response()->json(['data' => $data]);

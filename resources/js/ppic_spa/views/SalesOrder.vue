@@ -176,8 +176,8 @@
                         </thead>
                         <tbody>
                             <tr
-                                v-for="item in detailSO"
-                                :key="'detailSO' + item.id"
+                                v-for="(item, index) in detailSO"
+                                :key="index"
                             >
                                 <td v-text="item.paket"></td>
                                 <td v-text="item.produk"></td>
@@ -245,16 +245,6 @@ export default {
         ));
         this.$store.commit("setIsLoading", false);
     },
-        async getDetail(id, nama) {
-            this.$store.commit("setIsLoading", true);
-            await axios
-                .post("/api/ppic/master_pengiriman/detail/" + id)
-                .then((response) => {
-                    this.detail = response.data.data;
-                });
-            $("#detailtable").DataTable();
-            this.$store.commit("setIsLoading", false);
-        },
 
         async getDetail(id, nama) {
             this.$store.commit("setIsLoading", true);
@@ -262,8 +252,10 @@ export default {
                 .get("/api/ppic/data/so/detail/" + id)
                 .then((response) => {
                     this.detail = response.data.data;
+                    setTimeout(() => {
+                        $("#detailtable").DataTable();
+                    }, 100);
                 });
-            $("#detailtable").DataTable();
             this.$store.commit("setIsLoading", false);
 
             this.nama_produk = nama;
@@ -279,11 +271,10 @@ export default {
                     .get("/api/ppic/data/produk_so/" + id + "/" + value)
                     .then((response) => {
                         this.detailSO = response.data.data;
-                    });
-            } catch (error) {
-                console.log(error);
-            }
-            $("#detailtableSO").DataTable({
+
+
+                        setTimeout(() => {
+                                        $("#detailtableSO").DataTable({
                 autoWidth: false,
                 drawCallback: function (settings) {
                     var api = this.api();
@@ -309,6 +300,11 @@ export default {
                 },
                 columnDefs: [{ targets: [0], visible: false }],
             });
+                        }, 100);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
             this.$store.commit("setIsLoading", false);
             this.showModalSO = true;
         },

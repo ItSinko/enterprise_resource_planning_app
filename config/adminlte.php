@@ -1306,8 +1306,19 @@ return [
         [
             'text' => 'Pengiriman',
             'icon' => 'fas fa-shipping-fast fa-fw',
-            'url' => '/logistik/pengiriman/show',
             'auth' => [15],
+            'submenu'   =>  [
+                [
+                    'text'  =>  'Penjualan',
+                    'icon'  =>  'far fa-circle',
+                    'url'   =>  '/logistik/pengiriman/show'
+                ],
+                [
+                    'text'  =>  'Retur',
+                    'icon'  =>  'far fa-circle',
+                    'url'   =>  '/logistik/pengiriman_retur/show',
+                ],
+            ]
         ],
         // [
         //     'text' => 'Riwayat Pengiriman',
@@ -1412,6 +1423,29 @@ return [
             'url' => '/as/retur/show',
             'auth' => [8],
         ],
+        [
+            'text' => 'Perbaikan',
+            'icon' => 'fas fa-cogs fa-fw',
+            'url' => '/as/perbaikan/show',
+            'auth' => [8],
+        ],
+        [
+            'text' => 'Pengiriman',
+            'icon' => 'fas fa-truck fa-fw',
+            'url' => '/as/pengiriman/show',
+            'auth' => [8],
+        ],
+        [
+            'header' => 'Laporan',
+            'auth' => [8]
+        ],
+        [
+            'text' => 'Laporan Keluhan',
+            'icon' => 'fas fa-file fa-fw',
+            'url' => '/as/laporan/show',
+            'auth' => [8],
+        ],
+
         [
             'text' => 'test',
             'isNavbarRightItem' => true,
