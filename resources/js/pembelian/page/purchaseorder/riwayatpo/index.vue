@@ -8,6 +8,7 @@ export default {
         return {
             dataTable: [
                 {
+                    id: 1,
                     no_po: 'PO-0001',
                     divisi: 'Divisi 1',
                     supplier: 'Supplier 1',

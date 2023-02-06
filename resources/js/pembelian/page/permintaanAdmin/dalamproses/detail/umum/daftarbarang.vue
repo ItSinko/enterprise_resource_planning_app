@@ -5,6 +5,12 @@ export default {
     components: {
         status
     },
+    props: {
+        id: {
+            type: Number,
+            required: true
+        }
+    },
     mixins: [mix],
     data() {
         return {
@@ -34,13 +40,38 @@ export default {
                     status: 'selesai'
                 },
             ],
+            dataTableSelected: []
+        }
+    },
+    methods: {
+        checkAll(){
+            this.dataTableSelected != this.dataTable ? this.dataTableSelected = this.dataTable : this.dataTableSelected = []
+            console.log(this.dataTableSelected)
+        },
+        checkOne(index){
+            if(this.$refs.cbChild[index].checked){
+                this.dataTableSelected.push(this.dataTable[index])
+            }else{
+                this.dataTableSelected = this.dataTableSelected.filter(data => data.id != this.dataTable[index].id)
+            }
+        },
+        addPO() {
+            this.$router.push({
+                name: 'purchaseorderCreate',
+                params: {
+                    id: this.id,
+                    open: 'dalamproses',
+                    dataSelected: this.dataTableSelected
+                },
+            })
+            $('.modalDetail').modal('hide')
         }
     },
 }
 </script>
 <template>
     <div>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" @click="addPO">
             <i class="fa fa-plus"></i>
             <span>Buat Purchase Order</span>
         </button>
@@ -48,7 +79,7 @@ export default {
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th><input type="checkbox" name="" id=""></th>
+                    <th><input type="checkbox" @click="checkAll"></th>
                     <th>Nama Barang</th>
                     <th>Jumlah</th>
                     <th>Estimasi Harga</th>
@@ -58,8 +89,8 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="data in dataTable" :key="data.id">
-                    <td><input type="checkbox" name="" id=""></td>
+                <tr v-for="(data, index) in dataTable" :key="data.id">
+                    <td><input type="checkbox" ref="cbChild" @click="checkOne(index)"></td>
                     <td>{{ data.nama_barang }}</td>
                     <td>{{ data.jumlah }}</td>
                     <td>{{ formatRupiah(data.estimasi_harga) }}</td>

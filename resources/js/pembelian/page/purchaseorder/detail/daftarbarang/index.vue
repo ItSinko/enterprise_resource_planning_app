@@ -52,14 +52,14 @@ export default {
 <template>
     <div>
         <modal-detail :kurs="kurs" v-if="modal" @close="closeModal"/>
-        <button class="btn btn-info">
+        <button class="btn btn-info" v-if="$route.params.open !== 'riwayat'">
             <i class="fa fa-check"></i>
             Tambah Penerimaan
         </button>
         <table class="table text-center mt-1">
             <thead class="thead-light">
                 <tr>
-                    <th v-if="divisi === 7"><input type="checkbox" @click="checkAll"></th>
+                    <th v-if="divisi === 7 && $route.params.open !== 'riwayat'"><input type="checkbox" @click="checkAll"></th>
                     <th>Nama Produk</th>
                     <th>Jumlah</th>
                     <th>Status</th>
@@ -68,7 +68,7 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="(table, index) in dataTable" :key="index">
-                    <td v-if="divisi === 7"><input type="checkbox" ref="child" v-if="divisi === 7"></td>
+                    <td v-if="divisi === 7 && $route.params.open !== 'riwayat'"><input type="checkbox" ref="child" v-if="divisi === 7"></td>
                     <td>{{ table.nama_produk }}</td>
                     <td>{{ table.jumlah }}</td>
                     <td><status :status="table.status" /></td>

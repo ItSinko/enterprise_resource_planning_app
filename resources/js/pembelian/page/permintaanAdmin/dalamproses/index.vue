@@ -49,11 +49,13 @@ export default {
                     status: 'selesai',
                     persentase: 25
                 }
-            ]
+            ],
+            idModal: null
         }
     },
     methods: {
         detail(id, jenis) {
+            this.idModal = id
             if (jenis === 'umum') {
                 this.modal = true
                 setTimeout(() => {
@@ -61,6 +63,7 @@ export default {
                 }, 100);
             } else {
                 this.modalPart = true
+                
                 setTimeout(() => {
                     $('.modalDetailPart').modal('show')
                 }, 500);
@@ -79,8 +82,8 @@ export default {
 </script>
 <template>
     <div>
-        <Detail v-if="modal" @close="closeModal"/>
-        <DetailPart v-if="modalPart" @close="closeModalPart"/>
+        <Detail v-if="modal" @close="closeModal" :id="idModal" />
+        <DetailPart v-if="modalPart" @close="closeModalPart" :id="idModal"/>
         <Table :dataTables="dalamProses" @detail="detail"/>
     </div>
 </template>

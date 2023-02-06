@@ -121,6 +121,7 @@ export default {
                         </div>
                     </form>
                 </span>
+                <router-link :to="{name : 'purchaseorderCreate'}">Tambah</router-link>
             </div>
             <div class="p-2 bd-highlight">
                 <input type="text" class="form-control" v-model="searchdalamProses" placeholder="Cari...">

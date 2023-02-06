@@ -43,8 +43,7 @@
                 <div class="card-text">
                     <div class="row">
                         <div class="col-3 d-flex align-self-stretch" v-for="(file, idx) in documents" :key="idx">
-                            <div class="card" 
-                            >
+                            <div class="card">
                                 <div class="card-body">
                                     <div class="card-text">
                                         <p class="text-center text-secondary">{{ file.nama_dokumen }}</p>
@@ -56,7 +55,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card" v-if="documents.at(-1)">
+                        <div class="col-3 d-flex align-self-stretch" v-if="documents.at(-1)">
                             <div class="card-body">
                                 <div class="d-flex align-items-center bd-highlight mt-4">
                                 

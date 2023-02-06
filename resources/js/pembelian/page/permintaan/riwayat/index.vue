@@ -1,10 +1,15 @@
 <script>
 import moment from 'moment';
+import Detail from '../dalamproses/detail'
 export default {
+    components: {
+        Detail
+    },
     data() {
         return {
             dataTable: [
                 {
+                    id: 1,
                     no_pp : 'PP-0001',
                     jenis_barang: 'Umum',
                     tanggal_diminta: '2020-01-01',
@@ -13,6 +18,7 @@ export default {
                     dokumen: 'link_to_file',
                 },
                 {
+                    id: 2,
                     no_pp : 'PP-0002',
                     jenis_barang: 'Umum',
                     tanggal_diminta: '2020-01-01',
@@ -20,18 +26,30 @@ export default {
                     tanggal_selesai: '2020-01-01',
                     dokumen: 'link_to_file',
                 },
-            ]
+            ],
+            modal: false,
         }
     },
     methods: {
         moment(date) {
             return moment(date).lang('id').format('LL')
         },
+        detail(id) {
+            this.modal = true
+            setTimeout(() => {
+                $('.modalDetail').modal('show')
+            }, 100);
+        },
+        closeModal() {
+            this.modal = false
+            $('.modalDetail').modal('hide')
+        }
     }
 }
 </script>
 <template>
     <div>
+        <detail v-if="modal" @close="closeModal"/>
         <table class="table tablePermintaan">
             <thead class="thead-light">
                 <tr>
@@ -59,7 +77,7 @@ export default {
                         </a>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary">
+                        <button class="btn btn-sm btn-outline-primary" @click="detail(data.id)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                             Detail
                         </button>

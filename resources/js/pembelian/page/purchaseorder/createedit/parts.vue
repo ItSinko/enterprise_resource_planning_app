@@ -7,23 +7,23 @@ export default {
     },
     props: {
         kurs: '',
+        formPart: [{
+            kode_part: '',
+            nama_part: '',
+            stok: 0,
+            jumlah: 0,
+            jumlah_beli: 0,
+            estimasi_harga: 0,
+            harga_beli: 0,
+            ongkir: 0,
+            biaya_lain: 0,
+            konversi: 0,
+        }]
     },
     data() {
         return {
             money_kurs: 0,
             api: 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies',
-                    formPart: [{
-            kode_part: 'SP-0001',
-            nama_part: 'Sparepart 1',
-            stok: 2,
-            jumlah: 45,
-            jumlah_beli: 20,
-            estimasi_harga: 45000,
-            harga_beli: 45000,
-            ongkir: 24000,
-            biaya_lain: 20000,
-            konversi: 0,
-        }]
         }
     },
     methods: {
@@ -64,7 +64,7 @@ export default {
                         <div class="form-group row">
                             <label for="" class="col-6">Nilai Mata Uang Saat ini</label>
                             <div class="col-6">
-                                <inputprice :nilai="money_kurs" :disabled="true" />
+                                <inputprice :nilai="money_kurs" v-model="money_kurs" :disabled="false" />
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@ export default {
                         </thead>
                         <tbody>
                             <tr v-for="(part, index) in formPart" :key="index">
-                                <td>{{ index }}</td>
+                                <td>{{ index + 1 }}</td>
                                 <td>
                                     <p>{{ part.kode_part }} - {{ part.nama_part }}</p>
                                     <small class="text-danger">Stok : {{ part.stok }}</small>

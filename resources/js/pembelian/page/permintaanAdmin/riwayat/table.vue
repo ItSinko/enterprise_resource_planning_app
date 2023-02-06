@@ -1,15 +1,37 @@
 <script>
+import Detail from '../../permintaan/dalamproses/detail'
 export default {
+    components: {
+        Detail
+    },
     props: {
         dataTable: {
             type: Array,
             default: () => []
         }
     },
+    data() {
+        return {
+            modal: false
+        }
+    },
+    methods: {
+        detail(id) {
+            this.modal = true
+            setTimeout(() => {
+                $('.modalDetail').modal('show')
+            }, 100);
+        },
+        closeModal() {
+            this.modal = false
+            $('.modalDetail').modal('hide')
+        }
+    }
 }
 </script>
 <template>
     <div>
+        <detail v-if="modal" @close="closeModal"/>
         <table class="table">
             <thead class="thead-light">
                 <tr>

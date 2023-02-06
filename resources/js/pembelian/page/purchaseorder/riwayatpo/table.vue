@@ -13,6 +13,15 @@
             formatDateIndonesia(date) {
                 return moment(date).lang('id').format('LL')
             },
+            detail(id) {
+                this.$router.push({
+                    name: 'purchaseorderDetal',
+                    params: {
+                        id: id,
+                        open: 'riwayat'
+                    }
+                })
+            }
         },
     }
 
@@ -42,7 +51,7 @@
                     <td>{{formatDateIndonesia(purchaseorder.estimasi)}}</td>
                     <td>{{ purchaseorder.ekspedisi }}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info">
+                        <button class="btn btn-sm btn-outline-info" @click="detail(purchaseorder.id)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </button>
                     </td>

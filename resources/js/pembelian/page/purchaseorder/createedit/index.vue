@@ -22,11 +22,11 @@ export default {
                 },
                 {
                     name: 'Purchase Order',
-                    link: '/pembelian/purchaseorder'
+                    link: '/pembelian/po'
                 },
                 {
                     name: 'Create',
-                    link: '/pembelian/purchaseorder/create'
+                    link: '/pembelian/po/create'
                 }
             ],
             formPO: {
@@ -41,12 +41,25 @@ export default {
                 telepon: '',
                 kurs: '',
             },
+            formPart: [{
+                kode_part: 'SP-0001',
+                nama_part: 'Sparepart 1',
+                stok: 2,
+                jumlah: 45,
+                jumlah_beli: 20,
+                estimasi_harga: 45,
+                harga_beli: 45,
+                ongkir: 24,
+                biaya_lain: 20,
+                konversi: 0,
+            }]
         }
     },
 }
 </script>
 <template>
     <div>
+        <p>{{ this.$route.params }}</p>
         <headers :title="title" :breadcumbs="breadcumbs"/>
         <headers-po />
         <div class="row">
@@ -57,6 +70,6 @@ export default {
                 <info-supplier :formSupplier="formSupplier"/>
             </div>
         </div>
-        <parts :kurs="formSupplier.kurs"/>
+        <parts :kurs="formSupplier.kurs" :formPart="formPart"/>
     </div>
 </template>

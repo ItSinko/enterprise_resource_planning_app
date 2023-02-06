@@ -16,7 +16,7 @@ export default {
         },
         kurs: {
             type: String,
-            default: 'Rp.'
+            default: 'IDR'
         }
     },
     data() {
@@ -42,7 +42,7 @@ export default {
                 if(this.isInputActive){
                     return this.nilai.toString();
                 }else{
-                    return "Rp. " + this.nilai.toString().split('').reverse().join('').match(/\d{1,3}/g).join('.').split('').reverse().join('');
+                    return this.kurs ? this.nilai.toLocaleString('id-ID', { style: 'currency', currency: this.kurs }) : this.nilai.toLocaleString('id-ID');
                 }
             },
             set(modifiedValue){

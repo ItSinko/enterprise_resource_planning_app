@@ -7,6 +7,7 @@
         data() {
             return {
                 riwayatPO: [{
+                        id: 1,
                         no_po: 'PO-001',
                         divisi: 'IT',
                         supplier: 'PT. ABC',
@@ -15,6 +16,7 @@
                         ekspedisi: 'JNE',
                     },
                     {
+                        id: 2,
                         no_po: 'PO-002',
                         divisi: 'IT',
                         supplier: 'PT. ABC',

@@ -2,6 +2,12 @@
 import daftarBarang from './daftarbarang.vue'
 import daftarPO from './daftarpo.vue'
 export default {
+    props: {
+        id: {
+            type: Number,
+            required: true
+        }
+    },
     components: {
         daftarBarang,
         daftarPO
@@ -108,10 +114,10 @@ export default {
                         </ul>
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-daftarBrg" role="tabpanel" aria-labelledby="pills-daftarBrg-tab">
-                            <daftarBarang></daftarBarang>
+                            <daftarBarang :id="id"/>
                         </div>
                         <div class="tab-pane fade" id="pills-daftarPO" role="tabpanel" aria-labelledby="pills-daftarPO-tab">
-                            <daftarPO></daftarPO>
+                            <daftarPO />
                         </div>
                     </div>  
                 </div>

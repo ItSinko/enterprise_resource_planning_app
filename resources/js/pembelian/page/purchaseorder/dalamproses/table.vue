@@ -18,10 +18,22 @@
                 return moment(date).lang('id').format('LL')
             },
             detail(id) {
-                
+                this.$router.push({
+                    name: 'purchaseorderDetal',
+                    params: {
+                        id: id,
+                        open: 'dalamproses'
+                    }
+                })
             },
             edit(id) {
-                
+                this.$router.push({
+                    name: 'purchaseorderEdit',
+                    params: {
+                        id: id,
+                        open: 'dalamproses'
+                    }
+                })
             },
             batal(id) {
                 
@@ -76,25 +88,25 @@
                                 will-change: transform;
                             ">
                             <button 
-                            @click="detail(data.id)" class="dropdown-item" type="button">
+                            @click="detail(purchaseorder.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>
 
                             <button 
-                            @click="edit(data.id)" class="dropdown-item" type="button">
+                            @click="edit(purchaseorder.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-edit"></i>
                                 Edit
                             </button>
 
                             <button 
-                            @click="batal(data.id)" class="dropdown-item" type="button">
+                            @click="batal(purchaseorder.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-times"></i>
                                 Batal
                             </button>
 
                             <button 
-                            @click="hapus(data.id)" class="dropdown-item" type="button">
+                            @click="hapus(purchaseorder.id)" class="dropdown-item" type="button">
                                 <i class="fas fa-trash"></i>
                                 Hapus
                             </button>

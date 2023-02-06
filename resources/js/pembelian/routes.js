@@ -70,14 +70,19 @@ const routes = [
         name: "purchaseorder",
     },
     {
-        path: "/pembelian/createPO",
+        path: "/pembelian/po/create",
         component: PurchaseOrderCreateEdit,
         name: "purchaseorderCreate",
     },
     {
+        path: "/pembelian/po/edit",
+        component: PurchaseOrderCreateEdit,
+        name: "purchaseorderEdit",
+    },
+    {
         path: "/pembelian/po/detail",
         component: PurchaseOrderDetail,
-        name: "purchaseorder",
+        name: "purchaseorderDetal",
     },
 ];
 

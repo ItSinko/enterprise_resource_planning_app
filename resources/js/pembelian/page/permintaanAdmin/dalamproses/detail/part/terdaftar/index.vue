@@ -1,51 +1,21 @@
 <script>
     import lodash from 'lodash'
-import Status from '../../../../../../components/status.vue'
+    import Status from '../../../../../../components/status.vue'
     export default {
         components: {
             Status
         },
+        props: {
+            dataTable: {
+                type: Array,
+                default: () => []
+            }
+        },
         data() {
         return {
-                dataTable: [{
-                        kode: 'P-0001',
-                        nama: 'Part 1',
-                        produk: 'Produk 1',
-                        kurs: 'EUR',
-                        jumlah: 10,
-                        harga: 50,
-                        ongkir: 50,
-                        lain: 50,
-                        konversi: 1000,
-                        status: 'belum proses',
-                    },
-                    {
-                        kode: 'P-0002',
-                        nama: 'Part 2',
-                        produk: 'Produk 1',
-                        kurs: 'AUD',
-                        jumlah: 20,
-                        harga: 100,
-                        ongkir: 100,
-                        lain: 100,
-                        konversi: 1000,
-                        status: 'selesai',
-                    },
-                    {
-                        kode: 'P-0003',
-                        nama: 'Part 3',
-                        produk: 'Produk 2',
-                        kurs: 'USD',
-                        jumlah: 30,
-                        harga: 150,
-                        ongkir: 150,
-                        lain: 150,
-                        konversi: 1000,
-                        status: 'belum proses',
-                    }
-                ],
                 link: 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies',
                 showTable: false,
+                dataSelected: [],
             }
         },
         methods: {
@@ -58,6 +28,24 @@ import Status from '../../../../../../components/status.vue'
             subtotal(item) {
                 return item.jumlah * item.harga + item.ongkir + item.lain
             },
+            checkAll() {
+                if (this.$refs.cbChild.length > 0) {
+                    this.$refs.cbChild.forEach(cb => {
+                        cb.checked = !cb.checked
+                        this.dataSelected = cb.checked ? this.dataTable : []
+                    })
+                }
+                this.$emit('dataSelected', this.dataSelected)
+            },
+            checkOne(id){
+                let index = this.dataTable.findIndex(item => item.id == id)
+                if(this.$refs.cbChild[index].checked){
+                    this.dataSelected.push(this.dataTable[index])
+                }else{
+                    this.dataSelected = this.dataSelected.filter(data => data.id != this.dataTable[index].id)
+                }
+                this.$emit('dataSelected', this.dataSelected)
+            }
         },
         updated() {
             this.showTable = true
@@ -76,7 +64,7 @@ import Status from '../../../../../../components/status.vue'
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th><input type="checkbox"></th>
+                    <th><input type="checkbox" @click="checkAll"></th>
                     <th>Kode & Nama Part</th>
                     <th>Jumlah</th>
                     <th>Harga</th>
@@ -94,7 +82,7 @@ import Status from '../../../../../../components/status.vue'
                     </tr>
                     <template v-for="(item2) in item">
                         <tr>
-                            <td><input type="checkbox"></td>
+                            <td><input type="checkbox" :value="item2.id" ref="cbChild" @click="checkOne(item2.id)"></td>
                             <td>{{ item2.kode }} - {{ item2.nama }}</td>
                             <td>{{ item2.jumlah }}</td>
                             <td>{{ formatHarga(item2.harga, item2.kurs) }}</td>

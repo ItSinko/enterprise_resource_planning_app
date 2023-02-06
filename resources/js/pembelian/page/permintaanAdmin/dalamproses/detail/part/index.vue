@@ -1,16 +1,79 @@
 <script>
-import Terdaftar from './terdaftar'
-import TidakTerdaftar from './tidakterdaftar'
-import daftarpo from '../daftarpo'
-    export default { 
+    import Terdaftar from './terdaftar'
+    import daftarpo from '../daftarpo'
+    export default {
+        props: {
+            id: {
+                type: Number,
+                required: true
+            }
+        },
         components: {
             Terdaftar,
-            TidakTerdaftar,
             daftarpo
+        },
+        data() {
+            return {
+                dataTable: [{
+                        id: 1,
+                        kode: 'P-0001',
+                        nama: 'Part 1',
+                        produk: 'Produk 1',
+                        kurs: 'EUR',
+                        jumlah: 10,
+                        harga: 50,
+                        ongkir: 50,
+                        lain: 50,
+                        konversi: 1000,
+                        status: 'belum proses',
+                    },
+                    {
+                        id: 2,
+                        kode: 'P-0002',
+                        nama: 'Part 2',
+                        produk: 'Produk 1',
+                        kurs: 'AUD',
+                        jumlah: 20,
+                        harga: 100,
+                        ongkir: 100,
+                        lain: 100,
+                        konversi: 1000,
+                        status: 'selesai',
+                    },
+                    {
+                        id: 3,
+                        kode: 'P-0003',
+                        nama: 'Part 3',
+                        produk: 'Produk 2',
+                        kurs: 'USD',
+                        jumlah: 30,
+                        harga: 150,
+                        ongkir: 150,
+                        lain: 150,
+                        konversi: 1000,
+                        status: 'belum proses',
+                    }
+                ],
+                dataSelected: null, 
+            }
         },
         methods: {
             closeModal() {
                 this.$emit('close')
+            },
+            checkDatable(data) {
+                this.dataSelected = data
+            },
+            addPO() {
+            this.$router.push({
+                name: 'purchaseorderCreate',
+                params: {
+                    id: this.id,
+                    open: 'dalamproses',
+                    dataSelected: this.dataSelected
+                },
+            })
+            $('.modalDetailPart').modal('hide')
             }
         },
     }
@@ -113,9 +176,14 @@ import daftarpo from '../daftarpo'
                                 aria-controls="pills-daftarbarang" aria-selected="false">Daftar PO</a>
                         </li>
                     </ul>
+
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-daftarpo" role="tabpanel"
                             aria-labelledby="pills-daftarpo-tab">
+                            <button class="btn btn-primary mb-2" @click="addPO">
+                                <i class="fas fa-plus"></i>
+                                Buat Purchase Order
+                            </button>
                             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" id="pills-terdaftar-tab" data-toggle="pill"
@@ -131,17 +199,17 @@ import daftarpo from '../daftarpo'
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="pills-terdaftar" role="tabpanel"
                                     aria-labelledby="pills-terdaftar-tab">
-                                    <terdaftar />
-                                    </div>
+                                    <terdaftar :dataTable="dataTable" @dataSelected="checkDatable" />
+                                </div>
                                 <div class="tab-pane fade" id="pills-tidakterdaftar" role="tabpanel"
                                     aria-labelledby="pills-tidakterdaftar-tab">
-                                    <tidak-terdaftar />
-                                    </div>
+                                    <terdaftar :dataTable="dataTable" @dataSelected="checkDatable" />
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-daftarbarang" role="tabpanel"
                             aria-labelledby="pills-daftarbarang-tab">
-                        <daftarpo />    
+                            <daftarpo />
                         </div>
                     </div>
                 </div>
