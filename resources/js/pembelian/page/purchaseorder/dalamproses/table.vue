@@ -36,10 +36,52 @@
                 })
             },
             batal(id) {
-                
+                this.$swal({
+                    title: 'Apakah anda yakin?',
+                    text: "Anda tidak akan dapat mengembalikan data ini!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, batalkan!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // this.$axios.delete(`/api/purchaseorder/${id}`)
+                        //     .then(res => {
+                        //         this.$swal('Dibatalkan!', 'Data berhasil dibatalkan.', 'success')
+                        //         this.$emit('refresh')
+                        //     })
+                        //     .catch(err => {
+                        //         this.$swal('Gagal!', 'Data gagal dibatalkan.', 'error')
+                        //     })
+                        this.$swal('Dibatalkan!', 'Data berhasil dibatalkan.', 'success')
+                        this.$emit('refresh')
+                    }
+                })
             },
             hapus(id) {
-                
+                                this.$swal({
+                    title: 'Apakah anda yakin?',
+                    text: "Anda tidak akan dapat mengembalikan data ini!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // this.$axios.delete(`/api/purchaseorder/${id}`)
+                        //     .then(res => {
+                        //         this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
+                        //         this.$emit('refresh')
+                        //     })
+                        //     .catch(err => {
+                        //         this.$swal('Gagal!', 'Data gagal dihapus.', 'error')
+                        //     })
+                        this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
+                        this.$emit('refresh')
+                    }
+                })
             }
         },
     }

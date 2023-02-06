@@ -197,7 +197,7 @@
                             <div class="form-group row">
                                 <label for="" class="col-4 text-right">Kurs</label>
                                 <div class="col-4">
-                                    <v-select :options="getKurs" @input="kursChanged($event)"></v-select>
+                                    <v-select :options="getKurs" @input="kursChanged($event)" v-model="supplier.kurs"></v-select>
                                 </div>
                             </div>
                             <div class="form-group row">

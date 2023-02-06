@@ -85,6 +85,9 @@ export default {
                 return self.indexOf(value) === index
             })
         },
+        refresh() {
+            this.$forceUpdate()
+        }
     },
 }
 </script>
@@ -127,6 +130,6 @@ export default {
                 <input type="text" class="form-control" v-model="searchdalamProses" placeholder="Cari...">
             </div>
         </div>
-        <Table :filteredDatatables="filtereddalamProses" />
+        <Table :filteredDatatables="filtereddalamProses" @refresh="refresh" />
     </div>
 </template>
