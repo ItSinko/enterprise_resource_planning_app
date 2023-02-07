@@ -65,7 +65,7 @@
                 $('.modalAddProses').modal('show')
             },
             detail(idx){
-                this.$router.push({ name: 'barangmasukdalamproses', params: { id: idx } })
+                this.$router.push({ name: 'barangmasukdalamproses', params: { id: idx, urlBefore: 'dalam-proses' } })
             },
             deleteProses(idx, po) {
                 this.loading = true

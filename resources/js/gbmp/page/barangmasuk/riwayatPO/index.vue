@@ -36,7 +36,8 @@
                 this.$router.push({
                     name: 'barangmasukdalamproses',
                     params: {
-                        id: idx
+                        id: idx,
+                        urlBefore: 'riwayatPO'
                     }
                 })
             },

@@ -59,9 +59,9 @@
             async detailTransfer(id) {
                 const { data } = await axios.get(`/api/gbmp/data/${this.divisi}/${id}`)
                 this.details = data.data
-                setTimeout(() => {
-                $('.modalDetailTransfer').modal('show')
-                }, 100);
+                this.$nextTick(() => {
+                    $('.modalDetailTransfer').modal('show');
+                })
             },
 
             barang(brg, id) {
