@@ -15,6 +15,15 @@
             moment(date) {
                 return moment(date).lang("ID").format('DD MMMM YYYY')
             },
+            detail(key) {
+                this.$router.push({
+                    name: 'barangmasukdalamproses',
+                    params: {
+                        id: key,
+                        urlBefore: 'jadwalpenerimaan'
+                    }
+                })
+            }
         },
     }
 
@@ -37,7 +46,7 @@
                     <div class="d-flex bd-highlight">
                         <div class="p-2 flex-grow-1 bd-highlight text-bold">
                             {{ table.no_po }}
-                            <button class="btn btn-sm btn-outline-info">
+                            <button class="btn btn-sm btn-outline-info" @click="detail(key)">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                             </button>
                             <p class="text-muted">

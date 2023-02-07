@@ -775,6 +775,12 @@ return [
             'auth' => [11],
             'url'  => '/gbmp/barang-masuk',
         ],
+        [
+            'text' => 'Permintaan Bahan Baku',
+            'icon' => 'fas fa-boxes',
+            'auth' => [11],
+            'url'  => '/gbmp/bahan-baku-request',
+        ],
         // [
         //     'text' => 'Stok',
         //     'auth' => [11],
