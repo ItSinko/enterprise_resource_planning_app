@@ -38,9 +38,9 @@ export default {
         },
         showModal(id) {
             this.modal = true
-            setTimeout(() => {
+            this.$nextTick(() => {
                 $('.modalDetailPO').modal('show')
-            }, 100);
+            })
         },
         closeModal() {
             this.modal = false

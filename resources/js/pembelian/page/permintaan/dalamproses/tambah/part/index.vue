@@ -25,9 +25,9 @@ export default {
         addPart() {
             this.detailData = null
             this.modal = true
-            setTimeout(() => {
+            this.$nextTick(() => {
                 $('.modalPart').modal('show')
-            }, 100);
+            })
         },
         simpanPart(data){
             const { form, detail, idx } = data
@@ -52,9 +52,9 @@ export default {
             }
             this.detailData = data
             this.modal = true
-            setTimeout(() => {
+            this.$nextTick(() => {
                 $('.modalPart').modal('show')
-            }, 100);
+            })
         },
         close() {
             this.modal = false

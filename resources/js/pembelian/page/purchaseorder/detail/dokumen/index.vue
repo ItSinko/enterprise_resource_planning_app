@@ -32,9 +32,9 @@ export default {
     methods: {
         showModal(jenis) {
             this.jenis = jenis
-            setTimeout(() => {
+            this.$nextTick(() => {
                 $('.modalUploadDokumen').modal('show')
-            }, 100);
+            })
         }
     }
 }

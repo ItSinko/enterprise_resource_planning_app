@@ -36,9 +36,9 @@ export default {
         },
         detail(index) {
             this.modalDetail = true
-            setTimeout(() => {
+            this.$nextTick(() => {
                 $('.modalDetail').modal('show')
-            }, 50);
+            })
         }
     },
 }

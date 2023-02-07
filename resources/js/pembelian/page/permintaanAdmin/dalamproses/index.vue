@@ -58,15 +58,15 @@ export default {
             this.idModal = id
             if (jenis === 'umum') {
                 this.modal = true
-                setTimeout(() => {
+                this.$nextTick(() => {
                     $('.modalDetail').modal('show')
-                }, 100);
+                })
             } else {
                 this.modalPart = true
                 
-                setTimeout(() => {
+                this.$nextTick(() => {
                     $('.modalDetailPart').modal('show')
-                }, 500);
+                })
             }
         },
         closeModal() {

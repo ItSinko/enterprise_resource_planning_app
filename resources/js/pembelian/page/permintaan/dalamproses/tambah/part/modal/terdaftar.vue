@@ -47,11 +47,11 @@
                 })
                 this.tableMerged = filtered
 
-                setTimeout(() => {
+                this.$nextTick(() => {
                     this.$refs.checked.forEach(item => {
-                        this.formPart.find(data => data.id == item.value) ? item.checked = true : item.checked = false
+                        item.checked = this.formPart.find(item => item.id == data.id)
                     })
-                }, 100);
+                })
             },
             checkedAll() {
                 this.formPart != this.dataTable ? this.formPart = this.dataTable : this.formPart = []

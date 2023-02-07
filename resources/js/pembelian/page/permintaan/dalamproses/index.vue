@@ -73,9 +73,9 @@
         methods: {
             detail(id) {
                 this.modalDetail = true
-                setTimeout(() => {
+                this.$nextTick(() => {
                     $('.modalDetail').modal('show')
-                }, 100);
+                })
             },
             closeDetail() {
                 this.modalDetail = false
@@ -139,9 +139,9 @@
                     id,
                     no_pp
                 }
-                setTimeout(() => {
+                this.$nextTick(() => {
                     $('.modalUpload').modal('show')
-                }, 100);
+                })
             }
         }
     }
