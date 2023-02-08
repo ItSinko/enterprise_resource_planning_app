@@ -41,17 +41,9 @@ export default {
                 telepon: '',
                 kurs: '',
             },
-            formPart: null
+            formPart: this.$route.params.dataSelected ? this.$route.params.dataSelected : []
         }
     },
-    created() {
-        this.addPart()
-    },
-    methods: {
-        addPart() {
-            return this.$route.params.dataSelected ? this.formPart = this.$route.params.dataSelected : this.formPart = []
-        },
-    }
 }
 </script>
 <template>
