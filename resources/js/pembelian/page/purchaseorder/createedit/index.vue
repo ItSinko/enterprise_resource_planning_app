@@ -41,25 +41,21 @@ export default {
                 telepon: '',
                 kurs: '',
             },
-            formPart: [{
-                kode_part: 'SP-0001',
-                nama_part: 'Sparepart 1',
-                stok: 2,
-                jumlah: 45,
-                jumlah_beli: 20,
-                estimasi_harga: 45,
-                harga_beli: 45,
-                ongkir: 24,
-                biaya_lain: 20,
-                konversi: 0,
-            }]
+            formPart: null
         }
     },
+    created() {
+        this.addPart()
+    },
+    methods: {
+        addPart() {
+            return this.$route.params.dataSelected ? this.formPart = this.$route.params.dataSelected : this.formPart = []
+        },
+    }
 }
 </script>
 <template>
     <div>
-        <p>{{ this.$route.params }}</p>
         <headers :title="title" :breadcumbs="breadcumbs"/>
         <headers-po />
         <div class="row">

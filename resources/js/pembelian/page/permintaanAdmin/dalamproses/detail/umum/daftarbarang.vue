@@ -46,7 +46,9 @@ export default {
     methods: {
         checkAll(){
             this.dataTableSelected != this.dataTable ? this.dataTableSelected = this.dataTable : this.dataTableSelected = []
-            console.log(this.dataTableSelected)
+            this.$refs.cbChild.forEach(cb => {
+                cb.checked = !cb.checked
+            })
         },
         checkOne(index){
             if(this.$refs.cbChild[index].checked){
