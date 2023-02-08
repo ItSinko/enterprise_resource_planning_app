@@ -1,4 +1,11 @@
+<script>
 export default {
+    props: {
+        filteredDalamProses: {
+            type: Array,
+            required: true,
+        },
+    },
     data(){
         return {
             currentPage: 1,
@@ -18,8 +25,13 @@ export default {
             }
         },
         nowPage(page){
-            this.currentPage = page
+            if(page != '...'){
+                this.currentPage = page
+            }
         },
+        disableClickPageThreeDots(page){
+           return page === '...'
+        }
     },
     computed: {
         renderPaginate() {
@@ -52,5 +64,33 @@ export default {
 
             return pages
         }
-    }
+    },
+    mounted(){
+        this.$emit('updateFilteredDalamProses', this.renderPaginate)
+    },
+    watch: {
+        renderPaginate(){
+            this.$emit('updateFilteredDalamProses', this.renderPaginate)
+        }
+    },
 }
+</script>
+<template>
+    <div class="d-flex flex-row-reverse bd-highlight">
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
+                            </li>
+                            <li class="page-item" :class="paginate == currentPage ? 'active' : ''"
+                                v-for="paginate in pages" :key="paginate">
+                                <a class="page-link" @click="nowPage(paginate)" :disabled="disableClickPageThreeDots(paginate)" >{{paginate}}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
+                                    @click="nextPage">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+</template>

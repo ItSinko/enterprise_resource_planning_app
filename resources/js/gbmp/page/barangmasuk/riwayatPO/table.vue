@@ -42,7 +42,7 @@ export default {
                     <td>{{ moment(item.estimasi_datang) }}</td>
                     <td>{{ moment(item.tanggal_datang) }}</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info" @click="detail(idx)">
+                        <button class="btn btn-sm btn-outline-info" @click="detail(index)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </button>
                     </td>

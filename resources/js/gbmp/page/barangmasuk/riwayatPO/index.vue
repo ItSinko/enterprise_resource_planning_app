@@ -1,10 +1,10 @@
 <script>
     import tableRiwayat from './table.vue'
-    import mix from './mix'
+    import Pagination from '../../../components/pagination.vue'
     export default {
-        mixins: [mix],
         components: {
-            tableRiwayat
+            tableRiwayat,
+            Pagination,
         },
         data() {
             return {
@@ -29,6 +29,7 @@
                 ],
                 search: '',
                 loading: false,
+                renderPaginate: [],
             }
         },
         methods: {
@@ -36,10 +37,14 @@
                 this.$router.push({
                     name: 'barangmasukdalamproses',
                     params: {
-                        id: idx
+                        id: idx,
+                        routeBefore: 'riwayatPO'
                     }
                 })
             },
+                    updateFilteredDalamProses(data) {
+            this.renderPaginate = data
+        },
         },
         computed: {
             filteredDalamProses() {
@@ -95,23 +100,9 @@
             <table-riwayat :dataTable="renderPaginate" @detail="detail" />
         </div>
         <div class="card-footer">
-            <div class="d-flex flex-row-reverse bd-highlight">
-                <nav aria-label="...">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
-                        </li>
-                        <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
-                            :key="paginate">
-                            <a class="page-link" @click="nowPage(paginate)">{{paginate}}</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
-                                @click="nextPage">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+        <Pagination :filteredDalamProses="filteredDalamProses" 
+        @updateFilteredDalamProses="updateFilteredDalamProses"
+        />
         </div>
     </div>
 </template>

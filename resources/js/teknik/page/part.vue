@@ -5,6 +5,7 @@ import UploadFiles from "../components/upload-files.vue";
 import DetailBOM from '../components/detailBOM.vue'
 import axios from "axios";
 import mix from "./mix";
+import Pagination from "../components/pagination.vue";
 export default {
   mixins: [mix],
   components: {
@@ -12,6 +13,7 @@ export default {
     UploadImages,
     UploadFiles,
     DetailBOM,
+    Pagination,
   },
   data() {
     return {
@@ -55,6 +57,7 @@ export default {
           link: "/teknik/part",
         },
       ],
+      renderPaginate: [],
 
       // BOM
       loadingImages: false,
@@ -329,6 +332,9 @@ export default {
       }
 
     },
+    updatedRendered(data){
+      this.renderPaginate = data
+    }
   },
   computed: {
     partsFiltered() {
@@ -349,12 +355,6 @@ export default {
           satuan.includes(search)
         );
       });
-    },
-    renderPaginate() {
-      return this.partsFiltered.slice(
-        this.perPage * (this.currentPage - 1),
-        this.perPage * this.currentPage
-      );
     },
   },
 };
@@ -474,38 +474,10 @@ export default {
         </table>
       </div>
       <div class="card-footer">
-        <div class="d-flex flex-row-reverse bd-highlight">
-          <nav aria-label="...">
-            <ul class="pagination">
-              <li class="page-item">
-                <a
-                  class="page-link"
-                  :disabled="currentPage == 1"
-                  @click="previousPage"
-                  >Previous</a
-                >
-              </li>
-              <li
-                class="page-item"
-                :class="paginate == currentPage ? 'active' : ''"
-                v-for="paginate in pages"
-                :key="paginate"
-              >
-                <a class="page-link" @click="nowPage(paginate)">{{
-                  paginate
-                }}</a>
-              </li>
-              <li class="page-item">
-                <a
-                  class="page-link"
-                  :disabled="currentPage == pages[pages.length - 1]"
-                  @click="nextPage"
-                  >Next</a
-                >
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <pagination
+          :filteredDalamProses="partsFiltered"
+          @updateFilteredDalamProses="updatedRendered"
+        />
       </div>
     </div>
 

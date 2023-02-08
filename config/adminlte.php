@@ -804,6 +804,12 @@ return [
             'auth' => [11],
             'url'  => '/gbmp/barang-masuk',
         ],
+        [
+            'text' => 'Permintaaan Bahan Baku',
+            'icon' => 'fas fa-clipboard-list',
+            'auth' => [11],
+            'url'  => '/gbmp/permintaan-bahan-baku',
+        ],
         // [
         //     'text' => 'Stok',
         //     'auth' => [11],

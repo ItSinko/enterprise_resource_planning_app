@@ -59,7 +59,7 @@ export default {
                         {{ produk.status }}
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning" @click="terimaBarang(index)">
+                        <button class="btn btn-sm btn-warning" @click="terimaBarang(index)" v-if="$route.params.routeBefore !== 'riwayatPO'">
                             Terima dan Periksa
                         </button>
                         <button class="btn btn-outline-info btn-sm" @click="detail(index)">

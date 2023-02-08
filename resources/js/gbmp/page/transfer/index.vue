@@ -5,15 +5,15 @@
     import axios from 'axios'
     import addTransfer from './tambah.vue'
     import detailTransfer from './detail.vue'
-    import mix from './mix'
+    import Pagination from '../../components/pagination.vue'
     export default {
-        mixins: [mix],
         components: {
             Header,
             Table,
             Loading,
             addTransfer,
-            detailTransfer
+            detailTransfer,
+            Pagination
         },
         data() {
             return {
@@ -32,6 +32,8 @@
                 gudangtransfer: [],
                 details: null,
                 divisi: null,
+                renderPaginate: [],
+                loading: false,
             }
         },
         created() {
@@ -59,9 +61,9 @@
             async detailTransfer(id) {
                 const { data } = await axios.get(`/api/gbmp/data/${this.divisi}/${id}`)
                 this.details = data.data
-                setTimeout(() => {
+                this.$nextTick(() => {
                 $('.modalDetailTransfer').modal('show')
-                }, 100);
+                })
             },
 
             barang(brg, id) {
@@ -110,7 +112,10 @@
                             }
                         })
                 }
-            }
+            },
+            updateFilteredDalamProses(data) {
+                this.renderPaginate = data
+            },
         },
         computed: {
             filteredGudangTransfers() {
@@ -212,23 +217,9 @@
                 </div>
                 <Table :transfers="renderPaginate" @detail="detailTransfer" @barang="barang" @refresh="getGudangTransfer"/>
                 <div class="card-footer">
-                    <div class="d-flex flex-row-reverse bd-highlight">
-                        <nav aria-label="...">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
-                                </li>
-                                <li class="page-item" :class="paginate == currentPage ? 'active' : ''"
-                                    v-for="paginate in pages" :key="paginate">
-                                    <a class="page-link" @click="nowPage(paginate)">{{ paginate }}</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" :disabled="currentPage == pages[pages.length - 1]"
-                                        @click="nextPage">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                    <pagination 
+                    :filteredDalamProses="filteredGudangTransfers" 
+                    @updateFilteredDalamProses="updateFilteredDalamProses"/>
                 </div>
             </div>
         </div>
