@@ -82,9 +82,9 @@
                             } = axios.post('/api/gbmp/store', kirim)
                                 .then(success)
                                 .catch(error)
-                            setTimeout(() => {
+                            this.$nextTick(() => {
                                 this.$emit('refresh')
-                            }, 100);
+                            })
                         }
                     })
                 } else {

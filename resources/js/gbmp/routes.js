@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Transfer from "./page/transfer";
 import BarangMasuk from "./page/barangmasuk";
 import DetailBarangMasuk from "./page/barangmasuk/dalamproses/detail";
+import BahanBakuRequest from "./page/bahanbakurequest";
 import BahanBakuRequest from "./page/permintaanbahanbaku";
 const routes = [
     {
@@ -19,6 +20,11 @@ const routes = [
         path: "/gbmp/barang-masuk/dalam-proses/:id",
         name: "barangmasukdalamproses",
         component: DetailBarangMasuk
+    },
+    {
+        path: "/gbmp/bahan-baku-request",
+        name: "bahanbakurequest",
+        component: BahanBakuRequest
     },
     {
         path: "/gbmp/permintaan-bahan-baku",

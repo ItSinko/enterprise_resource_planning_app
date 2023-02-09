@@ -62,7 +62,7 @@
                 const { data } = await axios.get(`/api/gbmp/data/${this.divisi}/${id}`)
                 this.details = data.data
                 this.$nextTick(() => {
-                $('.modalDetailTransfer').modal('show')
+                    $('.modalDetailTransfer').modal('show');
                 })
             },
 
@@ -112,7 +112,6 @@
                             }
                         })
                 }
-            },
             updateFilteredDalamProses(data) {
                 this.renderPaginate = data
             },

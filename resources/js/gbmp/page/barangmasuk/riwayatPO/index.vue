@@ -38,7 +38,7 @@
                     name: 'barangmasukdalamproses',
                     params: {
                         id: idx,
-                        routeBefore: 'riwayatPO'
+                        urlBefore: 'riwayatPO'
                     }
                 })
             },

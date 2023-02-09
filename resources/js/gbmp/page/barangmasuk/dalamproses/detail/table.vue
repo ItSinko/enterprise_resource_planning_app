@@ -20,9 +20,9 @@ export default {
     methods: {
         detail(idx){
             this.produk_detail = this.produks[idx].nama_produk;
-            setTimeout(() => {
-            $('.modalDetail').modal('show');
-            }, 100);
+            this.$nextTick(() => {
+                $('.modalDetail').modal('show');
+            })
         },
         terimaBarang(idx){
             $('.modalTerimaBarang').modal('show');
@@ -59,7 +59,7 @@ export default {
                         {{ produk.status }}
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-warning" @click="terimaBarang(index)" v-if="$route.params.routeBefore !== 'riwayatPO'">
+                        <button class="btn btn-sm btn-warning" @click="terimaBarang(index)" v-if="$route.params.urlBefore !== 'riwayatPO'">
                             Terima dan Periksa
                         </button>
                         <button class="btn btn-outline-info btn-sm" @click="detail(index)">

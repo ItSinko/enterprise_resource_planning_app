@@ -11,7 +11,7 @@ export default {
         moment(date) {
             return moment(date).format('DD MMMM YYYY')
         },
-                detail(idx){
+        detail(idx){
             this.$emit('detail', idx)
         }
     },
