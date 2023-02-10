@@ -18,14 +18,14 @@ export default {
                 no_permintaan: 'FP-PRD/IX/22/001',
                 tanggal_permintaan: '2021-09-22',
                 tanggal_dibutuhkan: '2021-09-22',
-                tanggal_pengembalian: '2021-09-22',
-                status: '-',
+                tanggal_pengembalian: null,
+                status: 'belum proses',
             }
         }
     },
     methods: {
         formatDate(date) {
-            return moment(date).lang('id').format('LL')
+            return date ? moment(date).lang('id').format('LL') : '-'
         }
     },
 }
@@ -89,27 +89,47 @@ export default {
             <div class="col d-flex align-items-stretch">
                 <div class="card">
                     <div class="card-body card-danger">
-                        <h4 class="card-title text-bold">Permintaan</h4>
+                        <h4 class="card-title text-bold mb-5">Permintaan</h4>
                         <div class="card-text">
                             <div class="row">
-                                <div class="col"></div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <p>No Permintaan</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ permintaan.no_permintaan }}</p>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col"></div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <p>Tanggal Permintaan</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ formatDate(permintaan.tanggal_permintaan) }}</p>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col"></div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <p>Tanggal Dibutuhkan</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ formatDate(permintaan.tanggal_dibutuhkan) }}</p>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col"></div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <p>Tanggal Pengembalian</p>
+                                </div>
+                                <div class="col">
+                                    <p>{{ formatDate(permintaan.tanggal_pengembalian) }}</p>
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="col"></div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <p>Status</p>
+                                </div>
+                                <div class="col">
+                                    <status :status="permintaan.status" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,28 +138,3 @@ export default {
         </div>
     </div>
 </template>
-<style>
-    .card-danger {
-        background-color: #ebdfdf;
-        color: #985d61;
-    }
-
-    .card-info {
-        background-color: #dee4e9;
-        color: #5b7a8f;
-    }
-
-    .card-success {
-        background-color: #dbe2dc;
-        color: #4b6c51;
-    }
-
-    .card-secondary {
-        background-color: #d8d8d8;
-        color: #4b4b4b;
-    }
-
-    .row-whith-wide-cards .card {
-  width: 100%;
-}
-</style>

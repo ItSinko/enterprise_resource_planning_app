@@ -112,6 +112,7 @@
                             }
                         })
                 }
+            },
             updateFilteredDalamProses(data) {
                 this.renderPaginate = data
             },

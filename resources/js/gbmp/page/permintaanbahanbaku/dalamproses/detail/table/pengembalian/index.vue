@@ -1,31 +1,57 @@
 <script>
 import moment from 'moment';
-import status from '../../../../../components/status.vue';
+import status from '../../../../../../components/status.vue';
+import terima from './terima'
+import detail from './detail'
 
 export default {
     components: {
-        status
+        status,
+        terima,
+        detail
     },
     data() {
         return {
             pengembalian: [
                 {
+                    id: 1,
                     no_pengembalian: 'P-001',
                     tgl_pengembalian: '2020-01-01',
                     status: 'terima pengembalian',
                 },
                 {
+                    id: 2,
                     no_pengembalian: 'P-002',
                     tgl_pengembalian: '2020-01-01',
                     status: 'selesai',
                 }
             ],
             search: '',
+            modal: false,
+            modalTerima: false,
         }
     },
     methods: {
-        formatTanggal(tanggal) {
-            return moment(tanggal).lang('id').format('LL');
+        formatTanggal(date) {
+            return date ? moment(date).lang('id').format('LL') : '-'
+        },
+        closeModalTerima() {
+            this.modal = false
+            this.modalTerima = false
+            $('.modalTerima').modal('hide')
+            $('.modalDetail').modal('hide')
+        },
+        terima(id) {
+            this.modalTerima = true
+            this.$nextTick(() => {
+                $('.modalTerima').modal('show')
+            })
+        },
+        detail(id) {
+            this.modal = true
+            this.$nextTick(() => {
+                $('.modalDetail').modal('show')
+            })
         }
     },
     computed: {
@@ -41,6 +67,8 @@ export default {
 </script>
 <template>
     <div>
+        <terima v-if="modalTerima" @close="closeModalTerima"/>
+        <detail v-if="modal" @close="closeModalTerima"/>
         <div class="d-flex flex-row-reverse bd-highlight">
             <div class="form-group"><input type="search" class="form-control" placeholder="cari" v-model="search"></div>
         </div>
@@ -59,9 +87,14 @@ export default {
                     <td>{{ index + 1 }}</td>
                     <td>{{ pengembalian.no_pengembalian }}</td>
                     <td>{{ formatTanggal(pengembalian.tgl_pengembalian) }}</td>
-                    <td><status :status="pengembalian.status"></status></td>
                     <td>
-                        <i class="fas fa-eye text-info"></i>
+                        <button class="btn btn-info btn-sm" 
+                        @click="terima(pengembalian.id)"
+                        v-if="pengembalian.status === 'terima pengembalian'">Terima Pengembalian</button>
+                        <status :status="pengembalian.status" v-else/>
+                    </td>
+                    <td>
+                        <i class="fas fa-eye text-info" @click="detail(pengembalian.id)"></i>
                     </td>
                 </tr>
             </tbody>

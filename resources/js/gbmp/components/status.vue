@@ -12,10 +12,11 @@ export default {
     },
     methods: {
         statusCheck(status){
-            switch (status) {
+            const textSmall = status.toLowerCase()
+            switch (textSmall) {
                 case 'batal':
                     return 'badge badge-danger';
-                case 'terima pengembalian':
+                case 'draft':
                     return 'badge badge-info';
                 case 'pembelian ditolak':
                     return 'badge badge-danger';
@@ -31,6 +32,8 @@ export default {
                     return 'badge badge-warning';
                 case 'kirim barang':
                     return 'badge badge-danger';
+                case 'done':
+                    return 'badge badge-success';
                 case 'selesai':
                     return 'badge badge-success';
                 case '-':

@@ -1,15 +1,9 @@
 <script>
-import moment from 'moment'
 export default {
     props: {
         detail: {
             type: Object,
             default: () => {}
-        },
-    },
-    methods: {
-        moment(date) {
-            return moment(date).lang('ID').format('DD MMMM YYYY')
         },
     },
 }
@@ -48,7 +42,7 @@ export default {
                                         <div class="card card-success">
                                             <div class="card-body">
                                                 <p>Tanggal Transfer</p>
-                                                <p class="text-bold">{{ moment(detail.header.tanggal_transfer) }}</p>
+                                                <p class="text-bold">{{ formatTanggal(detail.header.tanggal_transfer) }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -95,28 +89,3 @@ export default {
             </div>
         </div>
 </template>
-<style>
-    .card-danger {
-        background-color: #ebdfdf;
-        color: #985d61;
-    }
-
-    .card-info {
-        background-color: #dee4e9;
-        color: #5b7a8f;
-    }
-
-    .card-success {
-        background-color: #dbe2dc;
-        color: #4b6c51;
-    }
-
-    .card-secondary {
-        background-color: #d8d8d8;
-        color: #4b4b4b;
-    }
-
-    .row-whith-wide-cards .card {
-  width: 100%;
-}
-</style>

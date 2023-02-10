@@ -1,9 +1,7 @@
 <script>
-import moment from 'moment';
 import status from '../../../components/status.vue';
 import tujuan from '../../../components/tujuan.vue';
 import detail from './detail'
-import Detail from '../../transfer/detail.vue';
 export default {
     props: {
         dalamProses: {
@@ -15,7 +13,6 @@ export default {
         status,
         tujuan,
         detail,
-        Detail
     },
     data() {
         return {
@@ -23,9 +20,6 @@ export default {
         }
     },
     methods: {
-        moment(date){
-            return moment(date).lang('id').format('LL');
-        },
         detail(id){
             this.modal = true;
             this.$nextTick(() => {
@@ -35,7 +29,7 @@ export default {
         create(id){
             this.$router.push({ name: 'permintaanbahanbaku.create', params: { id: id } });
         },
-        close(){
+        closeModalDetail(){
             this.modal = false;
             $('.modalPermintaan').modal('hide');
         },
@@ -44,7 +38,7 @@ export default {
 </script>
 <template>
     <div>
-        <detail v-if="modal" @close="close"/>
+        <detail v-if="modal" @close="closeModalDetail"/>
         <table class="table">
             <thead class="thead-light">
                 <tr>
@@ -64,8 +58,8 @@ export default {
                     <td>{{ item.no_referensi }}</td>
                     <td>{{ item.no_permintaan }}</td>
                     <td><tujuan :tujuan="item.tujuan" /></td>
-                    <td>{{ moment(item.tgl_permintaan) }}</td>
-                    <td>{{ moment(item.tgl_dibutuhkan) }}</td>
+                    <td>{{ formatTanggal(item.tgl_permintaan) }}</td>
+                    <td>{{ formatTanggal(item.tgl_dibutuhkan) }}</td>
                     <td>
                         <status :status="item.status" :persentase="item.persentase" />
                     </td>

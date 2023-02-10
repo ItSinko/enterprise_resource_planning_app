@@ -12,9 +12,6 @@
             momentfullDay(date) {
                 return moment(date).lang("ID").format('dddd')
             },
-            moment(date) {
-                return moment(date).lang("ID").format('DD MMMM YYYY')
-            },
             detail(key) {
                 this.$router.push({
                     name: 'barangmasukdalamproses',
@@ -37,7 +34,7 @@
                         <h4 class="text-bold">{{ momentfullDay(idx) }}</h4>
                     </div>
                     <div class="p-2 bd-highlight">
-                        <h4 class="text-bold">{{ moment(idx) }}</h4>
+                        <h4 class="text-bold">{{ formatTanggal(idx) }}</h4>
                     </div>
                 </div>
             </div>

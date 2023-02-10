@@ -1,5 +1,4 @@
 <script>
-import moment from 'moment'
 export default {
     props: {
         dalamProses: {
@@ -8,9 +7,6 @@ export default {
         },
     },
     methods: {
-        moment(date) {
-            return moment(date).format('DD MMMM YYYY')
-        },
         checked(idx) {
             this.$emit('checked', idx)
         },
@@ -62,10 +58,10 @@ export default {
                         {{ proses.supplier }}
                     </td>
                     <td>
-                        {{ moment(proses.tanggal_diminta) }}
+                        {{ formatTanggal(proses.tanggal_diminta) }}
                     </td>
                     <td>
-                        {{ moment(proses.estimasi_datang) }}
+                        {{ formatTanggal(proses.estimasi_datang) }}
                     </td>
                     <td>
                         <span :class="status(proses.status)">{{ proses.status }}</span>

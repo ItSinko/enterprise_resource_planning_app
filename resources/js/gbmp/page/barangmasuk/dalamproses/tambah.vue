@@ -1,5 +1,4 @@
 <script>
-    import moment from 'moment'
     export default {
         props: {
             addProses: {
@@ -62,9 +61,6 @@
             }
         },
         methods: {
-            moment(date) {
-                return moment(date).format('DD MMMM YYYY')
-            },
             deleteProses(idx, po) {
                 this.$emit('deleteProses', idx, po)
             },
@@ -167,7 +163,7 @@
                                             <td>{{ index + 1 }}</td>
                                             <td>{{ proses.no_po }}</td>
                                             <td>{{ proses.supplier }}</td>
-                                            <td>{{ moment(proses.estimasi_datang) }}</td>
+                                            <td>{{ formatTanggal(proses.estimasi_datang) }}</td>
                                             <td>
                                                 <input v-model="proses.jadwal_mulai" type="date" name="" id="" class="form-control" :min="getDatesMonthsAndYearsSelected.minDates" :max="getDatesMonthsAndYearsSelected.maxDates">
                                             </td>

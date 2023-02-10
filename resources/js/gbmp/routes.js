@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import Transfer from "./page/transfer";
 import BarangMasuk from "./page/barangmasuk";
 import DetailBarangMasuk from "./page/barangmasuk/dalamproses/detail";
-import BahanBakuRequest from "./page/bahanbakurequest";
 import BahanBakuRequest from "./page/permintaanbahanbaku";
 const routes = [
     {

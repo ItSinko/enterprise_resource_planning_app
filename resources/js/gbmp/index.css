@@ -1,0 +1,27 @@
+.card-danger {
+    background-color: #ebdfdf;
+    color: #985d61;
+}
+
+.card-info {
+    background-color: #dee4e9;
+    color: #5b7a8f;
+}
+
+.card-success {
+    background-color: #dbe2dc;
+    color: #4b6c51;
+}
+
+.card-secondary {
+    background-color: #d8d8d8;
+    color: #4b4b4b;
+}
+.card-primary {
+    background-color: #eff2f4;
+    color: #5b7a8f;
+}
+
+.row-whith-wide-cards .card {
+width: 100%;
+}

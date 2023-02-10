@@ -1,8 +1,8 @@
 <script>
 import Header from './header.vue';
-import Pengembalian from './table/pengembalian.vue';
+import Pengembalian from './table/pengembalian';
 import Permintaan from './table/permintaan.vue';
-import Penyerahan from './table/penyerahan.vue';
+import Penyerahan from './table/penyerahan/';
 export default {
     components: {
         Header,
@@ -10,15 +10,11 @@ export default {
         Permintaan,
         Penyerahan
     },
-    methods: {
-        closeModal(){
-            this.$emit('close');
-        },
-    },
 }
 </script>
 <template>
-    <div class="modal fade modalPermintaan" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal fade modalPermintaan" id="modelId" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true"
+        data-keyboard="false" data-backdrop="static" style="display: block">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">

@@ -1,9 +1,14 @@
 <script>
-import status from '../../../../../components/status.vue';
-import moment from 'moment';
+import status from '../../../../../../components/status.vue';
+import tambah from './tambah'
+import detail from './detail'
+import Detail from './tambah/detail.vue';
 export default {
     components: {
-        status
+        status,
+        tambah,
+        detail,
+        Detail
     },
     data() {
         return {
@@ -20,12 +25,29 @@ export default {
                 }
             ],
             search: '',
+            modal: false,
+            modalDetail: false,
         }
     },
     methods: {
-        formatTanggal(tanggal) {
-            return moment(tanggal).lang('id').format('LL');
-        }
+        showModal() {
+            this.modal = true;
+            this.$nextTick(() => {
+                $('.tambahPenyerahan').modal('show');
+            });
+        },
+        showModalDetail() {
+            this.modalDetail = true;
+            this.$nextTick(() => {
+                $('.modalDetailPenyerahan').modal('show');
+            });
+        },
+        closeModalTambah() {
+            this.modal = false;
+            this.modalDetail = false;
+            $('.tambahPenyerahan').modal('hide');
+            $('.modalDetailPenyerahan').modal('hide');
+        },
     },
     computed: {
         filteredPenyerahan() {
@@ -40,9 +62,11 @@ export default {
 </script>
 <template>
     <div>
+        <tambah v-if="modal" @close="closeModalTambah" />
+        <detail v-if="modalDetail" @close="closeModalTambah" />
         <div class="d-flex bd-highlight">
         <div class="p-2 flex-grow-1 bd-highlight">
-            <button class="btn btn-info">
+            <button class="btn btn-info"  @click="showModal">
                 <i class="fa fa-plus"></i>
                 Buat Penyerahan
             </button>
@@ -70,7 +94,7 @@ export default {
                         <status :status="penyerahan.status"/>
                     </td>
                     <td>
-                        <i class="fas fa-eye text-info"></i>
+                        <i class="fas fa-eye text-info" @click="showModalDetail"></i>
                         <i class="fas fa-edit text-warning"></i>
                         <i class="fas fa-trash text-danger"></i>
                     </td>

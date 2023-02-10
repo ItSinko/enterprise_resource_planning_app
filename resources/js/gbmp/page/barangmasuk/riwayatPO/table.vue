@@ -1,5 +1,4 @@
 <script>
-import moment from 'moment'
 export default {
     props: {
         dataTable: {
@@ -8,9 +7,6 @@ export default {
         },
     },
     methods: {
-        moment(date) {
-            return moment(date).format('DD MMMM YYYY')
-        },
         detail(idx){
             this.$emit('detail', idx)
         }
@@ -38,9 +34,9 @@ export default {
                     <td>{{ item.no_po }}</td>
                     <td>{{ item.divisi }}</td>
                     <td>{{ item.supplier }}</td>
-                    <td>{{ moment(item.tanggal_diminta) }}</td>
-                    <td>{{ moment(item.estimasi_datang) }}</td>
-                    <td>{{ moment(item.tanggal_datang) }}</td>
+                    <td>{{ formatTanggal(item.tanggal_diminta) }}</td>
+                    <td>{{ formatTanggal(item.estimasi_datang) }}</td>
+                    <td>{{ formatTanggal(item.tanggal_datang) }}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-info" @click="detail(index)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
