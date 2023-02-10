@@ -11,6 +11,10 @@ class Status extends Model
     protected $connection = 'erp';
     protected $table = 'm_status';
 
+    function PermintaanPembelian()
+    {
+        return $this->hasMany(Status::class);
+    }
     function status()
     {
         return $this->hasMany(Status::class);

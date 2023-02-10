@@ -53,4 +53,8 @@ class Sparepart extends Model
     {
         return $this->hasMany(DetailPermintaanPembelianProduk::class);
     }
+    public function DetailPPBomPart()
+    {
+        return $this->hasMany(DetailPPBomPart::class);
+    }
 }

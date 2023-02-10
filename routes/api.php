@@ -35,11 +35,19 @@ Route::prefix('/aset')->group(function () {
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_aset']);
 });
 
+// Route::prefix('/supplier')->group(function () {
+//     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
+//     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_supplier']);
+//     Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
+//     Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+// });
+
 Route::prefix('/supplier')->group(function () {
-    Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
-    Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_supplier']);
-    Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
-    Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+    Route::get('/', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
+    Route::post('/', [App\Http\Controllers\MasterController::class, 'store_supplier']);
+    Route::get('/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
+    Route::put('/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+    Route::delete('/{id}', [App\Http\Controllers\MasterController::class, 'delete_supplier']);
 });
 
 
@@ -216,15 +224,21 @@ Route::prefix('/laporan')->group(function () {
 });
 Route::prefix('/pembelian')->group(function () {
     Route::prefix('/pp')->group(function () {
-        Route::post('store', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
-        Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
-        Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
-        Route::post('aksi/{jenis}/{id}', [App\Http\Controllers\PembelianController::class, 'ubah_pp']);
+        Route::get('/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_detail_pp']);
+        Route::get('/bom/{bom_id}', [App\Http\Controllers\PembelianController::class, 'get_data_detail_bom']);
+        Route::get('/', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+        Route::post('/', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
     });
-    Route::prefix('/po')->group(function () {
-        Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
-        Route::get('detail/{poid}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);
-    });
+    // Route::prefix('/pp')->group(function () {
+    //     Route::post('store', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
+    //     Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+    //     Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
+    //     Route::post('aksi/{jenis}/{id}', [App\Http\Controllers\PembelianController::class, 'ubah_pp']);
+    // });
+    // Route::prefix('/po')->group(function () {
+    //     Route::get('data/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
+    //     Route::get('detail/{poid}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);
+    // });
 });
 Route::prefix('/gbmp')->group(function () {
     Route::post('/tf', [App\Http\Controllers\GudangController::class, 'tfgbmp']);

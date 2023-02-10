@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aset;
 use App\Models\DetailPembelianBarangMasuk;
 use App\Models\DetailPenerimaanBarang;
 use App\Models\DetailPermintaanPembelian;
 use App\Models\DetailPoPembelian;
+use App\Models\DetailPPAset;
+use App\Models\DetailPPBom;
+use App\Models\DetailPPBomPart;
 use App\Models\Divisi;
 use App\Models\PembelianBarangMasuk;
 use App\Models\PermintaanPembelian;
 use App\Models\PoPembelian;
+use App\Models\teknik\BillOfMaterial;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,6 +22,26 @@ use Illuminate\Support\Facades\Validator;
 
 class PembelianController extends Controller
 {
+    public function get_data_pp()
+    {
+        $data = array();
+        $pp = PermintaanPembelian::all();
+        foreach ($pp as $key_pp => $pp) {
+            $data[$key_pp] = array(
+                'id' => $pp->id,
+                'pp' => $pp->no_pp,
+                'tujuan' => $pp->tujuan,
+                'jenis' => $pp->jenis,
+                'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
+                'tgl_diminta' => $pp->tgl_diminta,
+                'divisi' => $pp->Divisi->nama,
+                'status' => $pp->Status->nama,
+            );
+        }
+
+        return response()->json(['data' => $data]);
+    }
+
     public function ubah_pp($jenis, $id)
     {
 
@@ -57,7 +82,7 @@ class PembelianController extends Controller
     }
     public function store_data_pp(Request $request)
     {
-        dd($request->all());
+        //dd($request->all());
         $validator = Validator::make($request->all(), [
             'no_pp' => 'required|unique:permintaan_pembelian,no_pp',
             'tgl_dibutuhkan' => 'required',
@@ -81,42 +106,66 @@ class PembelianController extends Controller
             ]);
 
             if (isset($request->aset)) {
-                for ($i = 0; $i < count($request->aset); $i++) {
-                    DetailPermintaanPembelian::create([
-                        'permintaan_pembelian_id' => $pp->id,
-                        'aset_id' => $request->aset[$i]['aset_id'],
-                        'jumlah' => $request->aset[$i]['jumlah'],
-                        'harga' => $request->aset[$i]['harga'],
-                        'estimasi_harga' => $request->aset[$i]['es_harga'],
-                        'via' => $request->aset[$i]['via'],
-                        'link' => $request->aset[$i]['link'],
-                    ]);
+                if (isset($request->aset[0]['terdaftar'])) {
+                    for ($i = 0; $i < count($request->aset[0]['terdaftar']); $i++) {
+                        DetailPPAset::create([
+                            'permintaan_pembelian_id' => $pp->id,
+                            'aset_id' => $request->aset[0]['terdaftar'][$i]['aset_id'],
+                            'jumlah' => $request->aset[0]['terdaftar'][$i]['jumlah'],
+                            'harga' => $request->aset[0]['terdaftar'][$i]['harga'],
+                            'estimasi_harga' => $request->aset[0]['terdaftar'][$i]['estimasi_harga'],
+                            'via' => $request->aset[0]['terdaftar'][$i]['via'],
+                            'link' => $request->aset[0]['terdaftar'][$i]['link'],
+                        ]);
+                    }
+                }
+                if (isset($request->aset[0]['tidak_terdaftar'])) {
+                    for ($i = 0; $i < count($request->aset[0]['tidak_terdaftar']); $i++) {
+                        $aset = Aset::create([
+                            'daftar_perkiraan_id' => $request->aset[0]['tidak_terdaftar'][$i]['daftar_perkiraan_id'],
+                            'nama' => $request->aset[0]['tidak_terdaftar'][$i]['nama'],
+                            'merk'  => $request->aset[0]['tidak_terdaftar'][$i]['merk']
+                        ]);
+                        DetailPPAset::create([
+                            'permintaan_pembelian_id' => $pp->id,
+                            'aset_id' => $aset->id,
+                            'jumlah' => $request->aset[0]['tidak_terdaftar'][$i]['jumlah'],
+                            'harga' => $request->aset[0]['tidak_terdaftar'][$i]['harga'],
+                            'estimasi_harga' => $request->aset[0]['tidak_terdaftar'][$i]['estimasi_harga'],
+                            'via' => $request->aset[0]['tidak_terdaftar'][$i]['via'],
+                            'link' => $request->aset[0]['tidak_terdaftar'][$i]['link'],
+                        ]);
+                    }
                 }
             }
 
-            if (isset($request->terdaftar)) {
-                for ($i = 0; $i < count($request->terdaftar); $i++) {
-                    DetailPermintaanPembelian::create([
+            if (isset($request->part)) {
+                for ($i = 0; $i < count($request->part); $i++) {
+                    $detail_pp_bom =  DetailPPBom::create([
                         'permintaan_pembelian_id' => $pp->id,
-                        'part_id' => $request->terdaftar[$i]['part_id'],
-                        'bom_id' => $request->terdaftar[$i]['bom_id'],
-                        'jumlah' => $request->terdaftar[$i]['jumlah'],
-                        'harga' => $request->terdaftar[$i]['harga'],
-                        'is_terdaftar' => 1,
+                        'bom_id' => $request->part[$i]['bom_id'],
+                        'produk_id' => $request->part[$i]['produk_id'],
                     ]);
-                }
-            }
-
-            if (isset($request->tdk_terdaftar)) {
-                for ($i = 0; $i < count($request->tdk_terdaftar); $i++) {
-                    DetailPermintaanPembelian::create([
-                        'permintaan_pembelian_id' => $pp->id,
-                        'part_id' => $request->tdk_terdaftar[$i]['part_id'],
-                        'bom_id' => $request->tdk_terdaftar[$i]['bom_id'],
-                        'jumlah' => $request->tdk_terdaftar[$i]['jumlah'],
-                        'harga' => $request->tdk_terdaftar[$i]['harga'],
-                        'is_terdaftar' => 0,
-                    ]);
+                    if (isset($request->part[$i]['terdaftar'])) {
+                        for ($j = 0; $j < count($request->part[$i]['terdaftar']); $j++) {
+                            DetailPPBomPart::create([
+                                'detail_pp_bom_id' => $detail_pp_bom->id,
+                                'part_id' => $request->part[$i]['terdaftar'][$j]['part_id'],
+                                'jumlah' => $request->part[$i]['terdaftar'][$j]['jumlah'],
+                                'harga' => $request->part[$i]['terdaftar'][$j]['harga']
+                            ]);
+                        }
+                    }
+                    if (isset($request->part[$i]['tidak_terdaftar'])) {
+                        for ($j = 0; $j < count($request->part[$i]['tidak_terdaftar']); $j++) {
+                            DetailPPBomPart::create([
+                                'detail_pp_bom_id' => $detail_pp_bom->id,
+                                'nama' => $request->part[$i]['tidak_terdaftar'][$j]['nama'],
+                                'jumlah' => $request->part[$i]['tidak_terdaftar'][$j]['jumlah'],
+                                'harga' => $request->part[$i]['tidak_terdaftar'][$j]['harga']
+                            ]);
+                        }
+                    }
                 }
             }
 
@@ -126,59 +175,54 @@ class PembelianController extends Controller
         }
     }
 
-    public function get_data_pp($id)
+    public function get_data_detail_bom($id)
     {
-        $data = array();
-        if ($id != 0) {
-            $pp = PermintaanPembelian::find($id);
-
-            $data[] = array(
-                'id' => $pp->id,
-                'no_pp' => $pp->no_pp,
-                'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
-                'tgl_diminta' => $pp->tgl_diminta,
-                'jenis' => $pp->jenis,
-                'tujuan' => $pp->tujuan,
+        $detailbom = DetailPPBom::find($id);
+        foreach ($detailbom->DetailPPBomPart as $key_bom => $detailpp) {
+            $data[$key_bom] = array(
+                'id' => $detailpp->id,
             );
+        }
+        return response()->json(['data' => $data]);
+    }
 
-            if ($pp->jenis == 'umum') {
-                foreach ($pp->DetailPermintaanPembelian as $key_p => $dp) {
-                    $data['aset'][$key_p] = array(
-                        'id' => $dp->id,
-                        'nama' => $dp->Aset->nama,
-                        'jumlah' => $dp->jumlah,
-                        'es_harga' => $dp->estimasi_harga,
-                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
-                        'link' => $dp->link,
-                        'status' => 'proses'
-                    );
-                }
-            } else {
-                foreach ($pp->DetailPPterdaftar('true') as $key_p => $dp) {
-                    $data['part_terdaftar'][$key_p] = array(
-                        'id' => $dp->id,
-                        'nama' => $dp->Part->nama,
-                        'jumlah' => $dp->jumlah,
-                        'es_harga' => $dp->estimasi_harga,
-                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
-                        'status' => 'proses'
-                    );
-                }
-                foreach ($pp->DetailPPterdaftar('false') as $key_p => $dp) {
-                    $data['part_tidak_terdaftar'][$key_p] = array(
-                        'id' => $dp->id,
-                        'nama' => $dp->Part->nama,
-                        'jumlah' => $dp->jumlah,
-                        'es_harga' => $dp->estimasi_harga,
-                        'subtotal' =>  $dp->estimasi_harga *  $dp->jumlah,
-                        'status' => 'proses'
-                    );
-                }
+
+    public function get_data_detail_pp($id)
+    {
+
+        $pp = PermintaanPembelian::find($id);
+        $data = array(
+            'id' => $pp->id,
+            'no_pp' => $pp->no_pp,
+            'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
+            'tgl_diminta' => $pp->tgl_diminta,
+            'jenis' => $pp->jenis,
+            'tujuan' => $pp->tujuan,
+
+        );
+
+        if ($pp->DetailPPAset) {
+            foreach ($pp->DetailPPAset as $key_aset => $aset) {
+                $data['aset'][$key_aset] = array(
+                    'id' => $aset->id,
+                    'nama' => $aset->Aset->nama,
+                    'jumlah' => $aset->jumlah,
+                    'harga' => $aset->harga,
+                    'estimasi_harga' => $aset->estimasi_harga,
+                    'subtotal' => $aset->harga *  $aset->jumlah,
+                    'link' => $aset->via == 'online' ? $aset->link : 'offline',
+                );
             }
+        }
 
-            return response()->json(['data' => $data]);
-        } else {
-            $data = PermintaanPembelian::all();
+        if ($pp->DetailPPBom) {
+            foreach ($pp->DetailPPBom as $key_bom => $bom) {
+                $data['part'][$key_bom] = array(
+                    'id' => $bom->id,
+                    'kode' => $bom->Bom->kode,
+                    'nama' => $bom->Bom->nama,
+                );
+            }
         }
 
         return response()->json(['data' => $data]);
