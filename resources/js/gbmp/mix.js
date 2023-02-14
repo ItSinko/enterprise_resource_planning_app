@@ -1,5 +1,10 @@
 import moment from 'moment';
 export default {
+    data() {
+        return {
+            divisi: localStorage.getItem('divisi'),          
+        }
+    },
     methods: {
         formatTanggal(date){
             return date ? moment(date).lang('id').format('LL') : '-';

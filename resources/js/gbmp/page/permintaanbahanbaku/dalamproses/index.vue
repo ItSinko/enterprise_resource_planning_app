@@ -1,10 +1,12 @@
 <script>
 import Table from './table.vue';
 import Pagination from '../../../components/pagination.vue';
+import TambahPermintaan from './detail/table/permintaan/create'
 export default {
     components: {
         Table,
         Pagination,
+        TambahPermintaan,
     },
     data() {
         return {
@@ -31,11 +33,22 @@ export default {
             ],
             search: '',
             renderPaginate: [],
+            modal: false,
         }
     },
     methods: {
         updateFilteredDalamProses(data) {
             this.renderPaginate = data
+        },
+        addPermintaan() {
+            this.modal = true
+            this.$nextTick(() => {
+                $('.addModalPermintaan').modal('show')
+            })
+        },
+        closePermintaan() {
+            this.modal = false
+            $('.addModalPermintaan').modal('hide')
         },
     },
     computed: {
@@ -55,11 +68,18 @@ export default {
 </script>
 <template>
     <div>
-        <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="d-flex bd-highlight mb-3">
+            <div class="mr-auto p-2 bd-highlight">
+                <button class="btn btn-primary" @click="addPermintaan" v-if="divisi !== '11'">
+                    <i class="fa fa-plus"></i>
+                    Tambah Permintaan
+                </button>
+            </div>
             <div class="p-2 bd-highlight">
                 <input type="search" class="form-control" placeholder="Cari" v-model="search">
             </div>
-</div>
+        </div>
+        <TambahPermintaan v-if="modal" @close="closePermintaan"/>
         <Table :dalamProses="renderPaginate" />
         <Pagination :filteredDalamProses="filteredDalamProses" 
         @updateFilteredDalamProses="updateFilteredDalamProses"

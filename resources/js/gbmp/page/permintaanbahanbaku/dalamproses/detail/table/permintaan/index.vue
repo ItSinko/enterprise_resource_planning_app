@@ -64,7 +64,7 @@ export default {
     <div>
         <div class="d-flex bd-highlight">
         <div class="p-2 flex-grow-1 bd-highlight">
-            <button class="btn btn-info">
+            <button class="btn btn-info" v-if="divisi === '11'" >
                 <i class="fa fa-plus"></i>
                 Buat Penyerahan
             </button>

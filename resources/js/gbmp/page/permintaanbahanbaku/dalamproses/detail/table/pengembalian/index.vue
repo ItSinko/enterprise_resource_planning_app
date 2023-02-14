@@ -41,6 +41,12 @@ export default {
             $('.modalTerima').modal('hide')
             $('.modalDetail').modal('hide')
         },
+        tambah() {
+            this.modalTerima = true
+            this.$nextTick(() => {
+                $('.modalTerima').modal('show')
+            })
+        },
         terima(id) {
             this.modalTerima = true
             this.$nextTick(() => {
@@ -70,8 +76,23 @@ export default {
         <terima v-if="modalTerima" @close="closeModalTerima"/>
         <detail v-if="modal" @close="closeModalTerima"/>
         <div class="d-flex flex-row-reverse bd-highlight">
-            <div class="form-group"><input type="search" class="form-control" placeholder="cari" v-model="search"></div>
         </div>
+
+        <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+                <button 
+                class="btn btn-primary" 
+                @click="tambah"
+                v-if="divisi !== '11'"
+                >
+                    <i class="fa fa-plus"></i> Tambah Pengembalian
+                </button>
+            </div>
+            <div class="p-2 bd-highlight">
+                <div class="form-group"><input type="search" class="form-control" placeholder="cari" v-model="search"></div>
+            </div>
+        </div>
+
         <table class="table">
             <thead class="thead-light">
                 <tr>
@@ -90,7 +111,7 @@ export default {
                     <td>
                         <button class="btn btn-info btn-sm" 
                         @click="terima(pengembalian.id)"
-                        v-if="pengembalian.status === 'terima pengembalian'">Terima Pengembalian</button>
+                        v-if="pengembalian.status === 'terima pengembalian'">Ajukan Pengembalian</button>
                         <status :status="pengembalian.status" v-else/>
                     </td>
                     <td>

@@ -1,7 +1,7 @@
 <script>
 import Header from './header.vue';
 import Pengembalian from './table/pengembalian';
-import Permintaan from './table/permintaan.vue';
+import Permintaan from './table/permintaan/index.vue';
 import Penyerahan from './table/penyerahan/';
 export default {
     components: {

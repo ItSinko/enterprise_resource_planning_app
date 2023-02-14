@@ -1,18 +1,51 @@
 <script>
 import Header from '../../header.vue'
-import Table from './table.vue'
+import TablePengembalian from './tablePengembalian.vue'
+import TableBuat from './tableBuat.vue'
 export default {
     components: {
         Header,
-        Table
+        TablePengembalian,
+        TableBuat
+    },
+    props: {
+
     },
     data() {
         return {
             formDetail: {
                 no_pengembalian: 'P-001',
-                tgl_pengembalian: '2020-01-01',
+                tgl_pengembalian: new Date().toISOString().slice(0, 10),
+                dataTablePengembalian: [
+                    {
+                        part: 'P-001 - Part 1',
+                        jumlah_diserahkan: 22,
+                        jumlah_ok: 0,
+                        jumlah_nok: 0,
+                        keterangan: '-', 
+                    }
+                ],
+                dataTableNew: [
+                    {
+                        part: 'P-001 - Part 1',
+                        jumlah_diserahkan: 22,
+                        jumlah_kembali: 0,
+                        keterangan: '-', 
+                    }
+                ]
             }
         }
+    },
+    methods: {
+        tambahPart() {
+            this.formDetail.dataTableNew.push({
+                part: 'P-001 - Part 1',
+                jumlah_diserahkan: 22,
+                jumlah_ok: 0,
+                jumlah_nok: 0,
+                keterangan: '-', 
+            })
+        },
     },
 }
 </script>
@@ -35,31 +68,50 @@ export default {
                     <div class="card-body">
                         <h4 class="card-title mb-5">Detail Pengembalian</h4>
                         <div class="card-text">
-                            <div class="row">
-                                <div class="col-1">
-                                    <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <div v-if="divisi === '11'">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>No Pengembalian</p>
+                                    </div>
+                                    <div class="col-6">
+                                        {{ formDetail.no_pengembalian }}
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    <p>No Pengembalian</p>
-                                </div>
-                                <div class="col">
-                                    <p class="text-bold">{{ formDetail.no_pengembalian }}</p>
+                                <div class="row">
+                                    <div class="col-1">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>Tanggal Pengembalian</p>
+                                    </div>
+                                    <div class="col-6">
+                                        {{ formatTanggal(formDetail.tgl_pengembalian) }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-1">
-                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <div class="row" v-else>
+                                <div class="col-5">
+                                    <p class="text-right">Tanggal Pengembalian</p>
                                 </div>
-                                <div class="col">
-                                    <p>Tanggal Pengembalian</p>
+                                <div class="col-6">
+                                    <input type="date" v-model="formDetail.tgl_pengembalian" class="form-control col-6">
                                 </div>
-                                <div class="col">
-                                    <p class="text-bold">{{ formatTanggal(formDetail.tgl_pengembalian) }}</p>
+                            </div>
+                            <div class="d-flex flex-row-reverse bd-highlight">
+                                <div class="p-2 bd-highlight">
+                                    <button class="btn btn-info" v-if="divisi !== '11'" @click="tambahPart">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Tambah Part
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <Table />
+                        <TablePengembalian v-if="divisi === '11'" :dataTable="formDetail.dataTablePengembalian" />
+                        <TableBuat v-else :dataTable="formDetail.dataTableNew" />
                     </div>
                 </div>
             </div>

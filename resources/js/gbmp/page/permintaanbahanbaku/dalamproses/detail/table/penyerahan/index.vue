@@ -18,6 +18,11 @@ export default {
                     tgl_penyerahan: '2020-01-01',
                     status: 'kirim barang',
                 },
+                                {
+                    no_penyerahan: 'P-001',
+                    tgl_penyerahan: '2020-01-01',
+                    status: 'terima barang',
+                },
                 {
                     no_penyerahan: 'P-002',
                     tgl_penyerahan: '2020-01-01',
@@ -48,6 +53,25 @@ export default {
             $('.tambahPenyerahan').modal('hide');
             $('.modalDetailPenyerahan').modal('hide');
         },
+        terimaBarang() {
+            this.$swal({
+                title: 'Terima Penyerahan?',
+                text: "Apakah anda yakin untuk menerima barang ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, terima barang!'
+            }).then((result) => {
+                if (result.value) {
+                    this.$swal(
+                        'Terima Barang!',
+                        'Data berhasil di terima.',
+                        'success'
+                    )
+                }
+            })
+        },
     },
     computed: {
         filteredPenyerahan() {
@@ -66,7 +90,7 @@ export default {
         <detail v-if="modalDetail" @close="closeModalTambah" />
         <div class="d-flex bd-highlight">
         <div class="p-2 flex-grow-1 bd-highlight">
-            <button class="btn btn-info"  @click="showModal">
+            <button class="btn btn-info" v-if="divisi === '11'"  @click="showModal">
                 <i class="fa fa-plus"></i>
                 Buat Penyerahan
             </button>
@@ -91,12 +115,11 @@ export default {
                     <td>{{ penyerahan.no_penyerahan }}</td>
                     <td>{{ formatTanggal(penyerahan.tgl_penyerahan) }}</td>
                     <td>
-                        <status :status="penyerahan.status"/>
+                        <button class="btn btn-sm btn-info" @click="terimaBarang" v-if="penyerahan.status === 'terima barang'" >Terima Barang</button>
+                        <status :status="penyerahan.status" v-else/>
                     </td>
                     <td>
                         <i class="fas fa-eye text-info" @click="showModalDetail"></i>
-                        <i class="fas fa-edit text-warning"></i>
-                        <i class="fas fa-trash text-danger"></i>
                     </td>
                 </tr>
             </tbody>
