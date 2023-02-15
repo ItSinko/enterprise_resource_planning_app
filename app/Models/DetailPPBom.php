@@ -19,10 +19,14 @@ class DetailPPBom extends Model
     }
     public function PermintaanPembelian()
     {
-        return $this->belongsTo(PermintaanPembelian::class, 'aset_id');
+        return $this->belongsTo(PermintaanPembelian::class, 'permintaan_pembelian_id');
     }
     public function DetailPPBomPart()
     {
         return $this->hasMany(DetailPPBomPart::class, 'detail_pp_bom_id', 'id');
+    }
+    public function Produk()
+    {
+        return $this->belongsTo(Produk::class, 'produk_id', 'id');
     }
 }

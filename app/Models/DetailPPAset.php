@@ -18,6 +18,10 @@ class DetailPPAset extends Model
     }
     public function PermintaanPembelian()
     {
-        return $this->belongsTo(PermintaanPembelian::class, 'aset_id');
+        return $this->belongsTo(PermintaanPembelian::class, 'permintaan_pembelian_id');
+    }
+    public function DetailPoPembelianAset()
+    {
+        return $this->hasMany(DetailPoPembelianAset::class);
     }
 }

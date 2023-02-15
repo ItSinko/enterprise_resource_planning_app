@@ -20,4 +20,8 @@ class DetailPPBomPart extends Model
     {
         return $this->belongsTo(DetailPPBom::class, 'detail_pp_bom_id', 'id');
     }
+    public function DetailPOPembelianPart()
+    {
+        return $this->hasMany(DetailPOPembelianPart::class);
+    }
 }

@@ -15,6 +15,10 @@ class Status extends Model
     {
         return $this->hasMany(Status::class);
     }
+    function PoPembelian()
+    {
+        return $this->hasMany(PoPembelian::class);
+    }
     function status()
     {
         return $this->hasMany(Status::class);

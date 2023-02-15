@@ -2487,6 +2487,15 @@ class MasterController extends Controller
             return response()->json(['data' => 'error']);
         }
     }
+    public function get_validasi_aset($keyword)
+    {
+        $data = Aset::where('nama', $keyword)->get();
+        if (count($data) > 0) {
+            return response()->json(['data' => 'Sudah Ada']);
+        } else {
+            return response()->json(['data' => 'Kosong']);
+        }
+    }
     public function get_data_aset()
     {
         $data = array();
