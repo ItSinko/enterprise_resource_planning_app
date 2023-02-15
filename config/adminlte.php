@@ -800,7 +800,7 @@ return [
         ],
         [
             'text' => 'Barang Masuk',
-            'icon' => 'fas fa-sign-in-alt',
+            'icon' => 'fas fa-box',
             'auth' => [11],
             'url'  => '/gbmp/barang-masuk',
         ],
@@ -809,6 +809,12 @@ return [
             'icon' => 'fas fa-clipboard-list',
             'auth' => [11],
             'url'  => '/gbmp/permintaan-bahan-baku',
+        ],
+        [
+            'text' => 'Penyerahan Barang',
+            'icon' => 'fas fa-box-open',
+            'auth' => [11],
+            'url'  => '/gbmp/penyerahan-barang',
         ],
         // [
         //     'text' => 'Stok',

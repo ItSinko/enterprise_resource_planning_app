@@ -55,12 +55,9 @@ export default {
         filteredDalamProses() {
             const dataIsNotNull = (data) => data !== null && data !== undefined && data !== "" ? data : "-";
             return this.dalamProses.filter((proses) => {
-                return dataIsNotNull(proses.no_referensi).toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                    dataIsNotNull(proses.no_permintaan).toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                    dataIsNotNull(proses.tujuan).toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                    dataIsNotNull(proses.tgl_permintaan).toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                    dataIsNotNull(proses.tgl_dibutuhkan).toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                    dataIsNotNull(proses.status).toString().toLowerCase().includes(this.search.toLowerCase())
+                return Object.keys(proses).some((key) => {
+                    return String(dataIsNotNull(proses[key])).toLowerCase().includes(this.search.toLowerCase())
+                })
             })
         },
     }

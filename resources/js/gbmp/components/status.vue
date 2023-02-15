@@ -14,6 +14,7 @@ export default {
         statusCheck(status){
             const textSmall = status.toLowerCase()
             switch (textSmall) {
+                // status
                 case 'batal':
                     return 'badge badge-danger';
                 case 'draft':
@@ -26,6 +27,8 @@ export default {
                     return 'badge badge-warning';
                 case 'menunggu permintaan':
                     return 'badge badge-warning';
+                case 'menunggu penerimaan':
+                    return 'badge badge-warning';
                 case 'proses po':
                     return 'badge badge-primary';
                 case 'proses':
@@ -36,6 +39,17 @@ export default {
                     return 'badge badge-success';
                 case 'selesai':
                     return 'badge badge-success';
+                // tujuan
+                case 'gudang':
+                    return 'badge badge-info';
+                case 'produksi':
+                    return 'badge badge-primary';
+                case 'perbaikan':
+                    return 'badge badge-danger';
+                case 'perakitan':
+                    return 'badge badge-primary';
+                case 'peminjaman':
+                    return 'badge badge-secondary';
                 case '-':
                     return ''
                 default:
