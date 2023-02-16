@@ -816,6 +816,18 @@ return [
             'auth' => [11],
             'url'  => '/gbmp/penyerahan-barang',
         ],
+        [
+            'text' => 'Pengembalian Barang',
+            'icon' => 'fas fa-truck-loading',
+            'auth' => [11],
+            'url'  => '/gbmp/pengembalian-barang',
+        ],
+        [
+            'text' => 'Daftar Stok',
+            'icon' => 'fas fa-boxes',
+            'auth' => [11],
+            'url'  => '/gbmp/daftar-stok',
+        ],
         // [
         //     'text' => 'Stok',
         //     'auth' => [11],
