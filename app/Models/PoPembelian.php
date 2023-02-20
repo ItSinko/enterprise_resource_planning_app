@@ -10,7 +10,7 @@ class PoPembelian extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'po_pembelian';
-    protected $fillable = ['permintaan_pembelian_id', 'no_po', 'tgl_po', 'tgl_datang', 'ekspedisi_id', 'supplier_id', 'kurs_id', 'divisi_id', 'status_id'];
+    protected $fillable = ['permintaan_pembelian_id', 'no_po', 'tgl_po', 'tgl_datang', 'tgl_estimasi_datang', 'ekspedisi_id', 'supplier_id', 'kurs_id', 'divisi_id', 'status_id'];
 
     function PermintaanPembelian()
     {

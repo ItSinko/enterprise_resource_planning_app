@@ -230,15 +230,19 @@ Route::prefix('/pembelian')->group(function () {
         Route::get('/', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
         Route::post('/', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
         Route::put('/{id}', [App\Http\Controllers\PembelianController::class, 'update_data_pp']);
-        Route::put('/{id}/{status}', [App\Http\Controllers\PembelianController::class, 'update_status_pp']);
+        Route::put('/{id}/status', [App\Http\Controllers\PembelianController::class, 'update_status_pp']);
         Route::delete('/{id}/part', [App\Http\Controllers\PembelianController::class, 'delete_data_pp_part']);
         Route::delete('/{id}/umum', [App\Http\Controllers\PembelianController::class, 'delete_data_pp_umum']);
         Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
     });
     Route::prefix('/po')->group(function () {
+        Route::prefix('/terima')->group(function () {
+            Route::post('/', [App\Http\Controllers\PembelianController::class, 'terima_po']);
+        });
         Route::get('/', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
         Route::post('/', [App\Http\Controllers\PembelianController::class, 'store_data_po']);
         Route::put('/{id}', [App\Http\Controllers\PembelianController::class, 'update_data_po']);
+        Route::put('/{id}/status', [App\Http\Controllers\PembelianController::class, 'update_status_po']);
         Route::delete('/{id}/part', [App\Http\Controllers\PembelianController::class, 'delete_data_po_part']);
         Route::delete('/{id}/umum', [App\Http\Controllers\PembelianController::class, 'delete_data_po_umum']);
         Route::get('/{id}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);

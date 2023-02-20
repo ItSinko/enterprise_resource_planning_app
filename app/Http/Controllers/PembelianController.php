@@ -21,14 +21,48 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PembelianController extends Controller
 {
     public function get_data_pp()
     {
+        // $pp = PermintaanPembelian::all();
+        // foreach ($pp as $key_pp => $pp) {
+        //     $data[$key_pp] = array(
+        //         'id' => $pp->id,
+        //         'pp' => $pp->no_pp,
+        //         'tujuan' => $pp->tujuan,
+        //         'jenis' => $pp->jenis,
+        //         'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
+        //         'tgl_diminta' => $pp->tgl_diminta,
+        //         'divisi' => $pp->Divisi->nama,
+        //         'status' => $pp->Status->nama,
+        //     );
+        // }
         $data = array();
-        $pp = PermintaanPembelian::all();
+        $pp = DB::select("
+        select pp.id ,pp.no_pp ,pp.tujuan ,pp.jenis ,pp.tgl_dibutuhkan ,pp.tgl_diminta ,ms.nama as status,d.nama as divisi,
+        (select sum(dpbp.jumlah) from detail_pp_bom dpb join detail_pp_bom_part dpbp on dpb.id = dpbp.detail_pp_bom_id where dpb.permintaan_pembelian_id = pp.id ) as jumlah_pp,
+        (select  coalesce (sum(dppp.jumlah),0) from po_pembelian pp2 join detail_po_pembelian_part dppp  on dppp.po_pembelian_id = pp2.id where pp2.permintaan_pembelian_id = pp.id)
+        as jumlah_po,
+        (select round( jumlah_po / jumlah_pp * 100)) as status_persen
+        from permintaan_pembelian as pp
+        join m_status ms on ms.id = pp.status_id
+        join divisi d ON d.id = pp.divisi_id
+        where pp.jenis = 'part'
+        union
+        select pp.id ,pp.no_pp ,pp.tujuan ,pp.jenis ,pp.tgl_dibutuhkan ,pp.tgl_diminta ,ms.nama as status ,d.nama as divisi,
+        (select sum(dpa.jumlah) from detail_pp_aset dpa where dpa.permintaan_pembelian_id = pp.id) as jumlah_pp,
+        (select  coalesce (sum(dppa.jumlah),0) from po_pembelian pp2 join detail_po_pembelian_aset dppa on dppa.po_pembelian_id = pp2.id where pp2.permintaan_pembelian_id = pp.id)
+        as jumlah_po,
+        (select round( jumlah_po / jumlah_pp * 100)) as status_persen
+        from permintaan_pembelian as pp
+        join m_status ms on ms.id = pp.status_id
+        join divisi d ON d.id = pp.divisi_id
+        where pp.jenis = 'umum'");
+
         foreach ($pp as $key_pp => $pp) {
             $data[$key_pp] = array(
                 'id' => $pp->id,
@@ -37,25 +71,26 @@ class PembelianController extends Controller
                 'jenis' => $pp->jenis,
                 'tgl_dibutuhkan' => $pp->tgl_dibutuhkan,
                 'tgl_diminta' => $pp->tgl_diminta,
-                'divisi' => $pp->Divisi->nama,
-                'status' => $pp->Status->nama,
+                'divisi' => $pp->divisi,
+                'status' => $pp->status,
+                'status_persen' => $pp->status_persen,
             );
         }
 
         return response()->json(['data' => $data]);
     }
 
-    public function update_status_pp($id, $status)
+    public function update_status_pp(Request $request, $id)
     {
 
-        if ($status == 'terima') {
+        if ($request->status == 'terima') {
             $pp =  PermintaanPembelian::find($id);
             $pp->status_id = 2;
             $pp->save();
             return response()->json([
                 'data' => 'berhasil'
             ]);
-        } elseif ($status == 'tolak' || $status == 'batal') {
+        } elseif ($request->status == 'tolak' || $request->status == 'batal') {
             $pp =  PermintaanPembelian::find($id);
             $pp->status_id = 18;
             $pp->save();
@@ -297,9 +332,23 @@ class PembelianController extends Controller
                 );
             }
         }
+        if ($pp->PoPembelian) {
+            foreach ($pp->PoPembelian as $key_po => $po) {
+                $data['po'][$key_po] = array(
+                    'id' => $po->id,
+                    'no_po' => $po->no_po,
+                    'tgl_po' => $po->tgl_po,
+                    'tgl_estimasi_datang' => $po->tgl_estimasi_datang,
+                    'tgl_datang' => $po->tgl_datang,
+                    'status' => $po->Status->nama,
+
+                );
+            }
+        }
 
         return response()->json(['data' => $data]);
     }
+
     public function update_data_pp(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -441,16 +490,44 @@ class PembelianController extends Controller
     public function get_data_po()
     {
         $data = array();
-        $po = PoPembelian::with(['Supplier', 'Divisi', 'Status'])->get();
+        $po = DB::select("
+        select po.id , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
+        (select sum(dppa.jumlah) from detail_po_pembelian_aset dppa where dppa.po_pembelian_id = po.id ) as jumlah_po,
+        (select sum(dppa.jumlah_diterima) from detail_po_pembelian_aset dppa where dppa.po_pembelian_id = po.id ) as jumlah_diterima,
+        (select round( jumlah_diterima / jumlah_po * 100)) as status_persen
+        from po_pembelian po
+        join permintaan_pembelian pp on po.permintaan_pembelian_id = pp.id
+        join ekspedisi e  on e.id = po.ekspedisi_id
+        join supplier s on s.id = po.supplier_id
+        join kurs k on k.id = po.kurs_id
+        join divisi d on d.id = po.divisi_id
+        join m_status ms on ms.id = po.status_id
+        where pp.jenis = 'umum'
+        union
+        select po.id , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
+        (select sum(dppp.jumlah) from detail_po_pembelian_part dppp  where dppp.po_pembelian_id = po.id ) as jumlah_po,
+        (select sum(dppp.jumlah_diterima) from detail_po_pembelian_part dppp where dppp.po_pembelian_id = po.id ) as jumlah_diterima,
+        (select round( jumlah_diterima / jumlah_po * 100)) as status_persen
+        from po_pembelian po
+        join permintaan_pembelian pp on po.permintaan_pembelian_id = pp.id
+        join ekspedisi e  on e.id = po.ekspedisi_id
+        join supplier s on s.id = po.supplier_id
+        join kurs k on k.id = po.kurs_id
+        join divisi d on d.id = po.divisi_id
+        join m_status ms on ms.id = po.status_id
+        where pp.jenis = 'part'
+        ");
+
         foreach ($po as $key_po => $po) {
             $data[$key_po] = array(
                 'id' => $po->id,
-                'po' => $po->no_po,
-                'tgl_diminta' => $po->tgl_po,
-                'tgl_kedatangan' => $po->tgl_datang,
-                'supplier' => $po->Supplier->nama,
-                'divisi' => $po->Divisi->nama,
-                'status' => $po->Status->nama
+                'po' => $po->po,
+                'tgl_diminta' => $po->tgl_diminta,
+                'tgl_kedatangan' => $po->tgl_kedatangan,
+                'supplier' => $po->supplier,
+                'divisi' => $po->divisi,
+                'status' => $po->status,
+                'status_persen' => $po->status_persen
             );
         }
         return response()->json(['data' => $data]);
@@ -527,6 +604,7 @@ class PembelianController extends Controller
             $po->no_po = $request->no_po;
             $po->tgl_po = $request->tgl_po;
             $po->tgl_datang = $request->tgl_datang;
+            $po->tgl_estimasi_datang = $request->tgl_estimasi_datang;
             $po->ekspedisi_id = $request->ekspedisi_id;
             $po->supplier_id = $request->supplier_id;
             $po->kurs_id = $request->kurs_id;
@@ -585,6 +663,31 @@ class PembelianController extends Controller
         }
     }
 
+    public function terima_po(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id.*' => 'required',
+            'jumlah_diterima.*' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => 'gagal'
+            ]);
+        } else {
+            if ($request->aset) {
+
+                for ($i = 0; $i < count($request->aset); $i++) {
+                    $data = DetailPoPembelianAset::find($request->aset[$i]['id']);
+                    $data->jumlah_diterima = $request->aset[$i]['jumlah_diterima'];
+                    $data->save();
+                }
+                return response()->json([
+                    'data' => 'success'
+                ]);
+            }
+        }
+    }
+
     public function store_data_po(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -609,6 +712,7 @@ class PembelianController extends Controller
                 'no_po' => $request->no_po,
                 'tgl_po' => $request->tgl_po,
                 'tgl_datang' => $request->tgl_datang,
+                'tgl_estimasi_datang' => $request->tgl_estimasi_datang,
                 'ekspedisi_id' => $request->ekspedisi_id,
                 'supplier_id' => $request->supplier_id,
                 'kurs_id' => $request->kurs_id,
@@ -685,6 +789,7 @@ class PembelianController extends Controller
                     'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
                     // 'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
                     'jumlah' => $d->jumlah,
+                    'jumlah_diterima' => $d->jumlah_diterima,
                     'harga' => $d->harga,
                     'ongkir' => $d->ongkir,
                     'biaya_lain' => $d->biaya_lain,
@@ -711,6 +816,26 @@ class PembelianController extends Controller
 
 
         return response()->json(['data' => $data]);
+    }
+
+    public function update_status_po(Request $request, $id)
+    {
+
+        if ($request->status == 'terima') {
+            $po =  PoPembelian::find($id);
+            $po->status_id = 2;
+            $po->save();
+            return response()->json([
+                'data' => 'berhasil'
+            ]);
+        } elseif ($request->status == 'tolak' || $request->status == 'batal') {
+            $po =  PoPembelian::find($id);
+            $po->status_id = 18;
+            $po->save();
+            return response()->json([
+                'data' => 'berhasil'
+            ]);
+        }
     }
     function toRomawi($number)
     {
