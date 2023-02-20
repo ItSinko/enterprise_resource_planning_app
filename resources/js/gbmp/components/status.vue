@@ -50,6 +50,11 @@ export default {
                     return 'badge badge-primary';
                 case 'peminjaman':
                     return 'badge badge-secondary';
+                // Jenis
+                case 'screw':
+                    return 'badge badge-primary';
+                case 'dioda':
+                    return 'badge badge-primary';
                 case '-':
                     return ''
                 default:

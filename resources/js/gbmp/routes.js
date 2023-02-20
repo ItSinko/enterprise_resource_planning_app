@@ -6,6 +6,7 @@ import DetailBarangMasuk from "./page/barangmasuk/dalamproses/detail";
 import BahanBakuRequest from "./page/permintaanbahanbaku";
 import PenyerahanBarang from "./page/penyerahanbarang";
 import PengembalianBarang from "./page/pengembalianbarang";
+import DaftarStok from "./page/daftarstok";
 const routes = [
     {
         path: "/gbmp/transfer",
@@ -43,6 +44,12 @@ const routes = [
         path: "/gbmp/pengembalian-barang",
         name: "pengembalianbarang",
         component: PengembalianBarang
+    },
+    // Daftar Stok
+    {
+        path: "/gbmp/daftar-stok",
+        name: "daftarstok",
+        component: DaftarStok
     }
 ]
 
