@@ -55,6 +55,12 @@ export default {
                     return 'badge badge-primary';
                 case 'dioda':
                     return 'badge badge-primary';
+
+                // Kondisi
+                case 'aktif':
+                    return 'badge badge-success';
+                case 'tidak aktif':
+                    return 'badge badge-danger';
                 case '-':
                     return ''
                 default:

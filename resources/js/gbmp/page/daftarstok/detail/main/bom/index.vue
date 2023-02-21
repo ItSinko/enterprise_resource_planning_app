@@ -41,7 +41,7 @@ export default {
         }
     },
 }
-</script>
+</script>   
 <template>
     <div>
         <detail v-if="modalDetail" @close="closeDetailModal"></detail>
