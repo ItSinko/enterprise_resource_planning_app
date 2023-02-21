@@ -1140,6 +1140,15 @@ return [
             'auth' => [23, 34]
         ],
         [
+            'header' => 'INCOMING',
+            'auth' => [23]
+        ],
+        [
+            'text' => 'Barang Masuk',
+            'icon' => 'fas fa-box-open',
+            'url' => '/qcinc/barang-masuk',
+        ],
+        [
             'header' => 'ALAT UJI',
             'auth' => [34]
         ],

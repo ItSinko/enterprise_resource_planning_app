@@ -9,5 +9,6 @@
     "/native/js/teknik.js": "/native/js/teknik.js",
     "/native/js/gbmp.js": "/native/js/gbmp.js",
     "/native/js/pembelian.js": "/native/js/pembelian.js",
+    "/native/js/qc.js": "/native/js/qc.js",
     "/native/css/plugin.css": "/native/css/plugin.css"
 }
