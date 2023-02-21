@@ -45,4 +45,8 @@ class PoPembelian extends Model
     {
         return $this->hasMany(DetailPoPembelianPart::class);
     }
+    public function PenerimaanPoAset()
+    {
+        return $this->hasMany(PenerimaanPoAset::class);
+    }
 }

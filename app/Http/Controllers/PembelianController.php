@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Aset;
 use App\Models\DetailPembelianBarangMasuk;
 use App\Models\DetailPenerimaanBarang;
+use App\Models\DetailPenerimaanPoAset;
 use App\Models\DetailPermintaanPembelian;
 use App\Models\DetailPoPembelian;
 use App\Models\DetailPoPembelianAset;
@@ -14,6 +15,7 @@ use App\Models\DetailPPBom;
 use App\Models\DetailPPBomPart;
 use App\Models\Divisi;
 use App\Models\PembelianBarangMasuk;
+use App\Models\PenerimaanPoAset;
 use App\Models\PermintaanPembelian;
 use App\Models\PoPembelian;
 use App\Models\teknik\BillOfMaterial;
@@ -493,7 +495,8 @@ class PembelianController extends Controller
         $po = DB::select("
         select po.id , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
         (select sum(dppa.jumlah) from detail_po_pembelian_aset dppa where dppa.po_pembelian_id = po.id ) as jumlah_po,
-        (select sum(dppa.jumlah_diterima) from detail_po_pembelian_aset dppa where dppa.po_pembelian_id = po.id ) as jumlah_diterima,
+        (select  coalesce (sum(dppa2.jumlah),0) from detail_penerimaan_po_aset dppa2 join penerimaan_po_aset ppa on dppa2.penerimaan_po_aset_id  = ppa.id
+        where ppa.po_pembelian_id  = po.id ) as jumlah_diterima,
         (select round( jumlah_diterima / jumlah_po * 100)) as status_persen
         from po_pembelian po
         join permintaan_pembelian pp on po.permintaan_pembelian_id = pp.id
@@ -503,19 +506,6 @@ class PembelianController extends Controller
         join divisi d on d.id = po.divisi_id
         join m_status ms on ms.id = po.status_id
         where pp.jenis = 'umum'
-        union
-        select po.id , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
-        (select sum(dppp.jumlah) from detail_po_pembelian_part dppp  where dppp.po_pembelian_id = po.id ) as jumlah_po,
-        (select sum(dppp.jumlah_diterima) from detail_po_pembelian_part dppp where dppp.po_pembelian_id = po.id ) as jumlah_diterima,
-        (select round( jumlah_diterima / jumlah_po * 100)) as status_persen
-        from po_pembelian po
-        join permintaan_pembelian pp on po.permintaan_pembelian_id = pp.id
-        join ekspedisi e  on e.id = po.ekspedisi_id
-        join supplier s on s.id = po.supplier_id
-        join kurs k on k.id = po.kurs_id
-        join divisi d on d.id = po.divisi_id
-        join m_status ms on ms.id = po.status_id
-        where pp.jenis = 'part'
         ");
 
         foreach ($po as $key_po => $po) {
@@ -666,8 +656,9 @@ class PembelianController extends Controller
     public function terima_po(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'surat_jalan' => 'required',
             'id.*' => 'required',
-            'jumlah_diterima.*' => 'required'
+            'jumlah.*' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -675,11 +666,18 @@ class PembelianController extends Controller
             ]);
         } else {
             if ($request->aset) {
+                $p = PenerimaanPoAset::create([
+                    'po_pembelian_id' => $request->po_pembelian_id,
+                    'surat_jalan' => $request->surat_jalan,
+                    'file' => $request->file
+                ]);
 
                 for ($i = 0; $i < count($request->aset); $i++) {
-                    $data = DetailPoPembelianAset::find($request->aset[$i]['id']);
-                    $data->jumlah_diterima = $request->aset[$i]['jumlah_diterima'];
-                    $data->save();
+                    $data = DetailPenerimaanPoAset::create([
+                        'penerimaan_po_aset_id' => $p->id,
+                        'detail_po_pembelian_id' => $request->aset[$i]['id'],
+                        'jumlah' => $request->aset[$i]['jumlah']
+                    ]);
                 }
                 return response()->json([
                     'data' => 'success'
@@ -789,7 +787,6 @@ class PembelianController extends Controller
                     'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
                     // 'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
                     'jumlah' => $d->jumlah,
-                    'jumlah_diterima' => $d->jumlah_diterima,
                     'harga' => $d->harga,
                     'ongkir' => $d->ongkir,
                     'biaya_lain' => $d->biaya_lain,
