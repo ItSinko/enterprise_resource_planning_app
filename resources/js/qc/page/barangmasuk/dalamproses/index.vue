@@ -1,5 +1,6 @@
 <script>
     import Table from './table'
+    import Tambah from './tambah'
     export default {
         data() {
             return {
@@ -23,10 +24,13 @@
                 selectTable: [],
                 search: '',
                 checkFilter: [],
+
+                modal: false,
             }
         },
         components: {
-            Table
+            Table,
+            Tambah
         },
         methods: {
             checkStatus(value){
@@ -35,7 +39,27 @@
                 }else{
                     this.checkFilter.push(value)
                 }
-            }
+            },
+
+            tambahPengecekan(){
+                if (this.selectTable.length > 0) {
+                    this.modal = true
+                    this.$nextTick(() => {
+                        $('.modalBarangMasuk').modal('show')
+                    })
+                } else {
+                    this.$swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Silahkan pilih data terlebih dahulu!',
+                    })
+                }
+            },
+
+            closeModalTambah() {
+                this.modal = false
+                $('.modalBarangMasuk').modal('hide')
+            },
         },
         computed: {
             uniqueStatus() {
@@ -58,9 +82,10 @@
 </script>
 <template>
     <div>
+        <Tambah v-if="modal" @close="closeModalTambah" :selectTable="selectTable"/>
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" @click="tambahPengecekan">
                     <i class="fas fa-plus"></i>
                     Tambah Jadwal Pengecekan
                 </button>
