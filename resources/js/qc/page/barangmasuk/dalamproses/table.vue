@@ -8,7 +8,8 @@ export default {
         selectTable: {
             type: Array,
             default: () => []
-        }
+        },
+
     },
     methods: {
         getBadgeColor(){
@@ -52,7 +53,7 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="(proses, index) in dataTable" :key="index">
-                    <td><input type="checkbox" @click="checked(index)"></td>
+                    <td><input type="checkbox" ref="proses" @click="checked(index)"></td>
                     <td>{{proses.no_po}}</td>
                     <td>{{proses.divisi}}</td>
                     <td>{{proses.supplier}}</td>

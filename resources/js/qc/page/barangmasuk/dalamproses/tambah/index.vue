@@ -1,5 +1,9 @@
 <script>
+import Table from './table.vue'
     export default {
+        components: {
+            Table
+        },
         props: {
             selectTable: {
                 type: Array,
@@ -8,9 +12,16 @@
         },
         data() {
             return {
-                selectYears: null,
-                selectMonth: null,
+                formPeriode : {
+                    month : null,
+                    years : null
+                },
             }
+        },
+        methods: {
+            deleteTable(index) {
+                this.$emit('deleteTable', index)
+            },
         },
         computed: {
             getAllMonths() {
@@ -49,15 +60,18 @@
 
                     <div class="form-group row">
                         <label for="" class="col-4 text-right">Periode Bulan</label>
-                        <v-select class="col-5" :options="getAllMonths" label="month" v-model="selectMonth" />
+                        <v-select class="col-5" :options="getAllMonths" label="month" v-model="formPeriode.month" />
 
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-4 text-right">Periode Tahun</label>
-                        <v-select class="col-5" :options="get5YearsOld" label="years" v-model="selectYears" />
-
+                        <v-select class="col-5" :options="get5YearsOld" label="years" v-model="formPeriode.years" />
                     </div>
 
+                    <Table
+                    @deleteTable="deleteTable"
+                    :selectTable="selectTable" 
+                    :formPeriode="formPeriode"/>
 
                 </div>
                 <div class="modal-footer">

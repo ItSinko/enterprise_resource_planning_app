@@ -11,6 +11,8 @@
                         tanggal_diminta: '2020-01-01',
                         estimasi_kedatangan: '2020-01-01',
                         status: 'Dalam Pemeriksaan Gudang',
+                        jadwal_mulai: '',
+                        jadwal_selesai: '',
                     },
                     {
                         no_po: 'PO-002',
@@ -19,6 +21,8 @@
                         tanggal_diminta: '2020-01-01',
                         estimasi_kedatangan: '2020-01-01',
                         status: 'Menunggu Kedaatangan',
+                        jadwal_mulai: '',
+                        jadwal_selesai: '',
                     }
                 ],
                 selectTable: [],
@@ -60,6 +64,11 @@
                 this.modal = false
                 $('.modalBarangMasuk').modal('hide')
             },
+
+            deleteTable(idx) {
+                this.selectTable.splice(idx, 1)
+                this.$refs.table.$refs.proses[idx].checked = false
+            },
         },
         computed: {
             uniqueStatus() {
@@ -82,7 +91,11 @@
 </script>
 <template>
     <div>
-        <Tambah v-if="modal" @close="closeModalTambah" :selectTable="selectTable"/>
+        <Tambah v-if="modal" 
+        @close="closeModalTambah" 
+        :selectTable="selectTable"
+        @deleteTable="deleteTable"
+        />
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
                 <button class="btn btn-primary" @click="tambahPengecekan">
@@ -123,6 +136,10 @@
                 <input type="text" class="form-control" v-model="search" placeholder="Cari">
             </div>
         </div>
-        <Table :dataTable="filteredTable" :selectTable="selectTable" />
+        <Table
+        ref="table"
+        :dataTable="filteredTable" 
+        :selectTable="selectTable"
+         />
     </div>
 </template>
