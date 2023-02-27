@@ -33,6 +33,9 @@ export default {
                 this.selectTable.push(this.dataTable[index])
             }
         },
+        detail(id){
+            this.$router.push({name: 'barangmasukdetail', params: {id: id}})
+        },
     },
 }
 </script>
@@ -63,7 +66,7 @@ export default {
                         <span :class="getBadgeColor()">{{proses.status}}</span>
                     </td>
                     <td>
-                        <button class="btn btn-outline-info">
+                        <button class="btn btn-outline-info" @click="detail(proses.id)">
                             <i class="fas fa-eye"></i>
                         </button>
                     </td>

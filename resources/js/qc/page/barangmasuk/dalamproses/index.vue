@@ -5,6 +5,7 @@
         data() {
             return {
                 dataTable: [{
+                        id: 1,
                         no_po: 'PO-001',
                         divisi: 'Produksi',
                         supplier: 'PT. ABC',
@@ -15,6 +16,7 @@
                         jadwal_selesai: '',
                     },
                     {
+                        id: 2,
                         no_po: 'PO-002',
                         divisi: 'Produksi',
                         supplier: 'PT. ABC',
