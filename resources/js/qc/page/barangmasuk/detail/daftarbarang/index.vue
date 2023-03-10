@@ -1,10 +1,12 @@
 <script>
 import Status from '../../../../components/status.vue'
 import Detail from './detail'
+import Periksa from './periksa'
 export default {
     components: {
         Status,
-        Detail
+        Detail,
+        Periksa
     },
     data() {
         return {
@@ -27,7 +29,8 @@ export default {
                     btn_aksi: 'hasil',
                 }
             ],
-            modal: false
+            modal: false,
+            modalPeriksa: false,
         }
     },
     methods: {
@@ -37,16 +40,27 @@ export default {
           $('.modalDetailBarangMasuk').modal('show')
         })
       }, 
+      periksa(id){
+        this.modalPeriksa = true
+        this.$nextTick(() => {
+          $('.modalPeriksaBarangMasuk').modal('show')
+        })
+      },
       closeModalDetail(){
         this.modal = false
         $('.modalDetailBarangMasuk').modal('hide')
-      }, 
+      },
+      closeModalPeriksa(){
+        this.modalPeriksa = false
+        $('.modalPeriksaBarangMasuk').modal('hide')
+      },
     },
 }
 </script>
 <template>
     <div>
         <detail v-if="modal" @close="closeModalDetail"/>
+        <periksa v-if="modalPeriksa" @close="closeModalPeriksa"/>
         <table class="table text-center">
             <thead class="thead-light">
                 <tr>
@@ -66,7 +80,7 @@ export default {
                         <status :status="data.status" :persentase="data.persentase"/>
                     </td>
                     <td>
-                        <button class="btn btn-warning" v-if="data.btn_aksi == 'terima'">Terima dan Periksa</button>
+                        <button class="btn btn-warning" v-if="data.btn_aksi == 'terima'" @click="periksa(data.id)">Terima dan Periksa</button>
                         <button class="btn btn-danger" v-if="data.btn_aksi == 'hasil'">Hasil Analisa Teknik</button>
                         <button class="btn btn-outline-info" @click="detail(data.id)">
                             <i class="fas fa-eye"></i>
