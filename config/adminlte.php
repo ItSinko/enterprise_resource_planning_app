@@ -1608,6 +1608,11 @@ return [
             'url' => '/teknik/bom/',
             'auth' => [10],
         ],
+        [
+            'text' => 'Purchase Order',
+            'icon' => 'fas fa-database fa-fw',
+            'url' => '/teknik/purchaseOrder/',
+        ],
 
         // [
         //     'header' => 'AIR',
