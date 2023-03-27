@@ -10,7 +10,7 @@ class Supplier extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'supplier';
-    protected $fillable = ['kode', 'nama', 'kurs', 'email', 'telepon', 'jenis'];
+    protected $fillable = ['kode', 'nama', 'kurs', 'email', 'telepon', 'fax', 'alamat', 'postal_code', 'negara', 'jenis'];
 
     public function PermintaanPembelian()
     {

@@ -2348,6 +2348,7 @@ class MasterController extends Controller
     }
     public function store_supplier(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'supplier.kode' => 'required|unique:supplier,kode',
             'supplier.nama' => 'required|unique:supplier,nama',
@@ -2365,6 +2366,10 @@ class MasterController extends Controller
                 'kurs' => $request->supplier['kurs'],
                 'email' =>  $request->kontak_supplier['email'],
                 'telepon' => $request->kontak_supplier['telepon'],
+                'fax' => $request->kontak_supplier['fax'],
+                'alamat' => $request->kontak_supplier['alamat'],
+                'postal_code' => $request->kontak_supplier['postal_code'],
+                'negara' => $request->kontak_supplier['negara'],
                 'jenis' => $request->supplier['jenis'],
             ]);
 
@@ -2404,6 +2409,27 @@ class MasterController extends Controller
             $data->jenis = $request->supplier['jenis'];
             $data->save();
             return response()->json(['status' => 'berhasil']);
+        }
+    }
+
+    public function delete_supplier($id)
+    {
+        $supplier = Supplier::find($id);
+        $supplier->delete();
+
+        if ($supplier) {
+            return response()->json(['data' => 'success']);
+        } else {
+            return response()->json(['data' => 'error']);
+        }
+    }
+    public function get_validasi_aset($keyword)
+    {
+        $data = Aset::where('nama', $keyword)->get();
+        if (count($data) > 0) {
+            return response()->json(['data' => 'Sudah Ada']);
+        } else {
+            return response()->json(['data' => 'Kosong']);
         }
     }
     public function get_data_aset()

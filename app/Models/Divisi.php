@@ -30,4 +30,8 @@ class Divisi extends Model
     {
         return $this->hasMany(PermintaanPembelian::class);
     }
+    public function PoPembelian()
+    {
+        return $this->hasMany(PoPembelian::class);
+    }
 }

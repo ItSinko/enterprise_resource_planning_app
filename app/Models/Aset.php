@@ -10,6 +10,8 @@ class Aset extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'aset';
+    protected $fillable = ['daftar_perkiraan_id', 'nama', 'merk', 'deskripsi', 'kode'];
+
 
     public function DaftarPerkiraan()
     {
@@ -18,5 +20,9 @@ class Aset extends Model
     public function DetailPermintaanPembelian()
     {
         return $this->hasMany(DetailPermintaanPembelian::class);
+    }
+    public function DetailPPAset()
+    {
+        return $this->hasMany(DetailPPAset::class);
     }
 }

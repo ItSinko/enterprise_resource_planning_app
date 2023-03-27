@@ -36,4 +36,16 @@ class PermintaanPembelian extends Model
     {
         return $this->belongsTo(Divisi::class);
     }
+    public function Status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
+    public function DetailPPBom()
+    {
+        return $this->hasMany(DetailPPBom::class);
+    }
+    public function DetailPPAset()
+    {
+        return $this->hasMany(DetailPPAset::class);
+    }
 }
