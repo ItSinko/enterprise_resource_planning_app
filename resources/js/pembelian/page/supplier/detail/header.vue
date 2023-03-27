@@ -13,8 +13,8 @@ export default {
         <div class="card card-primary">
             <div class="card-body text-center">
                 <p class="text-bold">{{ headers.nama }}</p>
-                <p>Alamat Perusahaan</p>
-                <p>{{ headers.kode }}</p>
+                <p>{{ headers.alamat }}</p>
+                <p class="text-bold">Kode Pos (Postal Code) {{ headers.kode }} {{ headers.negara }}</p>
             </div>
         </div>
         <div class="card card-secondary">
@@ -54,15 +54,15 @@ export default {
                 <p class="text-bold">Kontak</p>
                 <p>
                     <i class="fas fa-mail-bulk"></i>
-                    <span class="ml-2">{{ headers.email }}</span>
+                    <span class="ml-2 text-bold">{{ headers.email }}</span>
                 </p>
                 <p>
                     <i class="fas fa-phone-alt"></i>
-                    <span class="ml-2">{{ headers.telepon }}</span>
+                    <span class="ml-2 text-bold">{{ headers.telepon }}</span>
                 </p>
                 <p>
                     <i class="fa fa-fax" aria-hidden="true"></i>
-                    <span class="ml-2">Fax</span>
+                    <span class="ml-2 text-bold">{{ headers.fax }}</span>
                 </p>
             </div>
         </div>

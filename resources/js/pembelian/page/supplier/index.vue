@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         async getSupplier(){
-            const { data } = await axios.get('/api/supplier/data').then(res => res.data)
+            const { data } = await axios.get('/api/supplier').then(res => res.data)
             this.suppliers = data
             this.loading = false
         },

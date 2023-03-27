@@ -51,7 +51,7 @@
         },
         methods: {
             async getDetailSuppliers () {
-                const { data } = await axios.get(`/api/supplier/edit/${this.id}`).then(res => res.data)
+                const { data } = await axios.get(`/api/supplier/${this.id}`).then(res => res.data)
                 this.headers = data
             }
         }

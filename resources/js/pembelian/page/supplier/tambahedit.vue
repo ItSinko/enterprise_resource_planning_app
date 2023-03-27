@@ -32,15 +32,13 @@
                     kurs: '',
                     jenis: '',
                 },
-                alamat_supplier: {
-                    alamat: '',
-                    kode_pos: '',
-                    negara: '',
-                },
                 kontak_supplier: {
+                    alamat: '',
+                    postal_code: '',
                     telepon: '',
                     email: '',
                     fax: '',
+                    negara: '',
                 },
                 country: [],
                 getKurs: [],
@@ -54,17 +52,21 @@
         methods: {
             async getSupplier() {
                 if (this.id) {
-                    const { data } = await axios.get(`/api/supplier/edit/${this.id}`).then(res => res.data)
-                    const { kode, nama, email, telepon, jenis, kurs } = data
+                    const { data } = await axios.get(`/api/supplier/${this.id}`).then(res => res.data)
+                    const { nama, kode, kurs, jenis, alamat, postal_code, telepon, email, fax, negara} = data
                     this.supplier = {
-                        kode,
                         nama,
-                        jenis,
+                        kode,
                         kurs,
+                        jenis,
                     }
                     this.kontak_supplier = {
-                        email,
+                        alamat,
+                        postal_code,
                         telepon,
+                        email,
+                        fax,
+                        negara,
                     }
                 }
                 const { data } = await axios.get('https://restcountries.com/v3.1/all').then(res => res)
@@ -86,7 +88,6 @@
             simpan(){
                 let data = {
                     supplier: this.supplier,
-                    alamat_supplier: this.alamat_supplier,
                     kontak_supplier: this.kontak_supplier,
                 }
                 const checkIsNotNull = (obj) => {
@@ -121,12 +122,11 @@
                 }
 
                 const saveData = () => {
-                    const { supplier, alamat_supplier, kontak_supplier } = data
+                    const { supplier, kontak_supplier } = data
                     
                     const isAdd = () => {
-                        axios.post('/api/supplier/store', {
+                        axios.post('/api/supplier', {
                             supplier,
-                            alamat_supplier,
                             kontak_supplier,
                         }).then(res => {
                             success()
@@ -136,9 +136,8 @@
                     }
 
                     const isUpdated = () => {
-                        axios.post(`/api/supplier/update/${this.id}`, {
+                        axios.put(`/api/supplier/${this.id}`, {
                             supplier,
-                            alamat_supplier,
                             kontak_supplier,
                         }).then(res => {
                             success()
@@ -150,7 +149,7 @@
                     this.id ? isUpdated() : isAdd()
                 }
 
-                if (checkIsNotNull(data.supplier) && checkIsNotNull(data.alamat_supplier) && isValidSupplier(data.kontak_supplier)) {
+                if (checkIsNotNull(data.supplier) && checkIsNotNull(data.kontak_supplier) && isValidSupplier(data.kontak_supplier)) {
                     checkEmailIsValid(data.kontak_supplier.email) ? saveData() : this.$swal('Gagal', 'Email tidak valid', 'error')
                 } else {
                     this.$swal('Gagal', 'Data tidak boleh kosong', 'error')
@@ -229,15 +228,15 @@
                                         <div class="form-group row">
                                             <label for="" class="col-2">Alamat</label>
                                             <textarea class="col-8 form-control" name="" id="" cols="5"
-                                                rows="5" v-model="alamat_supplier.alamat"></textarea>
+                                                rows="5" v-model="kontak_supplier.alamat"></textarea>
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Postal Code</label>
-                                            <input type="text" class="form-control col-3" v-model="alamat_supplier.kode_pos" @keypress="isNumber($event)">
+                                            <input type="text" class="form-control col-3" v-model="kontak_supplier.postal_code" @keypress="isNumber($event)">
                                         </div>
                                         <div class="form-group row">
                                             <label for="" class="col-2">Negara</label>
-                                            <v-select class="col-8 ml-n2" :options="country" v-model="alamat_supplier.negara"></v-select>
+                                            <v-select class="col-8 ml-n2" :options="country" v-model="kontak_supplier.negara"></v-select>
                                         </div>
                                     </div>
                                 </div>
