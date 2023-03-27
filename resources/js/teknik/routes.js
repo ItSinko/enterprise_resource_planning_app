@@ -20,7 +20,8 @@ const routes = [
     },
     {
         path: "/teknik/detailPO",
-        component: DetailPO
+        component: DetailPO,
+        name: "detailPO"
     },
     {
         path: "/teknik/purchaseOrder",

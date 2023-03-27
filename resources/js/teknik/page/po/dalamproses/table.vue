@@ -21,6 +21,11 @@
                 required: true
             }
         },
+        methods: {
+            detail(id) {
+            this.$router.push({ name: 'detailPO', params: { id: id } })
+            }
+        }
     }
 
 </script>
@@ -47,7 +52,7 @@
                     <td>{{formatDateIndonesia(purchaseorder.estimasi)}}</td>
                     <td v-html="status(purchaseorder.status)"></td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info">
+                        <button class="btn btn-sm btn-outline-info" @click="detail(id)">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </button>
                     </td>
