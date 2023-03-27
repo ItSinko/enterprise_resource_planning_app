@@ -75,7 +75,8 @@ class PembelianController extends Controller
                 'tgl_diminta' => $pp->tgl_diminta,
                 'divisi' => $pp->divisi,
                 'status' => $pp->status,
-                'status_persen' => $pp->status_persen,
+                // Change status persen to integer
+                'status_persen' => (int) $pp->status_persen,
             );
         }
 
@@ -257,8 +258,8 @@ class PembelianController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'data' => 'error'
-            ]);
+                'message' => $th->getMessage(),
+            ], 500);
         }
     }
 

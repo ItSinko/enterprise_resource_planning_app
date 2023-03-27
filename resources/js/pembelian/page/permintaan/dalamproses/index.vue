@@ -2,6 +2,7 @@
     import Table from './table.vue'
     import Detail from './detail'
     import Upload from './upload'
+    import axios from 'axios'
     export default {
         components: {
             Table,
@@ -10,69 +11,28 @@
         },
         data() {
             return {
-                dataTables: [{
-                        id: 1,
-                        no_pp: 'PP-001',
-                        jenis_barang: 'umum',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'upload',
-                        status: 'draft',
-                    },
-                    {
-                        id: 2,
-                        no_pp: 'PP-002',
-                        jenis_barang: 'part',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'lihat PP',
-                        status: 'minta persetujuan',
-                    },
-                    {
-                        id: 3,
-                        no_pp: 'PP-003',
-                        jenis_barang: 'umum',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'upload',
-                        status: 'menunggu persetujuan',
-                    },
-                    {
-                        id: 4,
-                        no_pp: 'PP-004',
-                        jenis_barang: 'part',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'upload',
-                        status: 'proses pembelian',
-                    },
-                    {
-                        id: 5,
-                        no_pp: 'PP-005',
-                        jenis_barang: 'umum',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'lihat PP',
-                        status: 'batal',
-                    },
-                    {
-                        id: 6,
-                        no_pp: 'PP-006',
-                        jenis_barang: 'part',
-                        tanggal_diminta: '2021-01-01',
-                        tanggal_dibutuhkan: '2021-01-01',
-                        pp: 'upload',
-                        status: 'ditolak pembelian',
-                    }
-                ],
+                dataTables: [],
                 modalDetail: false,
+                detailData: null,
+
                 modalUpload: false,
                 detailUpload: null,
             }
         },
+        mounted() {
+            this.getPP()
+        },
         methods: {
-            detail(id) {
+            async getPP() {
+                const { data } = await axios.get('/api/pembelian/pp/')
+                this.dataTables = data.data
+            },  
+            detail(id, jenis) {
                 this.modalDetail = true
+                this.detailData = {
+                    id,
+                    jenis
+                }
                 this.$nextTick(() => {
                     $('.modalDetail').modal('show')
                 })
@@ -110,13 +70,15 @@
             },
             batal(id) {
                 const batalPermintaan = async () => {
-                    // try {
-                    //     const { data } = await axios.put(`/api/permintaan/${id}/batal`)
-                    //     this.$swal('Berhasil', data.message, 'success')
-                    // } catch (error) {
-                    //     console.log(error)
-                    // }
-                    this.$swal('Berhasil', 'Data berhasil dibatalkan', 'success')
+                    try {
+                        const { data } = await axios.put(`/api/pembelian/pp/${id}/status`, {
+                            status: 'tolak'
+                        })
+                        this.$swal('Berhasil', data.message, 'success')
+                        this.getPP()
+                    } catch (error) {
+                        console.log(error)
+                    }
                 }
 
                 this.$swal({
@@ -149,7 +111,7 @@
 </script>
 <template>
     <div>
-    <Detail v-if="modalDetail" @close="closeDetail"/>
+    <Detail :detail="detailData" v-if="modalDetail" @close="closeDetail"/>
     <Upload 
     v-if="modalUpload"
     :dataUpload="detailUpload"

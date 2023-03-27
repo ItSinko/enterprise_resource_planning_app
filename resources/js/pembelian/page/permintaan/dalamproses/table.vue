@@ -1,8 +1,12 @@
 <script>
     import moment from "moment";
     import mix from "../../../mix";
+    import status from '../../../components/status.vue'
     export default {
         mixins: [mix],
+        components: {
+            status
+        },
         props: {
             dataTables: {
                 type: Array,
@@ -26,8 +30,8 @@
             moment(date) {
                 return moment(date).lang('id').format('LL')
             },
-            detail(id) {
-                this.$emit('detail', id)
+            detail(id, jenis) {
+                this.$emit('detail', id, jenis)
             },
             edit(id) {
                 this.$emit('edit', id)
@@ -104,34 +108,8 @@
                 }
             },
 
-            status(status) {
-                switch (status) {
-                    case 'draft':
-                        return `<span class="badge badge-info">Draft</span>`
-                        break;
-                    case 'minta persetujuan':
-                        return `<span class="badge badge-info">Minta Persetujuan</span>`
-                        break;
-                    case 'menunggu persetujuan':
-                        return `<span class="badge badge-warning">Menunggu Persetujuan</span>`
-                        break;
-                    case 'proses pembelian':
-                        return `<span class="badge badge-primary">Proses Pembelian</span>`
-                        break;
-                    case 'batal':
-                        return `<span class="badge badge-danger">Batal</span>`
-                        break;
-                    case 'ditolak pembelian':
-                        return `<span class="badge badge-danger">Ditolak Pembelian</span>`
-                        break;
-                    default:
-                        return `<span class="badge badge-success">${status}</span>`
-                        break;
-                }
-            },
-
             showButtonEdit(status) {
-                switch (status) {
+                switch (status.toLowerCase()) {
                     case 'draft':
                         return true
                         break;
@@ -157,7 +135,7 @@
             },
 
             showButtonBatal(status) {
-                switch (status) {
+                switch (status.toLowerCase()) {
                     case 'draft':
                         return true
                         break;
@@ -183,7 +161,7 @@
             },
 
             showButtonHapus(status) {
-                switch (status) {
+                switch (status.toLowerCase()) {
                     case 'draft':
                         return true
                         break;
@@ -213,28 +191,8 @@
                 const dataIsNotNull = (data) =>
                     data !== null && data !== undefined && data !== "" ? data : "-";
                 return this.dataTables.filter((dataTable) => {
-                    return (
-                        dataIsNotNull(dataTable.no_pp)
-                        .toString()
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(dataTable.jenis_barang)
-                        .toString()
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(dataTable.tanggal_diminta)
-                        .toString()
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(dataTable.tanggal_dibutuhkan)
-                        .toString()
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(dataTable.pp)
-                        .toString()
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(dataTable.status)
+                    return Object.keys(dataTable).some((key) =>
+                        dataIsNotNull(dataTable[key])
                         .toString()
                         .toLowerCase()
                         .includes(this.search.toLowerCase())
@@ -269,7 +227,7 @@
                     <th>Jenis Barang</th>
                     <th>Tanggal Diminta</th>
                     <th>Tanggal Dibutuhkan</th>
-                    <th>PP</th>
+                    <!-- <th>PP</th> -->
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -277,19 +235,19 @@
             <tbody v-if="renderPaginate.length > 0">
                 <tr v-for="(data, index) in renderPaginate" :key="data.id">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ data.no_pp }}</td>
+                    <td>{{ data.pp }}</td>
                     <td>
-                        <div v-html="jenis(data.jenis_barang)"></div>
+                        <div v-html="jenis(data.jenis)"></div>
                     </td>
-                    <td>{{ moment(data.tanggal_diminta) }}</td>
-                    <td>{{ moment(data.tanggal_dibutuhkan) }}</td>
-                    <td>
+                    <td>{{ moment(data.tgl_diminta) }}</td>
+                    <td>{{ moment(data.tgl_dibutuhkan) }}</td>
+                    <!-- <td>
                         <button class="btn btn-sm" :class="classPP(data.pp)"
                             @click="checkPP(data.id, data.no_pp, data.pp)">
                             <i :class="iconPP(data.pp)"></i>
-                            {{ data.pp }}</button></td>
+                            {{ data.pp }}</button></td> -->
                     <td>
-                        <div v-html="status(data.status)"></div>
+                        <status :status="data.status" :persentase="data.status_persen"></status>
                     </td>
                     <td>
                         <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true"
@@ -304,7 +262,7 @@
                                 left: 0px;
                                 will-change: transform;
                             ">
-                            <button @click="detail(data.id)" class="dropdown-item" type="button">
+                            <button @click="detail(data.id, data.jenis)" class="dropdown-item" type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>

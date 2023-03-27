@@ -41,10 +41,10 @@ export default {
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-terdaftar" role="tabpanel" aria-labelledby="pills-terdaftar-tab">
-                        <Terdaftar />
+                        <Terdaftar :dataTable="null"/>
                     </div>
                     <div class="tab-pane fade" id="pills-tidakterdaftar" role="tabpanel" aria-labelledby="pills-tidakterdaftar-tab">
-                        <TidakTerdaftar />
+                        <TidakTerdaftar :dataTable="null"/>
                     </div>
                     </div>
                 </div>

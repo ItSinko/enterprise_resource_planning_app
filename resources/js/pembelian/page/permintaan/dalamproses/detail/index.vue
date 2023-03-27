@@ -3,6 +3,7 @@
     import DaftarBarangUmum from './daftarbarang/umum'
     import DaftarBarangPart from './daftarbarang/part'
     import DaftarPO from './daftarPO'
+    import axios from 'axios'
     export default {
         components: {
             Header,
@@ -10,7 +11,53 @@
             DaftarBarangPart,
             DaftarPO
         },
+        props: {
+            detail: {
+                type: Object,
+                required: true
+            }
+        },
+        data() {
+            return {
+                headers: {},
+                dataTableUmum: [],
+                dataTablePart: [],
+                dataTablePO: [],
+            }
+        },
+        mounted() {
+            this.getDetail()
+        },
         methods: {
+            async getDetail(){
+                this.$store.dispatch('setLoading', true)
+                if (this.detail.jenis == 'umum') {
+                    const { data } = await axios.get(`/api/pembelian/pp/${this.detail.id}`).then(res => res.data)
+                    const { no_pp, tgl_dibutuhkan, tgl_diminta, jenis, tujuan, aset, po} = data
+                    this.headers = {
+                        no_pp,
+                        tgl_dibutuhkan,
+                        tgl_diminta,
+                        jenis,
+                        tujuan
+                    }
+                    this.dataTableUmum = aset
+                    this.dataTablePO = po ?? []
+                }else{
+                    const { data } = await axios.get(`/api/pembelian/pp/${this.detail.id}`).then(res => res.data)
+                    const { no_pp, tgl_dibutuhkan, tgl_diminta, jenis, tujuan, part, po} = data
+                    this.headers = {
+                        no_pp,
+                        tgl_dibutuhkan,
+                        tgl_diminta,
+                        jenis,
+                        tujuan
+                    }
+                    this.dataTablePart = part
+                    this.dataTablePO = po ?? []
+                }
+                this.$store.dispatch('setLoading', false)
+            },
             close() {
                 this.$emit('close')
             },
@@ -26,11 +73,22 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.value) {
+                        try {
+                        // axios.delete(`/api/pembelian/pp/${id}/umum`)
                         this.$swal(
                             'Terhapus!',
                             'Data berhasil dihapus.',
                             'success'
-                        )
+                        )   
+                        this.getDetail()
+                        } catch (error) {
+                            this.$swal(
+                                'Gagal!',
+                                'Data gagal dihapus.',
+                                'error'
+                            )
+                            console.log(error)
+                        }
                     }
                 })
             },
@@ -69,8 +127,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <Header />
+                <div class="modal-body" v-if="!$store.state.loading">
+                    <Header :header="headers" />
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="pills-barang-tab" data-toggle="pill"
@@ -89,11 +147,11 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-barang" role="tabpanel"
                             aria-labelledby="pills-barang-tab">
-                            <!-- <DaftarBarangUmum @deleteBarang="deletePO" /> -->
-                            <DaftarBarangPart/>
+                            <DaftarBarangUmum :dataTable="dataTableUmum" @deleteBarang="deletePO" v-if="detail.jenis == 'umum'"/>
+                            <DaftarBarangPart :dataTable="dataTablePart" v-else/>
                         </div>
                         <div class="tab-pane fade" id="pills-po" role="tabpanel" aria-labelledby="pills-po-tab">
-                            <DaftarPO @del="deletePO" @terima="terima"/>
+                            <DaftarPO :dataTable="dataTablePO" @del="deletePO" @terima="terima"/>
                         </div>
                     </div>
                 </div>

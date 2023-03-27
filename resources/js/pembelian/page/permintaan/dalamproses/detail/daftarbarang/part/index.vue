@@ -1,8 +1,10 @@
 <script>
 import Modal from './modal'
+import status from '../../../../../../components/status.vue'
 export default {
     components: {
-        Modal
+        Modal,
+        status
     },
     props: {
         dataTable: {
@@ -13,28 +15,11 @@ export default {
     },
     data() {
         return {
-            dataTableDummy: [
-                {
-                    namaBom: 'BOM 1',
-                    status: 'selesai',
-                },
-                {
-                    namaBom: 'BOM 2',
-                    status: 'proses',
-                }
-            ],
             modal: false,
             titleModal: 'Detail BOM'
         }
     },
     methods: {
-        generateStatusHTML(status) {
-            if (status === 'selesai') {
-                return `<span class="badge badge-success text-capitalize">${status}</span>`
-            } else {
-                return `<span class="badge badge-warning text-capitalize">${status}</span>`
-            }
-        },
         showModal(title) {
             this.modal = true
             this.titleModal = title
@@ -65,9 +50,11 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="data in dataTableDummy" :key="data.namaBom">
-                    <td>{{ data.namaBom }}</td>
-                    <td v-html="generateStatusHTML(data.status)"></td>
+                <tr v-for="(data, key) in dataTable" :key="key">
+                    <td>{{ data.nama }}</td>
+                    <td>
+                        <!-- <status :status="data.status" /> -->
+                    </td>
                     <td>
                         <button class="btn btn-sm btn-outline-info" @click="showModal(data.namaBom)">
                             <i class="fa fa-eye"></i>

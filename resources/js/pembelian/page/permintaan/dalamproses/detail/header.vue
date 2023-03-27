@@ -1,7 +1,7 @@
 <script>
     export default {
         props: {
-            data: {
+            header: {
                 type: Object,
                 default: () => {
                     return {}
@@ -20,7 +20,7 @@
                         <div class="card card-danger">
                             <div class="card-body">
                                 <p>No Permintaan Pembelian</p>
-                                <h5 class="text-bold">PP/PRD</h5>
+                                <h5 class="text-bold">{{ header.no_pp }}</h5>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                         <div class="card card-success">
                             <div class="card-body">
                                 <p>Jenis Barang</p>
-                                <h5 class="text-bold">PP/PRD</h5>
+                                <h5 class="text-bold">{{ upperCase(header.jenis) }}</h5>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                         <div class="card card-secondary">
                             <div class="card-body">
                                 <p>Tanggal Diminta</p>
-                                <h5 class="text-bold">PP/PRD</h5>
+                                <h5 class="text-bold">{{ formatTanggal(header.tgl_diminta) }}</h5>
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                         <div class="card card-danger">
                             <div class="card-body">
                                 <p>Tanggal Dibutuhkan</p>
-                                <h5 class="text-bold">PP/PRD</h5>
+                                <h5 class="text-bold">{{ formatTanggal(header.tgl_dibutuhkan) }}</h5>
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                     </div>
                     <div class="p-2 bd-highlight">
                         <p>Tujuan</p>
-                        <h5 class="text-bold">PP/PRD</h5>
+                        <h5 class="text-bold">{{ header.tujuan }}</h5>
                     </div>
                 </div>
             </div>

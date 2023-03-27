@@ -224,7 +224,7 @@ Route::prefix('/laporan')->group(function () {
     Route::post('/qc/{jenis}/{produk}/{no_so}/{hasil}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\QcController::class, 'get_data_laporan_qc']);
     Route::post('/logistik/{pengiriman}/{ekspedisi}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\LogistikController::class, 'get_data_laporan_logistik']);
 });
-Route::prefix('/pembelian')->group(function () {
+Route::prefix('/pembelian')->group(function () { 
     Route::prefix('/pp')->group(function () {
         Route::get('/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_detail_pp']);
         Route::get('/{id}/part', [App\Http\Controllers\PembelianController::class, 'get_data_detail_bom']);

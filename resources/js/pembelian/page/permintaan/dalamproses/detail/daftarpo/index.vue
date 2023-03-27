@@ -1,6 +1,9 @@
 <script>
-import moment from 'moment'
+import Status from '../../../../../components/status.vue'
 export default {
+    components: {
+        Status
+    },
     props: {
         dataTable: {
             type: Array,
@@ -9,60 +12,7 @@ export default {
             }
         },
     },
-    data() {
-        return {
-            dataTableDummy: [
-                {
-                    id: 1,
-                    no_po: 'PO-001',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'selesai',
-                },
-                {
-                    id: 2,
-                    no_po: 'PO-002',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'dalam proses',
-                },
-                {
-                    id: 3,
-                    no_po: 'PO-003',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'draft',
-                },
-                {
-                    id: 4,
-                    no_po: 'PO-004',
-                    tanggal_po: '2020-01-01',
-                    estimasi_kedatangan: '2020-01-01',
-                    tanggal_kedatangan: '2020-01-01',
-                    status: 'terima barang',
-                }
-            ]
-        }
-    },
     methods: {
-        dateFormatIDR(value) {
-            return moment(value).lang('id').format('DD MMMM YYYY')
-        },
-        generateStatusToHTML(status) {
-            switch (status) {
-                case 'selesai':
-                    return `<span class="badge badge-success">${status}</span>`
-                case 'dalam proses':
-                    return `<span class="badge badge-warning">${status}</span>`
-                case 'draft':
-                    return `<span class="badge badge-danger">${status}</span>`
-                default:
-                    return `<span class="badge badge-danger">${status}</span>`
-            }
-        },
         del(id) {
             this.$emit('del', id)
         },
@@ -86,20 +36,27 @@ export default {
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(item, key) in dataTableDummy" :key="key+ 'daftarpo'">
+            <tbody v-if="dataTable.length > 0">
+                <tr v-for="(item, key) in dataTable" :key="key+ 'daftarpo'">
                     <td>{{ key+1 }}</td>
                     <td>{{ item.no_po }}</td>
-                    <td>{{ dateFormatIDR(item.tanggal_po) }}</td>
-                    <td>{{ dateFormatIDR(item.estimasi_kedatangan) }}</td>
-                    <td>{{ dateFormatIDR(item.tanggal_kedatangan) }}</td>
+                    <td>{{ formatTanggal(item.tgl_po) }}</td>
+                    <td>{{ formatTanggal(item.tgl_estimasi_datang) }}</td>
+                    <td>{{ formatTanggal(item.tgl_datang) }}</td>
                     <td>
                         <button class="btn btn-sm btn-success" v-if="item.status == 'terima barang'" @click="terima(item.id)">Terima Barang</button>
-                        <span v-html="generateStatusToHTML(item.status)" v-else></span>
+                        <span v-else>
+                            <status :status="item.status" />
+                        </span>
                     </td>
                     <td>
                         <i class="fa fa-trash red" aria-hidden="true" @click="del(item.id)"></i>
                     </td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="7" class="text-center">Tidak ada data</td>
                 </tr>
             </tbody>
         </table>

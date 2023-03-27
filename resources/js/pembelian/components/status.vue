@@ -12,7 +12,7 @@ export default {
     },
     methods: {
         statusCheck(status){
-            switch (status) {
+            switch (status.toLowerCase()) {
                 case 'batal':
                     return 'badge badge-danger';
                 case 'pembelian ditolak':
@@ -29,6 +29,8 @@ export default {
                     return 'badge badge-warning';
                 case 'selesai':
                     return 'badge badge-success';
+                case 'draft':
+                    return 'badge badge-info';
                 default:
                     return 'badge badge-light';
             }
@@ -44,7 +46,7 @@ export default {
                 :aria-valuenow="persentase" aria-valuemin="0" aria-valuemax="100">{{ persentase }}%</div>
             </div>
             <div class="d-flex justify-content-center">
-                <span class="text-bold">Selesai</span>
+                <span class="text-bold">{{ status }}</span>
             </div>
         </div>
         <span v-else :class="statusCheck(status)">{{ status }}</span>
