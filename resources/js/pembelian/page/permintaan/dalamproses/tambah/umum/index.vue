@@ -56,7 +56,7 @@ import TidakTerdaftar from './tidakterdaftar'
                 <terdaftar :dataTable="accepted" :sisa="sisa.accepted" @trash="trashAccepted" @add="addAccepted"/>
             </div>
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                <tidak-terdaftar :dataTable="notAccepted" :sisa="sisa.notAccepted" @add="addNotAccepted" @trash="trashNotAccepted"/>
+                <tidak-terdaftar :dataTable="notAccepted" :sisa="sisa.notAccepted" @add="addNotAccepted" @trash="trashNotAccepted" ref="tidakterdaftar"/>
             </div>
         </div>
         </div>

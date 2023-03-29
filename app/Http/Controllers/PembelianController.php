@@ -104,7 +104,9 @@ class PembelianController extends Controller
     }
     public function store_data_pp(Request $request)
     {
-        //dd($request->all());
+        return response()->json([
+            'data' => $request->all()
+        ]);
         $validator = Validator::make($request->all(), [
             'no_pp' => 'required|unique:permintaan_pembelian,no_pp',
             'tgl_dibutuhkan' => 'required',
@@ -114,8 +116,8 @@ class PembelianController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'data' => 'gagal'
-            ]);
+                'data' => $validator->errors()
+            ], 500);
         } else {
             $pp = PermintaanPembelian::create([
                 'no_pp' => $request->no_pp,
@@ -166,35 +168,35 @@ class PembelianController extends Controller
                 for ($i = 0; $i < count($request->part); $i++) {
                     $detail_pp_bom =  DetailPPBom::create([
                         'permintaan_pembelian_id' => $pp->id,
-                        'bom_id' => $request->part[$i]['bom_id'],
-                        'produk_id' => $request->part[$i]['produk_id'],
+                        'bom_id' => $request->part[$i]['versi']['value'],
+                        'produk_id' => $request->part[$i]['produk']['value'],
                     ]);
-                    if (isset($request->part[$i]['terdaftar'])) {
-                        for ($j = 0; $j < count($request->part[$i]['terdaftar']); $j++) {
+                    if (isset($request->part[$i]['detail']['terdaftar'])) {
+                        for ($j = 0; $j < count($request->part[$i]['detail']['terdaftar']); $j++) {
                             DetailPPBomPart::create([
                                 'detail_pp_bom_id' => $detail_pp_bom->id,
-                                'part_id' => $request->part[$i]['terdaftar'][$j]['part_id'],
-                                'jumlah' => $request->part[$i]['terdaftar'][$j]['jumlah'],
-                                'harga' => $request->part[$i]['terdaftar'][$j]['harga']
+                                'part_id' => $request->part[$i]['detail']['terdaftar'][$j]['id'],
+                                'jumlah' => $request->part[$i]['detail']['terdaftar'][$j]['jumlah_kebutuhan'],
+                                'harga' => $request->part[$i]['detail']['terdaftar'][$j]['harga']
                             ]);
                         }
                     }
-                    if (isset($request->part[$i]['tidak_terdaftar'])) {
-                        for ($j = 0; $j < count($request->part[$i]['tidak_terdaftar']); $j++) {
+                    if (isset($request->part[$i]['detail']['tidakTerdaftar'])) {
+                        for ($j = 0; $j < count($request->part[$i]['detail']['tidakTerdaftar']); $j++) {
                             DetailPPBomPart::create([
                                 'detail_pp_bom_id' => $detail_pp_bom->id,
-                                'nama' => $request->part[$i]['tidak_terdaftar'][$j]['nama'],
-                                'jumlah' => $request->part[$i]['tidak_terdaftar'][$j]['jumlah'],
-                                'harga' => $request->part[$i]['tidak_terdaftar'][$j]['harga']
+                                'nama' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['nama'],
+                                'jumlah' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['jumlah'],
+                                'harga' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['harga']
                             ]);
                         }
                     }
                 }
             }
 
-            return response()->json([
-                'data' => 'success'
-            ]);
+            // return response()->json([
+            //     'data' => 'success'
+            // ]);
         }
     }
 
@@ -273,6 +275,8 @@ class PembelianController extends Controller
             $q->where('id', $id);
         })->whereNotNull('nama')->get();
 
+        $data = array();
+
         if (count($terdaftar) > 0) {
             foreach ($terdaftar as $key_bom => $detailpp) {
                 $data['terdaftar'][$key_bom] = array(
@@ -294,7 +298,9 @@ class PembelianController extends Controller
             }
         }
 
-        return response()->json(['data' => $data]);
+        return response()->json([
+            'data' => $data
+        ], 200);
     }
 
 
@@ -434,33 +440,36 @@ class PembelianController extends Controller
 
 
 
-                for ($i = 0; $i < count($request->part); $i++) {
-                    $detail_pp_bom =  DetailPPBom::create([
-                        'permintaan_pembelian_id' => $pp->id,
-                        'bom_id' => $request->part[$i]['bom_id'],
-                        'produk_id' => $request->part[$i]['produk_id'],
-                    ]);
-                    if (isset($request->part[$i]['terdaftar'])) {
-                        for ($j = 0; $j < count($request->part[$i]['terdaftar']); $j++) {
-                            DetailPPBomPart::create([
-                                'detail_pp_bom_id' => $detail_pp_bom->id,
-                                'part_id' => $request->part[$i]['terdaftar'][$j]['part_id'],
-                                'jumlah' => $request->part[$i]['terdaftar'][$j]['jumlah'],
-                                'harga' => $request->part[$i]['terdaftar'][$j]['harga']
-                            ]);
+                if (isset($request->part)) {
+                    for ($i = 0; $i < count($request->part); $i++) {
+                        $detail_pp_bom =  DetailPPBom::create([
+                            'permintaan_pembelian_id' => $pp->id,
+                            'bom_id' => $request->part[$i]['versi']['value'],
+                            'produk_id' => $request->part[$i]['produk']['value'],
+                        ]);
+                        if (isset($request->part[$i]['detail']['terdaftar'])) {
+                            for ($j = 0; $j < count($request->part[$i]['detail']['terdaftar']); $j++) {
+                                DetailPPBomPart::create([
+                                    'detail_pp_bom_id' => $detail_pp_bom->id,
+                                    'part_id' => $request->part[$i]['detail']['terdaftar'][$j]['id'],
+                                    'jumlah' => $request->part[$i]['detail']['terdaftar'][$j]['jumlah_kebutuhan'],
+                                    'harga' => $request->part[$i]['detail']['terdaftar'][$j]['harga']
+                                ]);
+                            }
                         }
-                    }
-                    if (isset($request->part[$i]['tidak_terdaftar'])) {
-                        for ($j = 0; $j < count($request->part[$i]['tidak_terdaftar']); $j++) {
-                            DetailPPBomPart::create([
-                                'detail_pp_bom_id' => $detail_pp_bom->id,
-                                'nama' => $request->part[$i]['tidak_terdaftar'][$j]['nama'],
-                                'jumlah' => $request->part[$i]['tidak_terdaftar'][$j]['jumlah'],
-                                'harga' => $request->part[$i]['tidak_terdaftar'][$j]['harga']
-                            ]);
+                        if (isset($request->part[$i]['detail']['tidakTerdaftar'])) {
+                            for ($j = 0; $j < count($request->part[$i]['detail']['tidakTerdaftar']); $j++) {
+                                DetailPPBomPart::create([
+                                    'detail_pp_bom_id' => $detail_pp_bom->id,
+                                    'nama' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['nama'],
+                                    'jumlah' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['jumlah'],
+                                    'harga' => $request->part[$i]['detail']['tidakTerdaftar'][$j]['harga']
+                                ]);
+                            }
                         }
                     }
                 }
+
             }
 
             return response()->json([

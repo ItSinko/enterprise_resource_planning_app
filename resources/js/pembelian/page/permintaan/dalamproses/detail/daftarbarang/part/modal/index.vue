@@ -12,6 +12,11 @@ export default {
             required: true,
             default: 'Nama BOM'
         },
+        bom: {
+            type: Object,
+            required: true,
+            default: () => {}
+        }
     },
     methods: {
         closeModal() {
@@ -41,10 +46,10 @@ export default {
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-terdaftar" role="tabpanel" aria-labelledby="pills-terdaftar-tab">
-                        <Terdaftar :dataTable="null"/>
+                        <Terdaftar :dataTable="bom.terdaftar"/>
                     </div>
                     <div class="tab-pane fade" id="pills-tidakterdaftar" role="tabpanel" aria-labelledby="pills-tidakterdaftar-tab">
-                        <TidakTerdaftar :dataTable="null"/>
+                        <TidakTerdaftar :dataTable="bom.belum_terdaftar"/>
                     </div>
                     </div>
                 </div>

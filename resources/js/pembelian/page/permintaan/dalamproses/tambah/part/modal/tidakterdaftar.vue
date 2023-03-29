@@ -33,8 +33,6 @@ export default {
             this.detailSelected.forEach(item => {
                 this.formPartNotRegistered.push(item)
             })
-        } else {
-            this.tambahPart()
         }
     },
     hapus(idx) {
@@ -71,10 +69,10 @@ export default {
                         <input type="text" class="form-control" v-model="item.nama">
                     </td>
                     <td>
-                        <input type="text" class="form-control" v-model="item.jumlah" @keypress="onlyNumber($event)">
+                        <input type="text" class="form-control" v-model="item.jumlah" @keypress="isNumber($event)">
                     </td>
                     <td>
-                        <inputprice :nilai="item.harga" v-model="item.harga" @keypress="onlyNumber($event)">
+                        <inputprice :nilai="item.harga" v-model="item.harga" @keypress="isNumber($event)">
                         </inputprice>
                     </td>
                     <td>

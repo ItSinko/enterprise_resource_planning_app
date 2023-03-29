@@ -1,7 +1,11 @@
 <script>
 import mix from '../mix'
+import status from '../../../../../../../../components/status.vue';
 export default {
     mixins: [mix],
+    components: {
+        status
+    },
     props: {
         dataTable: {
             type: Array,
@@ -9,39 +13,6 @@ export default {
             default: () => []
         }
     },
-    data() {
-        return {
-            dataTableDummy: [
-                {
-                    nama: 'Sparepart 1',
-                    jumlah: 10,
-                    estimasiHarga: 100000,
-                    status: 'selesai',
-                },
-                {
-                    nama: 'Sparepart 2',
-                    jumlah: 20,
-                    estimasiHarga: 200000,
-                    status: 'proses',
-                }
-            ],
-        }
-    },
-    methods: {
-        formatRupiah(currency){
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(currency)
-        },
-        subtotal(jumlah, estimasiHarga) {
-            return this.formatRupiah(jumlah * estimasiHarga)
-        },
-        generateStatusHTML(status) {
-            if (status === 'selesai') {
-                return `<span class="badge badge-success text-capitalize">${status}</span>`
-            } else {
-                return `<span class="badge badge-warning text-capitalize">${status}</span>`
-            }
-        },
-    }
 }
 </script>
 <template>
@@ -54,17 +25,19 @@ export default {
                     <th>Jumlah</th>
                     <th>Estimasi Harga</th>
                     <th>Subtotal</th>
-                    <th>Status</th>
+                    <!-- <th>Status</th> -->
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in dataTableDummy" :key="index">
+                <tr v-for="(item, index) in dataTable" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>{{ item.nama }}</td>
                     <td>{{ item.jumlah }}</td>
-                    <td>{{ formatRupiah(item.estimasiHarga) }}</td>
-                    <td>{{ subtotal(item.jumlah, item.estimasiHarga) }}</td>
-                    <td v-html="generateStatusHTML(item.status)"></td>
+                    <td>{{ formatRupiah(item.harga) }}</td>
+                    <td>{{ subtotal(item.jumlah, item.harga) }}</td>
+                    <!-- <td>
+                        <status :status="item.status" />
+                    </td> -->
                 </tr>
             </tbody>
         </table>

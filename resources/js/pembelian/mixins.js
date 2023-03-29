@@ -7,6 +7,12 @@ export default {
         },
         upperCase(text) {
             return text ? text.toUpperCase() : '';
+        },
+        formatRupiah(currency){
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(currency)
+        },
+        isNumber(event) {
+            new RegExp('[0-9]').test(event.key) || event.preventDefault()
         }
     }
 }

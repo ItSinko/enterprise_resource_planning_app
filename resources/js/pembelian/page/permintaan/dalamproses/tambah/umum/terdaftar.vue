@@ -23,15 +23,10 @@ export default {
         trash(index) {
             this.$emit('trash', index)
         },
-        changeToIdr(value) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR'
-            }).format(value)
+        selectAset(index) {
+            this.dataTable[index].aset_id = this.dataTable[index].asetSelected?.value ?? null
+            this.dataTable[index].no_perkiraan = this.dataTable[index].asetSelected?.no_perkiraan ?? null
         },
-        isNumber(event) {
-            new RegExp('[0-9]').test(event.key) || event.preventDefault()
-        }
     },
     computed: {
         calcTotalEstimasiHarga() {
@@ -44,7 +39,12 @@ export default {
                 currency: 'IDR'
             }).format(total)
         },
-    }
+        checkAsetSelected() {
+            let aset = this.aset
+            let selected = this.dataTable.map(item => item.aset_id)
+            return aset.filter(item => !selected.includes(item.value))
+        },
+    },
 }
 </script>
 <template>
@@ -74,13 +74,15 @@ export default {
             <tbody>               
                 <tr v-for="(data, index) in dataTable" :key="index">
                     <td>{{ index + 1 }}</td>
-                    <td>{{ data.nama_barang }}</td>
+                    <td><v-select v-model="data.asetSelected" :options="checkAsetSelected" @input="selectAset(index)"></v-select></td>
                     <td>{{ data.no_perkiraan }}</td>
-                    <td>{{ data.supplier }}</td>
+                    <td>
+                        <v-select v-model="data.supplier" :options="supplier"></v-select>
+                    </td>
                     <td><input type="text" @keypress="isNumber($event)" v-model="data.jumlah" class="form-control"></td>
                     <td><input-price :nilai="data.estimasi_harga" v-model="data.estimasi_harga" /></td>
-                    <td><v-select v-model="data.pembelian_via" :options="jenisPembelian"></v-select></td>
-                    <td><input type="text" v-model="data.link" class="form-control" :disabled="validationLink(data.pembelian_via)"></td>
+                    <td><v-select v-model="data.via" :options="jenisPembelian"></v-select></td>
+                    <td><input type="text" v-model="data.link" class="form-control" :disabled="validationLink(data.via)"></td>
                     <td>
                         <i class="fa fa-minus" @click="trash(index)" style="color: red" aria-hidden="true"></i>
                     </td>

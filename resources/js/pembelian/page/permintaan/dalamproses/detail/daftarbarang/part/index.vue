@@ -1,6 +1,7 @@
 <script>
 import Modal from './modal'
 import status from '../../../../../../components/status.vue'
+import axios from 'axios'
 export default {
     components: {
         Modal,
@@ -16,11 +17,21 @@ export default {
     data() {
         return {
             modal: false,
-            titleModal: 'Detail BOM'
+            titleModal: 'Detail BOM',
+            detailBOM: {}
         }
     },
     methods: {
-        showModal(title) {
+        async getDetailBOM(id){
+            try {
+                const { data } = await axios.get(`/api/pembelian/pp/${id}/part`).then(res => res.data)
+                this.detailBOM = data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        showModal(title, id) {
+            this.getDetailBOM(id)
             this.modal = true
             this.titleModal = title
             this.$nextTick(() => {
@@ -36,7 +47,7 @@ export default {
 </script>
 <template>
     <div>
-        <Modal :namabom="titleModal" @close-modal="close" v-if="modal"/>
+        <Modal :bom="detailBOM" :namabom="titleModal" @close-modal="close" v-if="modal"/>
         <button class="btn btn-sm btn-warning mb-5">
             <i class="fa fa-print"></i>
             Cetak PP
@@ -56,7 +67,7 @@ export default {
                         <!-- <status :status="data.status" /> -->
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-info" @click="showModal(data.namaBom)">
+                        <button class="btn btn-sm btn-outline-info" @click="showModal(data.nama, data.id)">
                             <i class="fa fa-eye"></i>
                             Detail
                         </button>

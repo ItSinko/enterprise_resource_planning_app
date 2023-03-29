@@ -42,14 +42,15 @@
                     const selectedData = this.formPart.find(item => item.id == data.id)
                     if (selectedData){
                         return { ...data, ...selectedData }
+                    } else {
+                        return data
                     }
-                    return data
                 })
                 this.tableMerged = filtered
 
                 this.$nextTick(() => {
-                    this.$refs.checked.forEach(item => {
-                        item.checked = this.formPart.find(item => item.id == data.id)
+                    this.$refs.checked.forEach((item, index) => {
+                        item.checked = this.formPart.find(item => item.id == filtered[index].id)
                     })
                 })
             },
@@ -73,13 +74,9 @@
             filteredDatatables() {
                 const dataIsNotNull = (data) => data !== null && data !== undefined && data !== ''
                 return this.tableMerged.filter(item => {
-                    return (
-                        dataIsNotNull(item.kode) && item.kode.toLowerCase().includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(item.nama) && item.nama.toLowerCase().includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(item.jumlah_per_set) && item.jumlah_per_set.toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(item.jumlah_kebutuhan) && item.jumlah_kebutuhan.toString().toLowerCase().includes(this.search.toLowerCase()) ||
-                        dataIsNotNull(item.harga) && item.harga.toString().toLowerCase().includes(this.search.toLowerCase())
-                    )
+                    return Object.keys(item).some(key => {
+                        return dataIsNotNull(item[key]) && item[key].toString().toLowerCase().includes(this.search.toLowerCase())
+                    })
                 })
             },
         }
@@ -128,10 +125,10 @@
                         {{ item.jumlah_per_set }}
                     </td>
                     <td>
-                        <input type="text" class="form-control" v-model.number="item.jumlah_kebutuhan" @keypress="onlyNumber($event)">
+                        <input type="text" class="form-control" v-model.number="item.jumlah_kebutuhan" @keypress="isNumber($event)">
                     </td>
                     <td>
-                        <inputprice :nilai="item.harga" v-model="item.harga" @keypress="onlyNumber($event)">
+                        <inputprice :nilai="item.harga" v-model="item.harga" @keypress="isNumber($event)">
                         </inputprice>
                     </td>
                     <td>

@@ -11,12 +11,6 @@ export default {
         status
     },
     methods: {
-        formatCurrency(value) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-            }).format(value)
-        },
         deleteBarang(id){
             this.$emit('deleteBarang', id)
         }
@@ -48,8 +42,8 @@ export default {
                         <td>{{ key + 1 }}</td>
                         <td>{{ item.nama }}</td>
                         <td>{{ item.jumlah }}</td>
-                        <td>{{ formatCurrency(item.estimasi_harga) }}</td>
-                        <td>{{ formatCurrency(item.subtotal) }}</td>
+                        <td>{{ formatRupiah(item.estimasi_harga) }}</td>
+                        <td>{{ formatRupiah(item.subtotal) }}</td>
                         <td>
                             <a v-if="item.link != null" :href="item.link" target="_blank">{{ item.link }}</a>
                             <p v-else class="text-muted text-uppercase">offline</p>

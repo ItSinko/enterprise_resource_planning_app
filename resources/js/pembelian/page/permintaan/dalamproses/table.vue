@@ -36,8 +36,8 @@
             edit(id) {
                 this.$emit('edit', id)
             },
-            hapus(id) {
-                this.$emit('hapus', id)
+            hapus(id, jenis) {
+                this.$emit('hapus', id, jenis)
             },
             batal(id) {
                 this.$emit('batal', id)
@@ -279,7 +279,7 @@
                                 Batal
                             </button>
 
-                            <button v-if="showButtonHapus(data.status)" @click="hapus(data.id)" class="dropdown-item"
+                            <button v-if="showButtonHapus(data.status)" @click="hapus(data.id, data.jenis)" class="dropdown-item"
                                 type="button">
                                 <i class="fas fa-trash"></i>
                                 Hapus

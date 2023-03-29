@@ -13,8 +13,8 @@ export default {
         },
     },
     methods: {
-        del(id) {
-            this.$emit('del', id)
+        detail(id) {
+            this.$emit('detail', id)
         },
         terima(id) {
             this.$emit('terima', id)
@@ -50,7 +50,9 @@ export default {
                         </span>
                     </td>
                     <td>
-                        <i class="fa fa-trash red" aria-hidden="true" @click="del(item.id)"></i>
+                        <button class="btn btn-outline-info" @click="detail(item.id)">
+                            <i class="fa fa-eye"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>

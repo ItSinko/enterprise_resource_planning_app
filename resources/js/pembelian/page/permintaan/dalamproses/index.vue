@@ -41,15 +41,21 @@
                 this.modalDetail = false
                 $('.modalDetail').modal('hide')
             },
-            hapus(id) {
+            hapus(id, jenispp) {
+                const jenis = jenispp.toLowerCase()
                 const deletePermintaan = async () => {
-                    // try {
-                    //     const { data } = await axios.delete(`/api/permintaan/${id}`)
-                    //     this.$swal('Berhasil', data.message, 'success')
-                    // } catch (error) {
-                    //     console.log(error)
-                    // }
-                    this.$swal('Berhasil', 'Data berhasil dihapus', 'success')
+                    try {
+                        if(jenis == 'umum'){
+                            await axios.delete(`/api/pembelian/pp/${id}/umum`)
+                        } else {
+                            await axios.delete(`/api/pembelian/pp/${id}/part`)
+                        }
+                        this.$swal('Berhasil', 'Data berhasil dihapus', 'success')
+                        this.getPP()
+                    } catch (error) {
+                        console.log(error)
+                        this.$swal('Gagal', 'Data gagal dihapus', 'error')
+                    }
                 }
 
                 this.$swal({

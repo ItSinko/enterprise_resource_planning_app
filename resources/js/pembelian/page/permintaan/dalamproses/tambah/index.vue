@@ -39,46 +39,8 @@
                     tujuan: null,
                 },
                 umum : {
-                    acceptedParts: [
-                    {
-                        nama_barang: 'Besi',
-                        no_perkiraan: '123',
-                        supplier: 'PT. ABC',
-                        jumlah: 100,
-                        estimasi_harga: 100000,
-                        pembelian_via: 'Offline',
-                        link: 'https://www.google.com'
-                    },
-                    {
-                        nama_barang: 'Besi',
-                        no_perkiraan: '123',
-                        supplier: 'PT. ABC',
-                        jumlah: 100,
-                        estimasi_harga: 100000,
-                        pembelian_via: 'Online',
-                        link: 'https://www.google.com'
-                    }  
-                ],
-                notAcceptedParts: [
-                    {
-                        merek: 'Besi',
-                        no_perkiraan: '123',
-                        supplier: 'PT. ABC',
-                        jumlah: 100,
-                        estimasi_harga: 100000,
-                        pembelian_via: 'Offline',
-                        link: 'https://www.google.com'
-                    },
-                    {
-                        merek: 'Besi',
-                        no_perkiraan: '123',
-                        supplier: 'PT. ABC',
-                        jumlah: 100,
-                        estimasi_harga: 100000,
-                        pembelian_via: 'Online',
-                        link: 'https://www.google.com'
-                    }  
-                ]
+                acceptedParts: [],
+                notAcceptedParts: []
                 }
             }
         },
@@ -96,13 +58,15 @@
             },
             addAccepted() {
                 this.umum.acceptedParts.push({
-                    nama_barang: 'Besi',
-                    no_perkiraan: '123',
-                    supplier: 'PT. ABC',
-                    jumlah: 100,
-                    estimasi_harga: 100000,
-                    pembelian_via: 'Online',
-                    link: 'https://www.google.com'
+                    asetSelected: null,
+                    aset_id: '',
+                    no_perkiraan: '',
+                    supplier: '',
+                    jumlah: 0,
+                    harga: 0,
+                    estimasi_harga: 0,
+                    via: '',
+                    link: ''
                 })
             },
             trashNotAccepted(index) {
@@ -110,13 +74,15 @@
             },
             addNotAccepted() {
                 this.umum.notAcceptedParts.push({
-                    merek: 'Besi',
-                    no_perkiraan: '123',
-                    supplier: 'PT. ABC',
-                    jumlah: 100,
-                    estimasi_harga: 100000,
-                    pembelian_via: 'Online',
-                    link: 'https://www.google.com'
+                    merk: '',
+                    nama: '',
+                    daftar_perkiraan_id: 1,
+                    supplier: '',
+                    jumlah: 0,
+                    estimasi_harga: 0,
+                    harga: 0,
+                    via: '',
+                    link: ''
                 })
             },
             back() {
@@ -125,17 +91,39 @@
                 })
             },
             save() {
-                const isConditional  = () => {
+                const isConditional = async () => {
                     if (this.formPermintaan.kebutuhan === 'umum') {
                     const checkUmum = Object.values(this.calcSisaUmum).every((item) => item === false)
                     const umum = {
-                        terdaftar: this.$refs.umum.accepted,
-                        tidak_terdaftar: this.$refs.umum.notAccepted
+                        no_pp: this.headers.rencana,
+                        tujuan: this.formPermintaan.tujuan,
+                        jenis: this.formPermintaan.kebutuhan,
+                        tgl_dibutuhkan: this.formPermintaan.tanggal,
+                        tgl_diminta: this.headers.tanggal,
+                        divisi: localStorage.getItem('divisi'),
+                        aset: [{
+                            terdaftar: this.$refs.umum.accepted,
+                            tidak_terdaftar: this.$refs.umum.notAccepted
+                        }]
                     }
-                    checkUmum ? isSendData(umum) : isFailed('Total Pembelian Melebihi Sisa Budget');
+                    // checkUmum ? isSendData(umum) : isFailed('Total Pembelian Melebihi Sisa Budget');
+
+                    checkMerkAndNama() && this.checkNotNullFormPermintaan
+                     ? isSendData(umum) : isFailed('Silahkan diteliti kembali merk dan nama barang yang tidak terdaftar')
+                    
                     }else{
-                        const part = this.$refs.part.formPart
-                        isSendData(part)
+                        const part = {
+                            no_pp: this.headers.rencana,
+                            tujuan: this.formPermintaan.tujuan,
+                            jenis: this.formPermintaan.kebutuhan,
+                            tgl_dibutuhkan: this.formPermintaan.tanggal,
+                            tgl_diminta: this.headers.tanggal,
+                            divisi: localStorage.getItem('divisi'),
+                            part: this.$refs.part.formPart,
+                        }
+                    
+                        this.checkNotNullFormPermintaan ? isSendData(part) : isFailed('Silahkan diteliti kembali form permintaan')
+                        
                     }   
                 }
 
@@ -151,10 +139,8 @@
 
                 const isSendData = async (form) => {
                     try {
-                        const { data } = await axios.post('/api/pembelian/pp/store', {
-                            headers: this.headers.rencana,
-                            detail: this.formPermintaan,
-                            daftar: form
+                        await axios.post('/api/pembelian/pp', {
+                            ...form
                         }).then((response) => {
                             isSuccess()
                         })
@@ -175,6 +161,10 @@
                 }).then((result) => {
                     result.value ? isConditional() : ''
                 })
+
+                const checkMerkAndNama = () => {
+                    return this.$refs.umum.$refs.tidakterdaftar.checkSameMerkAndNameAndAsset;
+                };
             }
         },
         computed: {
@@ -200,6 +190,9 @@
                     notAccepted: sisaNotAccepted < 0 ? true : false
                 }
             },
+            checkNotNullFormPermintaan() {
+                return Object.values(this.formPermintaan).every((item) => item !== '' && item !== null)
+            },
         }
     }
 
@@ -220,14 +213,23 @@
                                 v-model="formPermintaan.tanggal" 
                                 class="form-control" 
                                 :min="this.headers.tanggal"
-                                :max="getTwoWeeksDateAfter"></div>
+                                :max="getTwoWeeksDateAfter"
+                                :class="{'is-invalid': checkNotNullFormPermintaan && formPermintaan.tanggal === ''}"
+                                ></div>
+                                <div class="invalid-feedback">
+                                    Tanggal Dibutuhkan harus diisi
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Kebutuhan Barang</label>
                                 <div class="col-5">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="umum" v-model="formPermintaan.kebutuhan">
+                                            id="inlineRadio1" value="umum" v-model="formPermintaan.kebutuhan"
+                                            >
+                                        <div class="invalid-feedback">
+                                            Kebutuhan Barang harus dipilih
+                                        </div>
                                         <label class="form-check-label" for="inlineRadio1">Umum</label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -240,7 +242,12 @@
                             <div class="form-group row">
                                 <label for="" class="col-5 text-right">Tujuan</label>
                                 <div class="col-4">
-                                    <textarea name="" id="" cols="2" rows="3" v-model="formPermintaan.tujuan" class="form-control"></textarea>
+                                    <textarea name="" id="" cols="2" rows="3" v-model="formPermintaan.tujuan" class="form-control"
+                                    :class="{'is-invalid': checkNotNullFormPermintaan && formPermintaan.tujuan === ''}"
+                                    ></textarea>
+                                    <div class="invalid-feedback">
+                                        Tujuan harus diisi
+                                    </div>
                                 </div>
                             </div>
                         </div>
