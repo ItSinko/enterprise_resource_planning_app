@@ -4,6 +4,7 @@ import Header from './header.vue'
 import daftarBarang from './daftarbarang'
 import dokumen from './dokumen'
 import hasilpengecekan from './hasilpengecekan'
+import axios from 'axios'
 
 export default {
     components: {
@@ -16,29 +17,47 @@ export default {
     data() {
         return {
             title: 'Purchase Order',
-                breadcumbs: [
-                    {
-                        name: 'Beranda',
-                        link: '#'
-                    },
-                    {
-                        name: 'Purchase Order',
-                        link: '/pembelian/po'
-                    },
-                    {
-                        name: 'Detail Purchase Order',
-                        link: '/pembelian/po/detail'
-                    }
-                ],
-                kurs: 'usd'      
+            breadcumbs: [
+                {
+                    name: 'Beranda',
+                    link: '#'
+                },
+                {
+                    name: 'Purchase Order',
+                    link: '/pembelian/po'
+                },
+                {
+                    name: 'Detail Purchase Order',
+                    link: '/pembelian/po/detail'
+                }
+            ],
+            kurs: 'usd',
+            header: {},
+            daftarBarangData: [],
         }
     },
+    created() {
+        this.getData()
+    },
+    methods: {
+        async getData() {
+            const id = this.$route.params.id
+            const { pp_header, po_header, supplier_header, data } = await axios.get(`/api/pembelian/po/${id}`).then(res => res.data.data)
+            this.header = {
+                pp_header,
+                po_header,
+                supplier_header,
+            }
+            this.daftarBarangData = data
+        }
+    },
+
 }
 </script>
 <template>
     <div>
         <header-master :title="title" :breadcumbs="breadcumbs" />
-        <Header />
+        <Header :header="header"/>
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title text-bold">Daftar Part</h4>
@@ -56,7 +75,7 @@ export default {
 </ul>
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-        <daftar-barang :kurs="kurs"/>
+        <daftar-barang :dataTable="daftarBarangData" :kurs="kurs"/>
   </div>
   <div class="tab-pane fade" id="pills-hasilpengecekan" role="tabpanel" aria-labelledby="pills-hasilpengecekan-tab">
         <hasilpengecekan />

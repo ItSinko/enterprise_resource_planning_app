@@ -1,7 +1,8 @@
 <script>
-    import Status from '../../../components/status'
+    import status from '../../../components/status'
     import moment from 'moment'
     import mix from '../../../mix'
+    import axios from 'axios'
     export default {
         mixins: [mix],
         props: {
@@ -11,17 +12,18 @@
             }
         },
         components: {
-            Status
+            status
         },
         methods: {
             formatDateIndonesia(date) {
                 return moment(date).lang('id').format('LL')
             },
-            detail(id) {
+            detail(id, jenis) {
                 this.$router.push({
                     name: 'purchaseorderDetal',
                     params: {
                         id: id,
+                        jenis: jenis,
                         open: 'dalamproses'
                     }
                 })
@@ -46,21 +48,20 @@
                     confirmButtonText: 'Ya, batalkan!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // this.$axios.delete(`/api/purchaseorder/${id}`)
-                        //     .then(res => {
-                        //         this.$swal('Dibatalkan!', 'Data berhasil dibatalkan.', 'success')
-                        //         this.$emit('refresh')
-                        //     })
-                        //     .catch(err => {
-                        //         this.$swal('Gagal!', 'Data gagal dibatalkan.', 'error')
-                        //     })
-                        this.$swal('Dibatalkan!', 'Data berhasil dibatalkan.', 'success')
-                        this.$emit('refresh')
+                       axios.put(`/api/pembelian/po/${id}/status`, {
+                            status: 'tolak'
+                       }).then(res => {
+                            this.$swal('Dibatalkan!', 'Data berhasil dibatalkan.', 'success')
+                            this.$emit('refresh')
+                        })
+                        .catch(err => {
+                            this.$swal('Gagal!', 'Data gagal dibatalkan.', 'error')
+                        })
                     }
                 })
             },
-            hapus(id) {
-                                this.$swal({
+            hapus(id, jenis) {
+                this.$swal({
                     title: 'Apakah anda yakin?',
                     text: "Anda tidak akan dapat mengembalikan data ini!",
                     icon: 'warning',
@@ -70,16 +71,21 @@
                     confirmButtonText: 'Ya, hapus!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // this.$axios.delete(`/api/purchaseorder/${id}`)
-                        //     .then(res => {
-                        //         this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
-                        //         this.$emit('refresh')
-                        //     })
-                        //     .catch(err => {
-                        //         this.$swal('Gagal!', 'Data gagal dihapus.', 'error')
-                        //     })
-                        this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
-                        this.$emit('refresh')
+                        if(jenis == 'umum'){
+                            axios.delete(`/api/pembelian/po/${id}/umum`).then(res => {
+                                this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
+                                this.$emit('refresh')
+                            }).catch(err => {
+                                this.$swal('Gagal!', 'Data gagal dihapus.', 'error')
+                            })
+                        }else{
+                            axios.delete(`/api/pembelian/po/${id}/part`).then(res => {
+                                this.$swal('Dihapus!', 'Data berhasil dihapus.', 'success')
+                                this.$emit('refresh')
+                            }).catch(err => {
+                                this.$swal('Gagal!', 'Data gagal dihapus.', 'error')
+                            })
+                        }
                     }
                 })
             }
@@ -111,13 +117,10 @@
                     <td>{{formatDateIndonesia(purchaseorder.tanggal)}}</td>
                     <td>{{formatDateIndonesia(purchaseorder.estimasi)}}</td>
                     <td>
-                        <div class="progress" v-if="purchaseorder.status === 'selesai'">
-                            <div class="progress-bar bg-success" role="progressbar" :style="{width: purchaseorder.progress + '%'}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ purchaseorder.progress }}%</div>
-                        </div>
-                        <status :status="purchaseorder.status" />
+                        <status :status="purchaseorder.status" :persentase="purchaseorder.persentase"/>
                     </td>
                     <td>
-                                                <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true"
+                        <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true"
                             aria-expanded="true">
                             <i class="fas fa-ellipsis-v"></i>
                         </div>
@@ -130,7 +133,7 @@
                                 will-change: transform;
                             ">
                             <button 
-                            @click="detail(purchaseorder.id)" class="dropdown-item" type="button">
+                            @click="detail(purchaseorder.id, purchaseorder.jenis)" class="dropdown-item" type="button">
                                 <i class="fas fa-eye"></i>
                                 Detail
                             </button>
@@ -148,7 +151,7 @@
                             </button>
 
                             <button 
-                            @click="hapus(purchaseorder.id)" class="dropdown-item" type="button">
+                            @click="hapus(purchaseorder.id, purchaseorder.jenis)" class="dropdown-item" type="button">
                                 <i class="fas fa-trash"></i>
                                 Hapus
                             </button>

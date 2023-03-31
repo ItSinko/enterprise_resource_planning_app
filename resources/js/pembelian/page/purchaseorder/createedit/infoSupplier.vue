@@ -20,7 +20,7 @@ export default {
     methods: {
         async getSuppliers() {
             try {
-                const { data } = await axios.get('/api/supplier/data').then(res => res.data)
+                const { data } = await axios.get('/api/supplier').then(res => res.data)
                 data.forEach(item => {
                     this.supplierSelect.push({
                         value: item.id,

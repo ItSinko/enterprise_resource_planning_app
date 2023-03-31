@@ -1,5 +1,6 @@
 <script>
 import Table from './table.vue'
+import axios from 'axios'
 export default {
     components: {
         Table
@@ -8,48 +9,17 @@ export default {
         return {
             searchdalamProses: '',
             filterdalamProses: [],
-            dataTable: [
-                {
-                    id: 1,
-                    no_po: 'PO-0001',
-                    divisi: 'Divisi 1',
-                    supplier: 'Supplier 1',
-                    tanggal_diminta: '2020-01-01',
-                    tanggal_estimasi: '2020-01-01',
-                    status: 'proses po',
-                },
-                {
-                    id: 2,
-                    no_po: 'PO-0002',
-                    divisi: 'Divisi 2',
-                    supplier: 'Supplier 2',
-                    tanggal_diminta: '2020-01-01',
-                    tanggal_estimasi: '2020-01-01',
-                    status: 'menunggu permintaan',
-                },
-                {
-                    id: 3,
-                    no_po: 'PO-0003',
-                    divisi: 'Divisi 3',
-                    supplier: 'Supplier 3',
-                    tanggal_diminta: '2020-01-01',
-                    tanggal_estimasi: '2020-01-01',
-                    status: 'batal',
-                },
-                {
-                    id: 4,
-                    no_po: 'PO-0004',
-                    divisi: 'Divisi 4',
-                    supplier: 'Supplier 4',
-                    tanggal_diminta: '2020-01-01',
-                    tanggal_estimasi: '2020-01-01',
-                    status: 'selesai',
-                    progress: 50,
-                }
-            ],
+            dataTable: [],
         }
     },
+    mounted() {
+        this.getData()
+    },
     methods: {
+        async getData() {
+            const { data } = await axios.get('/api/pembelian/po').then(res => res.data)
+            this.dataTable = data
+        },
         clickFilterdalamProses(filter) {
             if (this.filterdalamProses.includes(filter)) {
                 this.filterdalamProses = this.filterdalamProses.filter(item => item !== filter)
@@ -57,6 +27,9 @@ export default {
                 this.filterdalamProses.push(filter)
             }
         },
+        refresh() {
+            this.getData()
+        }
     },
     computed: {
         filtereddalamProses() {
@@ -70,12 +43,10 @@ export default {
                 })
             }
             return filtered.filter((purchaseorder) => {
-                return purchaseorder.no_po.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                    purchaseorder.divisi.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                    purchaseorder.supplier.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                    purchaseorder.tanggal_diminta.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                    purchaseorder.tanggal_estimasi.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                    purchaseorder.status.toLowerCase().includes(this.searchdalamProses.toLowerCase())
+                return Object.keys(purchaseorder).some((key) => {
+                    return String(purchaseorder[key]).toLowerCase().includes(this.searchdalamProses
+                        .toLowerCase())
+                })
             })
         },
         getAllStatusUnique() {
@@ -85,9 +56,6 @@ export default {
                 return self.indexOf(value) === index
             })
         },
-        refresh() {
-            this.$forceUpdate()
-        }
     },
 }
 </script>

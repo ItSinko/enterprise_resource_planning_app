@@ -503,7 +503,7 @@ class PembelianController extends Controller
     {
         $data = array();
         $po = DB::select("
-        select po.id , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
+        select po.id, pp.jenis , no_po as po , tgl_po as tgl_diminta , tgl_estimasi_datang , tgl_datang as tgl_kedatangan, e.nama as ekspedisi , s.nama as supplier , k.nama as kurs , d.nama as divisi, ms.nama as status,
         (select sum(dppa.jumlah) from detail_po_pembelian_aset dppa where dppa.po_pembelian_id = po.id ) as jumlah_po,
         (select  coalesce (sum(dppa2.jumlah),0) from detail_penerimaan_po_aset dppa2 join penerimaan_po_aset ppa on dppa2.penerimaan_po_aset_id  = ppa.id
         where ppa.po_pembelian_id  = po.id ) as jumlah_diterima,
@@ -515,20 +515,33 @@ class PembelianController extends Controller
         join kurs k on k.id = po.kurs_id
         join divisi d on d.id = po.divisi_id
         join m_status ms on ms.id = po.status_id
-        where pp.jenis = 'umum'
         ");
 
         foreach ($po as $key_po => $po) {
-            $data[$key_po] = array(
-                'id' => $po->id,
-                'po' => $po->po,
-                'tgl_diminta' => $po->tgl_diminta,
-                'tgl_kedatangan' => $po->tgl_kedatangan,
-                'supplier' => $po->supplier,
-                'divisi' => $po->divisi,
-                'status' => $po->status,
-                'status_persen' => $po->status_persen
-            );
+            if ($po->status_persen == 0) {
+                $data[$key_po] = array(
+                    'id' => $po->id,
+                    'no_po' => $po->po,
+                    'tanggal' => $po->tgl_diminta,
+                    'estimasi' => $po->tgl_kedatangan,
+                    'supplier' => $po->supplier,
+                    'divisi' => $po->divisi,
+                    'status' => $po->status,
+                    'jenis' => $po->jenis,
+                );
+            } else {
+                $data[$key_po] = array(
+                    'id' => $po->id,
+                    'no_po' => $po->po,
+                    'tanggal' => $po->tgl_diminta,
+                    'estimasi' => $po->tgl_kedatangan,
+                    'supplier' => $po->supplier,
+                    'divisi' => $po->divisi,
+                    'status' => $po->status,
+                    'jenis' => $po->jenis,
+                    'persentase' => (int) $po->status_persen
+                );
+            }
         }
         return response()->json(['data' => $data]);
     }
@@ -698,68 +711,80 @@ class PembelianController extends Controller
 
     public function store_data_po(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'permintaan_pembelian_id' => 'required',
-            'no_po' => 'required|unique:po_pembelian,no_po',
-            'tgl_po' => 'required',
-            'tgl_datang' => 'required',
-            'ekspedisi_id' => 'required',
-            'supplier_id' => 'required',
-            'kurs_id' => 'required',
-            'divisi_id' => 'required',
-            'status_id' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => 'gagal'
+        // dd($request->all());
+        try {
+            $validator = Validator::make($request->all(), [
+                'permintaan_pembelian_id' => 'required',
+                'no_po' => 'required|unique:po_pembelian,no_po',
+                'tgl_po' => 'required',
+                'tgl_datang' => 'required',
+                'ekspedisi_id' => 'required',
+                'supplier_id' => 'required',
+                'kurs_id' => 'required',
+                'divisi_id' => 'required',
+                'status_id' => 'required',
             ]);
-        } else {
-            // dd($request->all());
-            $po =  PoPembelian::create([
-                'permintaan_pembelian_id' => $request->permintaan_pembelian_id,
-                'no_po' => $request->no_po,
-                'tgl_po' => $request->tgl_po,
-                'tgl_datang' => $request->tgl_datang,
-                'tgl_estimasi_datang' => $request->tgl_estimasi_datang,
-                'ekspedisi_id' => $request->ekspedisi_id,
-                'supplier_id' => $request->supplier_id,
-                'kurs_id' => $request->kurs_id,
-                'divisi_id' => $request->divisi_id,
-                'status_id' => $request->status_id,
-            ]);
-
-
-            if (isset($request->aset)) {
-                for ($i = 0; $i < count($request->aset); $i++) {
-                    DetailPoPembelianAset::create([
-                        'po_pembelian_id' => $po->id,
-                        'detail_pp_aset_id' => $request->aset[$i]['detail_pp_aset_id'],
-                        'jumlah' => $request->aset[$i]['jumlah'],
-                        'harga' => $request->aset[$i]['harga'],
-                        'ongkir' => $request->aset[$i]['ongkir'],
-                        'biaya_lain' => $request->aset[$i]['biaya_lain'],
-                        'konversi' => $request->aset[$i]['konversi'],
-                    ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'data' => 'gagal',
+                    'error' => $validator->errors()
+                ]);
+            } else {
+                // dd($request->all());
+                $po =  PoPembelian::create([
+                    'permintaan_pembelian_id' => $request->permintaan_pembelian_id,
+                    'no_po' => $request->no_po,
+                    'tgl_po' => $request->tgl_po,
+                    'tgl_datang' => $request->tgl_datang,
+                    'tgl_estimasi_datang' => $request->tgl_estimasi_datang,
+                    'ekspedisi_id' => $request->ekspedisi_id,
+                    'supplier_id' => $request->supplier_id,
+                    'kurs_id' => $request->kurs_id,
+                    'divisi_id' => $request->divisi_id,
+                    'status_id' => $request->status_id,
+                ]);
+    
+    
+                if (isset($request->aset)) {
+                    for ($i = 0; $i < count($request->aset); $i++) {
+                        DetailPoPembelianAset::create([
+                            'po_pembelian_id' => $po->id,
+                            'detail_pp_aset_id' => $request->aset[$i]['detail_pp_aset_id'],
+                            'jumlah' => $request->aset[$i]['jumlah'],
+                            'harga' => $request->aset[$i]['harga'],
+                            'ongkir' => $request->aset[$i]['ongkir'],
+                            'biaya_lain' => $request->aset[$i]['biaya_lain'],
+                            'konversi' => $request->aset[$i]['konversi'],
+                            'status_id' => $request->aset[$i]['status_id'],
+                        ]);
+                    }
                 }
-            }
-
-            if (isset($request->part)) {
-                for ($i = 0; $i < count($request->part); $i++) {
-                    DetailPoPembelianPart::create([
-                        'po_pembelian_id' => $po->id,
-                        'detail_pp_bom_part_id' => $request->part[$i]['detail_pp_bom_part_id'],
-                        'jumlah' => $request->part[$i]['jumlah'],
-                        'harga' => $request->part[$i]['harga'],
-                        'ongkir' => $request->part[$i]['ongkir'],
-                        'biaya_lain' => $request->part[$i]['biaya_lain'],
-                        'konversi' => $request->part[$i]['konversi'],
-                    ]);
+    
+                if (isset($request->part)) {
+                    for ($i = 0; $i < count($request->part); $i++) {
+                        DetailPoPembelianPart::create([
+                            'po_pembelian_id' => $po->id,
+                            'detail_pp_bom_part_id' => $request->part[$i]['detail_pp_bom_part_id'],
+                            'jumlah' => $request->part[$i]['jumlah'],
+                            'harga' => $request->part[$i]['harga'],
+                            'ongkir' => $request->part[$i]['ongkir'],
+                            'biaya_lain' => $request->part[$i]['biaya_lain'],
+                            'konversi' => $request->part[$i]['konversi'],
+                            'status_id' => $request->part[$i]['status_id'],
+                            
+                        ]);
+                    }
                 }
+    
+                return response()->json([
+                    'data' => 'success'
+                ]);
             }
-
+        } catch (\Throwable $th) {
             return response()->json([
-                'data' => 'success'
-            ]);
+                'data' => 'gagal',
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
 
@@ -767,7 +792,7 @@ class PembelianController extends Controller
     {
         $po = PoPembelian::find($id);
         $data['pp_header'] = array(
-            'nopo' => $po->PermintaanPembelian->no_pp,
+            'nopp' => $po->PermintaanPembelian->no_pp,
             'jenis_barang' => $po->PermintaanPembelian->jenis,
             'divisi' => $po->PermintaanPembelian->Divisi->nama,
             'tgl_dibutuhkan' => $po->PermintaanPembelian->tgl_dibutuhkan,
@@ -790,27 +815,41 @@ class PembelianController extends Controller
 
         if ($po->DetailPoPart) {
             $part = DetailPoPembelianPart::with(['DetailPPBomPart.Part', 'DetailPPBomPart.DetailPPBom.Produk'])->where('po_pembelian_id', $id)->get();
+            
+            $data['data'] = [];
 
             foreach ($part as $key => $d) {
-                $data['data'][$key] = array(
+                $id_produk = $d->DetailPPBomPart->DetailPPBom->id;
+                $nama_produk = $d->DetailPPBomPart->DetailPPBom->Produk->nama;
+                $detail = [
                     'id' => $d->id,
                     'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
-                    // 'nama' => $d->DetailPPBomPart->part_id == null ? $d->DetailPPBomPart->nama : $d->DetailPPBomPart->Part->nama,
                     'jumlah' => $d->jumlah,
                     'harga' => $d->harga,
                     'ongkir' => $d->ongkir,
                     'biaya_lain' => $d->biaya_lain,
                     'konversi' => $d->konversi,
-                    'produk_id' => $d->DetailPPBomPart->DetailPPBom->Produk->nama
-                );
+                ];
+
+                if (!isset($data['data'][$id_produk])) {
+                    $data['data'][$id_produk] = [
+                        'id_produk' => $id_produk,
+                        'nama_produk' => $nama_produk,
+                        'detail' => [],
+                    ];
+                }
+
+                $data['data'][$id_produk]['detail'][] = $detail;
             }
+
+            $data['data'] = array_values($data['data']);
         }
         if ($po->DetailPoAset) {
             $asset = DetailPoPembelianAset::with(['DetailPPAset'])->where('po_pembelian_id', $id)->get();
             foreach ($asset as $key => $d) {
                 $data['data'][$key] = array(
                     'id' => $d->id,
-                    'nama' => $d->DetailPPAset->Aset->nama,
+                    'nama_produk' => $d->DetailPPAset->Aset->nama,
                     'jumlah' => $d->jumlah,
                     'harga' => $d->harga,
                     'ongkir' => $d->ongkir,
@@ -820,9 +859,9 @@ class PembelianController extends Controller
             }
         }
 
-
-
-        return response()->json(['data' => $data]);
+        return response()->json([
+            'data' => $data
+        ], 200);
     }
 
     public function update_status_po(Request $request, $id)

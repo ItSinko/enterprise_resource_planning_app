@@ -8,20 +8,10 @@
             kurs: {
                 type: String,
                 required: true
-            }
-        },
-        data() {
-            return {
-                dataTables: [{
-                    kode: 'P001',
-                    nama: 'Part 1',
-                    jumlah: 10,
-                    harga: 20,
-                    ongkir: 5,
-                    biaya_lain: 5,
-                    konversi: 50000,
-                    status: 'selesai'
-                }]
+            },
+            dataTables: {
+                type: Array,
+                required: true
             }
         },
         methods: {
@@ -63,12 +53,12 @@
                                 <th>Biaya Lain</th>
                                 <th>Subtotal</th>
                                 <th>Konversi</th>
-                                <th>Status</th>
+                                <!-- <th>Status</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(datatable, idx) in dataTables" :key="idx">
-                                <td>{{ datatable.kode }} - {{ datatable.nama }}</td>
+                                <td>{{ datatable.nama }}</td>
                                 <td>{{ datatable.jumlah }}</td>
                                 <td>{{ formatHarga(datatable.harga, kurs) }}</td>
                                 <td>{{ formatHarga(datatable.ongkir, kurs) }}</td>
@@ -76,7 +66,7 @@
                                 <td>{{ formatHarga(subtotal(datatable), kurs) }}</td>
                                 <td>{{ formatHarga(datatable.konversi, 'idr') }}</td>
                                 <td>
-                                    <status :status="datatable.status"></status>
+                                    <!-- <status :status="datatable.status"></status> -->
                                 </td>
                             </tr>
                         </tbody>

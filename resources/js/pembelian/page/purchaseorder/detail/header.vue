@@ -3,7 +3,30 @@
         props: {
             header: {
                 type: Object,
-                default: () => {}
+                default: () => {
+                    return {
+                        pp_header: {
+                            nopp: '',
+                            jenis_barang: '',
+                            divisi: '',
+                            tgl_dibutuhkan: '',
+                            tgl_diminta: '',
+                            tujuan: '',
+                        },
+                        po_header: {
+                            nopo: '',
+                            tgl_po: '',
+                            tgl_datang: '',
+                            ekspedisi: '',
+                        },
+                        supplier_header: {
+                            nama: '',
+                            alamat: '',
+                            email: '',
+                            telp: '',
+                        },
+                    }
+                }
             },
         },
     }
@@ -25,7 +48,7 @@
                                     <p>No PP</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.pp_header?.nopp }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -35,8 +58,8 @@
                                 <div class="col">
                                     <p>Jenis Barang</p>
                                 </div>
-                                <div class="col text-bold">
-                                    <p>Part</p>
+                                <div class="col text-bold text-capitalize">
+                                    <p>{{ header.pp_header?.jenis_barang }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -46,8 +69,8 @@
                                 <div class="col">
                                     <p>Divisi</p>
                                 </div>
-                                <div class="col text-bold">
-                                    <p>Produksi</p>
+                                <div class="col text-bold text-capitalize">
+                                    <p>{{ header.pp_header?.divisi }} </p>
                                 </div>
                             </div>
                             <div class="row">
@@ -58,7 +81,7 @@
                                     <p>Tanggal Diminta</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ formatTanggal(header.pp_header?.tgl_diminta) }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -69,7 +92,7 @@
                                     <p>Tanggal Dibutuhkan</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ formatTanggal(header.pp_header?.tgl_dibutuhkan) }}</p>
                                 </div>
                             </div>
                             <div class="alert alert-warning" role="alert">
@@ -77,9 +100,9 @@
                                     <div class="col-2">
                                         <i class="fas mt-4 fa-2xl fa-info-circle"></i>
                                     </div>
-                                    <div class="col">
+                                    <div class="col text-capitalize">
                                         <small>Tujuan</small><br>
-                                        <b>PP/2020/0001</b>
+                                        <b>{{ header.pp_header?.tujuan }}</b>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +123,7 @@
                                     <p>No PO</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.po_header?.nopo }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -111,7 +134,7 @@
                                     <p>Tanggal PO</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ formatTanggal(header.po_header?.tgl_po) }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -122,7 +145,7 @@
                                     <p>Estimasi Kedatangan</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ formatTanggal(header.po_header?.tgl_datang) }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -133,7 +156,7 @@
                                     <p>Tanggal Kedatangan</p>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ formatTanggal(header.po_header?.tgl_datang) }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -143,11 +166,11 @@
                                 <div class="col">
                                     <p>Ekspedisi</p>
                                 </div>
-                                <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                <div class="col text-bold text-capitalize">
+                                    <p>{{ header.po_header?.ekspedisi }}</p>
                                 </div>
                             </div>
-                            <div class="alert alert-danger" role="alert">
+                            <!-- <div class="alert alert-danger" role="alert">
                                 <div class="row">
                                     <div class="col-2">
                                         <i class="fas mt-4 fa-2xl fa-exclamation-triangle"></i>
@@ -160,7 +183,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -175,7 +198,7 @@
                                     <i class="fas fa-user-alt"></i>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.supplier_header?.nama }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -183,7 +206,7 @@
                                     <i class="fa fa-map-pin" aria-hidden="true"></i>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.supplier_header?.alamat }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -191,7 +214,7 @@
                                     <i class="fas fa-mail-bulk"></i>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.supplier_header?.email }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -199,7 +222,7 @@
                                     <i class="fas fa-phone-alt"></i>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>PP/2020/0001</p>
+                                    <p>{{ header.supplier_header?.telp }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -207,7 +230,7 @@
                                     <i class="fas fa-money-bill-wave"></i>
                                 </div>
                                 <div class="col text-bold">
-                                    <p>USD</p>
+                                    <!-- <p>{{ header.po_header.top }}</p> -->
                                 </div>
                             </div>
                         </div>

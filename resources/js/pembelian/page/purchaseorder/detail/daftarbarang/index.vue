@@ -6,6 +6,10 @@ export default {
         kurs: {
             type: String,
             required: true
+        },
+        dataTable: {
+            type: Array,
+            required: true
         }
     },
     components: {
@@ -15,19 +19,10 @@ export default {
     data() {
         return {
             divisi: parseInt(localStorage.getItem('divisi')),
-            dataTable: [
-                {
-                    nama_produk: 'Produk 1',
-                    jumlah: 10,
-                    status: 'selesai',
-                },
-                {
-                    nama_produk: 'Produk 2',
-                    jumlah: 10,
-                    status: 'belum proses',
-                }
-            ],
             modal: false,
+            detail: [],
+            jenis: this.$route.params.jenis,
+
         }
     },
     methods: {
@@ -36,8 +31,9 @@ export default {
                 item.checked = !item.checked
             })
         },
-        showModal(id) {
+        showModal(detail) {
             this.modal = true
+            this.detail = detail
             this.$nextTick(() => {
                 $('.modalDetailPO').modal('show')
             })
@@ -51,7 +47,7 @@ export default {
 </script>
 <template>
     <div>
-        <modal-detail :kurs="kurs" v-if="modal" @close="closeModal"/>
+        <modal-detail :dataTables="detail" :kurs="kurs" v-if="modal" @close="closeModal"/>
         <button class="btn btn-info" v-if="$route.params.open !== 'riwayat'">
             <i class="fa fa-check"></i>
             Tambah Penerimaan
@@ -61,19 +57,19 @@ export default {
                 <tr>
                     <th v-if="divisi === 7 && $route.params.open !== 'riwayat'"><input type="checkbox" @click="checkAll"></th>
                     <th>Nama Produk</th>
-                    <th>Jumlah</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th v-if="jenis == 'umum'">Jumlah</th>
+                    <!-- <th>Status</th> -->
+                    <th v-if="jenis != 'umum'">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(table, index) in dataTable" :key="index">
                     <td v-if="divisi === 7 && $route.params.open !== 'riwayat'"><input type="checkbox" ref="child" v-if="divisi === 7"></td>
                     <td>{{ table.nama_produk }}</td>
-                    <td>{{ table.jumlah }}</td>
-                    <td><status :status="table.status" /></td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-primary" @click="showModal(table.jumlah)">
+                    <td v-if="jenis == 'umum'">{{ table.jumlah }}</td>
+                    <!-- <td><status :status="table.status" /></td> -->
+                    <td v-if="jenis != 'umum'">
+                        <button class="btn btn-sm btn-outline-primary" @click="showModal(table.detail)">
                             <i class="fa fa-eye"></i>
                         </button>
                     </td>
