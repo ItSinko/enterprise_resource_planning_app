@@ -102,7 +102,7 @@
                     <th>No PO</th>
                     <th>Divisi</th>
                     <th>Supplier</th>
-                    <th>Tanggal Dimitra</th>
+                    <th>Tanggal Diminta</th>
                     <th>Estimasi Kedatangan</th>
                     <th>Status</th>
                     <th>Aksi</th>
