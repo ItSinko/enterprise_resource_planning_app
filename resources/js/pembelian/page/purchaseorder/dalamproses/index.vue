@@ -10,6 +10,10 @@ export default {
             searchdalamProses: '',
             filterdalamProses: [],
             dataTable: [],
+            tanggal: {
+                mulai: '',
+                hingga: ''
+            }
         }
     },
     mounted() {
@@ -29,7 +33,7 @@ export default {
         },
         refresh() {
             this.getData()
-        }
+        },
     },
     computed: {
         filtereddalamProses() {
@@ -42,12 +46,29 @@ export default {
                         .status == filter))
                 })
             }
-            return filtered.filter((purchaseorder) => {
-                return Object.keys(purchaseorder).some((key) => {
-                    return String(purchaseorder[key]).toLowerCase().includes(this.searchdalamProses
-                        .toLowerCase())
+
+            // check if tanggal is empty
+            const tanggal = Object.keys(this.tanggal).some(key => this.tanggal[key] != '')
+
+            if (tanggal) {
+                filtered = filtered.filter(purchaseorder => {
+                    return purchaseorder.tanggal >= this.tanggal.mulai && purchaseorder.tanggal <= this.tanggal.hingga
                 })
-            })
+
+                return filtered.filter((purchaseorder) => {
+                    return Object.keys(purchaseorder).some((key) => {
+                        return String(purchaseorder[key]).toLowerCase().includes(this.searchdalamProses
+                            .toLowerCase())
+                    })
+                })
+            } else {
+                return filtered.filter((purchaseorder) => {
+                    return Object.keys(purchaseorder).some((key) => {
+                        return String(purchaseorder[key]).toLowerCase().includes(this.searchdalamProses
+                            .toLowerCase())
+                    })
+                })
+            }
         },
         getAllStatusUnique() {
             return this.dataTable.map((purchaseorder) => {
@@ -86,8 +107,8 @@ export default {
                                 <div class="form-group">
                                     <label for="jenis_penjualan">Tanggal PO</label>
                                 </div>
-                                <div class="form-group"><label for="">Mulai Tanggal</label><input type="date" class="form-control"></div>
-                                <div class="form-group"><label for="">Hingga Tanggal</label><input type="date" class="form-control"></div>
+                                <div class="form-group"><label for="">Mulai Tanggal</label><input type="date" v-model="tanggal.mulai" class="form-control"></div>
+                                <div class="form-group"><label for="">Hingga Tanggal</label><input type="date" v-model="tanggal.hingga" class="form-control"></div>
                             </div>
                         </div>
                     </form>
