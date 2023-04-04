@@ -131,7 +131,7 @@
                         }).then(res => {
                             success()
                         }).catch(err => {
-                            error()
+                            error() 
                         })
                     }
 

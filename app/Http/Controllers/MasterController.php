@@ -2406,6 +2406,10 @@ class MasterController extends Controller
             $data->kurs = $request->supplier['kurs'];
             $data->email =  $request->kontak_supplier['email'];
             $data->telepon = $request->kontak_supplier['telepon'];
+            $data->fax = $request->kontak_supplier['fax'];
+            $data->alamat = $request->kontak_supplier['alamat'];
+            $data->postal_code = $request->kontak_supplier['postal_code'];
+            $data->negara = $request->kontak_supplier['negara'];
             $data->jenis = $request->supplier['jenis'];
             $data->save();
             return response()->json(['status' => 'berhasil']);
