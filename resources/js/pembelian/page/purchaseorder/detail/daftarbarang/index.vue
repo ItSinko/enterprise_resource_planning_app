@@ -22,7 +22,7 @@ export default {
             modal: false,
             detail: [],
             jenis: this.$route.params.jenis,
-
+            addPermintaan: [],
         }
     },
     methods: {
@@ -30,7 +30,12 @@ export default {
             this.$refs.child.forEach(item => {
                 item.checked = !item.checked
             })
+
+            this.addPermintaan = this.$refs.child.every(item => item.checked) ? this.dataTable : []
         },
+        checked(item, event){
+            this.addPermintaan = event.target.checked ? [...this.addPermintaan, item] : this.addPermintaan.filter(data => data.id !== item.id)
+        },  
         showModal(detail) {
             this.modal = true
             this.detail = detail
@@ -64,7 +69,11 @@ export default {
             </thead>
             <tbody>
                 <tr v-for="(table, index) in dataTable" :key="index">
-                    <td v-if="divisi === 7 && $route.params.open !== 'riwayat'"><input type="checkbox" ref="child" v-if="divisi === 7"></td>
+                    <td v-if="divisi === 7 && $route.params.open !== 'riwayat'">
+                        <input type="checkbox"
+                        @click="checked(table, $event)"
+                        ref="child" 
+                        v-if="divisi === 7"></td>
                     <td>{{ table.nama_produk }}</td>
                     <td v-if="jenis == 'umum'">{{ table.jumlah }}</td>
                     <!-- <td><status :status="table.status" /></td> -->
