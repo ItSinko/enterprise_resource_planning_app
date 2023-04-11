@@ -1,6 +1,7 @@
 <script>
 import Status from '../../../../components/status.vue'
 import modalDetail from '../modalDetail/index.vue'
+import Permintaan from '../penerimaan'
 export default {
     props: {
         kurs: {
@@ -10,11 +11,16 @@ export default {
         dataTable: {
             type: Array,
             required: true
-        }
+        },
+        header: {
+            type: Object,
+            required: true
+        },
     },
     components: {
         Status,
-        modalDetail
+        modalDetail,
+        Permintaan
     },
     data() {
         return {
@@ -23,6 +29,7 @@ export default {
             detail: [],
             jenis: this.$route.params.jenis,
             addPermintaan: [],
+            modalPermintaan: false,
         }
     },
     methods: {
@@ -46,14 +53,21 @@ export default {
         closeModal() {
             this.modal = false
             $('.modalDetailPO').modal('hide')
-        }
+        },
+        showModalPenerimaan() {
+            this.modalPermintaan = true
+            this.$nextTick(() => {
+                $('.modalPermintaan').modal('show')
+            })
+        },
     },
 }
 </script>
 <template>
     <div>
         <modal-detail :dataTables="detail" :kurs="kurs" v-if="modal" @close="closeModal"/>
-        <button class="btn btn-info" v-if="$route.params.open !== 'riwayat'">
+        <permintaan :header="header" :permintaan="addPermintaan" v-if="modalPermintaan"/>
+        <button class="btn btn-info" v-if="$route.params.open !== 'riwayat'" @click="showModalPenerimaan">
             <i class="fa fa-check"></i>
             Tambah Penerimaan
         </button>

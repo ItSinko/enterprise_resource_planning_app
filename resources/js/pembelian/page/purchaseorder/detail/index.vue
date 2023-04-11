@@ -75,7 +75,7 @@ export default {
 </ul>
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-        <daftar-barang :dataTable="daftarBarangData" :kurs="kurs"/>
+        <daftar-barang :dataTable="daftarBarangData" :header="header" :kurs="kurs"/>
   </div>
   <div class="tab-pane fade" id="pills-hasilpengecekan" role="tabpanel" aria-labelledby="pills-hasilpengecekan-tab">
         <hasilpengecekan />
