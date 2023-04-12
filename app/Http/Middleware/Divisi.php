@@ -32,7 +32,7 @@ class Divisi
         }
 
         if ($request->user()->hasRole("24")) {
-            return redirect('/ppic');
+            return redirect('/ppic'); 
         } else if ($request->user()->hasRole("15")) {
             return redirect('/logistik/dashboard');
         } else if ($request->user()->hasRole("3")) {
@@ -59,6 +59,8 @@ class Divisi
             return redirect('/administrator/dashboard');
         } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
             return redirect('/mtc/air/masuk');
+        } else if ($request->user()->hasRole("27")) {
+            return redirect('/pembelian/supplier');
         }
     }
 }
