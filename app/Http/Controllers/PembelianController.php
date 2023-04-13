@@ -678,6 +678,7 @@ class PembelianController extends Controller
 
     public function terima_po(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'surat_jalan' => 'required',
             'id.*' => 'required',
@@ -685,26 +686,33 @@ class PembelianController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'data' => 'gagal'
-            ]);
+                'status' => 'error'
+            ], 422);
         } else {
-            if ($request->aset) {
-                $p = PenerimaanPoAset::create([
-                    'po_pembelian_id' => $request->po_pembelian_id,
-                    'surat_jalan' => $request->surat_jalan,
-                    'file' => $request->file
-                ]);
-
-                for ($i = 0; $i < count($request->aset); $i++) {
-                    $data = DetailPenerimaanPoAset::create([
-                        'penerimaan_po_aset_id' => $p->id,
-                        'detail_po_pembelian_id' => $request->aset[$i]['id'],
-                        'jumlah' => $request->aset[$i]['jumlah']
+            try {
+                if ($request->aset) {
+                    $p = PenerimaanPoAset::create([
+                        'po_pembelian_id' => $request->po_pembelian_id,
+                        'surat_jalan' => $request->surat_jalan,
+                        'file' => $request->file
+                    ]);
+    
+                    for ($i = 0; $i < count($request->aset); $i++) {
+                        $data = DetailPenerimaanPoAset::create([
+                            'penerimaan_po_aset_id' => $p->id,
+                            'detail_po_pembelian_id' => $request->aset[$i]['id'],
+                            'jumlah' => $request->aset[$i]['jumlah']
+                        ]);
+                    }
+                    return response()->json([
+                        'status' => 'success'
                     ]);
                 }
+            } catch (\Throwable $th) {
                 return response()->json([
-                    'data' => 'success'
-                ]);
+                    'status' => 'error',
+                    'message' => $th->getMessage()
+                ], 422);
             }
         }
     }

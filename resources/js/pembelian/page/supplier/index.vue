@@ -16,7 +16,7 @@ export default {
             title: 'Supplier',
             breadcumbs: [
                 {
-                    name: 'Beranda`',
+                    name: 'Beranda',
                     link: '#'
                 },
                 {

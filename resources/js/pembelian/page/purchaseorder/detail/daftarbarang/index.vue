@@ -60,13 +60,17 @@ export default {
                 $('.modalPermintaan').modal('show')
             })
         },
+        closePenerimaan() {
+            this.modalPermintaan = false
+            $('.modalPermintaan').modal('hide')
+        },
     },
 }
 </script>
 <template>
     <div>
         <modal-detail :dataTables="detail" :kurs="kurs" v-if="modal" @close="closeModal"/>
-        <permintaan :header="header" :permintaan="addPermintaan" v-if="modalPermintaan"/>
+        <permintaan :header="header" :permintaan="addPermintaan" v-if="modalPermintaan" @close="closePenerimaan"/>
         <button class="btn btn-info" v-if="$route.params.open !== 'riwayat'" @click="showModalPenerimaan">
             <i class="fa fa-check"></i>
             Tambah Penerimaan

@@ -1,5 +1,6 @@
 <script>
 import headers from './headers.vue'
+import axios from 'axios'
 export default {
     components: {
         headers
@@ -13,6 +14,29 @@ export default {
             type: Array,
             required: true
         }
+    },
+    data() {
+        return {
+            surat_jalan: '',
+            file: null,
+        }
+    },
+    methods: {
+        uploadFile(file) {
+            this.file = file
+        },
+        async simpan() {
+            const formData = new FormData()
+            formData.append('po_pembelian_id', this.$route.params.id)
+            formData.append('surat_jalan', this.surat_jalan)
+            formData.append('file', this.file)
+            formData.append('aset', JSON.stringify(this.permintaan))
+
+            const { data } = await axios.post('/api/pembelian/po/terima', formData).then(res => res.data)
+            if (data.status) {
+                this.$router.push('/pembelian/po')
+            }
+        },
     }
 }
 </script>
@@ -22,7 +46,7 @@ export default {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Terima Barang PO</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" @click="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
             </div>
@@ -37,14 +61,14 @@ export default {
                         <div class="form-group row">
                             <label for="" class="col-5 text-right">No Surat Jalan</label>
                             <div class="col-3">
-                                <input type="text" class="form-control" placeholder="No Surat Jalan">
+                                <input type="text" class="form-control" v-model="surat_jalan" placeholder="No Surat Jalan">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="" class="col-5 text-right">Surat Jalan</label>
                             <div class="col-3">
-                                <input type="file" name="" id="" class="form-control">
+                                <input type="file" class="form-control" @change="uploadFile($event.target.files[0])">
                             </div>
                         </div>
                         </div>
@@ -64,7 +88,7 @@ export default {
                             <td>{{ item.nama_produk }}</td>
                             <td>{{ item.jumlah }}</td>
                             <td>{{ item.harga }}</td>
-                            <td>{{ item.biaya_ongkir }}</td>
+                            <td>{{ item.ongkir }}</td>
                             <td>{{ item.biaya_lain }}</td>
                         </tr>
                     </tbody>
@@ -73,8 +97,8 @@ export default {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" @click="close">Keluar</button>
+                <button type="button" class="btn btn-primary" @click="simpan">Terima</button>
             </div>
         </div>
     </div>

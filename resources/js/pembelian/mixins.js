@@ -13,6 +13,9 @@ export default {
         },
         isNumber(event) {
             new RegExp('[0-9]').test(event.key) || event.preventDefault()
+        },
+        close() {
+            this.$emit('close');
         }
     }
 }
