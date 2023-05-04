@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="form-group row">
                                     <label for="" class="col-4 text-right">Tanggal Penerimaan</label>
-                                    <input type="text" class="form-control col-5">
+                                    <input type="date" class="form-control col-5">
                                 </div>
                                 <Table :parts="parts" />
                             </div>

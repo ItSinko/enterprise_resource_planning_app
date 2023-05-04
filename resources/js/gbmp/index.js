@@ -9,12 +9,15 @@ import "datatables.net/js/jquery.dataTables.min"
 import "vue-select/dist/vue-select.css";
 import VueSweetalert2 from 'vue-sweetalert2';
 import Select from 'vue-select'
+import './index.css'
+import mix from './mix'
 
 window.Vue = require('vue').default;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueSweetalert2);
 Vue.component('v-select', Select);
+Vue.mixin(mix);
 
 const store = new Vuex.Store(Store);
 

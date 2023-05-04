@@ -1,7 +1,10 @@
 <script>
-    import moment from 'moment'
     import axios from 'axios'
+    import status from '../../components/status.vue'
     export default {
+        components: {
+            status
+        },
         props: {
             transfers: {
                 type: Array,
@@ -10,9 +13,6 @@
             }
         },
         methods: {
-            moment(date) {
-                return moment(date).format('DD MMMM YYYY')
-            },
 
             divisiClass(status) {
                 switch (status) {
@@ -20,19 +20,6 @@
                         return 'text-danger'
                     default:
                         return 'text-success'
-                }
-            },
-
-            statusClass(status) {
-                switch (status) {
-                    case 'Draft':
-                        return 'badge-info'
-                    case 'Menunggu Permintaan':
-                        return 'badge-warning'
-                    case 'Selesai':
-                        return 'badge-success'
-                    default:
-                        return 'badge-primary'
                 }
             },
 
@@ -82,9 +69,9 @@
                             } = axios.post('/api/gbmp/store', kirim)
                                 .then(success)
                                 .catch(error)
-                            setTimeout(() => {
+                            this.$nextTick(() => {
                                 this.$emit('refresh')
-                            }, 100);
+                            })
                         }
                     })
                 } else {
@@ -124,11 +111,13 @@
                     <td>{{ idx+1 }}</td>
                     <td>{{ trf.no_transaksi }}</td>
                     <td :class="divisiClass(trf.jenis)">{{ trf.divisi }}</td>
-                    <td>{{ moment(trf.tanggal_transfer) }}</td>
+                    <td>{{ formatTanggal(trf.tanggal_transfer) }}</td>
                     <td>
                         {{ trf.ket }}
                     </td>
-                    <td><span class="badge" :class="statusClass(trf.status)">{{ trf.status }}</span></td>
+                    <td>
+                        <status :status="trf.status" />
+                    </td>
                     <td>
                         <button class="btn btn-sm" :class="buttonColor(trf.status, trf.jenis)"
                             @click="condition(trf.status, trf.jenis, trf.id)"

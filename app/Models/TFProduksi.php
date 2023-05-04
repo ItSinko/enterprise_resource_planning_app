@@ -13,7 +13,7 @@ class TFProduksi extends Model
     protected $connection = 'erp';
     protected $table = 't_gbj';
 
-    protected $fillable = ['ke', 'dari', 'deskripsi', 'status_id', 'pesanan_id', 'retur_penjualan_id', 'tgl_keluar', 'tgl_masuk', 'state_id', 'jenis', 'created_by', 'created_at'];
+    protected $fillable = ['no_transaksi', 'ke', 'dari', 'deskripsi', 'status_id', 'pesanan_id', 'tgl_keluar', 'state_id', 'jenis', 'created_by', 'created_at'];
 
     function detail()
     {
@@ -59,8 +59,14 @@ class TFProduksi extends Model
         }
         return $jumlah;
     }
-
-    function ReturPenjualan(){
-        return $this->belongsTo(ReturPenjualan::class);
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 't_gbj_id', 'id');
+    }
+    function last_status($divisi)
+    {
+        $id = $this->id;
+        $data = TFProduksiHistory::where(['t_gbj_id' => $id, 'divisi_id' => $divisi])->latest()->first();
+        return $data->Status->nama;
     }
 }

@@ -12,7 +12,8 @@
         },
         data() {
             return {
-                breadcumbs: [{
+                breadcumbs: [
+                    {
                         name: 'Beranda',
                         link: '#'
                     },

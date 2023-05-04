@@ -800,9 +800,33 @@ return [
         ],
         [
             'text' => 'Barang Masuk',
-            'icon' => 'fas fa-sign-in-alt',
+            'icon' => 'fas fa-box',
             'auth' => [11],
             'url'  => '/gbmp/barang-masuk',
+        ],
+        [
+            'text' => 'Permintaaan Bahan Baku',
+            'icon' => 'fas fa-clipboard-list',
+            'auth' => [11],
+            'url'  => '/gbmp/permintaan-bahan-baku',
+        ],
+        [
+            'text' => 'Penyerahan Barang',
+            'icon' => 'fas fa-box-open',
+            'auth' => [11],
+            'url'  => '/gbmp/penyerahan-barang',
+        ],
+        [
+            'text' => 'Pengembalian Barang',
+            'icon' => 'fas fa-truck-loading',
+            'auth' => [11],
+            'url'  => '/gbmp/pengembalian-barang',
+        ],
+        [
+            'text' => 'Daftar Stok',
+            'icon' => 'fas fa-boxes',
+            'auth' => [11],
+            'url'  => '/gbmp/daftar-stok',
         ],
         // [
         //     'text' => 'Stok',
@@ -1114,6 +1138,15 @@ return [
             'url'  => '/penjualan/lacak/show',
             'icon' => 'fas fa-search',
             'auth' => [23, 34]
+        ],
+        [
+            'header' => 'INCOMING',
+            'auth' => [23]
+        ],
+        [
+            'text' => 'Barang Masuk',
+            'icon' => 'fas fa-box-open',
+            'url' => '/qcinc/barang-masuk',
         ],
         [
             'header' => 'ALAT UJI',

@@ -95,6 +95,9 @@ Route::middleware('auth')->prefix('/teknik')->group(function () {
 Route::middleware('auth')->prefix('/gbmp')->group(function () {
     Route::view('/{any?}', 'spa.gbmp');
 });
+Route::middleware('auth')->prefix('/qcinc')->group(function () {
+    Route::view('/{any?}', 'spa.qc');
+});
 Route::middleware('auth')->prefix('/pembelian')->group(function () {
     Route::view('/{any?}', 'spa.pembelian');
 });

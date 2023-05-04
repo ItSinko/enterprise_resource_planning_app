@@ -35,8 +35,3 @@
         </div>
     </div>
 </template>
-<style>
-            .row-whith-wide-cards .card {
-  width: 100%;
-}
-</style>
