@@ -37,12 +37,10 @@
                     })
                 }
                 return filtered.filter((purchaseorder) => {
-                    return purchaseorder.nopo.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                        purchaseorder.divisi.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                        purchaseorder.supplier.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                        purchaseorder.tanggal.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                        purchaseorder.estimasi.toLowerCase().includes(this.searchdalamProses.toLowerCase()) ||
-                        purchaseorder.status.toLowerCase().includes(this.searchdalamProses.toLowerCase())
+                    return Object.keys(purchaseorder).some((key) => {
+                        return String(purchaseorder[key]).toLowerCase().includes(this.searchdalamProses
+                            .toLowerCase())
+                    })
                 })
             },
             getAllStatusUnique() {
