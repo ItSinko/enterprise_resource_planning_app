@@ -45,10 +45,19 @@ export default {
     },
     methods: {
         checkAll(){
-            this.dataTableSelected != this.dataTable ? this.dataTableSelected = this.dataTable : this.dataTableSelected = []
-            this.$refs.cbChild.forEach(cb => {
-                cb.checked = !cb.checked
-            })
+            if (this.dataTableSelected.length == this.dataTable.length) {
+                this.dataTableSelected = []
+                this.$refs.checkAll.checked = false
+                this.$refs.cbChild.forEach((item) => {
+                    item.checked = false
+                })
+            } else {
+                this.dataTableSelected = this.dataTable.map((item) => item)
+                this.$refs.checkAll.checked = true
+                this.$refs.cbChild.forEach((item) => {
+                    item.checked = true
+                })
+            }
         },
         checkOne(index){
             if(this.$refs.cbChild[index].checked){
@@ -69,6 +78,15 @@ export default {
             $('.modalDetail').modal('hide')
         }
     },
+    watch: {
+        dataTableSelected() {
+            if (this.dataTableSelected.length == this.dataTable.length) {
+                this.$refs.checkAll.checked = true
+            } else {
+                this.$refs.checkAll.checked = false
+            }
+        }
+    }
 }
 </script>
 <template>
@@ -81,7 +99,7 @@ export default {
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th><input type="checkbox" @click="checkAll"></th>
+                    <th><input type="checkbox" ref="checkAll" @click="checkAll"></th>
                     <th>Nama Barang</th>
                     <th>Jumlah</th>
                     <th>Estimasi Harga</th>

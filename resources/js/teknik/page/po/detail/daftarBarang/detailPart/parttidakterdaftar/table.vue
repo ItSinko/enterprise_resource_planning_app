@@ -41,6 +41,15 @@ export default {
         detailPart(index) {
             this.$emit('detail', index)
         }
+    },
+    watch: {
+        partsSelected() {
+            if (this.partsSelected.length == this.dataTable.length) {
+                this.$refs.checkedPackAll.checked = true
+            } else {
+                this.$refs.checkedPackAll.checked = false
+            }
+        }
     }
 }
 </script>

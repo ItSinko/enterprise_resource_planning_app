@@ -29,10 +29,17 @@
                 return item.jumlah * item.harga + item.ongkir + item.lain
             },
             checkAll() {
-                if (this.$refs.cbChild.length > 0) {
-                    this.$refs.cbChild.forEach(cb => {
-                        cb.checked = !cb.checked
-                        this.dataSelected = cb.checked ? this.dataTable : []
+                if (this.dataSelected.length == this.dataTable.length) {
+                    this.dataSelected = []
+                    this.$refs.checkAll.checked = false
+                    this.$refs.cbChild.forEach((item) => {
+                        item.checked = false
+                    })
+                } else {
+                    this.dataSelected = this.dataTable.map((item) => item)
+                    this.$refs.checkAll.checked = true
+                    this.$refs.cbChild.forEach((item) => {
+                        item.checked = true
                     })
                 }
                 this.$emit('dataSelected', this.dataSelected)
@@ -56,6 +63,15 @@
                 return lodash.groupBy(this.dataTable, 'produk')
             }
         },
+        watch: {
+            dataSelected() {
+                if (this.dataSelected.length == this.dataTable.length) {
+                    this.$refs.checkAll.checked = true
+                } else {
+                    this.$refs.checkAll.checked = false
+                }
+            }
+        }
     }
 
 </script>
@@ -64,7 +80,7 @@
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th><input type="checkbox" @click="checkAll"></th>
+                    <th><input type="checkbox" ref="checkAll" @click="checkAll"></th>
                     <th>Kode & Nama Part</th>
                     <th>Jumlah</th>
                     <th>Harga</th>

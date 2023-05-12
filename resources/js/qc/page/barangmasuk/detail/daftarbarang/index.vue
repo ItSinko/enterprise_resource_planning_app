@@ -82,9 +82,9 @@ export default {
                     <td>
                         <button class="btn btn-warning" v-if="data.btn_aksi == 'terima'" @click="periksa(data.id)">Terima dan Periksa</button>
                         <button class="btn btn-danger" v-if="data.btn_aksi == 'hasil'">Hasil Analisa Teknik</button>
-                        <button class="btn btn-outline-info" @click="detail(data.id)">
+                        <!-- <button class="btn btn-outline-info" @click="detail(data.id)">
                             <i class="fas fa-eye"></i>
-                        </button>
+                        </button> -->
                     </td>
                 </tr>
             </tbody>

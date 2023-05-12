@@ -28,15 +28,17 @@ export default {
     },
     methods: {
         checkAll() {
-            if (this.$refs.cbChild.length > 0) {
-                this.$refs.cbChild.forEach((cb) => {
-                    cb.checked = !cb.checked
-                    if (cb.checked) {
-                        this.penyerahanChecked.push(this.penyerahan.find((item) => item.id === parseInt(cb.value)))
-                    } else {
-                        let index = this.penyerahanChecked.findIndex((item) => item.id === parseInt(cb.value))
-                        this.penyerahanChecked.splice(index, 1)
-                    }
+            if(this.penyerahanChecked.length === this.penyerahan.length) {
+                this.penyerahanChecked = []
+                this.$refs.checkAll.checked = false
+                this.$refs.cbChild.forEach((item) => {
+                    item.checked = false
+                })
+            } else {
+                this.penyerahanChecked = this.penyerahan.map((item) => item)
+                this.$refs.checkAll.checked = true
+                this.$refs.cbChild.forEach((item) => {
+                    item.checked = true
                 })
             }
         },
@@ -57,7 +59,16 @@ export default {
                 })
             })
         }
-    }   
+    },
+    watch: {
+        penyerahanChecked() {
+            if (this.penyerahanChecked.length === this.penyerahan.length) {
+                this.$refs.checkAll.checked = true
+            } else {
+                this.$refs.checkAll.checked = false
+            }
+        }
+    }
 }
 </script>
 <template>
@@ -76,7 +87,7 @@ export default {
         <table class="table">
             <thead class="thead-light">
             <tr>
-                <th><input type="checkbox" @click="checkAll"></th>
+                <th><input type="checkbox" @click="checkAll" ref="checkAll"></th>
                 <th>Kode Part</th>
                 <th>Nama Part</th>
                 <th>Jumlah / set</th>

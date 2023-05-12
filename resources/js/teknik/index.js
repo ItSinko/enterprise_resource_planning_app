@@ -9,6 +9,7 @@ import "datatables.net/js/jquery.dataTables.min"
 import "vue-select/dist/vue-select.css";
 import VueSweetalert2 from 'vue-sweetalert2';
 import Select from 'vue-select'
+import './index.css'
 
 window.Vue = require('vue').default;
 Vue.use(VueRouter);
