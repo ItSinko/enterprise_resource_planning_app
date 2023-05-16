@@ -13,7 +13,7 @@ class TFProduksi extends Model
     protected $connection = 'erp';
     protected $table = 't_gbj';
 
-    protected $fillable = ['ke', 'deskripsi', 'status_id', 'pesanan_id', 'tgl_keluar', 'state_id', 'jenis', 'created_by', 'created_at'];
+    protected $fillable = ['ke', 'dari', 'deskripsi', 'status_id', 'pesanan_id', 'retur_penjualan_id', 'tgl_keluar', 'tgl_masuk', 'state_id', 'jenis', 'created_by', 'created_at'];
 
     function detail()
     {
@@ -39,19 +39,28 @@ class TFProduksi extends Model
     {
         return $this->belongsTo(Pesanan::class, 'pesanan_id');
     }
+    function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 
     function bagian()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    function getJumlahKirim() {
+    function getJumlahKirim()
+    {
         $id = $this->id;
         $detail = TFProduksiDetail::where('t_gbj_id', $id)->get();
         $jumlah = 0;
-        foreach($detail as $d) {
+        foreach ($detail as $d) {
             $jumlah += $d->qty;
         }
         return $jumlah;
+    }
+
+    function ReturPenjualan(){
+        return $this->belongsTo(ReturPenjualan::class);
     }
 }

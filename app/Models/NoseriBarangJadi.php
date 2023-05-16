@@ -28,7 +28,7 @@ class NoseriBarangJadi extends Model
     }
     function NoseriTGbj()
     {
-        return $this->hasMany(NoseriTGbj::class);
+        return $this->hasMany(NoseriTGbj::class, 'noseri_id');
     }
 
     function layout()
@@ -45,6 +45,11 @@ class NoseriBarangJadi extends Model
     {
         return $this->hasOne(NoseriBrgJadiLog::class, 'noseri_id');
     }
+    public function NoseriPerbaikan(){
+        return $this->hasMany(NoseriPerbaikan::class, 'noseri_barang_jadi_id');
+    }
 
-
+    public function PengirimanNoseri(){
+        return $this->hasMany(PengirimanNoseri::class, 'noseri_barang_jadi_id');
+    }
 }

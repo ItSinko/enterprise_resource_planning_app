@@ -10,4 +10,21 @@ class Status extends Model
     use HasFactory;
     protected $connection = 'erp';
     protected $table = 'm_status';
+
+    function PermintaanPembelian()
+    {
+        return $this->hasMany(Status::class);
+    }
+    function PoPembelian()
+    {
+        return $this->hasMany(PoPembelian::class);
+    }
+    function status()
+    {
+        return $this->hasMany(Status::class);
+    }
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 'status_id', 'id');
+    }
 }

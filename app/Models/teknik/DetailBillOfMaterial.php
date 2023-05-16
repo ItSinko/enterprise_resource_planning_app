@@ -2,6 +2,7 @@
 
 namespace App\Models\teknik;
 
+use App\Models\DetailPermintaanPembelian;
 use App\Models\Satuan;
 use App\Models\Sparepart;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

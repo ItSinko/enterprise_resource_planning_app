@@ -2,6 +2,7 @@
 
 namespace App\Models\teknik;
 
+use App\Models\DetailPPBom;
 use App\Models\Produk;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,5 +22,13 @@ class BillOfMaterial extends Model
     function produk()
     {
         return $this->belongsTo(Produk::class, 'produk_id');
+    }
+    public function DetailPermintaanPembelian()
+    {
+        return $this->hasMany(DetailPermintaanPembelian::class);
+    }
+    public function DetailPPBom()
+    {
+        return $this->hasMany(DetailPPBom::class);
     }
 }

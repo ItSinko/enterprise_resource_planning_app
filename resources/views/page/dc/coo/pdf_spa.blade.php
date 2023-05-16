@@ -106,7 +106,8 @@
             <tr>
                 <td style="width:52.3%;"></td>
                 <td class="veramd align-center" style="width:47.7%;">
-                    <h3>{{ $data->id }} / SKA / {{ $romawi }} / SPA / {{ $tahun }}</h3>
+                    <h3>{{ $data->no_coo }} / SKA / {{ $romawi }} / SPA /
+                        {{ $data->tahun }}</h3>
                 </td>
             </tr>
         </tbody>

@@ -239,6 +239,35 @@ return [
             'icon'        => 'nav-icon fa fa-home',
             'auth'        => [23, 34]
         ],
+        // Pembelian
+        [
+            'header' => 'Pembelian',
+            'auth' => [7],
+        ],
+        [
+            'text'  =>  'Supplier',
+            'icon'  =>  'fas fa-truck',
+            'url'   =>  '/pembelian/supplier',
+            'auth'  => [7],
+        ],
+        [
+            'text' => 'Permintaan Pembelian',
+            'icon' => 'fas fa-shopping-cart',
+            'url' => '/pembelian/permintaan',
+            'auth' => [7],
+        ],
+        [
+            'text' => 'Permintaan Pembelian Admin',
+            'icon' => 'fas fa-shopping-cart',
+            'url' => '/pembelian/admin',
+            'auth' => [7],
+        ],
+        [
+            'text' => 'Purchase Order',
+            'icon' => 'fas fa-file-invoice-dollar',
+            'url' => '/pembelian/po',
+            'auth' => [7],
+        ],
         // PPIC (24)
         [
             'header' => 'Data',
@@ -764,17 +793,29 @@ return [
             'auth' => [11],
         ],
         [
-            'text' => 'Stok',
+            'text' => 'Transfer Antar Gudang',
+            'icon' => 'fas fa-exchange-alt',
             'auth' => [11],
-            'icon' =>  'fas fa-boxes',
-            'url' => '/gbmp/data_view'
+            'url'  => '/gbmp/transfer',
         ],
         [
-            'text' => 'Pesanan PPIC',
+            'text' => 'Barang Masuk',
+            'icon' => 'fas fa-sign-in-alt',
             'auth' => [11],
-            'icon' =>  'fas fa-boxes',
-            'url' => '/gbmp/bppb_view'
+            'url'  => '/gbmp/barang-masuk',
         ],
+        // [
+        //     'text' => 'Stok',
+        //     'auth' => [11],
+        //     'icon' =>  'fas fa-boxes',
+        //     'url' => '/gbmp/data_view'
+        // ],
+        // [
+        //     'text' => 'Pesanan PPIC',
+        //     'auth' => [11],
+        //     'icon' =>  'fas fa-boxes',
+        //     'url' => '/gbmp/bppb_view'
+        // ],
         // Produksi (17)
         // [
         //     'header' => 'PERSIAPAN',
@@ -1097,15 +1138,15 @@ return [
             'url'  => '/lab/alatuji/show',
             'auth' => [22],
         ],
+        // [
+        //     'icon' => 'fa fa-plus-circle',
+        //     'text' => 'Tambah Jenis Alat Uji',
+        //     'url'  => '/lab/alatuji/create',
+        //     'auth' => [22],
+        // ],
         [
             'icon' => 'fa fa-plus-circle',
-            'text' => 'Tambah Jenis Alat Uji',
-            'url'  => '/lab/alatuji/create',
-            'auth' => [22],
-        ],
-        [
-            'icon' => 'fa fa-plus-circle',
-            'text' => 'Tambah Serial Number',
+            'text' => 'Tambah Alat Uji',
             'url'  => '/lab/alatuji/barang/create',
             'auth' => [22],
         ],
@@ -1190,6 +1231,13 @@ return [
             'auth' => [13],
         ],
         [
+            'text' => 'Lacak',
+            'url'  => '/penjualan/lacak/show',
+            'icon' => 'fas fa-search',
+            'auth' => [13]
+        ],
+
+        [
             'header' => 'Penjualan',
             'auth' => [13, 17, 31]
         ],
@@ -1258,8 +1306,19 @@ return [
         [
             'text' => 'Pengiriman',
             'icon' => 'fas fa-shipping-fast fa-fw',
-            'url' => '/logistik/pengiriman/show',
             'auth' => [15],
+            'submenu'   =>  [
+                [
+                    'text'  =>  'Penjualan',
+                    'icon'  =>  'far fa-circle',
+                    'url'   =>  '/logistik/pengiriman/show'
+                ],
+                [
+                    'text'  =>  'Retur',
+                    'icon'  =>  'far fa-circle',
+                    'url'   =>  '/logistik/pengiriman_retur/show',
+                ],
+            ]
         ],
         // [
         //     'text' => 'Riwayat Pengiriman',
@@ -1364,6 +1423,29 @@ return [
             'url' => '/as/retur/show',
             'auth' => [8],
         ],
+        [
+            'text' => 'Perbaikan',
+            'icon' => 'fas fa-cogs fa-fw',
+            'url' => '/as/perbaikan/show',
+            'auth' => [8],
+        ],
+        [
+            'text' => 'Pengiriman',
+            'icon' => 'fas fa-truck fa-fw',
+            'url' => '/as/pengiriman/show',
+            'auth' => [8],
+        ],
+        [
+            'header' => 'Laporan',
+            'auth' => [8]
+        ],
+        [
+            'text' => 'Laporan Keluhan',
+            'icon' => 'fas fa-file fa-fw',
+            'url' => '/as/laporan/show',
+            'auth' => [8],
+        ],
+
         [
             'text' => 'test',
             'isNavbarRightItem' => true,

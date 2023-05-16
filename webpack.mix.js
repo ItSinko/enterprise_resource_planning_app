@@ -31,5 +31,9 @@ mix.js('resources/js/direksi/index.js', 'public/native/js/direksi.js').vue();
 mix.js('resources/js/produksi/app.js', 'public/native/js/produksi.js').vue();
 mix.js('resources/js/emiindo/index.js', 'public/native/js/emiindo.js').vue();
 mix.js('resources/js/teknik/index.js', 'public/native/js/teknik.js').vue();
+mix.js('resources/js/gbmp/index.js', 'public/native/js/gbmp.js').vue();
+mix.js('resources/js/pembelian/index.js', 'public/native/js/pembelian.js').vue();
+
+
 
 // mix.browserSync("http://localhost:8000")

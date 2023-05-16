@@ -85,8 +85,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in data" :key="item.id">
-                                <td>{{ item.DT_RowIndex }}</td>
+                            <tr v-for="(item, index) in produks" :key="index">
+                                <td>{{ index + 1 }}</td>
                                 <td v-html="item.nama_produk"></td>
                                 <td>{{ item.stok }}</td>
                                 <td>{{ item.jumlah }}</td>
@@ -109,7 +109,7 @@
             </div>
         </div>
         <!-- modal -->
-        <div class="modal" :class="{ 'is-active': showModal }">
+        <div class="modal" v-if="showModal" :class="{ 'is-active': showModal }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -154,7 +154,7 @@
             </div>
         </div>
 
-        <div class="modal" :class="{ 'is-active': showModalSO }">
+        <div class="modal" v-if="showModalSO" :class="{ 'is-active': showModalSO }">
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
@@ -176,8 +176,8 @@
                         </thead>
                         <tbody>
                             <tr
-                                v-for="item in detailSO"
-                                :key="'detailSO' + item.id"
+                                v-for="(item, index) in detailSO"
+                                :key="index"
                             >
                                 <td v-text="item.paket"></td>
                                 <td v-text="item.produk"></td>
@@ -213,6 +213,9 @@ export default {
             showModal: false,
             showModalSO: false,
             tabs: false,
+            produks: [],
+            salesOrder: [],
+            nama_produk: "",
         };
     },
 
@@ -235,22 +238,13 @@ export default {
                 Authorization: 'Bearer ' + localStorage.getItem('lokal_token')
             }
         }).then((response) => {
-        this.data = response.data.data;
+            this.produks = response.data.data;
         }).then(() => ($("#table_produk").DataTable({
             pagingType: "simple_numbers_no_ellipses",
             })
         ));
+        this.$store.commit("setIsLoading", false);
     },
-        async getDetail(id, nama) {
-            this.$store.commit("setIsLoading", true);
-            await axios
-                .post("/api/ppic/master_pengiriman/detail/" + id)
-                .then((response) => {
-                    this.detail = response.data.data;
-                });
-            $("#detailtable").DataTable();
-            this.$store.commit("setIsLoading", false);
-        },
 
         async getDetail(id, nama) {
             this.$store.commit("setIsLoading", true);
@@ -258,8 +252,10 @@ export default {
                 .get("/api/ppic/data/so/detail/" + id)
                 .then((response) => {
                     this.detail = response.data.data;
+                    setTimeout(() => {
+                        $("#detailtable").DataTable();
+                    }, 100);
                 });
-            $("#detailtable").DataTable();
             this.$store.commit("setIsLoading", false);
 
             this.nama_produk = nama;
@@ -275,11 +271,10 @@ export default {
                     .get("/api/ppic/data/produk_so/" + id + "/" + value)
                     .then((response) => {
                         this.detailSO = response.data.data;
-                    });
-            } catch (error) {
-                console.log(error);
-            }
-            $("#detailtableSO").DataTable({
+
+
+                        setTimeout(() => {
+                                        $("#detailtableSO").DataTable({
                 autoWidth: false,
                 drawCallback: function (settings) {
                     var api = this.api();
@@ -305,15 +300,15 @@ export default {
                 },
                 columnDefs: [{ targets: [0], visible: false }],
             });
+                        }, 100);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
             this.$store.commit("setIsLoading", false);
             this.showModalSO = true;
         },
-        //    "columnDefs":[
-        //         {"targets": [0], "visible": false},
-        //     ],
-        //   });
-    },
-    checkToken(){
+            checkToken(){
         if(localStorage.getItem('lokal_token') == null){
             // event.preventDefault();
             this.$swal({
@@ -335,6 +330,7 @@ export default {
     async logout() {
       await axios.post("/logout");
       document.location.href = "/";
+    },
     },
 
   created() {

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [App\Http\Controllers\ApiController::class, 'authenticate']);
 
 Route::prefix('/bom')->group(function () {
+    Route::get('/produk/{id}', [App\Http\Controllers\TeknikController::class, 'get_produk']);
     Route::post('/store', [App\Http\Controllers\TeknikController::class, 'store_bom']);
     Route::get('/data', [App\Http\Controllers\TeknikController::class, 'get_data_bom']);
     Route::get('/detail/{id}', [App\Http\Controllers\TeknikController::class, 'get_detail_bom']);
@@ -29,7 +30,30 @@ Route::prefix('/bom')->group(function () {
     Route::post('/update/{id}', [App\Http\Controllers\TeknikController::class, 'update_bom']);
     Route::post('/delete/{id}', [App\Http\Controllers\TeknikController::class, 'delete_bom']);
 });
+
+Route::prefix('/aset')->group(function () {
+    Route::get('/', [App\Http\Controllers\MasterController::class, 'get_data_aset']);
+    Route::get('/{value}/validasi', [App\Http\Controllers\MasterController::class, 'get_validasi_aset']);
+});
+
+// Route::prefix('/supplier')->group(function () {
+//     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
+//     Route::post('/store', [App\Http\Controllers\MasterController::class, 'store_supplier']);
+//     Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
+//     Route::post('/update/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+// });
+
+Route::prefix('/supplier')->group(function () {
+    Route::get('/', [App\Http\Controllers\MasterController::class, 'get_data_supplier']);
+    Route::post('/', [App\Http\Controllers\MasterController::class, 'store_supplier']);
+    Route::get('/{id}', [App\Http\Controllers\MasterController::class, 'edit_supplier']);
+    Route::put('/{id}', [App\Http\Controllers\MasterController::class, 'update_supplier']);
+    Route::delete('/{id}', [App\Http\Controllers\MasterController::class, 'delete_supplier']);
+});
+
+
 Route::prefix('/part')->group(function () {
+    Route::get('/divisi/{divisi_id}/{part_id}', [App\Http\Controllers\MasterController::class, 'get_data_divisi_sparepart']);
     Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_sparepart']);
     Route::get('/edit/{id}', [App\Http\Controllers\MasterController::class, 'edit_sparepart']);
     Route::get('/detail/{id}', [App\Http\Controllers\MasterController::class, 'get_detail_sparepart']);
@@ -125,6 +149,7 @@ Route::prefix('/produk')->group(function () {
         Route::delete('delete/file/{id}', [App\Http\Controllers\MasterController::class, 'delete_file_produk']);
     });
     Route::get('data', [App\Http\Controllers\MasterController::class, 'get_data_produk']);
+    Route::get('variasi', [App\Http\Controllers\MasterController::class, 'get_data_produk_variasi']);
     Route::post('create', [App\Http\Controllers\MasterController::class, 'create_produk']);
     Route::post('update', [App\Http\Controllers\MasterController::class, 'update_produk']);
     Route::delete('delete/{id}', [App\Http\Controllers\MasterController::class, 'delete_produk']);
@@ -149,7 +174,7 @@ Route::prefix('/penjualan_produk')->group(function () {
 Route::prefix('/penjualan')->group(function () {
     Route::get('/edit', [App\Http\Controllers\PenjualanController::class, 'get_data_edit_penjualan']);
     // Route::post('create', [App\Http\Controllers\PenjualanController::class, 'create_penjualan']);
-    Route::post('/penjualan/data/{jenis}/{status}', [App\Http\Controllers\PenjualanController::class, 'penjualan_data']);
+    Route::post('/penjualan/data/{jenis}/{status}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'penjualan_data']);
     Route::get('/ekatalog_data/{akn}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog_emindo']);
     Route::get('/spa_data/{po}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa_emindo']);
     Route::get('check_ekatalog/{akn}', [App\Http\Controllers\PenjualanController::class, 'cek_paket']);
@@ -199,22 +224,58 @@ Route::prefix('/laporan')->group(function () {
     Route::post('/qc/{jenis}/{produk}/{no_so}/{hasil}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\QcController::class, 'get_data_laporan_qc']);
     Route::post('/logistik/{pengiriman}/{ekspedisi}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\LogistikController::class, 'get_data_laporan_logistik']);
 });
-
+Route::prefix('/pembelian')->group(function () { 
+    Route::prefix('/pp')->group(function () {
+        Route::get('/{id}', [App\Http\Controllers\PembelianController::class, 'get_data_detail_pp']);
+        Route::get('/{id}/part', [App\Http\Controllers\PembelianController::class, 'get_data_detail_bom']);
+        Route::get('/', [App\Http\Controllers\PembelianController::class, 'get_data_pp']);
+        Route::post('/', [App\Http\Controllers\PembelianController::class, 'store_data_pp']);
+        Route::put('/{id}', [App\Http\Controllers\PembelianController::class, 'update_data_pp']);
+        Route::put('/{id}/status', [App\Http\Controllers\PembelianController::class, 'update_status_pp']);
+        Route::delete('/{id}/part', [App\Http\Controllers\PembelianController::class, 'delete_data_pp_part']);
+        Route::delete('/{id}/umum', [App\Http\Controllers\PembelianController::class, 'delete_data_pp_umum']);
+        Route::get('nourut/{divisi}', [App\Http\Controllers\PembelianController::class, 'get_nourut']);
+    });
+    Route::prefix('/po')->group(function () {
+        Route::prefix('/terima')->group(function () {
+            Route::post('/', [App\Http\Controllers\PembelianController::class, 'terima_po']);
+        });
+        Route::get('/', [App\Http\Controllers\PembelianController::class, 'get_data_po']);
+        Route::post('/', [App\Http\Controllers\PembelianController::class, 'store_data_po']);
+        Route::put('/{id}', [App\Http\Controllers\PembelianController::class, 'update_data_po']);
+        Route::put('/{id}/status', [App\Http\Controllers\PembelianController::class, 'update_status_po']);
+        Route::delete('/{id}/part', [App\Http\Controllers\PembelianController::class, 'delete_data_po_part']);
+        Route::delete('/{id}/umum', [App\Http\Controllers\PembelianController::class, 'delete_data_po_umum']);
+        Route::get('/{id}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);
+        // Route::get('detail/{poid}', [App\Http\Controllers\PembelianController::class, 'get_detail_po']);
+    });
+});
+Route::prefix('/gbmp')->group(function () {
+    Route::post('/tf', [App\Http\Controllers\GudangController::class, 'tfgbmp']);
+    Route::get('/data/{divisi}', [App\Http\Controllers\GudangController::class, 'tfgbmp_data']);
+    Route::get('/data/{divisi}/{id}', [App\Http\Controllers\GudangController::class, 'tfgbmp_detail']);
+    Route::post('/store', [App\Http\Controllers\GudangController::class, 'tfgbmp_store']);
+});
 Route::prefix('/gbj')->group(function () {
-    Route::post('data', [App\Http\Controllers\GudangController::class, 'get_data_barang_jadi'])->middleware('jwt.verify');
+    Route::post('data', [App\Http\Controllers\GudangController::class, 'get_data_barang_jadi']);
     Route::post('/create', [App\Http\Controllers\GudangController::class, 'StoreBarangJadi']);
     Route::post('/edit/{id}', [App\Http\Controllers\GudangController::class, 'UpdateBarangJadi']);
     Route::delete('/delete/{id}', [App\Http\Controllers\GudangController::class, 'DestroyBarangJadi']);
     Route::post('/get', [App\Http\Controllers\GudangController::class, 'GetBarangJadiByID']);
     Route::post('data-so', [GudangController::class, 'getSODone']);
 
+    Route::get('/modal_data/{id}', [App\Http\Controllers\GudangController::class, 'history_modal_gbj']);
+    Route::get('/modal_data_non/{id}', [App\Http\Controllers\GudangController::class, 'history_modal_gbj_non']);
+    Route::get('/modal_data_seri/{id}', [App\Http\Controllers\GudangController::class, 'history_modal_gbj_seri']);
+    Route::get('/modal_data_seri_non/{id}', [App\Http\Controllers\GudangController::class, 'history_modal_gbj_seri_non']);
     Route::get('/test', [App\Http\Controllers\GudangController::class, 'test']);
     // select
     Route::get('sel-product', [GudangController::class, 'select_product']);
     Route::get('sel-product/{id}', [GudangController::class, 'select_product_by_id']);
     Route::get('sel-satuan', [GudangController::class, 'select_satuan']);
     Route::get('sel-layout', [GudangController::class, 'select_layout']);
-    Route::get('sel-divisi', [GudangController::class, 'select_divisi'])->middleware('jwt.verify');
+    Route::get('sel-divisi', [GudangController::class, 'select_divisi']);
+    Route::get('sel-divisi/{id}', [GudangController::class, 'select_divisi_detail']);
     Route::get('sel-gbj', [GudangController::class, 'select_gbj'])->middleware('jwt.verify');
 
     // so
@@ -493,6 +554,7 @@ Route::prefix('/gk')->group(function () {
 Route::prefix('/noseri')->group(function () {
     Route::post('/edit/{id}', [App\Http\Controllers\NoseriController::class, 'UpdateNoSeri']);
     Route::delete('/delete/{id}', [App\Http\Controllers\NoseriController::class, 'DestroyNoSeri']);
+    Route::get('/pengganti/{id}', [App\Http\Controllers\AfterSalesController::class, 'get_noseri_pengganti']);
 });
 Route::prefix('/produk')->group(function () {
     Route::post('/variasi_stok/{id}', [App\Http\Controllers\PenjualanController::class, 'check_variasi_jumlah']);
@@ -600,7 +662,7 @@ Route::prefix('/logistik')->group(function () {
     });
 
     Route::group(['prefix' => '/cek'], function () {
-        Route::post('/no_sj/{id}/{val}/{jenis}', [App\Http\Controllers\LogistikController::class, 'check_no_sj']);
+        Route::post('/no_sj/{id}/{val}', [App\Http\Controllers\LogistikController::class, 'check_no_sj']);
         Route::post('/no_resi/{val}', [App\Http\Controllers\LogistikController::class, 'check_no_resi']);
         Route::get('/no_sj_detail/{id}', [App\Http\Controllers\LogistikController::class, 'get_surat_jalan_detail']);
         Route::get('/no_sj_belum_kirim/{customer}', [App\Http\Controllers\LogistikController::class, 'get_surat_jalan_belum_kirim']);
@@ -627,19 +689,53 @@ Route::prefix('/dc')->group(function () {
 });
 
 Route::prefix('/as')->group(function () {
-    Route::post('/so/data', [App\Http\Controllers\AfterSalesController::class, 'get_data_so']);
-    Route::post('/so/detail/{id}/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_detail_pengiriman']);
+    Route::prefix('/so')->group(function () {
+        Route::post('/data', [App\Http\Controllers\AfterSalesController::class, 'get_data_so']);
+        Route::post('/detail/{id}/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_detail_pengiriman']);
+    });
 
-    Route::post('/penjualan/belum_proses', [App\Http\Controllers\AfterSalesController::class, 'get_data_so_belum_kirim']);
-    Route::post('/penjualan/selesai_proses', [App\Http\Controllers\AfterSalesController::class, 'get_data_so_selesai_kirim']);
+    Route::post('/retur_exist', [App\Http\Controllers\AfterSalesController::class, 'get_no_retur_exist']);
+    Route::post('/retur_all', [App\Http\Controllers\AfterSalesController::class, 'get_all_retur']);
 
-    Route::get('/retur/detail', [App\Http\Controllers\AfterSalesController::class, 'detail_retur']);
-    Route::get('/list/so_selesai/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai']);
+    Route::get('/detail/so_retur/{id}/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_detail_so_retur']);
 
-    Route::get('/list/so_selesai_paket/{id}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai_paket']);
-    Route::get('/list/so_selesai_paket_produk/{id}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai_paket_produk']);
+    Route::post('/produk_noseri_retur', [App\Http\Controllers\AfterSalesController::class, 'produk_noseri_retur']);
+    Route::post('/produk_noseri_non_perbaikan', [App\Http\Controllers\AfterSalesController::class, 'produk_noseri_non_perbaikan']);
+    Route::post('/retur_siap_kirim', [App\Http\Controllers\AfterSalesController::class, 'retur_siap_kirim']);
+    Route::post('/barang_siap_kirim_retur', [App\Http\Controllers\AfterSalesController::class, 'barang_siap_kirim_retur']);
 
-    Route::get('/detail/so_retur/{id}', [App\Http\Controllers\AfterSalesController::class, 'get_detail_so_retur']);
+    Route::prefix('/penjualan')->group(function () {
+        Route::post('/belum_proses', [App\Http\Controllers\AfterSalesController::class, 'get_data_so_belum_kirim']);
+        Route::post('/selesai_proses', [App\Http\Controllers\AfterSalesController::class, 'get_data_so_selesai_kirim']);
+    });
+
+    Route::prefix('/retur')->group(function () {
+        Route::post('/data', [App\Http\Controllers\AfterSalesController::class, 'get_data_retur']);
+        Route::get('/data_detail', [App\Http\Controllers\AfterSalesController::class, 'get_data_detail_retur']);
+        Route::get('/detail', [App\Http\Controllers\AfterSalesController::class, 'detail_retur']);
+        Route::get('/laporan/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\AfterSalesController::class, 'laporan_retur']);
+        Route::post('/data/laporan/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\AfterSalesController::class, 'data_laporan']);
+
+    });
+
+    Route::prefix('/list')->group(function () {
+        Route::get('/so_selesai/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai']);
+        Route::post('/no_seri_lama', [App\Http\Controllers\MasterController::class, 'get_all_past_no_seri']);
+        Route::get('/so_selesai_paket/{id}/{jenis}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai_paket']);
+        Route::get('/so_selesai_paket_produk/{id}', [App\Http\Controllers\AfterSalesController::class, 'get_list_so_selesai_paket_produk']);
+    });
+
+    Route::prefix('/perbaikan')->group(function () {
+        Route::post('/detail/noseri/{id}', [App\Http\Controllers\AfterSalesController::class, 'detail_noseri_perbaikan']);
+        Route::post('/detail/part_pengganti/{id}', [App\Http\Controllers\AfterSalesController::class, 'detail_part_pengganti']);
+        Route::get('/nomor', [App\Http\Controllers\AfterSalesController::class, 'get_no_perbaikan']);
+    });
+
+    Route::prefix('/pengiriman')->group(function () {
+        Route::get('/data', [App\Http\Controllers\AfterSalesController::class, 'data_pengiriman'])->name('as.pengiriman.data');
+        Route::get('/detail', [App\Http\Controllers\AfterSalesController::class, 'detail_pengiriman'])->name('as.pengiriman.detail');
+        Route::post('/send', [App\Http\Controllers\AfterSalesController::class, 'send_pengiriman'])->name('as.pengiriman.send');
+    });
 });
 
 Route::group(['prefix' => 'direksi', 'middleware' => 'auth'], function () {
@@ -655,6 +751,12 @@ Route::prefix('/manager')->group(function () {
     Route::get('pesanan/{id}', [App\Http\Controllers\PpicController::class, 'pesanan']);
 });
 Route::get('/get_stok_pesanan', [MasterController::class, 'get_stok_pesanan']);
+
+Route::get('karyawan_all', [App\Http\Controllers\kesehatan\KaryawanController::class, 'get_karyawan_all']);
+
+Route::prefix('/divisi')->group(function(){
+    Route::get('karyawan/{id}', [MasterController::class, 'get_divisi_karyawan'])->middleware('jwt.verify');
+});
 
 Route::get('testingJson', [GudangController::class, 'dataTesting']);
 

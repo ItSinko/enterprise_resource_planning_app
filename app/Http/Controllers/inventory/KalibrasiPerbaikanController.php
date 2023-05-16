@@ -39,7 +39,8 @@ class KalibrasiPerbaikanController extends Controller
             DB::table(DB::raw('erp_kalibrasi.alatuji_sn al'))
             ->select(
                 DB::raw('concat(a.kd_alatuji,"-",al.no_urut) as kode_alat'),
-                'al.serial_number', 'al.status_pinjam_id', 'a.desk_alatuji', 'k.tgl_kirim', 'a.gbr_alatuji'
+                'al.serial_number', 'al.status_pinjam_id', 'a.desk_alatuji',
+                'k.tgl_kirim', 'a.gbr_alatuji'
             )
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji a'),'a.id_alatuji', '=', 'al.alatuji_id')
             ->leftJoin(DB::raw('erp_kalibrasi.'.$jenis.' k'), 'k.serial_number_id', '=', 'al.alatuji_id')
@@ -362,20 +363,21 @@ class KalibrasiPerbaikanController extends Controller
             $data = DB::table(DB::raw('erp_kalibrasi.'.$jenis.' k'))
             ->select(
                 DB::raw('concat(a.kd_alatuji,"-",sn.no_urut) as kode_alat'),
-                'tgl_kirim', 'a.nm_alatuji', 'sn.serial_number', 'k.id_'.$jenis, 'a.gbr_alatuji'
+                'tgl_kirim', 'a.nm_alatuji', 'sn.serial_number', 'k.id_'.$jenis, 'a.gbr_alatuji',
+                'sn.id_serial_number', 'k.perusahaan'
             )
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji_sn sn'), 'sn.id_serial_number', 'k.serial_number_id')
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji a'), 'a.id_alatuji', 'sn.alatuji_id')
             ->where('k.id_'.$jenis, $id)
             ->first();
 
-            $perusahaan = DB::table('erp_kalibrasi.merk')->get();
+            //$perusahaan = DB::table('erp_kalibrasi.merk')->get();
 
             return view('page.lab.kalibrasi_perbaikan_selesai', [
                 'data' => $data,
                 'id' => $id,
                 'jenis' => $jenis,
-                'perusahaan' => $perusahaan,
+                'perusahaan' => $data->perusahaan,
             ]);
 
         } catch (\Exception $e) {
@@ -434,7 +436,7 @@ class KalibrasiPerbaikanController extends Controller
             'tindak_lanjut' => $request->tindak_lanjut,
             'hasil_fisik' => $request->cekFisik,
             'hasil_fungsi' => $request->cekFungsi,
-            'merk_id' => $request->perusahaan,
+            'perusahaan' => $request->perusahaan,
             'biaya' => $request->biaya,
             'status_id' => '12',
         ]);
@@ -509,12 +511,12 @@ class KalibrasiPerbaikanController extends Controller
                 'k.serial_number_id', 'k.tgl_kirim', 'k.tgl_terima','k.jenis_id',
                 'k.masalah', 'k.hasil_fisik', 'k.hasil_fungsi', 'k.status_id',
                 'k.id_'.$jenis, 'a.nm_alatuji', 'sn.serial_number', 'k.memo',
-                'k.surat_jalan', 'k.tindak_lanjut', 's.nama_merk', 'k.biaya',
-                'u.nama'
+                'k.surat_jalan', 'k.tindak_lanjut', 'k.perusahaan', 'k.biaya',
+                'u.nama', 'k.perusahaan'
             )
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji_sn sn'), 'sn.id_serial_number', 'k.serial_number_id')
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji a'), 'a.id_alatuji', 'sn.alatuji_id')
-            ->leftJoin(DB::raw('erp_kalibrasi.merk s'), 's.id_merk', 'k.merk_id')
+            //->leftJoin(DB::raw('erp_kalibrasi.merk s'), 's.id_merk', 'k.merk_id')
             ->leftJoin(DB::raw('erp_spa.users u'), 'u.id', 'k.pelaksana_id')
             ->where('k.id_'.$jenis, $id)
             ->first();
@@ -534,5 +536,17 @@ class KalibrasiPerbaikanController extends Controller
         }
     }
 
+    function get_data_perusahaan($x){
+        $data =
+        DB::table(DB::raw('erp_kalibrasi.'.$x.' p'))
+        ->select('p.perusahaan')
+        ->groupBy('p.perusahaan')
+        ->get();
 
+        $d = $data->map(function($item, $key){
+            return $item->perusahaan;
+        });
+
+        return $d;
+    }
 }

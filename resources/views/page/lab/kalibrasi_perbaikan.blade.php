@@ -276,6 +276,7 @@
 <script>
     //hide dokumen internal external
     $(document).ready(function(){
+        // laravel internal external show/hide
         @if(old('dilakukan') == 'External')
             $('#internalContainer').hide();
         @elseif(old('dilakukan') == 'Internal')
@@ -283,7 +284,9 @@
         @else
             $('#externalContainer').hide();
         @endif
+        // laravel internal external show/hide
 
+        // interval external show/hide
         $("input[name$='dilakukan']").click(function(){
             if($("#external").is(":checked"))
             {
@@ -296,6 +299,7 @@
                 $('#externalContainer').hide();
             }
         })
+        // internal external show/hide
 
         $('#selectOperator').select2({
             placeholder: "Pilih Penanggung Jawab"

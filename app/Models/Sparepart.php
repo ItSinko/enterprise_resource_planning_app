@@ -40,4 +40,21 @@ class Sparepart extends Model
     {
         return $this->belongsToMany(JenisBahan::class, 'm_sparepart_bahan');
     }
+
+    public function DetailPenerimaanBarang()
+    {
+        return $this->hasMany(DetailPenerimaanBarang::class);
+    }
+    public function StokDivisiPart()
+    {
+        return $this->hasMany(StokDivisiPart::class, 'part_id', 'id');
+    }
+    public function DetailPermintaanPembelianProduk()
+    {
+        return $this->hasMany(DetailPermintaanPembelianProduk::class);
+    }
+    public function DetailPPBomPart()
+    {
+        return $this->hasMany(DetailPPBomPart::class);
+    }
 }

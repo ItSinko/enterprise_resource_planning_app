@@ -585,7 +585,7 @@
             var belumkirimtable = $('#belumkirimtable').DataTable({
                 destroy: true,
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 ajax: {
                     'url': '/api/logistik/so/data/detail/belum_kirim/' + '{{ $data->pesanan_id }}' +
                         "/" +
@@ -983,12 +983,8 @@
             produk_id = [];
             part_id = [];
 
-            $('#belumkirimtable').on('click', 'input[name="check_all"]', function() {
+            $('#belumkirimtable').on('click change', 'input[name="check_all"]', function() {
                 var rows = $('#belumkirimtable').DataTable().rows().nodes();
-
-                produk_id = [];
-                part_id = [];
-
 
                 if ($('input[name="check_all"]:checked').length > 0) {
                     $('.jumlah_kirim').prop('disabled', true);
@@ -996,7 +992,7 @@
                     $('#kirim_produk').removeAttr('disabled');
                 } else if ($('input[name="check_all"]:checked').length <= 0) {
                     $('.jumlah_kirim').prop('disabled', false);
-                    $('.check_detail').prop('checked', false);
+                    $('.check_detail', rows).prop('checked', false);
                     $('#kirim_produk').prop('disabled', true);
                 }
 
@@ -1017,7 +1013,6 @@
                     part_id_arr.jumlah_kirim = $(this).closest('tr').find('.jumlah_kirim').val();
                     part_id.push(part_id_arr);
                 });
-                console.log(produk_id);
                 validasi_checked_produk();
             });
 
@@ -1351,7 +1346,7 @@
                         var value = kode + val;
                         $.ajax({
                             type: "POST",
-                            url: '/api/logistik/cek/no_sj/0/' + value + '/' + jenis_penjualan,
+                            url: '/api/logistik/cek/no_sj/0/' + value,
                             dataType: 'json',
                             success: function(data) {
                                 if (data > 0) {
@@ -1378,7 +1373,7 @@
                     var value = kode + val;
                     $.ajax({
                         type: "POST",
-                        url: '/api/logistik/cek/no_sj/0/' + value + '/' + jenis_penjualan,
+                        url: '/api/logistik/cek/no_sj/0/' + value,
                         dataType: 'json',
                         success: function(data) {
                             if (data > 0) {

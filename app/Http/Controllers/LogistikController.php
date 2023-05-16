@@ -25,11 +25,12 @@ use App\Models\TFProduksi;
 use App\Models\TFProduksiDetail;
 use App\Models\NoseriTGbj;
 use App\Models\OutgoingPesananPart;
+use App\Models\Pengiriman;
 use Carbon\Carbon as CarbonCarbon;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\returnSelf;
 
 class LogistikController extends Controller
@@ -3893,6 +3894,31 @@ class LogistikController extends Controller
         }
     }
 
+    public function update_pengiriman_retur(Request $r){
+        $validator = Validator::make($r->all(), [
+            'no_surat_jalan' => ['required'],
+            'tgl_pengiriman' => ['required'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['data' => 'error', 'msg' => 'Periksa Kembali Form Anda']);
+        } else {
+            $u = Pengiriman::find($r->id);
+            $u->no_pengiriman = $r->no_surat_jalan;
+            $u->tanggal = $r->tgl_pengiriman;
+            $u->ekspedisi_id = $r->ekspedisi_id;
+            $u->pengirim = $r->non_ekspedisi;
+            $u->biaya_kirim = str_replace('.', '', $r->biaya_kirim);
+            $up = $u->save();
+
+
+            if ($up) {
+                return response()->json(['data' => "success", 'msg' => 'Berhasil mengubah Detail Pengiriman']);
+            } else {
+                return response()->json(['data' => 'error', 'msg' => 'Gagal mengubah Detail Pengiriman']);
+            }
+        }
+    }
+
     public function dashboard_so()
     {
         $data = Pesanan::addSelect(['cjumlahprd' => function($q){
@@ -4175,21 +4201,26 @@ class LogistikController extends Controller
         $l = Logistik::with('Ekspedisi')->where('id', $id)->get();
         return json_encode($l);
     }
-    public function check_no_sj($id, $val, $jenis)
+    public function check_no_sj($id, $val)
     {
-        $e = "";
+        $year = Carbon::now()->format('Y');
+        $count = "";
         if ($id != "0") {
-            $e = Logistik::where([['id', '!=', $id], ['nosurat', '=', $val]])->count();
+            $count_sj_penjualan = Logistik::where([['id', '!=', $id], ['nosurat', '=', $val]])->whereYear('tgl_kirim', $year)->count();
+            $count_sj_retur = Pengiriman::where([['id', '!=', $id], ['no_pengiriman', '=', $val]])->whereYear('tanggal', $year)->count();
+            $count = $count_sj_penjualan + $count_sj_retur;
         } else {
-            $e = Logistik::where('nosurat', $val)->count();
+            $count_sj_penjualan = Logistik::where('nosurat', $val)->whereYear('tgl_kirim', $year)->count();
+            $count_sj_retur = Pengiriman::where('no_pengiriman', $val)->whereYear('tanggal', $year)->count();
+            $count = $count_sj_penjualan + $count_sj_retur;
         }
-        return $e;
+        return $count;
     }
 
     public function check_no_resi($val)
     {
         $vals = str_replace("_", "/", $val);
-        $e = Logistik::where([['noresi', '!=', '-'], ['noresi', '=', $vals]])->count();
+        $e = Logistik::where([['noresi', '!=', '-'], ['noresi', '=', $vals]])->whereYear('created_at', $this->getYear())->count();
         return $e;
     }
 
@@ -4208,5 +4239,10 @@ class LogistikController extends Controller
     //MANAGER
     public function manager_logistik_show(){
         return view('manager.logistik.so.show');
+    }
+
+    function getYear()
+    {
+        return  Carbon::now()->format('Y');
     }
 }

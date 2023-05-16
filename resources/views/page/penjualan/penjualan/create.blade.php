@@ -125,13 +125,13 @@
         @media screen and (max-width: 1219px) {
 
             /* label,
-                                                .row {
-                                                    font-size: 12px;
-                                                }
+                                                            .row {
+                                                                font-size: 12px;
+                                                            }
 
-                                                h4 {
-                                                    font-size: 20px;
-                                                } */
+                                                            h4 {
+                                                                font-size: 20px;
+                                                            } */
             body {
                 font-size: 12px;
             }
@@ -148,13 +148,13 @@
         @media screen and (max-width: 991px) {
 
             /* label,
-                                                .row {
-                                                    font-size: 12px;
-                                                }
+                                                            .row {
+                                                                font-size: 12px;
+                                                            }
 
-                                                h4 {
-                                                    font-size: 20px;
-                                                } */
+                                                            h4 {
+                                                                font-size: 20px;
+                                                            } */
             section {
                 font-size: 12px;
             }
@@ -409,6 +409,12 @@
                                                                 aria-selected="true">Deskripsi Ekatalog</a>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
+                                                            <a class="nav-link" id="pills-po-ekat-tab"
+                                                                data-toggle="pill" href="#pills-po-ekat" role="tab"
+                                                                aria-controls="pills-po-ekat"
+                                                                aria-selected="false">Purchase Order</a>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
                                                             <a class="nav-link disabled" id="pills-instansi-tab"
                                                                 data-toggle="pill" href="#pills-instansi" role="tab"
                                                                 aria-controls="pills-instansi"
@@ -422,8 +428,7 @@
                                                         </li>
                                                     </ul>
                                                     <div class="tab-content" id="pills-tabContent">
-                                                        <div class="tab-pane fade show active" id="pills-penjualan"
-                                                            role="tabpanel" aria-labelledby="pills-penjualan-tab">
+                                                        <div class="tab-pane fade show active" id="pills-penjualan" role="tabpanel" aria-labelledby="pills-penjualan-tab">
                                                             <div class="card removeshadow">
                                                                 <div class="card-header">
                                                                     <h6>Deskripsi Ekatalog</h6>
@@ -594,8 +599,94 @@
                                                             </div> --}}
                                                             </div>
                                                         </div>
-                                                        <div class="tab-pane fade" id="pills-instansi" role="tabpanel"
-                                                            aria-labelledby="pills-instansi-tab">
+                                                        <div class="tab-pane fade show" id="pills-po-ekat" role="tabpanel" aria-labelledby="pills-po-ekat-tab">
+                                                            <div class="card removeshadow">
+                                                                <div class="card-header">
+                                                                    <h6>Purchase Order</h6>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <div class="form-group row">
+                                                                        <label for="no_po_ekat"
+                                                                            class="col-lg-5 col-md-12 col-form-label labelket">No
+                                                                            PO</label>
+                                                                        <div class="col-lg-5 col-md-12">
+                                                                            <input type="text"
+                                                                                class="form-control @error('no_po_ekat') is-invalid @enderror"
+                                                                                value=""
+                                                                                placeholder="Masukkan Nomor Purchase Order"
+                                                                                id="no_po_ekat" name="no_po_ekat" />
+                                                                            <div class="invalid-feedback" id="msgno_po_ekat">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="tanggal_po_ekat"
+                                                                            class="col-lg-5 col-md-12 col-form-label labelket">Tanggal
+                                                                            PO</label>
+                                                                        <div class="col-lg-5 col-md-12">
+                                                                            <input type="date"
+                                                                                class="form-control @error('tanggal_po_ekat') is-invalid @enderror"
+                                                                                value=""
+                                                                                placeholder="Masukkan Tanggal Purchase Order"
+                                                                                id="tanggal_po_ekat" name="tanggal_po_ekat" />
+                                                                            <div class="invalid-feedback" id="msgtanggal_po_ekat">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for=""
+                                                                            class="col-form-label col-lg-5 col-md-12 labelket">Delivery
+                                                                            Order</label>
+                                                                        <div class="col-lg-5 col-md-12 col-form-label">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio"
+                                                                                    name="do_ekat" id="yes" value="yes" />
+                                                                                <label class="form-check-label"
+                                                                                    for="yes">Tersedia</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input class="form-check-input" type="radio"
+                                                                                    name="do_ekat" id="no" value="no" />
+                                                                                <label class="form-check-label" for="no">Tidak
+                                                                                    tersedia</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row hide" id="do_detail_no_ekat">
+                                                                        <label for=""
+                                                                            class="col-form-label col-lg-5 col-md-12 labelket">Nomor
+                                                                            DO</label>
+                                                                        <div class="col-lg-5 col-md-12">
+                                                                            <input type="text"
+                                                                                class="form-control col-form-label @error('no_do_ekat') is-invalid @enderror"
+                                                                                id="no_do_ekat" name="no_do_ekat" />
+                                                                            <div class="invalid-feedback" id="msgno_do_ekat">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row hide" id="do_detail_tgl_ekat">
+                                                                        <label for=""
+                                                                            class="col-form-label col-lg-5 col-md-12 labelket">Tanggal
+                                                                            DO</label>
+                                                                        <div class="col-lg-5 col-md-12">
+                                                                            <input type="date"
+                                                                                class="form-control col-form-label @error('tanggal_do_ekat') is-invalid @enderror"
+                                                                                id="tanggal_do_ekat" name="tanggal_do_ekat" />
+                                                                            <div class="invalid-feedback" id="msgtanggal_do_ekat">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="keterangan_ekat"
+                                                                            class="col-lg-5 col-md-12 col-form-label labelket">Keterangan</label>
+                                                                        <div class="col-lg-5 col-md-12">
+                                                                            <textarea class="form-control" placeholder="Masukkan Keterangan" id="keterangan_ekat" name="keterangan_ekat"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="pills-instansi" role="tabpanel" aria-labelledby="pills-instansi-tab">
                                                             <div class="card removeshadow">
                                                                 <div class="card-header">
                                                                     <h6>Instansi</h6>
@@ -692,8 +783,7 @@
                                                             </div> --}}
                                                             </div>
                                                         </div>
-                                                        <div class="tab-pane fade" id="pills-produk" role="tabpanel"
-                                                            aria-labelledby="pills-produk-tab">
+                                                        <div class="tab-pane fade" id="pills-produk" role="tabpanel" aria-labelledby="pills-produk-tab">
                                                             <div class="card removeshadow">
                                                                 <div class="card-header">
                                                                     <h6>Rencana Penjualan</h6>
@@ -1361,7 +1451,7 @@
 
             function checkpenjualanform() {
                 if ($('input[type="radio"][name="status"]:checked').val() == "sepakat") {
-                    if (($('#no_urut').val() != "" && !$("#no_urut").hasClass('is-invalid')) && ($("#no_paket")
+                    if ((!$("#no_urut").hasClass('is-invalid')) && ($("#no_paket")
                             .val() != "" && !$("#no_paket").hasClass('is-invalid')) && $(
                             "input[name='status']:checked")
                         .val() != "" && $('#tanggal_pemesanan').val() != "" && $("#batas_kontrak").val() != "") {
@@ -1378,7 +1468,7 @@
                     }
                 } else if (($('input[type="radio"][name="status"]:checked').val() == "draft") || ($(
                         'input[type="radio"][name="status"]:checked').val() == "batal")) {
-                    if (($('#no_urut').val() != "" && !$("#no_urut").hasClass('is-invalid')) && $(
+                    if ((!$("#no_urut").hasClass('is-invalid')) && $(
                             "input[name='status']:checked").val() != "" && $('#tanggal_pemesanan').val() != "") {
 
                         if (($('#no_paket').val() != "" && $('input[type="checkbox"][name="isi_nopaket"]:checked')
@@ -1393,7 +1483,7 @@
                         $('#pills-instansi-tab').addClass('disabled');
                     }
                 } else {
-                    if (($('#no_urut').val() != "" && !$("#no_urut").hasClass('is-invalid')) && ($("#no_paket")
+                    if ((!$("#no_urut").hasClass('is-invalid')) && ($("#no_paket")
                             .val() != "" && !$("#no_paket").hasClass('is-invalid')) && $(
                             "input[name='status']:checked")
                         .val() != "" && $('#tanggal_pemesanan').val() != "") {
@@ -1521,7 +1611,7 @@
                         .val() !== "" && $("#alamatinstansi").val() !== "" && $(".provinsi").val() !== "" && $(
                             "#satuan_kerja").val() != "" && ($("#no_paket").val() != "" && !$("#no_paket").hasClass(
                             'is-invalid')) && $("input[name='status']:checked").val() != "" && $("#batas_kontrak")
-                        .val() != "" && $("#deskripsi").val() != "" && (($('#no_urut').val() != "" && !$("#no_urut")
+                        .val() != "" && $("#deskripsi").val() != "" && ((!$("#no_urut")
                             .hasClass('is-invalid')) && !$("#no_paket").hasClass('is-invalid')) &&
                         penjualan_produk_id == true && variasi == true && produk_jumlah == true && produk_harga ==
                         true && part_id == true && part_jumlah == true && part_harga == true && jasa_id == true &&
@@ -1533,8 +1623,7 @@
                 } else if (($('input[type="radio"][name="status"]:checked').val() == "draft") || ($(
                         'input[type="radio"][name="status"]:checked').val() == "batal")) {
                     if ($('#tanggal_pemesanan').val() != "" && $("#instansi").val() !== "" && $("#alamatinstansi")
-                        .val() !== "" && $("#satuan_kerja").val() != "" && $("#deskripsi").val() != "" && (($(
-                                '#no_urut').val() != "" && !$("#no_urut").hasClass('is-invalid')) && !$("#no_paket")
+                        .val() !== "" && $("#satuan_kerja").val() != "" && $("#deskripsi").val() != "" && ((!$("#no_urut").hasClass('is-invalid')) && !$("#no_paket")
                             .hasClass('is-invalid'))) {
                         if (($('#no_paket').val() != "" && $('input[type="checkbox"][name="isi_nopaket"]:checked')
                                 .length > 0) || ($('#no_paket').val() == "" && $(
@@ -1582,7 +1671,7 @@
                     if ($('#tanggal_pemesanan').val() != "" && $("#instansi").val() !== "" && $("#alamatinstansi")
                         .val() !== "" && $("#satuan_kerja").val() != "" && ($("#no_paket").val() != "" && !$(
                             "#no_paket").hasClass('is-invalid')) && $("input[name='status']:checked").val() != "" &&
-                        $("#deskripsi").val() != "" && (($('#no_urut').val() != "" && !$("#no_urut").hasClass(
+                        $("#deskripsi").val() != "" && ((!$("#no_urut").hasClass(
                             'is-invalid')) && !$("#no_paket").hasClass('is-invalid')) && penjualan_produk_id ==
                         true && variasi == true && produk_jumlah == true && produk_harga == true && part_id ==
                         true && part_jumlah == true && part_harga == true && jasa_id == true && jasa_harga == true
@@ -2214,9 +2303,8 @@
                         }
                     });
                 } else if ($(this).val() == "") {
-                    $("#msgno_urut").text("No Urut Harus diisi");
-                    $("#no_urut").addClass('is-invalid');
-                    $('#btntambah').attr("disabled", true);
+                    $("#msgno_urut").text("");
+                    $("#no_urut").removeClass('is-invalid');
                 }
                 checkvalidasi();
             });
@@ -2688,10 +2776,17 @@
                             } else {
                                 for (var y = 0; y < res[0].produk[x].gudang_barang_jadi
                                     .length; y++) {
+
+                                    var nama_var = "";
+                                    if (res[0].produk[x].gudang_barang_jadi[y].nama != "") {
+                                        nama_var = res[0].produk[x].gudang_barang_jadi[y].nama;
+                                    } else {
+                                        nama_var = res[0].produk[x].nama;
+                                    }
+
                                     data.push({
                                         id: res[0].produk[x].gudang_barang_jadi[y].id,
-                                        text: res[0].produk[x].gudang_barang_jadi[y]
-                                            .nama,
+                                        text: nama_var,
                                         jumlah: res[0].produk[x].pivot.jumlah,
                                         qt: cek_stok(res[0].produk[x]
                                             .gudang_barang_jadi[y].id)
@@ -3598,6 +3693,19 @@
                             response([]);
                         }
                     });
+                }
+            });
+
+            $('input[type="radio"][name="do_ekat"]').on('change', function() {
+                $('#btntambah').attr("disabled", true);
+                $("#no_do_ekat").val("");
+                $("#tanggal_do_ekat").val("");
+                if ($(this).val() == "yes") {
+                    $("#do_detail_no_ekat").removeClass("hide");
+                    $("#do_detail_tgl_ekat").removeClass("hide");
+                } else if ($(this).val() == "no") {
+                    $("#do_detail_no_ekat").addClass("hide");
+                    $("#do_detail_tgl_ekat").addClass("hide");
                 }
             });
             /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/

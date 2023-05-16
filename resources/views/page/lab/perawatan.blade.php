@@ -70,12 +70,15 @@
                 <div class="row mb-2">
                     <div class="col"><span class="float-right">Operator</span></div>
                     <div class="col">
-                        <select name="operator" id="selectOperator" class="form-control form-control-sm">
+                        <!-- <select name="operator" id="selectOperator" class="form-control form-control-sm">
                             <option value="" disabled selected hidden>Pilih Operator Perawatan</option>
                             @foreach($user as $u)
                             <option value="{{ $u->id }}" {{ old('operator') == $u->id ? 'selected' : '' }}>{{ $u->nama }}</option>
                             @endforeach
-                        </select>
+                        </select> -->
+                        <div class="form-group">
+                            <input type="text" name="operator" id="operator" class="form-control" placeholder="Nama Operator" value="{{ old('operator') }}">
+                        </div>
                     </div>
                 </div>
 
@@ -235,7 +238,7 @@
 @stop
 @section('adminlte_js')
 <script>
-$('#selectOperator').select2();
+//$('#selectOperator').select2();
 // tampilkan modal konfirmasi
 $("#btnSubmit").on('click', function(e){
     e.preventDefault();
@@ -252,6 +255,35 @@ $("#btnSubmit").on('click', function(e){
         }
     });
 });
+
+$(document).ready(function () {
+    // auto complete penaggung jawab
+    $(function() {
+        $.ajax({
+            type:'GET',
+            url:'{{ url("/api/inventory/get_data_pj/perawatan") }}',
+            success:function(data) {
+                autoComp(data);
+            }
+        });
+    });
+
+    function autoComp(data){
+        //hapus value jika ada yang null
+        for(let i = 0; i<data.length;i++){
+            if ( data[i] == null) { 
+                data.splice(i, 1); 
+            }
+        }
+        console.log(data);
+        $('#operator').autocomplete({
+            source: data,
+            autofocus: true,
+        });
+    }
+    // auto complete penanggung jawab end
+});
+
 </script>
 
 @endsection

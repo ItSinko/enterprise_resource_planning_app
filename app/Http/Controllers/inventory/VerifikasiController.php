@@ -87,9 +87,8 @@ class VerifikasiController extends Controller
     function store_verifikasi(Request $request)
     {
         // try {
-
             $request->validate([
-                'operator' => 'required',
+                //'operator' => 'required',
                 'tgl_verifikasi' => 'required',
                 'pelaksanaan_kendali' => 'required',
                 'cekFungsi' => 'required',
@@ -106,7 +105,6 @@ class VerifikasiController extends Controller
             ->leftJoin(DB::raw('erp_kalibrasi.alatuji a'), 'a.id_alatuji', '=', 'al.alatuji_id')
             ->where('al.id_serial_number', $request->serial_number)
             ->first();
-            $pj = DB::table('erp_spa.users')->where('id', $request->operator)->first();
 
             if($request->cekFisik == 10 or $request->cekFungsi == 10)
             {
@@ -153,7 +151,8 @@ class VerifikasiController extends Controller
                 'alat_uji' => $data->nm_alatuji,
                 'serial_number' => $data->serial_number,
                 'tgl_perawatan' => $request->tgl_perawatan,
-                'pj_dilakukan_oleh' => $pj->nama,
+                'pj_dilakukan_oleh' => auth()->user()->nama,
+                //'pj_dilakukan_oleh' => $request->operator,
             ];
 
             DB::table('erp_spa.tbl_log')->insert([
@@ -180,7 +179,9 @@ class VerifikasiController extends Controller
             $data =
             DB::table(DB::raw('erp_kalibrasi.verifikasi v'))
             ->select(
-                'v.tgl_perawatan', 'v.pengendalian', 'v.hasil_fisik', 'v.hasil_fungsi', 'v.keputusan', 'v.keterangan', 'v.tindak_lanjut'
+                'v.tgl_perawatan', 'v.pengendalian', 'v.hasil_fisik',
+                'v.hasil_fungsi', 'v.keputusan', 'v.keterangan',
+                'v.tindak_lanjut', 'v.jadwal_perawatan'
             )
             ->where('v.serial_number_id', '=', $id)
             ->get();

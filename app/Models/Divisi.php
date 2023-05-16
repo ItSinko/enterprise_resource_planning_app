@@ -18,4 +18,20 @@ class Divisi extends Model
     {
         return $this->hasMany(Karyawan::class);
     }
+    public function StokDivisiPart()
+    {
+        return $this->hasMany(StokDivisiPart::class, 'divisi_id', 'id');
+    }
+    public function TFProduksiHistory()
+    {
+        return $this->hasMany(TFProduksiHistory::class, 'divisi_id', 'id');
+    }
+    public function PermintaanPembelian()
+    {
+        return $this->hasMany(PermintaanPembelian::class);
+    }
+    public function PoPembelian()
+    {
+        return $this->hasMany(PoPembelian::class);
+    }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\inventory\Perawatan;
 use Illuminate\Support\Facades\DB;
 use App\Models\inventory\AlatSN;
+use App\Models\inventory\Target;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -104,18 +105,17 @@ class PerawatanController extends Controller
         ->where('al.id_serial_number', $request->serial_number)
         ->first();
 
-        $pj = DB::table('erp_spa.users')->where('id', $request->operator)->first();
-
-        $jadwal_perawatan = Carbon::parse($request->tgl_verifikasi)->addMonths(3)->format('Y-m-d');
+        $jadwal_perawatan = Carbon::parse($request->tgl_perawatan)->addMonths(3)->format('Y-m-d');
 
         Perawatan::create([
             'serial_number_id'  => $request->serial_number,
-            'kelengkapan'      => $request->cek_kelengkapan,
+            'kelengkapan'       => $request->cek_kelengkapan,
             'fungsi'            => $request->cek_fungsi_txt,
             'hasil_fisik'       => $request->cekFisik,
             'hasil_fungsi'      => $request->cekFungsi,
             'tindak_lanjut'     => $request->tindak_lanjut,
             'keterangan'        => $request->keterangan,
+            'penanggung_jawab'  => $request->operator,
             'tgl_perawatan'     => $request->tgl_perawatan,
             'jadwal_perawatan'  => $jadwal_perawatan,
             'created_by'        => auth()->user()->id,
@@ -137,12 +137,57 @@ class PerawatanController extends Controller
             ]);
         }
 
+        //update target
+        /*
+        $progress = Target::where('user_id', auth()->user()->id)->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->first();
+        if($progress != null){
+            
+            //jika target bulan ini telah terpenuhi,
+            //ganti ke pengisian dari target sebelunya yang belum terselesaikan
+            if($progress->target <= $progress->progress){
+                $tgl = date('Y-m-d', strtotime(date('Y-m-d'). ' - 1 months'));
+                $bln = date('m', strtotime($tgl));
+                $thn = date('Y', strtotime($tgl));
+
+                $progress = Target::where('user_id', auth()->user()->id)->get();
+                $i = 0;
+                $a = null;
+                $progress = $progress->toArray();
+
+                //cari dari progress bulan sebelumnya yang belum memenuhi target
+                while($progress[$i]['target'] > $progress[$i]['progres'] or $progress == null){
+                    $a = Target::where('id_target_kalibrasi', $progress[$i]['id_target_kalibrasi'])->first();
+                    $i++;
+                }
+                
+                //jika ada target yang masih belum terpenuhi
+                //isi target dari bulan tersebut
+                //
+                //update ini buat gk return habis update
+                //
+                if($a != null){
+                    $progress = $a;
+    
+                    Target::where('user_id', auth()->user()->id)->where('id_target_kalibrasi', $progress->id_target_kalibrasi)->first()->update([
+                        'progres' => $progress->progress + 1,
+                    ]);
+                    //return redirect()->back()->with(['success' => 'data verifikasi alat uji berhasil di perbarui']);
+                }
+                //update ini
+            }
+            $progress = Target::where('user_id', auth()->user()->id)->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))->first();
+            $progress = $progress->progress;
+            Target::where('user_id', auth()->user()->id)->latest('created_at')->first()->update([
+                'progres' => $progress + 1,
+            ]);
+        }*/
+
         // user log
         $obj = [
             'alat_uji' => $data->nm_alatuji,
             'serial_number' => $data->serial_number,
             'tgl_perawatan' => $request->tgl_perawatan,
-            'pj_dilakukan_oleh' => $pj->nama,
+            'pj_dilakukan_oleh' => $request->operator,
         ];
 
         DB::table('erp_spa.tbl_log')->insert([

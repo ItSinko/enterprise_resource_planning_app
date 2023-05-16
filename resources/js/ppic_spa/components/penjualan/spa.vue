@@ -55,6 +55,8 @@ export default {
     },
     updated() {
         if(this.penjualanspas.length > 0) {
+            const table = $('.spatable').DataTable();
+            table.destroy();
             $('.spatable').DataTable();
         }
     }

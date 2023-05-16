@@ -32,13 +32,27 @@ export default {
     },
     computed: {
         filteredProducts() {
+            const sortNameByAscending = (data) => {
+                return data.sort((a, b) => {
+                    if (a.nama < b.nama) {
+                        return -1;
+                    }
+                    if (a.nama > b.nama) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            };
+            
             const dataIsNotNull = (data) =>
                 data !== null && data !== undefined && data !== "" ? data : "";
-            return this.products.filter((row) => {
-                return Object.keys(row).some((key) => {
-                    return String(dataIsNotNull(row[key])).toLowerCase().includes(this.search.toLowerCase())
+            const filteredData = this.products.filter((row) => {
+                    return Object.keys(row).some((key) => {
+                        return String(dataIsNotNull(row[key])).toLowerCase().includes(this.search.toLowerCase())
                 })
             })
+
+            return sortNameByAscending(filteredData)
 
         },
         renderPaginate() {

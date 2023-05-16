@@ -6,3 +6,5 @@ import "datatables.net-bs4/js/dataTables.bootstrap4.min";
 import "chart.js/dist/chart";
 import "select2/dist/js/select2.full";
 import "fullcalendar";
+
+

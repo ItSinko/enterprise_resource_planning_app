@@ -129,10 +129,10 @@ $len = count($data);
                 <tr>
                     <td style="width:52.3%;"></td>
                     <td class="veramd align-center" style="width:47.7%;">
-                        <h3> {{ $d->id }}/ SKA /
+                        <h3> {{ $d->no_coo }}/ SKA /
                             {{ App\Http\Controllers\DcController::bulan_romawi($d->NoseriDetailLogistik->DetailLogistik->logistik->tgl_kirim) }}
                             / SPA /
-                            {{ App\Http\Controllers\DcController::tahun($d->NoseriDetailLogistik->DetailLogistik->logistik->tgl_kirim) }}
+                            {{ $d->tahun }}
                         </h3>
                     </td>
                 </tr>

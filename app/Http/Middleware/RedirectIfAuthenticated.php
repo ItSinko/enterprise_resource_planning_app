@@ -58,6 +58,10 @@ class RedirectIfAuthenticated
                     return redirect('/administrator/dashboard');
                 } else if ($request->user()->hasRole("10")) {
                     return redirect('/teknik/part');
+                }else if ($request->user()->hasRole("11")) {
+                    return redirect('/gbmp/transfer');
+                }else if ($request->user()->hasRole("7")) {
+                    return redirect('/pembelian/supplier');
                 }
             }
         }

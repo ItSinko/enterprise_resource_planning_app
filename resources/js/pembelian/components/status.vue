@@ -1,0 +1,54 @@
+<script>
+export default {
+    props: {
+        status: {
+            type: String,
+            required: true
+        },
+        persentase: {
+            type: Number,
+            required: false
+        }
+    },
+    methods: {
+        statusCheck(status){
+            switch (status.toLowerCase()) {
+                case 'batal':
+                    return 'badge badge-danger';
+                case 'pembelian ditolak':
+                    return 'badge badge-danger';
+                case 'belum proses':
+                    return 'badge badge-danger';
+                case 'menunggu diproses':
+                    return 'badge badge-warning';
+                case 'menunggu permintaan':
+                    return 'badge badge-warning';
+                case 'proses po':
+                    return 'badge badge-primary';
+                case 'proses':
+                    return 'badge badge-warning';
+                case 'selesai':
+                    return 'badge badge-success';
+                case 'draft':
+                    return 'badge badge-info';
+                default:
+                    return 'badge badge-light';
+            }
+        }
+    }
+}
+</script>
+<template>
+    <div>       
+        <div v-if="persentase">
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" :style="`width: ${persentase}%`" 
+                :aria-valuenow="persentase" aria-valuemin="0" aria-valuemax="100">{{ persentase }}%</div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <span class="text-bold">{{ status }}</span>
+            </div>
+        </div>
+        <span v-else :class="statusCheck(status)">{{ status }}</span>
+    </div>
+</template>

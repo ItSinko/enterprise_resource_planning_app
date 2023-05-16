@@ -41,9 +41,6 @@ Route::get('/home', function () {
     return redirect('/');
 })->middleware('auth');
 
-Route::get("/test", function () {
-    return view('test');
-});
 Route::view('/modul_dashboard/show', 'auth.dashboard');
 Route::group(['middleware' => 'auth', 'middleware' => ['auth', 'divisi:jual,kes,prd,dc,gbj,qc,log,gk,mtc,mgrgdg,dirut,it']], function () {
     Route::view('/edit_pwd', 'page.setting.edit_pwd');
@@ -95,7 +92,12 @@ Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
 Route::middleware('auth')->prefix('/teknik')->group(function () {
     Route::view('/{any?}', 'spa.teknik');
 });
-
+Route::middleware('auth')->prefix('/gbmp')->group(function () {
+    Route::view('/{any?}', 'spa.gbmp');
+});
+Route::middleware('auth')->prefix('/pembelian')->group(function () {
+    Route::view('/{any?}', 'spa.pembelian');
+});
 
 Route::group(['prefix' => '/gbj', 'middleware' => ['auth', 'divisi:gbj,mgrgdg,dirut']], function () {
     Route::view('/stok/{any?}', 'page.gbj.stok');
@@ -211,9 +213,9 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
 
         Route::group(['middleware' => ['divisi:jual,dirut,ppic']], function () {
             Route::view('/show', 'page.penjualan.penjualan.show')->name('penjualan.penjualan.show');
-            Route::post('/ekatalog/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog']);
-            Route::post('/spa/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa']);
-            Route::post('/spb/data/{value}', [App\Http\Controllers\PenjualanController::class, 'get_data_spb']);
+            Route::post('/ekatalog/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog']);
+            Route::post('/spa/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa']);
+            Route::post('/spb/data/{value}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'get_data_spb']);
         });
         Route::group(['middleware' => ['divisi:jual,ppic']], function () {
             Route::get('/export/{jenis}/{customer_id}/{tgl_awal}/{tgl_akhir}/{seri}/{tampilan}', [App\Http\Controllers\PenjualanController::class, 'export_laporan'])->name('penjualan.penjualan.export');
@@ -244,7 +246,7 @@ Route::group(['prefix' => 'penjualan', 'middleware' => 'auth'], function () {
         Route::view('/edit/{id}/{jenis}', 'page.penjualan.edit_so')->name('penjualan.so.edit');
     });
 
-    Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,qc,log,dc,asp,dirut']], function () {
+    Route::group(['prefix' => '/lacak', 'middleware' => ['divisi:jual,gbj,qc,log,dc,asp,dirut']], function () {
         Route::view('/show', 'page.penjualan.lacak.show')->name('penjualan.lacak.show');
     });
 
@@ -340,6 +342,13 @@ Route::group(['prefix' => 'logistik', 'middleware' => 'auth'], function () {
             });
         });
     });
+
+    Route::group(['prefix' => '/pengiriman_retur'], function () {
+        Route::view('/show', 'page.logistik.pengiriman_retur.show')->name('logistik.pengiriman_retur.show');
+        Route::view('/edit', 'page.logistik.pengiriman_retur.edit')->name('logistik.pengiriman_retur.edit');
+        Route::post('/update', [App\Http\Controllers\LogistikController::class, 'update_pengiriman_retur'])->name('logistik.pengiriman_retur.update');
+    });
+
     Route::group(['prefix' => '/laporan', 'middleware' => ['divisi:log']], function () {
         Route::view('/show', 'page.logistik.laporan.show')->name('logistik.laporan.show');
         Route::get('/export/{jenis}/{ekspedisi}/{tgl_awal}/{tgl_akhir}', [App\Http\Controllers\LogistikController::class, 'export_laporan'])->name('logistik.laporan.export');
@@ -395,13 +404,17 @@ Route::group(['prefix' => 'dc', 'middleware' => 'auth'], function () {
     });
 });
 
-Route::group(['prefix' => 'as', 'middleware' => ['auth', 'divisi:asp']], function () {
+Route::group(['prefix' => 'as', 'middleware' => ['auth', 'divisi:asp,log']], function () {
 
 
     Route::view('/dashboard', 'page.as.dashboard')->name('as.dashboard');
 
     Route::group(['prefix' => '/penjualan'], function () {
         Route::view('/show', 'page.as.penjualan.show')->name('as.penjualan.show');
+    });
+
+    Route::group(['prefix' => '/laporan'], function () {
+        Route::view('/show', 'page.as.laporan.show')->name('as.penjualan.show');
     });
 
     Route::group(['prefix' => '/retur'], function () {
@@ -411,6 +424,29 @@ Route::group(['prefix' => 'as', 'middleware' => ['auth', 'divisi:asp']], functio
         Route::get('/edit/{id}', [App\Http\Controllers\AfterSalesController::class, 'edit_retur'])->name('as.retur.edit');
         Route::put('/update/{id}', [App\Http\Controllers\AfterSalesController::class, 'update_retur'])->name('as.retur.update');
         Route::delete('/delete', [App\Http\Controllers\AfterSalesController::class, 'delete_retur'])->name('as.retur.delete');
+    });
+
+
+    Route::group(['prefix' => '/perbaikan'], function () {
+        Route::view('/show', 'page.as.perbaikan.show')->name('as.perbaikan.show');
+        Route::post('/data', [App\Http\Controllers\AfterSalesController::class, 'data_perbaikan'])->name('as.perbaikan.data');
+        Route::view('/create', 'page.as.perbaikan.create')->name('as.perbaikan.create');
+        Route::post('/store', [App\Http\Controllers\AfterSalesController::class, 'store_perbaikan'])->name('as.perbaikan.store');
+        Route::post('/switch', [App\Http\Controllers\AfterSalesController::class, 'save_switch_noseri'])->name('as.perbaikan.switch');
+        Route::post('/done_karantina', [App\Http\Controllers\AfterSalesController::class, 'done_karantina_noseri'])->name('as.perbaikan.done_karantina');
+        Route::view('/detail', 'page.as.perbaikan.detail')->name('as.perbaikan.detail');
+        Route::view('/noseri', 'page.as.perbaikan.switch')->name('as.perbaikan.noseri');
+        Route::get('/edit/{id}', [App\Http\Controllers\AfterSalesController::class, 'edit_perbaikan'])->name('as.perbaikan.edit');
+        Route::put('/update/{id}', [App\Http\Controllers\AfterSalesController::class, 'update_perbaikan'])->name('as.perbaikan.update');
+    });
+
+    Route::group(['prefix' => '/pengiriman'], function () {
+        Route::view('/show', 'page.as.pengiriman.show')->name('as.pengiriman.show');
+        Route::view('/create', 'page.as.pengiriman.create')->name('as.pengiriman.create');
+        Route::post('/store', [App\Http\Controllers\AfterSalesController::class, 'store_pengiriman'])->name('as.pengiriman.store');
+        Route::view('/detail', 'page.as.pengiriman.detail')->name('as.pengiriman.detail');
+        Route::get('/edit/{id}', [App\Http\Controllers\AfterSalesController::class, 'edit_pengiriman'])->name('as.pengiriman.edit');
+        Route::put('/update/{id}', [App\Http\Controllers\AfterSalesController::class, 'update_pengiriman'])->name('as.pengiriman.update');
     });
 
     Route::group(['prefix' => '/so'], function () {

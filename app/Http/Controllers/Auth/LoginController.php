@@ -104,6 +104,10 @@ class LoginController extends Controller
             return redirect('/mtc/air/masuk');
         } else if (auth()->user()->karyawan->divisi_id == 14) {
             return redirect('/administrator/dashboard');
+        } else if (auth()->user()->karyawan->divisi_id == 11) {
+            return redirect('/gbmp/transfer');
+        } else if (auth()->user()->karyawan->divisi_id == 7) {
+            return redirect('/pembelian/supplier');
         }
 
         return redirect('/home');

@@ -55,6 +55,8 @@ export default {
     },
     updated() {
         if(this.penjualanspbs.length > 0) {
+            const table = $('.spbtable').DataTable();
+            table.destroy();
             $('.spbtable').DataTable();
         }
     }

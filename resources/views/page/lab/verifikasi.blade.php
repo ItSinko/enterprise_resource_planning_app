@@ -59,24 +59,6 @@
 
                 <input type="hidden" name="serial_number" value="{{ $id }}">
 
-                @error('operator')
-                    <div class="row">
-                        <div class="col"></div>
-                        <div class="col alert bc-danger text-danger border border-danger p-1">{{ $message }}</div>
-                    </div>
-                @enderror
-                <div class="row mb-2">
-                    <div class="col"><span class="float-right">Operator</span></div>
-                    <div class="col">
-                        <select name="operator" id="selectOperator" class="form-control form-control-sm">
-                            <option value="" disabled selected hidden>Pilih Operator Verifikasi</option>
-                            @foreach($user as $u)
-                            <option value="{{ $u->id }}" {{ old('operator') == $u->id ? 'selected' : '' }}>{{ $u->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
                 @error('tgl_verifikasi')
                     <div class="row">
                         <div class="col"></div>

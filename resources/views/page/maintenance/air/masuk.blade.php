@@ -27,7 +27,10 @@
         top: -45px;
     } */
 
+    /* Styling untuk gauge meter */
+
     svg {
+        /* Styling gauge secara umum */
 
         height: auto;
         margin: 0;
@@ -36,6 +39,7 @@
     }
 
     .gauge {
+        /* Styling gauge air masuk*/
 
         width: auto;
         height: auto;
@@ -44,6 +48,7 @@
     }
 
     .gauge2 {
+        /* Styling gauge air keluar*/
 
         width: auto;
         height: auto;
@@ -53,6 +58,7 @@
 
     /* Style TDS TSS PH Meter */
     .outer-wrapper {
+        /* Styling bagian luar dari bar meter tds tss dan ph*/
         display: inline-block;
         margin: auto auto;
         padding: auto auto;
@@ -61,6 +67,7 @@
     }
 
     .column-wrapper {
+        /* Styling bagian dalam (Tinggi rendah bar) dari bar meter tds tss dan ph*/
 
         height: 90px;
         width: 20px;
@@ -152,7 +159,9 @@
 @section('content')
 <!-- <section class="content">
     <div class="container-fluid"> -->
+
 <div class="row">
+    <!-- baris pertama (Untuk bar penggunaan selama satu minggu -->
 
     <div class="col-sm-12 col-lg-12">
         <div class="card">
@@ -160,18 +169,20 @@
                 <i class="fas fa-chart-bar me-1"></i>
                 Total Penggunaan Air Satu Minggu (L) <br>
                 <?php
+                //Menampilkan tanggal mulai dari hari Senin sampai hari Minggu di minggu ini
                 echo date("d F Y", strtotime('monday this week')), " - ";
                 echo date("d F Y", strtotime('sunday this week'));
                 ?>
 
             </div>
-            <div class="card-body"><canvas id="myBarChart" width="100%" height="25%"></canvas></div>
+            <div class="card-body"><canvas id="myBarChart" width="100%" height="25%"></canvas></div> <!-- Tempat meletakkan Chart -->
         </div>
     </div>
 
 </div>
 
 <div class="row card-deck">
+    <!-- Area baris kedua-->
     <!-- <div class="col-sm-12"> -->
     <div class="card card-primary card-outline card-outline-tabs col-lg-2">
         <div class="card-header p-0 border-bottom-0">
@@ -186,12 +197,13 @@
         </div>
 
         <div class="tab-content" id="custom-tabs-four-tabContent">
+            <!-- Area tampilan air disimpan serta air digunakan -->
             <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab" style="height:215px">
-
                 <div class="card-header">
                     <i class="fas fa-chart-area me-1"></i>
                     Air Dipakai (L/M)
                 </div>
+                <!-- Tempat meletakkan gauge air digunakan -->
                 <div id="gg2" class="gauge2"></div>
             </div>
 
@@ -201,6 +213,7 @@
                     <i class="fas fa-chart-area me-1"></i>
                     Air Disimpan (L/M)
                 </div>
+                <!-- Tempat meletakkan gauge air disimpan -->
                 <div id="gg1" class="gauge"></div>
 
             </div>
@@ -217,10 +230,12 @@
         <div class="card-header">
             <i class="fas fa-chart-area me-1"></i>
             Penggunaan Air Hari Ini (<?php
+                                        //Pemrograman untuk menentukan nama hari ini dengan menggunakan bahasa indonesia
                                         setlocale(LC_ALL, 'id-ID');
                                         echo strftime("%A"); ?>)
         </div>
         <div class="card-body" style="height:auto;">
+            <!-- Tempat meletakkan chart untuk naik turunnya debit air secara realtime -->
             <div class="chart-container"><canvas id="myAreaChart" min height="110px" height="auto"></canvas></div>
         </div>
     </div>
@@ -228,12 +243,13 @@
 
     <!-- <div class="col-sm-12"> -->
     <div class="card col-lg-3">
+        <!-- Bagian monitoring kualitas air -->
         <div class="card-header">
             <i class="fas fa-chart-bar me-1"></i>
             Kondisi Air
         </div>
         <div class="card-body px-0 text-center">
-
+            <!-- Bagian monitoring pH air  -->
             <div class="outer-wrapper">
                 pH
                 <div class="column-wrapper">
@@ -243,6 +259,7 @@
                 <div class="value">pH</div>
             </div>
 
+            <!-- Bagian monitoring TSS air  -->
             <div class="outer-wrapper">
                 TSS
                 <div class="column-wrapper">
@@ -252,6 +269,7 @@
                 <div class="value">NTU</div>
             </div>
 
+            <!-- Bagian monitoring TDS air  -->
             <div class="outer-wrapper">
                 TDS
                 <div class="column-wrapper">
@@ -286,7 +304,7 @@
     var clientHeight = $('.column-wrapper')[0].style.height;
     console.log(clientHeight);
 
-    // Javascript bar chart / barchart
+    // Javascript bar chart untuk menampilkan penggunaan air setiap hari, selama satu minggu
     var ctx = document.getElementById("myBarChart");
     var BarChart = new Chart(ctx, {
         type: 'bar',
@@ -350,6 +368,7 @@
         }
     });
 
+    // fungsi untuk melakukan pengambilan data berapa banyak volume yang disimpan di dalam tandon hari ini
     function UpdateBarVolume() {
         $.ajax({
             url: "http://192.168.13.2:85/air/rekap_volume_in",
@@ -381,6 +400,7 @@
             },
         })
 
+        // fungsi untuk melakukan pengambilan data berapa banyak volume yang dikeluarkan dari dalam tandon hari ini
         $.ajax({
             url: "http://192.168.13.2:85/air/rekap_volume_out",
             type: "get",
@@ -412,15 +432,14 @@
         })
     }
 
+    //Melakukan pengulangan update setiap 3 detik (3000 milidetik) 
     setInterval(function() {
         UpdateBarVolume();
-    }, 1000);
+    }, 3000);
 
 
-    //Javascript Gauge 1
-    var nilaiGauge;
 
-    //Javascript Penggunaan Hari Ini / Penggunaan Air Hari ini
+    //Javascript Chart Penggunaan Hari Ini / Penggunaan Air Hari ini setiap detiknya
     var ctx = document.getElementById("myAreaChart");
     var kosong;
     var LineChart = new Chart(ctx, {
@@ -508,6 +527,10 @@
         }
     });
 
+    //Javascript untuk mengatur tampilan gauge meter
+    var nilaiGauge;
+
+    //Javscript untuk mengatur tampilan gauge meter dari debit air yang telah masuk ke dalam tandon setiap detiknya
     $(document).ready(function() {
         var gg1 = new JustGage({
             id: "gg1",
@@ -537,6 +560,7 @@
             counter: true
         });
 
+        //Javscript untuk mengatur tampilan gauge meter dari debit air yang telah keluar dari dalam tandon setiap detiknya
         var gg2 = new JustGage({
             id: "gg2",
             value: 0 + 'L/M',
@@ -565,7 +589,7 @@
             counter: true
         })
 
-        //update data
+        // fungsi untuk melakukan pengambilan data berapa banyak volume yang disimpan ke dalam tandon hari ini tiap detiknya
         function updateGaugeIn() {
             $.ajax({
                 url: "http://192.168.13.2:85/air/rekap_debit_in",
@@ -591,6 +615,7 @@
             })
         }
 
+        // fungsi untuk melakukan pengambilan data berapa banyak volume yang dikeluarkan dari dalam tandon hari ini tiap detiknya
         function updateGaugeOut() {
             $.ajax({
                 url: "http://192.168.13.2:85/air/rekap_debit_out",
@@ -616,14 +641,16 @@
             })
         }
 
+        //Melakukan pengulangan update setiap 3 detik (3000 milidetik) 
         setInterval(function() {
             updateGaugeIn();
             updateGaugeOut();
             kualitas();
-        }, 1000);
+        }, 3000);
 
     });
 
+    // fungsi untuk melakukan pengambilan data nilai pH, TSS, dan TDS dalam air
     function kualitas() {
         $.ajax({
             url: "http://192.168.13.2:85/air/rekap_kualitas",
@@ -642,7 +669,7 @@
                 }
 
 
-                // function PhSens() {
+                // Javascript penampil nilai pH
 
                 var pHmeter = res.data3[0].ph;
                 var randPercent = (pHmeter / 14.00) * 100;
@@ -674,9 +701,9 @@
                 $('.percentage').text(FloorPhMeter);
 
 
-                // }
 
-                // function TSSSens() {
+
+                // Javascript penampil nilai TSS
 
                 var TSSmeter = res.data3[0].tss;
                 var TSSrandPercent = (TSSmeter / 3000) * 100;
@@ -708,10 +735,10 @@
 
 
                 $('.TSSpercentage').text(floorTSS);
-                // }
 
 
-                // function TDSSens() {
+
+                // Javascript penampil nilai TDS
 
 
 
@@ -744,8 +771,6 @@
 
 
                 $('.TDSpercentage').text(floorTDS);
-
-                // }
 
             }
         })

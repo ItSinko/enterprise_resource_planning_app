@@ -18,7 +18,7 @@
         },
         methods: {
             close() {
-                $('.modalDetailPart').modal('hide')
+                this.$emit('close')
             }
         },
     }

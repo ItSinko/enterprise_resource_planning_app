@@ -161,7 +161,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="manual_book" class="form-control-file">
-                            <small class="text-muted">Dokumen berupa pdf maksimal 10mb</small>
+                            <small class="text-muted">Dokumen berupa pdf maksimal 8mb</small>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <div class="col">
                         <div class="form-group">
                             <input type="file" name="sop" class="form-control-file">
-                            <small class="text-muted">Gambar berupa jpg/jpeg/png maksimal 2mb</small>
+                            <small class="text-muted">Dokumen berupa pdf maksimal 8mb</small>
                         </div>
                     </div>
                 </div>

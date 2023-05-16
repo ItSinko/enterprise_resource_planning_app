@@ -518,10 +518,10 @@
                 }
             }).then((response) => {
                     this.rencana_jadwal = response.data;
+                this.$store.commit("setIsLoading", false);
                 });
             }
 
-            this.$store.commit("setIsLoading", false);
 
             let date = new Date();
             if (this.status === "pelaksanaan") {

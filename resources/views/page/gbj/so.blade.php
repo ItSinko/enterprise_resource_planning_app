@@ -734,8 +734,8 @@
                             "language": {
                                 // url: "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json",
                                 processing: "<span class='fa-stack fa-md'>\n\
-                                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                                </span>&emsp;Mohon Tunggu ...",
+                                                                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                    </span>&emsp;Mohon Tunggu ...",
                             },
                             "columnDefs": [{
                                     "targets": [6],
@@ -789,8 +789,8 @@
                             "language": {
                                 // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                                 processing: "<span class='fa-stack fa-md'>\n\
-                                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                                </span>&emsp;Mohon Tunggu ...",
+                                                                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                    </span>&emsp;Mohon Tunggu ...",
                             },
                             "columnDefs": [{
                                     "targets": [6],
@@ -839,49 +839,49 @@
                         "language": {
                             // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                             processing: "<span class='fa-stack fa-md'>\n\
-                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                            </span>&emsp;Mohon Tunggu ...",
+                                                                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                </span>&emsp;Mohon Tunggu ...",
                         }
                     });
 
                     $('#batal-po').DataTable({
-                        destroy: true,
-                        processing: true,
-                        serverSide: false,
-                        ajax: {
-                            url: '/api/v2/gbj/so_batal',
-                            type: 'post',
-                        },
-                        columns: [{
-                                data: 'DT_RowIndex',
-                                name: 'DT_RowIndex'
-                            },
-                            {
-                                data: 'so',
-                                name: 'so'
-                            },
-                            {
-                                data: 'no_po'
-                            },
-                            {
-                                data: 'nama_customer',
-                                name: 'nama_customer'
-                            },
-                            // { data: 'batas_out', name: 'batas_out'},
-                            {
-                                data: 'logs'
-                            },
-                            {
-                                data: 'aksi',
-                                name: 'aksi'
-                            },
-                        ],
-                        "language": {
-                            // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
-                            processing: "<span class='fa-stack fa-md'>\n\
-                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                            </span>&emsp;Mohon Tunggu ...",
-                        },
+                        // destroy: true,
+                        // processing: true,
+                        // serverSide: false,
+                        // ajax: {
+                        //     url: '/api/v2/gbj/so_batal',
+                        //     type: 'post',
+                        // },
+                        // columns: [{
+                        //         data: 'DT_RowIndex',
+                        //         name: 'DT_RowIndex'
+                        //     },
+                        //     {
+                        //         data: 'so',
+                        //         name: 'so'
+                        //     },
+                        //     {
+                        //         data: 'no_po'
+                        //     },
+                        //     {
+                        //         data: 'nama_customer',
+                        //         name: 'nama_customer'
+                        //     },
+                        //     // { data: 'batas_out', name: 'batas_out'},
+                        //     {
+                        //         data: 'logs'
+                        //     },
+                        //     {
+                        //         data: 'aksi',
+                        //         name: 'aksi'
+                        //     },
+                        // ],
+                        // "language": {
+                        //     // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
+                        //     processing: "<span class='fa-stack fa-md'>\n\
+                        //                                         <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                        //                                 </span>&emsp;Mohon Tunggu ...",
+                        // },
                     })
                 });
 
@@ -1344,8 +1344,8 @@
                         "language": {
                             // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                             processing: "<span class='fa-stack fa-md'>\n\
-                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                            </span>&emsp;Mohon Tunggu ...",
+                                                                                        <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                </span>&emsp;Mohon Tunggu ...",
                         },
                         "order": [
                             [5, 'asc']

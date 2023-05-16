@@ -26,10 +26,13 @@ use Alert;
 use App\Exports\CustomerData;
 use App\Exports\EkspedisiData;
 use App\Exports\ProdukData;
+use App\Models\Aset;
 use App\Models\DetailLogistik;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
+use App\Models\DetailStokDivisiPart;
+use App\Models\Divisi;
 use App\Models\Ekspedisi;
 use App\Models\FileProduk;
 use App\Models\Logistik;
@@ -38,11 +41,13 @@ use Illuminate\Support\Arr;
 use App\Models\GudangKarantinaDetail;
 use App\Models\GudangKarantinaNoseri;
 use App\Models\JalurEkspedisi;
-use App\Models\Mproduk;
-use App\Models\Satuan;
+use App\Models\kesehatan\Karyawan;
 use App\Models\Sparepart;
 use App\Models\SparepartGudang;
+use App\Models\StokDivisiPart;
 use App\Models\SystemLog;
+use App\Models\LotNumber;
+use App\Models\Supplier;
 use App\Models\teknik\BillOfMaterial;
 use App\Models\teknik\DetailBillOfMaterial;
 use App\Models\teknik\JenisBahan;
@@ -55,10 +60,108 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPUnit\Framework\returnValueMap;
 
+
 class MasterController extends Controller
 {
+    public function get_all_past_no_seri(Request $r){
+        $si_ekat21 = DB::connection('si_21')->table('seri_on')
+                ->select(
+                    'seri_on.noseri_on as noseri'
+                )
+                ->leftjoin('gudang_on', 'gudang_on.nolkppgdg_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('admjual_on', 'admjual_on.nolkppadm_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('qc_on', 'qc_on.nolkppqc_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('spa_on', 'spa_on.nolkpp_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('distributor', 'distributor.iddsb', '=', 'spa_on.pabrik_on')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spa_on.idprod_on')
+                ->where('seri_on.noseri_on', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_on.tglsj_on')
+                ->groupby('seri_on.noseri_on')
+                ->limit(10)->get();
+
+            $si_ekat20 = DB::connection('si_20')->table('seri_on')
+                ->select(
+                    'seri_on.noseri_on as noseri'
+                )
+                ->leftjoin('gudang_on', 'gudang_on.nolkppgdg_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('admjual_on', 'admjual_on.nolkppadm_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('qc_on', 'qc_on.nolkppqc_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('spa_on', 'spa_on.nolkpp_on', '=', 'seri_on.lkppfk_on')
+                ->leftjoin('distributor', 'distributor.iddsb', '=', 'spa_on.pabrik_on')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spa_on.idprod_on')
+                ->where('seri_on.noseri_on', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_on.tglsj_on')
+                ->groupby('seri_on.noseri_on')
+                ->get();
+
+
+            $si_spa21 = DB::connection('si_21')->table('seri_off')
+                ->select(
+                    'seri_off.noseri_off as noseri'
+                )
+                ->leftjoin('gudang_off', 'gudang_off.idordergdg_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('admjual_off', 'admjual_off.idorderadm_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('qc_off', 'qc_off.idorderqc_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('spa_off', 'spa_off.idorder_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('distributor', 'distributor.iddsb', '=', 'spa_off.pabrik_off')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spa_off.idprod_off')
+                ->where('seri_off.noseri_off', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_off.tglsj_off')
+                ->groupby('seri_off.noseri_off')
+                ->get();
+
+            $si_spa20 = DB::connection('si_20')->table('seri_off')
+                ->select(
+                    'seri_off.noseri_off as noseri'
+                )
+                ->leftjoin('gudang_off', 'gudang_off.idordergdg_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('admjual_off', 'admjual_off.idorderadm_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('qc_off', 'qc_off.idorderqc_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('spa_off', 'spa_off.idorder_off', '=', 'seri_off.idorderfk_off')
+                ->leftjoin('distributor', 'distributor.iddsb', '=', 'spa_off.pabrik_off')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spa_off.idprod_off')
+                ->where('seri_off.noseri_off', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_off.tglsj_off')
+                ->groupby('seri_off.noseri_off')
+                ->get();
+
+            $si_spb21 = DB::connection('si_21')->table('seri_spb')
+                ->select(
+                    'seri_spb.noseri_spb as noseri'
+                )
+                ->leftjoin('gudang_spb', 'gudang_spb.nogdg_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('admjual_spb', 'admjual_spb.noadm_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('qc_spb', 'qc_spb.noqc_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('spb', 'spb.nospb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spb.idprod_spb')
+                ->where('seri_spb.noseri_spb', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_spb.tglsjgdg_spb')
+                ->groupby('seri_spb.noseri_spb')
+                ->get();
+
+            $si_spb20 = DB::connection('si_20')->table('seri_spb')
+                ->select(
+                    'seri_spb.noseri_spb as noseri'
+                )
+                ->leftjoin('gudang_spb', 'gudang_spb.nogdg_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('admjual_spb', 'admjual_spb.noadm_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('qc_spb', 'qc_spb.noqc_spb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('spb', 'spb.nospb', '=', 'seri_spb.nogdgfk')
+                ->leftjoin('produk_master', 'produk_master.id_prod', '=', 'spb.idprod_spb')
+                ->where('seri_spb.noseri_spb', 'LIKE', '%' . $r->input('term', '') . '%')
+                ->whereNotNull('gudang_spb.tglsjgdg_spb')
+                ->groupby('seri_spb.noseri_spb')
+                ->get();
+
+            $data = $si_spa21->merge($si_spa20)->merge($si_spb20)->merge($si_spb21)->merge($si_ekat20)->merge($si_ekat21);
+            return response()->json($data);
+    }
+    public function get_divisi_karyawan($id, Request $r){
+        $data = Karyawan::where([['divisi_id', '=', $id], ['nama', 'LIKE', '%'.$r->input('term', '').'%']])->select('nama', 'id')->get();
+        return response()->json($data);
+    }
     //Get Data Table
-    public function  get_data_detail_ekspedisi($id)
+    public function get_data_detail_ekspedisi($id)
     {
         $data = Logistik::where('ekspedisi_id', $id)->get();
         return datatables()->of($data)
@@ -264,180 +367,20 @@ class MasterController extends Controller
     {
         return datatables()->of(Produk::with('KelompokProduk'))->toJson();
     }
-
-    public function store_produk_teknik(Request $request)
-    {
-        $validator = Validator::make($request->all(),  [
-            'kode' => 'required|unique:produk,kode',
-            'nama' => 'required|unique:produk,nama',
-            // 'bahan' => 'required',
-            // 'satuan' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()
-            ]);
-        } else {
-
-            if ($request->hasFile('image')) {
-                $name_image = md5($request->file('image')->getClientOriginalName());
-                $guessExtension_image = $request->file('image')->guessExtension();
-                $request->file('image')->storeAs('public\produk', $name_image . '.' . $guessExtension_image);
-            }
-
-
-
-            $p = $request->panjang != NULL ? $request->panjang : 0;
-            $l = $request->lebar != NULL ? $request->lebar : 0;
-            $t = $request->tinggi != NULL ? $request->tinggi : 0;
-
-            $produk = Produk::create([
-                'kelompok_produk_id' => $request->jenis,
-                'produk_id' => $request->kategori,
-                'kode' => $request->kode,
-                'nama' => $request->nama,
-                'gambar' => $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL,
-                'dimensi' => $p . 'x' . $l . 'x' . $t,
-                'satuan_id' => $request->satuan,
-                'versi' => $request->versi,
-                'fungsi' => $request->fungsi,
-                'deskripsi' => $request->deskripsi,
-                'tipe' => $request->tipe,
-                'merk' => $request->merk,
-                'no_produk_penyedia' => $request->noproduk,
-                'nama_perusahaan' => $request->perusahaan,
-                'jenis_produk_ekat' => $request->jenisekat,
-                'kode_kbki' => $request->kodeekat,
-                'no_ijin_edar' => $request->noizin,
-                'nilai_tkdn' => $request->tkdn,
-                'masa_berlaku' => $request->expired
-            ]);
-
-            if ($request->hasFile('lampiran')) {
-                foreach ($request->file('lampiran') as $lampiran) {
-                    $name_file = md5($lampiran->getClientOriginalName());
-                    $guessExtension_file = $lampiran->guessExtension();
-                    $lampiran->storeAs('public\lampiran_produk', $name_file . '.' . $guessExtension_file);
-
-                    $file = FileProduk::create([
-                        'produk_id' => $produk->id,
-                        'nama' => $name_file . '.' . $guessExtension_file
-                    ]);
-                }
-            }
-
-            for ($i = 0; $i < count($request->bahan); $i++) {
-                $produk->jenis_bahan()->attach($request->bahan[$i]);
-            }
-
-            return response()->json(['status' => 'berhasil']);
-        }
-    }
-
-    public function update_produk_teknik(Request $request, $id)
-    {
-        dd($request->all());
-        $validator = Validator::make($request->all(),  [
-            'kode' => 'required|unique:m_sparepart,kode,' . $id,
-            'nama' => 'required|unique:produk,nama' . $id,
-            // 'bahan' => 'required',
-            // 'satuan' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()
-            ]);
-        } else {
-
-            if ($request->hasFile('image')) {
-                $name_image = md5($request->file('image')->getClientOriginalName());
-                $guessExtension_image = $request->file('image')->guessExtension();
-                $request->file('image')->storeAs('public\produk', $name_image . '.' . $guessExtension_image);
-                $file_image = $name_image . '.' . $guessExtension_image;
-            } else {
-                if ($request->image != "null") {
-                    $file = $request->image;
-                } else {
-                    $file = NULL;
-                }
-            }
-
-
-
-            $p = $request->panjang != NULL ? $request->panjang : 0;
-            $l = $request->lebar != NULL ? $request->lebar : 0;
-            $t = $request->tinggi != NULL ? $request->tinggi : 0;
-
-            $produk = Produk::find($id);
-            $produk->kelompok_produk_id = $request->jenis;
-            $produk->kode = $request->kode;
-            $produk->nama = $request->nama;
-            $produk->gambar = $request->hasFile('image') ? $name_image . '.' . $guessExtension_image : NULL;
-            $produk->dimensi = $p . 'x' . $l . 'x' . $t;
-            $produk->satuan_id = $request->satuan;
-            $produk->versi = $request->versi;
-            $produk->fungsi = $request->fungsi;
-            $produk->deskripsi = $request->deskripsi;
-            $produk->tipe = $request->tipe;
-            $produk->merk = $request->merk;
-            $produk->no_produk_penyedia = $request->noproduk;
-            $produk->nama_perusahaan = $request->perusahaan;
-            $produk->jenis_produk_ekat = $request->jenisekat;
-            $produk->kode_kbki = $request->kodeekat;
-            $produk->no_ijin_edar = $request->noizin;
-            $produk->nilai_tkdn = $request->tkdn;
-            $produk->masa_berlaku = $request->expired;
-
-
-            // if ($request->hasFile('lampiran')) {
-            //     foreach ($request->file('lampiran') as $lampiran) {
-            //         $name_file = md5($lampiran->getClientOriginalName());
-            //         $guessExtension_file = $lampiran->guessExtension();
-            //         $lampiran->storeAs('public\lampiran_produk', $name_file . '.' . $guessExtension_file);
-
-            //         $file = FileProduk::create([
-            //             'produk_id' => $produk->id,
-            //             'nama' => $name_file . '.' . $guessExtension_file
-            //         ]);
-            //     }
-            // }
-
-            for ($i = 0; $i < count($request->bahan); $i++) {
-                $produk->jenis_bahan()->attach($request->bahan[$i]);
-            }
-
-            $produk_array = [];
-            for ($i = 0; $i < count($request->bahan); $i++) {
-                $produk_array[] = $request->bahan[$i];
-            }
-            $produk->jenis_bahan()->sync($produk_array);
-
-
-            return response()->json(['status' => 'berhasil']);
-        }
-    }
-
-    public function get_data_teknik_produk()
-    {
+    public function get_data_produk_variasi(Request $r){
+        $prd = GudangBarangJadi::with('Produk')->whereHas('Produk', function($q) use($r){
+            $q->where('nama', 'LIKE', '%' . $r->input('term', '') . '%');
+        })->get();
         $data = array();
 
-        $produk = Produk::all();
-        foreach ($produk as $key_p => $p) {
-            $data[$key_p] = array(
+        foreach($prd as $key_prd => $p){
+            $data[$key_prd] = array(
                 'id' => $p->id,
-                'kategori' => $p->KelompokProduk->nama,
-                'jenis' => $p->product->nama,
-                'kode' => $p->kode,
-                'nama' => $p->nama,
-                'deskripsi' => $p->deskripsi,
-                'jumlah' => rand(10, 100),
-                'satuan' => $p->satuan->nama,
-
+                'nama' => $p->Produk->nama." ".$p->nama
             );
         }
-        return response()->json(['data' => $data]);
+
+        return response()->json($data);
     }
     public function get_data_customer($divisi_id, $value)
     {
@@ -1269,12 +1212,11 @@ class MasterController extends Controller
     {
         $data = FileProduk::find($id)->delete();
 
-        if($data){
+        if ($data) {
             return response()->json(['data' => 'success']);
+        } else {
+            return response()->json(['data' => 'error']);
         }
-            else {
-                return response()->json(['data' => 'error']);
-            }
     }
 
     public function delete_produk($id)
@@ -2209,7 +2151,6 @@ class MasterController extends Controller
         );
 
         if (count($produk->jenis_bahan) > 0) {
-
             foreach ($produk->jenis_bahan as $key_jb => $s) {
                 $data[0]['detail']['spesifikasi']['bahan'][$key_jb] = array(
                     'value' => $s->id,
@@ -2219,7 +2160,6 @@ class MasterController extends Controller
         } else {
             $data[0]['detail']['spesifikasi']['bahan'] = array();
         }
-
         foreach ($bom as $key_bom => $b) {
             $data[0]['detail']['bom'][$key_bom] = array(
                 'id' => $b->id,
@@ -2229,19 +2169,14 @@ class MasterController extends Controller
                 'status' => $b->is_aktif == 1 ? 'Aktif' : 'Tidak Aktif',
             );
         }
-
         foreach ($produk->file_produk as $key_p => $f) {
             $data[0]['file'][$key_p] = array(
                 'id' => $f->id,
                 'path' => $f->nama
             );
         }
-
-
-
         return response()->json(['data' => $data]);
     }
-
     public function selectdata_jenis()
     {
         $jenispart = JenisPart::all();
@@ -2309,6 +2244,7 @@ class MasterController extends Controller
 
         return response()->json(['data' => $data]);
     }
+
     public function edit_produk_teknik($id)
     {
         $produk = Produk::find($id);
@@ -2343,8 +2279,6 @@ class MasterController extends Controller
                 'versi' => $produk->versi,
                 'fungsi' => $produk->fungsi,
                 'deskripsi' => $produk->deskripsi,
-
-
             ),
             'formEkatalog' => array(
                 'tipe' => $produk->tipe,
@@ -2361,11 +2295,7 @@ class MasterController extends Controller
                 'tkdn' => $produk->nilai_tkdn,
                 'expired' => $produk->masa_berlaku,
             ),
-
-
-
         );
-
 
         foreach ($produk->jenis_bahan  as  $key_bahan => $j) {
             $data['formSpecs']['bahan'][$key_bahan] = array(
@@ -2381,6 +2311,146 @@ class MasterController extends Controller
             );
         }
 
+        return response()->json(['data' => $data]);
+    }
+
+
+    public function  get_data_divisi_sparepart($divisi, $part)
+    {
+        if ($part != 0) {
+            $StokDivisiPart = StokDivisiPart::with('DetailStokDivisiPart.LotNumber')->where(['divisi_id' => $divisi, 'part_id' => $part])->get();
+            foreach ($StokDivisiPart as  $d) {
+                foreach ($d->DetailStokDivisiPart as $key_b => $e) {
+                    $data[$key_b] = array(
+                        'value' => $e->id,
+                        'stok' => $e->stok,
+                        'label' => $e->LotNumber->number
+                    );
+                }
+            }
+        } else {
+            $StokDivisiPart = StokDivisiPart::where('divisi_id', $divisi)->get();
+            foreach ($StokDivisiPart as $key_b => $e) {
+                $data[$key_b] = array(
+                    'value' => $e->part_id,
+                    'label' => $e->Sparepart->nama,
+                );
+            }
+        }
+
+        return response()->json(['parts' => $data]);
+    }
+
+    public function get_data_supplier()
+    {
+        $data = Supplier::all();
+        return response()->json(['data' => $data]);
+    }
+    public function store_supplier(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'supplier.kode' => 'required|unique:supplier,kode',
+            'supplier.nama' => 'required|unique:supplier,nama',
+            'supplier.jenis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            Supplier::create([
+                'kode' => $request->supplier['kode'],
+                'nama' => $request->supplier['nama'],
+                'kurs' => $request->supplier['kurs'],
+                'email' =>  $request->kontak_supplier['email'],
+                'telepon' => $request->kontak_supplier['telepon'],
+                'fax' => $request->kontak_supplier['fax'],
+                'alamat' => $request->kontak_supplier['alamat'],
+                'postal_code' => $request->kontak_supplier['postal_code'],
+                'negara' => $request->kontak_supplier['negara'],
+                'jenis' => $request->supplier['jenis'],
+            ]);
+
+
+            return response()->json([
+                'status' => 'berhasil'
+            ]);
+        }
+    }
+
+
+    public function edit_supplier($id)
+    {
+        $data = Supplier::find($id);
+        return response()->json(['data' => $data]);
+    }
+
+    public function update_supplier(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'supplier.kode' => 'required|unique:supplier,kode,' . $id,
+            'supplier.nama' => 'required|unique:supplier,nama,' . $id,
+            'supplier.jenis' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'gagal'
+            ]);
+        } else {
+            $data = Supplier::find($id);
+            $data->kode = $request->supplier['kode'];
+            $data->nama = $request->supplier['nama'];
+            $data->kurs = $request->supplier['kurs'];
+            $data->email =  $request->kontak_supplier['email'];
+            $data->telepon = $request->kontak_supplier['telepon'];
+            $data->fax = $request->kontak_supplier['fax'];
+            $data->alamat = $request->kontak_supplier['alamat'];
+            $data->postal_code = $request->kontak_supplier['postal_code'];
+            $data->negara = $request->kontak_supplier['negara'];
+            $data->jenis = $request->supplier['jenis'];
+            $data->save();
+            return response()->json(['status' => 'berhasil']);
+        }
+    }
+
+    public function delete_supplier($id)
+    {
+        $supplier = Supplier::find($id);
+        $supplier->delete();
+
+        if ($supplier) {
+            return response()->json(['data' => 'success']);
+        } else {
+            return response()->json(['data' => 'error']);
+        }
+    }
+    public function get_validasi_aset($keyword)
+    {
+        $data = Aset::where('nama', $keyword)->get();
+        if (count($data) > 0) {
+            return response()->json(['data' => 'Sudah Ada']);
+        } else {
+            return response()->json(['data' => 'Kosong']);
+        }
+    }
+    public function get_data_aset()
+    {
+        $data = array();
+        $aset = Aset::all();
+        foreach ($aset as $key => $d) {
+            $data[$key] = array(
+                'id' => $d->id,
+                'perkiraan' => $d->DaftarPerkiraan->id . '-' . $d->DaftarPerkiraan->nama,
+                'nama' => $d->nama,
+                'merk' => $d->merk,
+                'deskripsi' => $d->deskprisi,
+                'kode' => $d->kode,
+
+            );
+        }
         return response()->json(['data' => $data]);
     }
 }

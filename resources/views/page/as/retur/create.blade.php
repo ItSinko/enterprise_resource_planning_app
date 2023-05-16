@@ -135,9 +135,22 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card" style="box-shadow:none;">
-                        {{-- <div class="card-header bg-info">
-                        <h5 class="card-title"><i class="fas fa-plus"></i> Tambah Retur</h5>
-                    </div> --}}
+                        @if (Session::has('error') || count($errors) > 0)
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ Session::get('error') }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        @elseif(Session::has('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>{{ Session::get('success') }}</strong>,
+                                Terima kasih
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('as.retur.store') }}" id="formtambahretur">
                             @csrf
                             <div class="card-body">
@@ -152,15 +165,6 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <div class="form-group row" id="no_retur_input">
-                                                <label for="no_retur" class="col-lg-5 col-md-12 col-form-label labelket">No
-                                                    Retur</label>
-                                                <div class="col-lg-2 col-md-8">
-                                                    <input name="no_retur" id="no_retur"
-                                                        class="form-control col-form-label no_retur  @error('no_retur') is-invalid @enderror">
-                                                    <div class="invalid-feedback" id="msgno_retur"></div>
-                                                </div>
-                                            </div>
                                             <div class="form-group row" id="tgl_retur_input">
                                                 <label for="tgl_retur"
                                                     class="col-lg-5 col-md-12 col-form-label labelket">Tanggal Retur</label>
@@ -171,9 +175,8 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row" id="pilih_jenis_retur_input">
-                                                <label for="pilih_jenis_retur"
-                                                    class="col-lg-5 col-md-12 col-form-label labelket">Jenis Retur</label>
-                                                <div class="col-lg-3 col-md-8 d-flex justify-content-between">
+                                                <label for="pilih_jenis_retur" class="col-lg-5 col-md-12 col-form-label labelket">Jenis Retur</label>
+                                                <div class="col-lg-4 col-md-12 d-flex justify-content-between">
                                                     <div class="form-check form-check-inline col-form-label">
                                                         <input class="form-check-input" type="radio"
                                                             name="pilih_jenis_retur" id="pilih_jenis_retur1"
@@ -194,6 +197,13 @@
                                                             value="service" />
                                                         <label class="form-check-label"
                                                             for="pilih_jenis_retur3">Service</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline col-form-label">
+                                                        <input class="form-check-input" type="radio"
+                                                            name="pilih_jenis_retur" id="pilih_jenis_retur4"
+                                                            value="none"/>
+                                                        <label class="form-check-label"
+                                                            for="pilih_jenis_retur4">Tanpa Status</label>
                                                     </div>
                                                     <div class="invalid-feedback" id="msgpilih_jenis_retur"></div>
                                                 </div>
@@ -220,62 +230,84 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            {{-- <hr class="my-4"/> --}}
-                                            <div class="form-group row" id="no_transaksi_input">
-                                                <label for="no_transaksi"
-                                                    class="col-lg-5 col-md-12 col-form-label labelket">No Transaksi
-                                                    Penjualan</label>
-                                                <div class="col-lg-3 col-md-6">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend">
-                                                            <select
-                                                                class="form-control custom-select select2 no_transaksi_ref"
-                                                                id="no_transaksi_ref" name="no_transaksi_ref">
-                                                                <option value="po">No PO</option>
-                                                                <option value="so">No SO</option>
-                                                                <option value="no_akn">No AKN</option>
-                                                                <option value="no_sj">No SJ</option>
-                                                            </select>
-                                                        </div>
-                                                        <input type="text" name="no_transaksi" id="no_transaksi"
-                                                            class="form-control col-form-label no_transaksi  @error('no_transaksi') is-invalid @enderror" />
-                                                    </div>
-                                                    <small class="text-success mt-1" id="infono_transaksi">* Pilih Nomor
-                                                        Referensi Penjualan yang akan dipakai</small>
-                                                    <div class="invalid-feedback mt-1" id="msgno_transaksi"></div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row hide" id="pic_peminjaman_input">
+                                            <div class="form-group row" id="pic_peminjaman_input">
                                                 <label for="pic_peminjaman"
-                                                    class="col-lg-5 col-md-12 col-form-label labelket">Penanggung
-                                                    Jawab</label>
-                                                <div class="col-lg-4 col-md-8">
-                                                    <div class="input-group">
-                                                        <div class="input-group-prepend" width="40%">
+                                                    class="col-lg-5 col-md-12 col-form-label labelket">PIC</label>
+                                                <div class="col-lg-3 col-md-7">
+                                                    {{-- <div class="input-group">
+                                                        <div class="input-group-prepend">
                                                             <select class="form-control custom-select select2 divisi_id"
                                                                 id="divisi_id" name="divisi_id">
-
                                                             </select>
-                                                        </div>
-                                                        <input type="text" name="pic_peminjaman" id="pic_peminjaman"
-                                                            class="form-control col-form-label pic_peminjaman  @error('pic_peminjaman') is-invalid @enderror"
-                                                            width="60%" />
-                                                    </div>
-                                                    <small class="text-success mt-1" id="infono_transaksi">* Pilih Divisi
-                                                        Penanggung Jawab</small>
+                                                        </div> --}}
+                                                        <input type="text" name="pic_peminjaman" id="pic_peminjaman" class="form-control col-form-label pic_peminjaman  @error('pic_peminjaman') is-invalid @enderror"/>
+                                                    {{-- </div> --}}
+                                                    <small class="text-success mt-1" id="infono_transaksi">* Pilih PIC / isi jika tidak tersedia</small>
                                                     <div class="invalid-feedback" id="msgpic_peminjaman"></div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row" id="customer_id_input">
-                                                <label for="customer_id"
+                                            <div class="form-group row">
+                                                <label for="telp_pic" class="col-lg-5 col-md-12 col-form-label labelket">Telepon PIC</label>
+                                                <div class="col-lg-2 col-md-6">
+                                                    <input type="text" name="telp_pic" id="telp_pic" class="form-control col-form-label telp_pic  @error('telp_pic') is-invalid @enderror"/>
+                                                    <div class="invalid-feedback" id="msgtelp_pic"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row hide">
+                                                <input type="text" name="karyawan_id" id="karyawan_id"
+                                                            class="form-control col-form-label karyawan_id  @error('karyawan_id') is-invalid @enderror"
+                                                            width="60%" />
+                                            </div>
+                                            <div class="form-group row" id="no_transaksi_input">
+                                                <label for="no_transaksi"
+                                                    class="col-lg-5 col-md-12 col-form-label labelket">No Transaksi
+                                                    </label>
+                                                <div class="col-lg-3 col-md-6">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <select
+                                                                    class="form-control custom-select select2 no_transaksi_ref"
+                                                                    id="no_transaksi_ref" name="no_transaksi_ref">
+                                                                    <option value="po">No PO</option>
+                                                                    <option value="so">No SO</option>
+                                                                    <option value="no_akn">No AKN</option>
+                                                                    <option value="no_retur">No Retur</option>
+                                                                    <option value="no_sj">No SJ</option>
+                                                                    <option value="sj_retur">No SJ (Retur)</option>
+                                                                </select>
+                                                            </div>
+                                                            <input type="text" name="no_transaksi" id="no_transaksi"
+                                                                class="form-control col-form-label no_transaksi  @error('no_transaksi') is-invalid @enderror" />
+                                                        </div>
+                                                        <small class="text-success mt-1" id="infono_transaksi">* Pilih Nomor Referensi yang akan dipakai</small>
+                                                        <div class="invalid-feedback mt-1" id="msgno_transaksi"></div>
+                                                    </div>
+                                            </div>
+                                            <div class="form-group row hide">
+                                                <input type="text" name="pesanan_id" id="pesanan_id"
+                                                            class="form-control col-form-label pesanan_id  @error('pesanan_id') is-invalid @enderror"
+                                                            width="60%" />
+                                            </div>
+
+                                            <div class="form-group row" id="customer_nama_input">
+                                                <label for="customer_nama"
                                                     class="col-lg-5 col-md-12 col-form-label labelket"
                                                     id="label_cust">Nama Customer</label>
+                                                <div class="col-lg-4 col-md-8">
+                                                    <input name="customer_nama" id="customer_nama"
+                                                        class="form-control col-form-label customer_nama  @error('customer_nama') is-invalid @enderror" />
+                                                    <div class="invalid-feedback" id="msgcustomer_nama"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row hide">
                                                 <div class="col-lg-4 col-md-8">
                                                     <input name="customer_id" id="customer_id"
                                                         class="form-control col-form-label customer_id  @error('customer_id') is-invalid @enderror" />
                                                     <div class="invalid-feedback" id="msgcustomer_id"></div>
                                                 </div>
                                             </div>
+
                                             <div class="form-group row" id="alamat_input">
                                                 <label for="alamat"
                                                     class="col-lg-5 col-md-12 col-form-label labelket">Alamat</label>
@@ -296,188 +328,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div id="ref_trans" class="hide">
-                                    <hr class="my-4"/>
-                                    <h5>Referensi Transaksi</h5>
-                                    <div class="form-group row">
-                                        <label for="ref_transaksi" class="col-lg-5 col-md-12 col-form-label labelket">Transaksi</label>
-                                        <div class="col-lg-2 col-md-6 d-flex justify-content-between">
-                                            <div class="form-check form-check-inline col-form-label">
-                                                <input class="form-check-input" type="radio" name="ref_transaksi" id="ref_transaksi1" value="tersedia" />
-                                                <label class="form-check-label" for="ref_transaksi1">Tersedia</label>
-                                            </div>
-                                            <div class="form-check form-check-inline col-form-label">
-                                                <input class="form-check-input" type="radio" name="ref_transaksi" id="ref_transaksi2" value="tidak_tersedia" />
-                                                <label class="form-check-label" for="ref_transaksi2">Tidak Tersedia</label>
-                                            </div>
-                                            <div class="invalid-feedback" id="msgref_transaksi"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hide" id="no_ref_tidak_tersedia_input">
-                                        <label for="no_ref_tidak_tersedia" class="col-lg-5 col-md-12 col-form-label labelket">No Referensi</label>
-                                        <div class="col-lg-3 col-md-12">
-                                            <input type="text" class="form-control  col-form-label" id="no_ref_tidak_tersedia" name="no_ref_tidak_tersedia">
-                                            <div class="invalid-feedback" id="msgno_ref_tidak_tersedia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hide" id="customer_tidak_tersedia_input">
-                                        <label for="customer_tidak_tersedia" class="col-lg-5 col-md-12 col-form-label labelket">Nama Customer</label>
-                                        <div class="col-lg-3 col-md-12">
-                                            <input type="text" class="form-control  col-form-label" id="customer_tidak_tersedia" name="customer_tidak_tersedia">
-                                            <div class="invalid-feedback" id="msgcustomer_tidak_tersedia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hide" id="alamat_tidak_tersedia_input">
-                                        <label for="alamat_tidak_tersedia" class="col-lg-5 col-md-12 col-form-label labelket">Alamat Customer</label>
-                                        <div class="col-lg-3 col-md-12">
-                                            <textarea class="form-control col-form-label" id="alamat_tidak_tersedia" name="alamat_tidak_tersedia"></textarea>
-                                            <div class="invalid-feedback" id="msgalamat_tidak_tersedia"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hide" id="pilih_ref_penjualan_input">
-                                        <label for="pilih_ref_penjualan" class="col-lg-5 col-md-12 col-form-label labelket">Cari Berdasarkan</label>
-                                        <div class="col-lg-3 col-md-8 d-flex justify-content-between">
-                                            <div class="form-check form-check-inline col-form-label">
-                                                <input class="form-check-input" type="radio" name="pilih_ref_penjualan" id="pilih_ref_penjualan1" value="so" />
-                                                <label class="form-check-label" for="pilih_ref_penjualan1">No SO</label>
-                                            </div>
-                                            <div class="form-check form-check-inline col-form-label">
-                                                <input class="form-check-input" type="radio" name="pilih_ref_penjualan" id="pilih_ref_penjualan2" value="po" />
-                                                <label class="form-check-label" for="pilih_ref_penjualan2">No PO</label>
-                                            </div>
-                                            <div class="form-check form-check-inline col-form-label">
-                                                <input class="form-check-input" type="radio" name="pilih_ref_penjualan" id="pilih_ref_penjualan3" value="no_akn" />
-                                                <label class="form-check-label" for="pilih_ref_penjualan3">No Paket (Ekatalog)</label>
-                                            </div>
-                                            <div class="invalid-feedback" id="msgpilih_ref_penjualan"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hide" id="no_ref_penjualan_input">
-                                        <label for="no_ref_penjualan" class="col-lg-5 col-md-12 col-form-label labelket">No Ref Penjualan</label>
-                                        <div class="col-lg-3 col-md-12">
-                                            <select name="no_ref_penjualan" id="no_ref_penjualan" class="form-control custom-select no_ref_penjualan  @error('no_ref_penjualan') is-invalid @enderror">
-                                            </select>
-                                            <div class="invalid-feedback" id="msgno_ref_penjualan"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="informasi_transaksi" class="hide">
-                                    <hr class="my-4"/>
-                                    <h5>Info Penjualan</h5>
-                                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                                        <div class="col" id="info_customer">
-                                            <div class="card removeshadow bg-light h-100">
-                                                <div class="card-body">
-                                                    <h6><b>Customer</b></h6>
-                                                    <div class="row">
-                                                        <div class="p-2" style="min-width:60%; max-width: 70%">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Nama Customer</small></div>
-                                                                <div><b id="nama_customer">-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Alamat</small></div>
-                                                                <div><b id="alamat_customer">-</b></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No Telp</small></div>
-                                                                <div><b id="telp_customer">-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Provinsi</small></div>
-                                                                <div><b id="provinsi_customer">-</b></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col" id="info_penjualan">
-                                            <div class="card removeshadow bg-light h-100">
-                                                <div class="card-body">
-                                                    <h6><b>Transaksi Penjualan</b></h6>
-                                                    <div class="row d-flex justify-content-between">
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No SO</small></div>
-                                                                <div><b id="no_so">-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No AKN</small></div>
-                                                                <div><b id="no_paket">-</b></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No PO</small></div>
-                                                                <div><b id="no_po">-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Tanggal PO</small></div>
-                                                                <div><b id="tgl_po">-</b></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No DO</small></div>
-                                                                <div><b id="no_do">-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Tanggal DO</small></div>
-                                                                <div><b id="tgl_do">-</b></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col hide" id="info_retur">
-                                            <div class="card removeshadow bg-light h-100">
-                                                <div class="card-body">
-                                                    <h6><b>Transaksi Retur</b></h6>
-                                                    <div class="row d-flex justify-content-between">
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No Retur</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Tanggal Retur</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No SO</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No AKN</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-2">
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">No PO</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                            <div class="margin">
-                                                                <div><small class="text-muted">Tanggal PO</small></div>
-                                                                <div><b>-</b></div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> --}}
                                     <div id="barang_penjualan" class="card card-outline card-primary">
                                         <div class="card-header">
-                                            <h3 class="card-title">Permintaan Barang</h3>
+                                            <h3 class="card-title">Barang Retur</h3>
                                             <div class="card-tools">
                                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                     <i class="fas fa-minus"></i>
@@ -485,22 +338,6 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            {{-- <hr class="my-4">
-                                        <h5></h5>
-                                        <div class="form-group row" id="pilih_jenis_barang_input">
-                                            <label for="pilih_jenis_barang" class="col-lg-5 col-md-12 col-form-label labelket">Jenis Barang</label>
-                                            <div class="col-lg-2 col-md-8 d-flex justify-content-between">
-                                                <div class="form-check form-check-inline col-form-label">
-                                                    <input class="form-check-input" type="checkbox" name="pilih_jenis_barang[]" id="pilih_jenis_barang1" value="produk" />
-                                                    <label class="form-check-label" for="pilih_jenis_barang1">Produk</label>
-                                                </div>
-                                                <div class="form-check form-check-inline col-form-label">
-                                                    <input class="form-check-input" type="checkbox" name="pilih_jenis_barang[]" id="pilih_jenis_barang2" value="komplain" />
-                                                    <label class="form-check-label" for="pilih_jenis_barang2">Part</label>
-                                                </div>
-                                                <div class="invalid-feedback" id="msgpilih_jenis_barang"></div>
-                                            </div>
-                                        </div> --}}
                                             <div class="form-group row align-items-start">
                                                 <div id="card_produk"
                                                     class="card card-outline card-success col mx-2 collapsed-card">
@@ -523,36 +360,31 @@
                                                     <div class="card-body">
                                                         <div class="table-responsive">
                                                             <table class="table table-hover table-bordered table-striped"
-                                                                id="produktable" style="text-align:center;">
+                                                                id="produktable" style="text-align:center; width:100%;">
                                                                 <thead>
                                                                     <tr>
-                                                                        {{-- <th width="7%">No</th>
-                                                                    <th width="30%">Nama Paket</th>
-                                                                    <th width="25%">Nama Produk</th>
-                                                                    <th width="30%">No Seri</th>
-                                                                    <th width="8%">Aksi</th> --}}
-                                                                        <th width="7%">No</th>
-                                                                        <th width="62%">Nama Produk</th>
-                                                                        <th width="24%">Jumlah</th>
-                                                                        <th width="7%">Aksi</th>
+                                                                        <th width="5%">No</th>
+                                                                        <th width="50%">Nama Produk</th>
+                                                                        <th width="20%">Jumlah</th>
+                                                                        <th width="20%">No Seri</th>
+                                                                        <th hidden="true">Array</th>
+                                                                        <th width="5%">Aksi</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>1</td>
-                                                                        {{-- <td><select name="paket_produk_id[0]" id="paket_produk_id0" class="form-control custom-select paket_produk_id  @error('paket_produk_id') is-invalid @enderror"></select></td> --}}
-                                                                        <td><select name="produk_id[0]" id="produk_id0"
-                                                                                class="form-control custom-select produk_id  @error('produk_id') is-invalid @enderror"></select>
+                                                                        <td><select name="produk_id[0]" id="produk_id0" class="form-control custom-select produk_id  @error('produk_id') is-invalid @enderror"></select></td>
+                                                                        <td>
+                                                                            <input type="number" class="form-control jumlah_produk" name="jumlah_produk[0]" id="jumlah_produk0"/>
+                                                                            <small class="text-danger" id="msg_jumlah_produk"></small>
                                                                         </td>
-                                                                        <td><input type="number"
-                                                                                class="form-control produk_jumlah"
-                                                                                name="produk_jumlah[0]"
-                                                                                id="produk_jumlah0" /></td>
-                                                                        {{-- <td><select name="no_seri_select[0]" id="no_seri_select0" class="form-control custom-select no_seri @error('no_seri') is-invalid @enderror" multiple="true"></select>
-                                                                        <input type="text" class="form-control no_seri_input hide" id="no_seri_input0" name="no_seri_input[0]"/>
-                                                                    </td> --}}
-                                                                        <td><a href="#" id="tambah_paket_produk"><i
-                                                                                    class="fas fa-plus text-success"></i></a>
+                                                                        <td>
+                                                                            <button type="button" class="btn btn-sm btn-outline btn-info btn_seri" id="btn_seri" disabled="true" name="btn_seri[0]"><i class="fas fa-plus"></i> Tambah</button>
+                                                                            {{-- <select name="no_seri_select[0][]" id="no_seri_select0" class="form-control custom-select no_seri @error('no_seri') is-invalid @enderror" multiple="true"></select> --}}
+                                                                        </td>
+                                                                        <td hidden="true"><input type="text" name="no_seri_select[0]" id="no_seri_select0" class="form-control no_seri_select"></td>
+                                                                        <td><a href="#" id="tambah_paket_produk"><i class="fa fa-plus text-success"></i></a>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -620,6 +452,44 @@
                                     disabled="true">Tambah</button>
                             </div>
                         </form>
+
+                        <div class="modal fade" id="detail_modal" role="dialog" aria-labelledby="detail_modal" aria-hidden="true">
+                            <div class="modal-dialog modal-xl" role="document">
+                                <div class="modal-content" style="margin: 10px">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">No Seri</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" id="detail">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <input type="hidden" class="form-control index_table" id="index_table" name="index_table">
+                                                <div class="table-responsive">
+                                                    <table id="seri_table" class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No Seri</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><select class="form-control no_seri" name="no_seri[]" id="no_seri0"></select></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-info float-right" id="btntambahseri">Tambah</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -630,8 +500,27 @@
 @section('adminlte_js')
     <script>
         $(function() {
+            var access_token = localStorage.getItem('lokal_token');
+
+            if (access_token == null) {
+                Swal.fire({
+                    title: 'Session Expired',
+                    text: 'Silahkan login kembali',
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        event.preventDefault();
+                        document.getElementById('logout-form').submit();
+                    }
+                })
+            }
+
             var inputjumpart = false;
-            var inputjumproduk = false;
+            var inputno_seri = false;
 
             var inputpart = false;
             var inputproduk = false;
@@ -640,9 +529,11 @@
 
             function validasi() {
                 var jenis_array = [];
+
                 $('input[name="pilih_jenis_barang[]"]:checked').each(function() {
                     jenis_array.push($(this).val());
                 });
+
                 if ($.inArray("produk", jenis_array) !== -1) {
                     $('#produktable').find('.produk_id').each(function() {
                         if ($(this).val() != null) {
@@ -653,17 +544,17 @@
                         }
                     });
 
-                    $('#produktable').find('.produk_jumlah').each(function() {
+                    $('#produktable').find('.no_seri_select').each(function() {
                         if ($(this).val() != "") {
-                            inputjumproduk = true;
+                            inputno_seri = true;
                         } else {
-                            inputjumproduk = false;
+                            inputno_seri = false;
                             return false;
                         }
                     });
                 } else if ($.inArray("produk", jenis_array) === -1) {
                     inputproduk = true;
-                    inputjumproduk = true;
+                    inputno_seri = true;
                 }
 
                 if ($.inArray("part", jenis_array) !== -1) {
@@ -691,29 +582,15 @@
                     inputjumpart = true;
                 }
 
-                console.log(inputjumproduk + ", " + inputproduk + ", " + inputjumpart + ", " + inputpart);
-
-                if ($('#no_retur').val() != "" && $('#tgl_retur').val() != "" && $(
-                        'input[name="pilih_jenis_retur"]:checked').length > 0 && $('#customer_id').val() != "" && $(
+                if ($('#tgl_retur').val() != "" && $(
+                        'input[name="pilih_jenis_retur"]:checked').length > 0 && $('#customer_nama').val() != "" && $(
                         '#alamat').val() && $('input[name="pilih_jenis_barang[]"]:checked').length > 0 &&
-                    inputproduk == true && inputjumproduk == true && inputpart == true && inputjumpart == true) {
-                    if ($('input[name="pilih_jenis_retur"]:checked').val() != "peminjaman" && $(
-                            'input[name="no_transaksi"]').val() != "") {
-                        $('#btnsubmit').attr('disabled', false);
-                    } else if ($('input[name="pilih_jenis_retur"]:checked').val() == "peminjaman" && $(
-                            'input[name="pic_peminjaman"]').val() != "") {
-                        $('#btnsubmit').attr('disabled', false);
-                    } else {
-                        $('#btnsubmit').attr('disabled', true);
-                    }
+                    inputproduk == true && inputno_seri == true && inputpart == true && inputjumpart == true) {
+                    $('#btnsubmit').attr('disabled', false);
                 } else {
                     $('#btnsubmit').attr('disabled', true);
                 }
             }
-
-            $(document).on('change keyup', '#no_retur', function() {
-                validasi();
-            })
 
             $(document).on('change keyup', '#tgl_retur', function() {
                 validasi();
@@ -721,25 +598,27 @@
 
             $(document).on('change', 'input[name="pilih_jenis_retur"]', function() {
                 $('#no_transaksi').val("");
+                $('#customer_nama').val("");
                 $('#customer_id').val("");
                 $('#alamat').val("");
                 $('#telepon').val("");
+                $('.produk_id').empty();
+                $('.part_id').empty();
+                $('.part_jumlah').val('');
+                $('.no_seri_select').val('');
+                $('.btn_seri').attr('disabled', true);
+                $('.jumlah_produk').val('');
+                $('.btn_seri').removeClass('btn-warning');
+                $('.btn_seri').addClass('btn-info');
+                $('.btn_seri').html('<i class="fas fa-plus"></i> Tambah');
                 var value = $('input[name="pilih_jenis_retur"]:checked').val();
                 if (value == "peminjaman") {
-                    $('#pic_peminjaman_input').removeClass('hide');
                     $('#label_cust').text('Nama Peminjam');
                     $('#title_info_cust').text('Info Peminjaman');
-                    $('#no_transaksi_input').addClass('hide');
                 } else {
-                    $('#pic_peminjaman_input').addClass('hide');
                     $('#label_cust').text('Nama Customer');
                     $('#title_info_cust').text('Info Penjualan');
-                    $('#no_transaksi_input').removeClass('hide');
                 }
-                validasi();
-            })
-
-            $(document).on('change keyup', '#customer_id', function() {
                 validasi();
             })
 
@@ -747,31 +626,49 @@
                 validasi();
             })
 
-            // $(document).on('change keyup', 'input[name="pilih_jenis_barang[]"]', function(){
-            //     validasi();
-            // })
-
+            function get_jenis_trans(){
+                if($('#no_transaksi_ref').val() == "no_retur" || $('#no_transaksi_ref').val() == "sj_retur"){
+                    return "retur";
+                }else{
+                    return "jual";
+                }
+            }
             $(document).on('change', '#no_transaksi_ref', function() {
                 $('#no_transaksi').val("");
+                $('#pesanan_id').val("");
                 $('#customer_id').val("");
+                $('#customer_nama').val("");
                 $('#alamat').val("");
                 $('#telepon').val("");
+                $('.produk_id').empty();
+                $('.part_id').empty();
+                $('.part_jumlah').val('');
+                $('.no_seri_select').val('');
+                $('.btn_seri').attr('disabled', true);
+                $('.jumlah_produk').val('');
+                $('.btn_seri').removeClass('btn-warning');
+                $('.btn_seri').addClass('btn-info');
+                $('.btn_seri').html('<i class="fas fa-plus"></i> Tambah');
+
+                produk($('.produk_id'));
             })
 
             function trproduktable() {
                 var produktr = $('#produktable > tbody > tr').length;
                 var data = `<tr>
                     <td>1</td>
-                    {{-- <td><select name="paket_produk_id[0]" id="paket_produk_id0" class="form-control custom-select paket_produk_id  @error('paket_produk_id') is-invalid @enderror"></select></td> --}}
                     <td><select name="produk_id[0]" id="produk_id0" class="form-control custom-select produk_id  @error('produk_id') is-invalid @enderror"></select></td>
-                    <td><input type="number" class="form-control produk_jumlah" name="produk_jumlah[0]" id="produk_jumlah0"/></td>
-                    {{-- <td><select name="no_seri_select[0]" id="no_seri_select0" class="form-control custom-select no_seri @error('no_seri') is-invalid @enderror" multiple="true"></select>
-                        <input type="text" class="form-control no_seri_input hide" id="no_seri_input0" name="no_seri_input[0]"/></td> --}}
-                        <td>`;
+                    <td><input type="number" class="form-control jumlah_produk" name="jumlah_produk[0]" id="jumlah_produk0"/>
+                        <small class="text-danger" id="msg_jumlah_produk"></small></td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline btn-info btn_seri" id="btn_seri" disabled="true" name="btn_seri[0]"><i class="fas fa-plus"></i> Tambah</button>
+                    </td>
+                    <td hidden="true"><input type="text" name="no_seri_select[0]" id="no_seri_select0" class="form-control no_seri_select"></td>
+                    <td>`;
                 if (produktr > 0) {
                     data += `<a id="remove_paket_produk"><i class="fas fa-minus" style="color: red"></i></a>`;
                 } else {
-                    data += `<a href="#" id="tambah_paket_produk"><i class="fas fa-plus text-success"></i></a>`;
+                    data += `<a href="#" id="tambah_paket_produk"><i class="fa-solid fa-plus text-success"></i></a>`;
                 }
                 data += `</td>
                 </tr>`;
@@ -797,53 +694,58 @@
                 return data;
             }
 
+            function trseriproduk(i, obj) {
+                var seritr = ``;
+                if(obj != undefined){
+                    var idx = 0;
+                    obj.forEach(object => {
+                        seritr += `<tr><td><select class="form-control no_seri" name="no_seri[`+idx+`]" id="no_seri`+idx+`">
+                             <option value="`+object['id']+`" selected="true">`+object['text']+`</option>
+                        </select></td></tr>`;
+                        idx++;
+                    });
+                }else{
+                    for(var j=0; j < i; j++){
+                        seritr += `<tr><td><select class="form-control no_seri" name="no_seri[`+j+`]" id="no_seri`+j+`"></select></td></tr>`;
+                    }
+                }
+
+                return seritr;
+            }
+
             $('.no_ref_penjualan').select2();
             $('.paket_produk_id').select2();
 
-            function produk() {
-                $('.produk_id').select2({
-                    placeholder: "Pilih Produk",
-                    ajax: {
-                        minimumResultsForSearch: 20,
-                        dataType: 'json',
-                        theme: "bootstrap",
-                        delay: 250,
-                        type: 'GET',
-                        url: '/api/produk/select/',
-                        data: function(params) {
-                            return {
-                                term: params.term
-                            }
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data, function(obj) {
-                                    return {
-                                        id: obj.id,
-                                        text: obj.nama
-                                    };
-                                })
-                            };
-                        },
-                    }
-                })
+            function produk(table) {
+                $('.no_seri').select2();
+                var pesanan_id = $('#pesanan_id').val();
+                if(pesanan_id != ""){
+                    $('#produktable .no_seri_input').addClass('hide');
+                    produk_penjualan_tersedia(pesanan_id, table);
+                    part_tersedia(pesanan_id);
+                } else {
+                    $('#produktable .no_seri_input').removeClass('hide');
+                    produk_penjualan_tidak_tersedia(table);
+                    part_tidak_tersedia();
+                }
+
             }
 
             $('.divisi_id').select2({
                 placeholder: "Pilih Divisi",
+                width: 'auto',
+		        dropdownAutoWidth: true,
+                allowClear: true,
                 ajax: {
                     minimumResultsForSearch: 20,
-
                     dataType: 'json',
                     theme: "bootstrap",
                     delay: 250,
                     type: 'GET',
                     url: '/api/gbj/sel-divisi',
-                    // data: function(params) {
-                    //     return {
-                    //         term: params.term
-                    //     }
-                    // },
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    },
                     processResults: function(data) {
                         return {
                             results: $.map(data, function(obj) {
@@ -855,22 +757,37 @@
                         };
                     },
                 }
-            }).change(function(e) {
-                e.preventDefault();
+            });
 
-            })
+            function no_seri_arr(no_seri){
+                $('.no_seri').select2({
+                    placeholder: "Pilih No Seri",
+                    allowClear: true,
+                    data: no_seri
+                });
+            }
 
-            function part() {
-                $('.part_id').select2({
-                    placeholder: "Pilih Part",
+            function no_seri_lama(){
+                $('.no_seri').select2({
+                    placeholder: "Pilih No Seri",
+                    language: {
+                        inputTooShort: function (args) {
+                            return "Minimal 10 karakter atau lebih";
+                        },
+                        noResults: function () {
+                            return "Not Found.";
+                        },
+                        searching: function () {
+                            return "Searching...";
+                        }
+                    },
+                    minimumInputLength: 10,
                     ajax: {
-                        minimumResultsForSearch: 20,
-
                         dataType: 'json',
                         theme: "bootstrap",
                         delay: 250,
                         type: 'POST',
-                        url: '/api/gk/sel-m-spare',
+                        url: '/api/as/list/no_seri_lama',
                         data: function(params) {
                             return {
                                 term: params.term
@@ -880,8 +797,8 @@
                             return {
                                 results: $.map(data, function(obj) {
                                     return {
-                                        id: obj.id,
-                                        text: obj.nama
+                                        id: obj.noseri,
+                                        text: obj.noseri
                                     };
                                 })
                             };
@@ -891,11 +808,147 @@
             }
 
             $(document).on('change', '#produktable .produk_id', function() {
+                var btn_seri = $(this).closest('tr').find('.btn_seri');
+                var jumlah_produk = $(this).closest('tr').find('.jumlah_produk');
+                var no_seri_select = $(this).closest('tr').find('.no_seri_select');
+                var msg = $(this).closest('tr').find('#msg_jumlah_produk');
+                if(no_seri_select != ""){
+                    no_seri_select.val('');
+                    btn_seri.removeClass('btn-warning');
+                    btn_seri.addClass('btn-info');
+                    btn_seri.html('<i class="fas fa-plus"></i> Tambah');
+                }
+
+                if($(this).val() != ""){
+                    if(jumlah_produk.val() != ""){
+                        if($(this).select2('data')[0]['noseri'] != undefined){
+                            var seri_prd = Object.keys($(this).select2('data')[0]['noseri']).length;
+                            if(seri_prd >= jumlah_produk.val()){
+                                btn_seri.attr('disabled', false);
+                                msg.html('');
+                            }else{
+                                btn_seri.attr('disabled', true);
+                                msg.html('Jumlah No Seri hanya ada '+seri_prd);
+                            }
+                        }else{
+                            btn_seri.attr('disabled', false);
+                        }
+                    }
+                }
+                else{
+                    btn_seri.attr('disabled', true);
+                }
                 validasi();
             });
 
-            $(document).on('change keyup', '#produktable .produk_jumlah', function() {
+            $(document).on('keyup change', '#produktable .jumlah_produk', function() {
+                var btn_seri = $(this).closest('tr').find('.btn_seri');
+                var produk_id = $(this).closest('tr').find('.produk_id');
+                var no_seri_select = $(this).closest('tr').find('.no_seri_select');
+                var msg = $(this).closest('tr').find('#msg_jumlah_produk');
 
+                if(no_seri_select.val() != ""){
+                    no_seri_select.val('');
+                    btn_seri.removeClass('btn-warning');
+                    btn_seri.addClass('btn-info');
+                    btn_seri.html('<i class="fas fa-plus"></i> Tambah');
+                }
+
+                if($(this).val() != ""){
+                    if(produk_id.val() != ""){
+                        if(produk_id.select2('data')[0]['noseri'] != undefined){
+                            var seri_prd = Object.keys(produk_id.select2('data')[0]['noseri']).length;
+                            if(seri_prd >= $(this).val()){
+                                btn_seri.attr('disabled', false);
+                                msg.html('');
+                            }else{
+                                btn_seri.attr('disabled', true);
+                                msg.html('Jumlah No Seri hanya ada '+seri_prd);
+                            }
+                        }else{
+                            btn_seri.attr('disabled', false);
+                        }
+                    }
+                }
+                else{
+                    btn_seri.attr('disabled', true);
+                }
+                validasi();
+            })
+
+            $(document).on('click', '#produktable .btn_seri', function() {
+                var produk_id = $(this).closest('tr').find('.produk_id');
+                var jumlah = $(this).closest('tr').find('.jumlah_produk');
+                var no_seri_select = $(this).closest('tr').find('.no_seri_select');
+                var number = $(this).closest('tr').find("td:eq(0)").html() - 1;
+                $('#detail_modal').modal("show");
+                if(no_seri_select.val() != ""){
+                    var obj = JSON.parse(no_seri_select.val());
+                    $('#seri_table tbody').empty();
+                    $('#seri_table tbody').append(trseriproduk(jumlah.val(), obj));
+
+                    $('#index_table').val(number);
+                    if(produk_id.select2('data')[0]['noseri'] != undefined){
+                        no_seri_arr(produk_id.select2('data')[0]['noseri']);
+                    }
+                    else{
+                        no_seri_lama();
+                    }
+                }else{
+                    $('#seri_table tbody').empty();
+                    $('#seri_table tbody').append(trseriproduk(jumlah.val(), undefined));
+
+                    $('#index_table').val(number);
+                    if(produk_id.select2('data')[0]['noseri'] != undefined){
+                        no_seri_arr(produk_id.select2('data')[0]['noseri']);
+                    }
+                    else{
+                        no_seri_lama();
+                    }
+                }
+                validasi();
+            })
+
+            $(document).on('click', '#btntambahseri', function() {
+                var noseri_arr = [];
+                var idx = $('#index_table').val();
+                var inputseri = false;
+                $('#seri_table').find('.no_seri').each(function() {
+                    if($(this).val() != null){
+                        inputseri = true;
+                        var obj = {};
+                        obj.id = $(this).val();
+                        obj.text = $(this).select2('data')[0]['text'];
+                        noseri_arr.push(obj);
+                    }else{
+                        inputseri = false;
+                        return false;
+                    }
+                });
+
+                if(inputseri == true){
+                    $('#detail_modal').modal("hide");
+                    $('#no_seri_select'+idx).val( JSON.stringify(noseri_arr));
+                    console.log($('#no_seri_select'+idx).val());
+
+                    $('#produktable').find('button[name="btn_seri['+idx+']"]').removeClass('btn-info');
+                    $('#produktable').find('button[name="btn_seri['+idx+']"]').addClass('btn-warning');
+                    $('#produktable').find('button[name="btn_seri['+idx+']"]').html('<i class="fas fa-pencil-alt"></i> Edit');
+                }
+                else{
+                    swal.fire(
+                        'Form Kosong',
+                        'Ada Form yang belum diinput, Silahkan input ulang',
+                        'error'
+                    );
+                }
+                validasi();
+            })
+
+            $(document).on('change', '#parttable .part_id', function() {
+                if(typeof($(this).select2('data')[0]['jumlah']) != 'undefined'){
+                    $(this).closest('tr').find('.part_jumlah').val($(this).select2('data')[0]['jumlah'] );
+                }
                 validasi();
             });
 
@@ -908,8 +961,8 @@
             });
 
             $('.no_seri').select2();
-            produk();
-            part();
+            produk($('.produk_id'));
+
             $('input[type="radio"][name="ref_transaksi"]').on('change', function() {
                 format_informasi_ref_penjualan();
                 var value = $(this).val();
@@ -919,6 +972,9 @@
                 $('.paket_produk_id').empty();
                 $('.produk_id').empty();
                 $('.no_seri').empty();
+                $('.no_seri_select').val('');
+                $('.btn_seri').attr('disabled', true);
+                $('.jumlah_produk').val('');
 
                 if (value == "tidak_tersedia") {
                     $('#informasi_transaksi').addClass('hide');
@@ -932,7 +988,7 @@
 
                     $('#produktable tr').find('.no_seri_input').removeClass('hide');
                     $('#produktable tr').find('.no_seri').next(".select2-container").hide();
-                    produk_penjualan_tidak_tersedia();
+                    produk_penjualan_tidak_tersedia($('.produk_id'));
                 } else if (value == "tersedia") {
                     $('#informasi_transaksi').removeClass('hide');
 
@@ -962,13 +1018,12 @@
                     jenis_arry.push($(this).val());
                 });
 
-                console.log(x);
-
                 if ($('input[name="pilih_jenis_barang[]"]:checkbox:checked').length == 0) {
                     jenis_arry.push(x);
                     $('input[name="pilih_jenis_barang[]"][value="' + x + '"]').prop("checked", true);
                 }
                 filter_jenis(jenis_arry);
+                produk($('.produk_id'));
                 validasi();
             });
 
@@ -1002,8 +1057,6 @@
                 $t.find("tr").each(function(ind, el) {
                     $(el).find("td:eq(0)").html(++c);
                     var j = c - 1;
-                    // $(el).find('.paket_produk_id').attr('name', 'paket_produk_id[' + j + ']');
-                    // $(el).find('.paket_produk_id').attr('id', 'paket_produk_id' + j);
 
                     $(el).find('.produk_id').attr('name', 'produk_id[' + j + ']');
                     $(el).find('.produk_id').attr('id', 'produk_id' + j);
@@ -1011,26 +1064,18 @@
                     $(el).find('.produk_jumlah').attr('name', 'produk_jumlah[' + j + ']');
                     $(el).find('.produk_jumlah').attr('id', 'produk_jumlah' + j);
 
-                    // $(el).find('.no_seri').attr('name', 'no_seri_select[' + j + ']');
-                    // $(el).find('.no_seri').attr('id', 'no_seri_select' + j);
+                    $(el).find('.no_seri_select').attr('name', 'no_seri_select[' + j + ']');
+                    $(el).find('.no_seri_select').attr('id', 'no_seri_select' + j);
 
-                    // $(el).find('.no_seri_input').attr('name', 'no_seri_input[' + j + ']');
-                    // $(el).find('.no_seri_input').attr('id', 'no_seri_input' + j);
+                    $(el).find('.btn_seri').attr('name', 'btn_seri['+j+']');
 
-                    // $('.paket_produk_id').select2();
-                    produk();
-                    // $('.no_seri').select2();
-
-                    // if(referensi == "tersedia"){
-                    //     produk_penjualan_tersedia($(".no_ref_penjualan").val());
-                    //     $('.no_seri_input').addClass('hide');
-                    //     $('.no_seri').next(".select2-container").show();
-
-                    // } else if(referensi == "tidak_tersedia"){
-                    //     produk_penjualan_tidak_tersedia();
-                    //     $('.no_seri_input').removeClass('hide');
-                    //     $('.no_seri').next(".select2-container").hide();
-                    // }
+                    if($(el).find('.produk_id').val() == null){
+                        if($('#pesanan_id').val() != ''){
+                            produk_penjualan_tersedia($('#pesanan_id').val(), $(el).find('.produk_id'));
+                        }else{
+                            produk_penjualan_tidak_tersedia($(el).find('.produk_id'));
+                        }
+                    }
                 });
             }
 
@@ -1059,7 +1104,14 @@
 
                     $(el).find('.part_jumlah').attr('name', 'part_jumlah[' + j + ']');
                     $(el).find('.part_jumlah').attr('id', 'part_jumlah' + j);
-                    part();
+
+                    if($(el).find('.part_id').val() == null){
+                        if($('#pesanan_id').val() != ''){
+                            part_tersedia($('#pesanan_id').val());
+                        }else{
+                            part_tidak_tersedia();
+                        }
+                    }
                 });
             }
 
@@ -1150,9 +1202,10 @@
             }
 
             function informasi_ref_penjualan(id) {
+                var jenis = get_jenis_trans();
                 $.ajax({
                     type: "GET",
-                    url: '/api/as/detail/so_retur/' + id,
+                    url: '/api/as/detail/so_retur/' + id + '/' + jenis,
                     dataType: 'json',
                     success: function(data) {
                         $('#nama_customer').text(data.customer.nama);
@@ -1193,17 +1246,17 @@
                 });
             }
 
-            function produk_penjualan_tersedia(id) {
-                $('.paket_produk_id').empty();
-                $('.paket_produk_id').select2({
+            function produk_penjualan_tersedia(id, table) {
+                var jenis = get_jenis_trans();
+                table.select2({
+                    placeholder: "Pilih Paket Produk",
                     ajax: {
                         minimumResultsForSearch: 20,
-                        placeholder: "Pilih Paket Produk",
                         dataType: 'json',
                         theme: "bootstrap",
                         delay: 250,
                         type: 'GET',
-                        url: '/api/as/list/so_selesai_paket/' + id,
+                        url: '/api/as/list/so_selesai_paket/' + id + '/' + jenis,
                         data: function(params) {
                             return {
                                 term: params.term
@@ -1211,10 +1264,42 @@
                         },
                         processResults: function(data) {
                             return {
-                                results: $.map(data, function(obj) {
+                                results: $.map(data.produk, function(obj) {
                                     return {
                                         id: obj.id,
-                                        text: obj.penjualan_produk.nama
+                                        text: obj.nama,
+                                        noseri: obj.no_seri
+                                    };
+                                })
+                            };
+                        },
+                    }
+                }).trigger('change');
+            }
+
+            function part_tersedia(id){
+                var jenis = get_jenis_trans();
+                $('.part_id').select2({
+                    placeholder: "Pilih Part",
+                    ajax: {
+                        minimumResultsForSearch: 20,
+                        dataType: 'json',
+                        theme: "bootstrap",
+                        delay: 250,
+                        type: 'GET',
+                        url: '/api/as/list/so_selesai_paket/' + id + '/' + jenis,
+                        data: function(params) {
+                            return {
+                                term: params.term
+                            }
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data.part, function(obj) {
+                                    return {
+                                        id: obj.id,
+                                        text: obj.nama,
+                                        jumlah: obj.jumlah
                                     };
                                 })
                             };
@@ -1223,18 +1308,17 @@
                 })
             }
 
-            function produk_penjualan_tidak_tersedia() {
+            function produk_penjualan_tidak_tersedia(table) {
                 var prm;
-                // $('.paket_produk_id').empty();
-                $('.paket_produk_id').select2({
+                table.select2({
+                    placeholder: "Pilih Produk",
                     ajax: {
                         minimumResultsForSearch: 20,
-                        placeholder: "Pilih Paket Produk",
                         dataType: 'json',
                         theme: "bootstrap",
                         delay: 250,
                         type: 'GET',
-                        url: '/api/penjualan_produk/select_param/' + prm,
+                        url: '/api/produk/variasi/',
                         data: function(params) {
                             return {
                                 term: params.term
@@ -1251,20 +1335,20 @@
                             };
                         },
                     }
-                })
+                }).trigger('change');
+
             }
 
-            function produk_gudang_tersedia(column, id) {
-                $('#' + column).empty();
-                $('#' + column).select2({
+            function part_tidak_tersedia(){
+                $('.part_id').select2({
+                    placeholder: "Pilih Part",
+                    minimumResultsForSearch: 2,
                     ajax: {
-                        minimumResultsForSearch: 20,
-                        placeholder: "Pilih Produk",
                         dataType: 'json',
                         theme: "bootstrap",
                         delay: 250,
-                        type: 'GET',
-                        url: '/api/as/list/so_selesai_paket_produk/' + id,
+                        type: 'POST',
+                        url: '/api/gk/sel-m-spare',
                         data: function(params) {
                             return {
                                 term: params.term
@@ -1275,67 +1359,15 @@
                                 results: $.map(data, function(obj) {
                                     return {
                                         id: obj.id,
-                                        text: obj.gudang_barang_jadi.produk.nama + " " + obj
-                                            .gudang_barang_jadi.nama
-                                    };
-                                })
-                            };
-                        },
-                    }
-                })
-            }
-
-            function produk_gudang_tidak_tersedia(column, id) {
-                $('#' + column).select2({
-                    ajax: {
-                        minimumResultsForSearch: 20,
-                        placeholder: "Pilih Produk",
-                        dataType: 'json',
-                        theme: "bootstrap",
-                        delay: 250,
-                        type: 'GET',
-                        url: '/api/penjualan_produk/select/' + id,
-                        data: function(params) {
-                            return {
-                                term: params.term
-                            }
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: $.map(data[0].produk, function(obj) {
-                                    return {
-                                        id: obj.id,
                                         text: obj.nama
                                     };
                                 })
                             };
                         },
                     }
-                })
+                });
             }
-
-            $(document).on('keyup change', '.no_ref_penjualan', function() {
-                var val = $(this).val();
-                if (val != "") {
-                    informasi_ref_penjualan(val);
-                    produk_penjualan_tersedia(val);
-                }
-            });
-
-            $(document).on('keyup change', '#produktable  .paket_produk_id', function() {
-                var val = $(this).val();
-                var column = $(this).closest('tr').find('.produk_id').attr('id');
-                if (val != "") {
-                    $(column).empty();
-                    if ($('input[name="ref_transaksi"]:checked').val() == "tidak_tersedia") {
-                        produk_gudang_tidak_tersedia(column, val);
-                    } else if ($('input[name="ref_transaksi"]:checked').val() == "tersedia") {
-                        produk_gudang_tersedia(column, val);
-                    }
-                }
-            });
-
-            $("#customer_id").autocomplete({
+            $("#customer_nama").autocomplete({
                 source: function(request, response) {
                     $.ajax({
                         dataType: 'json',
@@ -1367,71 +1399,34 @@
                     $(this).val(ui.item.label);
 
                     if (id != "") {
+                        $('#customer_id').val(id);
                         $.ajax({
                             url: '/api/customer/select/' + id,
                             type: 'GET',
                             dataType: 'json',
                             success: function(data) {
+
                                 $('#alamat').val(data[0].alamat);
                                 $('#telepon').val(data[0].telepon);
+
+                                $('#alamat').attr('readonly', true);
+                                $('#telepon').attr('readonly', true);
                             }
                         });
-                    } else {
-                        $('#alamat').val("");
-                        $('#telepon').val("");
                     }
                     validasi();
                     return false;
-                }
-            });
-
-            $("#customer_id").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        dataType: 'json',
-                        url: '/api/customer/select',
-                        data: {
-                            term: request.term
-                        },
-                        success: function(data) {
-
-                            var transformed = $.map(data, function(el) {
-                                return {
-                                    label: el.nama,
-                                    value: el.id
-                                };
-                            });
-                            response(transformed.slice(0, 10));
-                        },
-                        error: function() {
-                            response([]);
-                        }
-                    });
                 },
-                focus: function(event, ui) {
-                    $(this).val(ui.item.label);
-                    return false;
-                },
-                select: function(event, ui) {
-                    var id = ui.item.value;
-                    $(this).val(ui.item.label);
-
-                    if (id != "") {
-                        $.ajax({
-                            url: '/api/customer/select/' + id,
-                            type: 'GET',
-                            dataType: 'json',
-                            success: function(data) {
-                                $('#alamat').val(data[0].alamat);
-                                $('#telepon').val(data[0].telepon);
-                            }
-                        });
-                    } else {
+                change: function(event, ui){
+                    if(ui.item == null){
+                        $('#customer_id').val('');
                         $('#alamat').val("");
                         $('#telepon').val("");
+
+                        $('#alamat').attr('readonly', false);
+                        $('#telepon').attr('readonly', false);
+                        validasi();
                     }
-                    validasi();
-                    return false;
                 }
             });
 
@@ -1465,33 +1460,120 @@
                 },
                 select: function(event, ui) {
                     var id = ui.item.value;
-
-                    $(this).val(ui.item.label);
+                    $('.no_seri_select').val('');
+                    $('.btn_seri').attr('disabled', true);
+                    $('.jumlah_produk').val('');
+                    $('.btn_seri').removeClass('btn-warning');
+                    $('.btn_seri').addClass('btn-info');
+                    $('.btn_seri').html('<i class="fas fa-plus"></i> Tambah');
+                    $('.no_seri').empty();
+                    $('.produk_id').empty();
                     if (id != "") {
+                        var jenis = get_jenis_trans();
+                        $('#pesanan_id').val(id);
+                        produk_penjualan_tersedia(id, $('.produk_id'));
+                        part_tersedia(id);
                         $.ajax({
-                            url: '/api/as/detail/so_retur/' + id,
+                            url: '/api/as/detail/so_retur/' + id +'/'+jenis,
                             type: 'GET',
                             dataType: 'json',
                             success: function(data) {
-                                $('#customer_id').val(data.customer.nama);
+                                $('#customer_nama').val(data.customer.nama);
+                                $('#customer_id').val(data.customer.id);
                                 $('#alamat').val(data.customer.alamat);
                                 $('#telepon').val(data.customer.telepon);
+                                $('#alamat').attr('readonly', true);
+                                $('#telepon').attr('readonly', true);
                             }
                         });
-                    } else {
-                        $('#customer_id').val("");
-                        $('#alamat').val("");
-                        $('#telepon').val("");
                     }
                     validasi();
                     return false;
-                },
-                keyup: function(event, ui) {
-                    $('#customer_id').val("");
-                    $('#alamat').val("");
-                    $('#telepon').val("");
+                }, change: function (event, ui) {
+                    if(ui.item == null){
+                        $('.no_seri_select').val('');
+                        $('.btn_seri').attr('disabled', true);
+                        $('.jumlah_produk').val('');
+                        $('.btn_seri').removeClass('btn-warning');
+                        $('.btn_seri').addClass('btn-info');
+                        $('.btn_seri').html('<i class="fas fa-plus"></i> Tambah');
+                        $('.part_id').empty();
+                        $('.part_jumlah').val("");
+                        $('.no_seri').empty();
+                        $('.produk_id').empty();
+                        $('#pesanan_id').val('');
+                        $('#customer_id').val("");
+                        $('#customer_nama').val("");
+                        $('#alamat').val("");
+                        $('#telepon').val("");
+                        $('#alamat').attr('readonly', false);
+                        $('#telepon').attr('readonly', false);
+                        produk_penjualan_tidak_tersedia($('.produk_id'));
+                        part_tidak_tersedia();
+                    }
                 }
             });
+
+            // $(document).on('keyup change', '.divisi_id', function(){
+            //     $('#karyawan_id').val('');
+            //     $('#pic_peminjaman').val('');
+            //     var divisi_id = $(this).val();
+            //     // get_karyawan(divisi_id);
+            // });
+
+            $(document).on('keyup change', '.no_seri', function(){
+                validasi();
+            })
+
+                $("#pic_peminjaman").autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            dataType: 'json',
+                            type: 'GET',
+                            url: '/api/karyawan_all',
+                            data: {
+                                term: request.term
+                            },
+                            beforeSend : function(xhr){
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                            },
+                            success: function(data) {
+                                var transformed = $.map(data, function(el) {
+                                    return {
+                                        label: el.nama,
+                                        value: el.id
+                                    };
+                                });
+                                response(transformed.slice(0, 10));
+                            },
+                            error: function() {
+                                response([]);
+                            }
+                        });
+                    },
+                    focus: function(event, ui) {
+                        $(this).val(ui.item.label);
+                        return false;
+                    },
+                    select: function(event, ui) {
+                        var id = ui.item.value;
+                        $(this).val(ui.item.label);
+
+                        if (id != "") {
+                            $('#karyawan_id').val(id);
+                        }
+                        return false;
+                    },
+                    change: function(event, ui) {
+                        if(ui.item == null){
+                            $('#karyawan_id').val('');
+                        }
+                        return false;
+                    },
+                });
+
+
+
         })
     </script>
 @stop

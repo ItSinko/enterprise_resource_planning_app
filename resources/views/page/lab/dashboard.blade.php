@@ -349,8 +349,8 @@ table tbody tr td i{
         <!-- bagian peminjaman alat uji end -->
 
         <!-- bagian grafik -->
+        <!-- card grafik peminjaman alat uji -->
         <div class="row">
-            <!-- card grafik peminjaman alat uji -->
             <div class="col p-1">
                 <div class="card mb-1">
                     <div class="card-body">
@@ -358,19 +358,9 @@ table tbody tr td i{
                     </div>
                 </div>
             </div>
-            <!-- card grafik peminjaman alat uji end -->
-
-            <!-- card gafik target maintenance alat uji -->
-            <!-- <div class="col p-1">
-                <div class="card mb-1">
-                    <div class="card-body">
-
-                    </div>
-                </div>
-            </div> -->
-            <!-- card gafik target maintenance alat uji end -->
         </div>
-        <!-- bagian grafik end -->
+        <!-- card grafik peminjaman alat uji end -->
+
 
     {{-- </div> --}}
 </div>
