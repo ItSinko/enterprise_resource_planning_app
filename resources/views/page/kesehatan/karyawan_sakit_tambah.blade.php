@@ -652,5 +652,19 @@
                 }
             });
         });
+
+        // show alert when input maks
+        $('#obat').on('change', '.jumlah', function(e) {
+            var jumlah = $(this).closest('tr').find('.jumlah')
+            // get max
+            var max = jumlah.attr('max');
+            // get value
+            var value = jumlah.val();
+            // check if value > max
+            if (value > max) {
+                alert('Jumlah melebihi stok');
+                jumlah.val(max);
+            }
+        });
     </script>
 @stop
