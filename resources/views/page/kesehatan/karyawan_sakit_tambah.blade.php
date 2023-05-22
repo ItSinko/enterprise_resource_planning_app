@@ -423,6 +423,13 @@
                         $("#stok" + index).text('Stok : ' + data[0].stok);
                         $("#jumlah" + index).prop('max', data[0].stok);
                         $("#jumlah" + index).prop('min', 1);
+
+                        // stok 0 disabled jumlah
+                        if (data[0].stok == 0) {
+                            $("#jumlah" + index).prop('disabled', true);
+                        } else {
+                            $("#jumlah" + index).prop('disabled', false);
+                        }
                     },
                     error: function(error) {
                         console.log(error);
