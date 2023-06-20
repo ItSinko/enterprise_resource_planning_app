@@ -66,6 +66,12 @@ export default {
                 this.$emit('simpan', this.form)
                 this.closeDialog()
             }
+        },
+        removeProduk(item) {
+            const index = this.form.indexOf(item)
+            if (index > -1) {
+                this.form.splice(index, 1)
+            }
         }
     },
     watch: {
@@ -186,7 +192,7 @@ export default {
                             <td v-if="!item.id">
                                 <v-btn
                                 icon
-                                    @click="form.splice(index, 1)"
+                                    @click="removeProduk(item)"
                                 >
                                     <v-icon>mdi-delete</v-icon>
                                 </v-btn>
