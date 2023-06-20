@@ -413,12 +413,13 @@ Route::group(['prefix' => 'as', 'middleware' => ['auth', 'divisi:asp,log']], fun
     });
 
     Route::group(['prefix' => '/retur'], function () {
-        Route::view('/show', 'page.as.retur.show')->name('as.retur.show');
-        Route::get('/create', [App\Http\Controllers\AfterSalesController::class, 'create_retur'])->name('as.retur.create');
-        Route::post('/store', [App\Http\Controllers\AfterSalesController::class, 'store_retur'])->name('as.retur.store');
-        Route::get('/edit/{id}', [App\Http\Controllers\AfterSalesController::class, 'edit_retur'])->name('as.retur.edit');
-        Route::put('/update/{id}', [App\Http\Controllers\AfterSalesController::class, 'update_retur'])->name('as.retur.update');
-        Route::delete('/delete', [App\Http\Controllers\AfterSalesController::class, 'delete_retur'])->name('as.retur.delete');
+        Route::view('/{any?}', 'page.as.retur.index');
+        // Route::view('/show', 'page.as.retur.show')->name('as.retur.show');
+        // Route::get('/create', [App\Http\Controllers\AfterSalesController::class, 'create_retur'])->name('as.retur.create');
+        // Route::post('/store', [App\Http\Controllers\AfterSalesController::class, 'store_retur'])->name('as.retur.store');
+        // Route::get('/edit/{id}', [App\Http\Controllers\AfterSalesController::class, 'edit_retur'])->name('as.retur.edit');
+        // Route::put('/update/{id}', [App\Http\Controllers\AfterSalesController::class, 'update_retur'])->name('as.retur.update');
+        // Route::delete('/delete', [App\Http\Controllers\AfterSalesController::class, 'delete_retur'])->name('as.retur.delete');
     });
 
 

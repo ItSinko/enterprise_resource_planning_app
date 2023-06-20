@@ -1385,7 +1385,7 @@ return [
         [
             'text' => 'Retur',
             'icon' => 'fas fa-exchange-alt fa-fw',
-            'url' => '/as/retur/show',
+            'url' => '/as/retur',
             'auth' => [8],
         ],
         [
