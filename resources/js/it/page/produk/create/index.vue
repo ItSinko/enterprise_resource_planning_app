@@ -55,6 +55,10 @@ export default {
             this.dialogDetail = false
             this.subProduk = null
         },
+        closeDialog() {
+            this.$emit('closeDialog')
+            this.form = []
+        },
         simpanSubProduk(item) {
             for (let i = 0; i < item.length; i++) {
                 this.form[this.indexProduk].detailproduk = item
@@ -104,7 +108,7 @@ export default {
                 <v-btn
                     icon
                     dark
-                    @click="dialogCreate = false"
+                    @click="closeDialog"
                 >
                     <v-icon>mdi-close</v-icon>
                 </v-btn>

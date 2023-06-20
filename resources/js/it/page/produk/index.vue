@@ -31,6 +31,10 @@ export default {
         addProduk() {
             this.produkEdit = null
             this.dialogCreate = true
+        },
+        closeDialog() {
+            this.dialogCreate = false
+            this.produkEdit = null
         }
     },
     created() {
@@ -57,6 +61,7 @@ export default {
                     <create-produk
                     :dialogCreate="dialogCreate"
                     :produk="produkEdit"
+                    @closeDialog="closeDialog"
                     @refresh="getProduk"
                     ></create-produk>
                 </div>

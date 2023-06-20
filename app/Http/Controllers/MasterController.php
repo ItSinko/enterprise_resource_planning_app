@@ -1846,10 +1846,13 @@ class MasterController extends Controller
 
     public function indexProduk() {
         try {
-            $produk = MProduk::whereHas('detailproduk', function ($query){
+            $produk = MProduk::whereDoesntHave('detailproduk')
+            ->orWhereHas('detailproduk', function ($query) {
                 $query->whereHas('GudangBarangJadi');
             })
-            ->with('detailproduk', 'detailproduk.GudangBarangJadi')
+            ->with(['detailproduk' => function ($query) {
+                $query->with('GudangBarangJadi');
+            }])
             ->get();
 
             return response()->json([
