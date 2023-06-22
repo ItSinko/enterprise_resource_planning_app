@@ -54,7 +54,7 @@ export default {
                     pages.push('...')
                     pages.push(totalPages)
                     break
-                }
+                }   
             }
             if(this.currentPage > 5 && this.currentPage < totalPages){
                 pages = [1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', totalPages]
