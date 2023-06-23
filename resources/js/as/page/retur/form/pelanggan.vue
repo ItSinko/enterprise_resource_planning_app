@@ -95,7 +95,6 @@ export default {
             }
         },
         getIdTransaksi() {
-            console.log(this.form.no_transaksi)
             const transaksi = this.transaksi_data.find(transaksi => transaksi.nama === this.form.no_transaksi)
             this.form.id_transaksi = transaksi?.id
         },

@@ -21,23 +21,7 @@ export default {
                 <label for="pilih_jenis_retur"
                     class="col-lg-5 col-md-12 col-form-label labelket text-right">Jenis Retur</label>
                 <div class="col-lg-4 col-md-12 ">
-                    <div class="form-check form-check-inline col-form-label">
-                        <input class="form-check-input" type="radio"
-                            name="pilih_jenis_retur"
-                            value="peminjaman"
-                            v-model="form.jenis_retur"
-                            />
-                        <label class="form-check-label"
-                            for="pilih_jenis_retur1">Peminjaman</label>
-                    </div>
-                    <div class="form-check form-check-inline col-form-label">
-                        <input class="form-check-input" type="radio"
-                            name="pilih_jenis_retur"
-                            v-model="form.jenis_retur"
-                            value="komplain" />
-                        <label class="form-check-label"
-                            for="pilih_jenis_retur2">Komplain</label>
-                    </div>
+                    <slot name="jenisretur"></slot>
                 </div>
             </div>
             <div class="form-group row" >

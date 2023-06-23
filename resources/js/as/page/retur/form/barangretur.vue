@@ -17,7 +17,6 @@ export default {
         addProduk() {
             this.barangretur.produk.push({
                 nama: '',
-                jumlah: '',
                 no_seri: [],
             })
         },
@@ -29,60 +28,31 @@ export default {
             this.produk = data
         },
         async getProdukTransaksi() {
-            switch (this.form?.selectPO) {
-                case 'po':
-                    try {
-                    const { data:customer } = await axios.get(`/api/as/detail/so_retur/${this.form.id_transaksi}/jual`)
-                    const { nama, alamat, telp } = customer
-                    this.form.customer_id = data?.customer_id
-                    this.form.customer_nama = nama
-                    this.form.alamat = alamat
-                    this.form.telepon = telp
+            try {
+                const { data:customer } = await axios.get(`/api/as/detail/so_retur/${this.form.id_transaksi}/jual`)
+                const { nama, alamat, telp, id } = customer.customer
+                this.form.customer_id = id
+                this.form.customer_nama = nama
+                this.form.alamat = alamat
+                this.form.telepon = telp
 
-                    const { data:prd } = await axios.get(`/api/as/list/so_selesai_paket/${this.form.id_transaksi}/jual`)
-                    this.barangretur.produk = prd?.produk.map(prd => {
-                        return {
-                            nama: {
-                                id: prd.id,
-                                nama: prd.nama,
-                            },
-                            jumlah: prd.no_seri.length,
-                            no_seri: prd.no_seri,
-                        }
-                    })
-                    } catch (error) {
-                        console.log(error)    
-                    }                    
-                    break;
-                case 'so':
-                        
-                    break;
-                case 'no_akn':
-                            
-                    break;
-                case 'no_retur':
-                
-                    break;
-                case 'no_sj':
-
-                    break;
-                case 'sj_retur':
-
-                    break;
-                default:
-                    break;
-            }
+                const { data:prd } = await axios.get(`/api/as/list/so_selesai_paket/${this.form.id_transaksi}/jual`)
+                this.barangretur.produk = prd?.produk.map(prd => {
+                    return {
+                        nama: {
+                            id: prd.id,
+                            nama: prd.nama,
+                        },
+                        no_seri: prd.no_seri,
+                    }
+                })
+            } catch (error) {
+                console.log(error)    
+            }  
         },
         addSerialNumber(index) {
-            this.produkSelected = Object.assign({}, this.barangretur.produk[index])
+            this.produkSelected = JSON.parse(JSON.stringify(this.barangretur.produk[index]))
             this.produkSelected.index = index
-            const jml = this.produkSelected.jumlah
-            this.produkSelected.no_seri = []
-            for (let i = 0; i < jml; i++) {
-                this.produkSelected.no_seri.push({
-                    text: '',
-                })
-            }
             this.showmodal = true
             this.$nextTick(() => {
                 this.$refs.addnoseri.show()
@@ -167,7 +137,7 @@ export default {
                                                 :options="produk"></v-select>
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" v-model="prd.jumlah" :disabled="isDisabled">
+                                                <input type="number" class="form-control" :value="prd.no_seri.length" disabled>
                                             </td>
                                             <td>
                                                 <button class="btn btn-info" @click="addSerialNumber(index)" v-if="!form.id_transaksi">
@@ -189,7 +159,9 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-12"></div>
+                <div class="col-lg-6 col-md-12">
+                    <slot name="form"></slot>
+                </div>
             </div>
         </div> 
     </div>

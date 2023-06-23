@@ -27,11 +27,27 @@ export default {
                 console.log(error)
             }
         },
-        simpan() {
-            this.$emit('simpan')
-            this.$nextTick(() => {
-                this.hide()
+        addNoSerialNumber() {
+            this.produk.no_seri.push({
+                text: '',
             })
+        },
+        simpan() {
+            if (this.checknoserinotempty) {
+                this.$emit('simpan')
+                this.hide()
+            } else {
+                this.$swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No Seri tidak boleh kosong!',
+                })
+            }
+        }
+    },
+    computed: {
+        checknoserinotempty() {
+            return this.produk.no_seri.every(noseri => noseri.text != '')
         }
     },
 }
@@ -47,10 +63,16 @@ export default {
             </button>
         </div>
         <div class="modal-body">
+            <div class="d-flex flex-row-reverse">
+                <div class="p-2 bd-highlight">
+                    <button type="button" class="btn btn-primary" @click="addNoSerialNumber">Tambah No Seri</button>
+                </div>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
                         <th>No Seri</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +81,11 @@ export default {
                             <autocomplete 
                             @input="getNoSeri(item.text)"
                             :options="no_seri" v-model="item.text" :id="index"></autocomplete>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" @click="produk.no_seri.splice(index, 1)">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
