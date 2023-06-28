@@ -143,11 +143,11 @@ export default {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nama Produk</th>
-                                        <th>Jumlah</th>
-                                        <th>No Seri</th>
-                                        <th>Aksi</th>
+                                        <th width="5%">No</th>
+                                        <th width="50%">Nama Produk</th>
+                                        <th width="20%">Jumlah</th>
+                                        <th width="20%">No Seri</th>
+                                        <th width="5%">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="!loading">
