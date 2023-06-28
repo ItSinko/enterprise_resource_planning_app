@@ -102,7 +102,7 @@ export default {
             const customer = this.customer_data.find(customer => customer.nama === this.form.customer_nama)
             this.form.customer_id = customer?.id
             this.form.alamat = customer?.alamat
-            this.form.telepon = customer?.telepon
+            this.form.telepon = customer?.telp
         },
     },
     computed: {
