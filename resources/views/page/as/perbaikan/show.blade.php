@@ -151,7 +151,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>No Perbaikan</th>
+                                            <th>No Referensi</th>
                                             <th>Tgl Perbaikan</th>
                                             <th>No Retur</th>
                                             <th>Produk</th>

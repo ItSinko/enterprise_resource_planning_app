@@ -250,7 +250,7 @@
                                         <div class="card-body">
                                             <div class="form-group row" id="no_perbaikan_input">
                                                 <label for="no_perbaikan" class="col-lg-5 col-md-12 col-form-label labelket">No
-                                                    Perbaikan</label>
+                                                    Referensi</label>
                                                 <div class="col-lg-3 col-md-8">
                                                     <input name="no_perbaikan" id="no_perbaikan"
                                                         class="form-control col-form-label no_perbaikan  @error('no_perbaikan') is-invalid @enderror" value="{{$data->no_perbaikan}}">
@@ -644,7 +644,7 @@
                 success: function(data) {
                     if (data > 0) {
                         $('#no_perbaikan').addClass('is-invalid');
-                        $('#msgno_perbaikan').text("No Perbaikan sudah terpakai");
+                        $('#msgno_perbaikan').text("No Referensi sudah terpakai");
                     } else {
                         $('#no_perbaikan').removeClass('is-invalid');
                         $('#msgno_perbaikan').text("");

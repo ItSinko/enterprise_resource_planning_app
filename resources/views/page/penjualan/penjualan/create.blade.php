@@ -125,13 +125,13 @@
         @media screen and (max-width: 1219px) {
 
             /* label,
-                                                                    .row {
-                                                                        font-size: 12px;
-                                                                    }
+                                                                                                                                        .row {
+                                                                                                                                            font-size: 12px;
+                                                                                                                                        }
 
-                                                                    h4 {
-                                                                        font-size: 20px;
-                                                                    } */
+                                                                                                                                        h4 {
+                                                                                                                                            font-size: 20px;
+                                                                                                                                        } */
             body {
                 font-size: 12px;
             }
@@ -148,13 +148,13 @@
         @media screen and (max-width: 991px) {
 
             /* label,
-                                                                    .row {
-                                                                        font-size: 12px;
-                                                                    }
+                                                                                                                                        .row {
+                                                                                                                                            font-size: 12px;
+                                                                                                                                        }
 
-                                                                    h4 {
-                                                                        font-size: 20px;
-                                                                    } */
+                                                                                                                                        h4 {
+                                                                                                                                            font-size: 20px;
+                                                                                                                                        } */
             section {
                 font-size: 12px;
             }
@@ -1722,7 +1722,7 @@
                 }
 
                 if ($('input[type="radio"][name="do"]:checked').val() == "yes") {
-                    if ($('#customer_id').val() != "" && $("#no_po").val() != "" && $("#tanggal_po").val() != "" &&
+                    if ($('#customer_id').val() != 484 && $("#no_po").val() != "" && $("#tanggal_po").val() != "" &&
                         $("#no_do").val() != "" && $("#tanggal_do").val() != "" && penjualan_produk_id == true &&
                         variasi == true && produk_jumlah == true && produk_harga == true && part_id == true &&
                         part_jumlah == true && part_harga == true && jasa_id == true && jasa_harga == true) {
@@ -1731,7 +1731,7 @@
                         $('#btntambah').attr("disabled", true);
                     }
                 } else if ($('input[type="radio"][name="do"]:checked').val() == "no") {
-                    if ($('#customer_id').val() != "" && $("#no_po").val() != "" && $("#tanggal_po").val() != "" &&
+                    if ($('#customer_id').val() != 484 && $("#no_po").val() != "" && $("#tanggal_po").val() != "" &&
                         penjualan_produk_id == true && variasi == true && produk_jumlah == true && produk_harga ==
                         true && part_id == true && part_jumlah == true && part_harga == true && jasa_id == true &&
                         jasa_harga == true) {
@@ -1802,6 +1802,11 @@
                     $("#akn").addClass("hide");
                     $(".os-content-arrange").remove();
                     $("#customer_id").attr('disabled', false);
+
+                    var $newOption = $("<option selected='selected'></option>").val("484").text(
+                        "Pilih Customer")
+                    $(".customer_id").append($newOption).trigger('change');
+
                     //cek
                     $("#belum_dsb").addClass("hide");
                     $("#penj_prd").removeClass("hide");
@@ -1834,6 +1839,11 @@
                     $("#akn").addClass("hide");
                     $(".os-content-arrange").remove();
                     $("#customer_id").attr('disabled', false);
+
+                    var $newOption = $("<option selected='selected'></option>").val("484").text(
+                        "Pilih Customer")
+                    $(".customer_id").append($newOption).trigger('change');
+
                     //cek
                     $("#belum_dsb").addClass("hide");
                     $("#penj_prd").removeClass("hide");
@@ -2300,6 +2310,7 @@
                 }
             }).change(function() {
                 var id = $(this).val();
+                var jenis = $('input[name="jenis_penjualan"]:checked').val();
                 // instansi_array.length = 0
                 $.ajax({
                     url: '/api/customer/select/' + id,
@@ -2309,6 +2320,9 @@
                         if (data[0] != undefined) {
                             $('#alamat').val(data[0].alamat);
                             $('#telepon').val(data[0].telp);
+                            if (jenis == 'spa' || jenis == 'spb') {
+                                checkvalidasinonakn()
+                            }
                         }
                     }
                 });

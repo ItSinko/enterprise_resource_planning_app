@@ -5,7 +5,7 @@
                 <ul class="fa-ul card-text">
                     <li class="py-2">
                         <div class="row text-md">
-                            <div class="col-lg-3 col-md-5 text-muted">No Perbaikan</div>
+                            <div class="col-lg-3 col-md-5 text-muted">No Referensi</div>
                             <div class="col-lg-9 col-md-7" id="no_perbaikan"></div>
                         </div>
                     </li>
