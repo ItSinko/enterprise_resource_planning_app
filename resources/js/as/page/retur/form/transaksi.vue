@@ -24,6 +24,15 @@ export default {
                     <slot name="jenisretur"></slot>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="" class="col-lg-5 col-md-12 col-form-label labelket text-right">Garansi</label>
+                <div class="col-lg-4 col md-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="form.garansi">
+                        <label class="custom-control-label" for="customSwitch1">{{ form.garansi ? 'Ya' : 'Tidak' }}</label>
+                    </div>
+                </div>
+            </div>
             <div class="form-group row" >
                 <label for="keterangan"
                     class="col-lg-5 col-md-12 col-form-label text-right">Keterangan

@@ -18,6 +18,7 @@ export default {
             form: {
                 tgl_retur: '',
                 jenis_retur: '',
+                garansi: false,
                 keterangan: '',
                 pic: '',
                 telepon_pic: '',
