@@ -27,7 +27,7 @@ export default {
             <div class="form-group row">
                 <label for="" class="col-lg-5 col-md-12 col-form-label labelket text-right">Garansi</label>
                 <div class="col-lg-4 col md-12">
-                    <div class="custom-control custom-switch">
+                    <div class="custom-control custom-switch mt-2">
                         <input type="checkbox" class="custom-control-input" id="customSwitch1" v-model="form.garansi">
                         <label class="custom-control-label" for="customSwitch1">{{ form.garansi ? 'Ya' : 'Tidak' }}</label>
                     </div>
