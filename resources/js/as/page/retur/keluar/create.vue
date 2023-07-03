@@ -108,6 +108,15 @@ export default {
                 <div class="form-check form-check-inline col-form-label">
                         <input class="form-check-input" type="radio"
                             name="pilih_jenis_retur"
+                            value="peminjaman"
+                            v-model="form.jenis_retur"
+                            />
+                        <label class="form-check-label"
+                            for="pilih_jenis_retur1">Peminjaman</label>
+                    </div>
+                <div class="form-check form-check-inline col-form-label">
+                        <input class="form-check-input" type="radio"
+                            name="pilih_jenis_retur"
                             value="service"
                             v-model="form.jenis_retur"
                             />
