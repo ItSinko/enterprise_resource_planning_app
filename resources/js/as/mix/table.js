@@ -25,7 +25,7 @@ export default {
         filteredDatatables() {
             const dataIsNotNull = (data) =>
                 data !== null && data !== undefined && data !== "" ? data : "-";
-            return this.dataTable.filter((dataTable) => {
+            return this.dataTable?.filter((dataTable) => {
                 return Object.keys(dataTable).some((key) =>
                     dataIsNotNull(dataTable[key])
                     .toString()
@@ -35,13 +35,13 @@ export default {
             });
         },
         renderPaginate() {
-            return this.filteredDatatables.slice(
+            return this.filteredDatatables?.slice(
                 this.perPage * (this.currentPage - 1),
                 this.perPage * this.currentPage
               );
           },
         pages() {
-            let totalPages = Math.ceil(this.filteredDatatables.length / this.perPage);
+            let totalPages = Math.ceil(this.filteredDatatables?.length / this.perPage);
             let pages = [];
             
             if (totalPages <= 5) {

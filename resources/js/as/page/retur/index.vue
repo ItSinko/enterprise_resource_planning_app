@@ -2,11 +2,13 @@
 import Header from '../../components/header';
 import Masuk from './masuk';
 import Keluar from './keluar';
+import Riwayat from './riwayat';
 export default {
     components: {
         Header,
         Masuk,
-        Keluar
+        Keluar,
+        Riwayat
     },
     data() {
         return {
@@ -41,6 +43,12 @@ export default {
                 @click="$store.dispatch('setMenuMemo', 'keluar')"
                 >Keluar</a>
             </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-riwayat-tab" data-toggle="pill" data-target="#pills-riwayat" type="button" role="tab" aria-controls="pills-riwayat" 
+                aria-selected="false"
+                @click="$store.dispatch('setMenuMemo', 'riwayat')"
+                >Riwayat</a>
+            </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -48,6 +56,9 @@ export default {
             </div>
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                 <Keluar />
+            </div>
+            <div class="tab-pane fade" id="pills-riwayat" role="tabpanel" aria-labelledby="pills-riwayat-tab">
+                <Riwayat />
             </div>
         </div>
     </div>

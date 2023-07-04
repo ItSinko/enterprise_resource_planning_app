@@ -85,6 +85,9 @@ export default {
         removePart(index) {
             this.barangretur.part.splice(index, 1)
         },
+        batal() {
+            this.$router.push('/as/retur')
+        },
     },
     watch: {
         'form.id_transaksi': function() {
@@ -94,7 +97,14 @@ export default {
     computed: {
         isDisabled() {
             return this.form.id_transaksi ? true : false
-        }
+        },
+        checkFormNotNull(){
+            const { tgl_retur, jenis_retur, keterangan, pic, telepon_pic, selectPO, no_transaksi, id_transaksi, customer_id, customer_nama, alamat } = this.form
+            if(tgl_retur && jenis_retur && keterangan && pic && telepon_pic && selectPO && no_transaksi && id_transaksi && customer_id && customer_nama && alamat) {
+                return true
+            }
+            return false
+        },
     },
     mounted() {
         this.getSparepart()
@@ -180,5 +190,9 @@ export default {
                 </div>
             </template>
         </FormBarangRetur>
+        <div class="d-flex bd-highlight mb-3">
+            <div class="mr-auto p-2 bd-highlight"><button class="btn btn-danger" @click="batal">Batal</button></div>
+            <div class="p-2 bd-highlight"><button class="btn btn-info" :disabled="!checkFormNotNull">Tambah</button></div>
+        </div>
     </div>
 </template>

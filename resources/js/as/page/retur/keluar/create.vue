@@ -89,11 +89,23 @@ export default {
             this.loading = true
             this.barangretur.produkPengganti[this.produkSelected.index] = this.produkSelected
             this.loading = false
-        }
+        },
+        batal() {
+            this.$router.push('/as/retur')
+        },
     },
     created() {
         this.getProduk()
     },
+    computed: {
+        checkFormNotNull(){
+            const { tgl_retur, jenis_retur, keterangan, pic, telepon_pic, selectPO, no_transaksi, id_transaksi, customer_id, customer_nama, alamat } = this.form
+            if(tgl_retur && jenis_retur && keterangan && pic && telepon_pic && selectPO && no_transaksi && id_transaksi && customer_id && customer_nama && alamat) {
+                return true
+            }
+            return false
+        },
+    }
 }
 </script>
 <template>
@@ -194,5 +206,9 @@ export default {
                 </div>
             </template>
         </FormBarangRetur>
+        <div class="d-flex bd-highlight mb-3">
+            <div class="mr-auto p-2 bd-highlight"><button class="btn btn-danger" @click="batal" >Batal</button></div>
+            <div class="p-2 bd-highlight"><button class="btn btn-info" :disabled="!checkFormNotNull">Tambah</button></div>
+        </div>
     </div>
 </template>

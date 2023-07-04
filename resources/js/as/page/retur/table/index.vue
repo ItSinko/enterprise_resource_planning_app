@@ -1,12 +1,18 @@
 <script>
 import mixTable from '../../../mix/table'
 import mix from '../../../mix/globalmix'
+import modal from '../modal'
 export default {
     props: ['dataTable'],
+    components: {
+      modal
+    },
     mixins: [mixTable, mix],
     data() {
         return {
             search: '',
+            id: '',
+            modalDialog: false
         }
     },
     methods: {
@@ -27,16 +33,42 @@ export default {
             break;
         }
       },
+      showDetail(id){
+        this.id = id
+        this.modalDialog = true
+        this.$nextTick(() => {
+          $('.modalRetur').modal('show')
+        })
+      },
+      closeModal() {
+        this.id = ''
+        this.modalDialog = false
+      },
+      selesaikan(id) {
+        this.$swal.fire({
+          title: 'Apakah anda yakin?',
+          text: "Anda akan menyelesaikan retur ini!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.$swal.fire('Berhasil!', 'Retur berhasil diselesaikan.', 'success')
+          }
+        })
+      }
     }
 }
 </script>
 <template>
     <div class="p-2">
+      <modal :id="id" v-if="modalDialog" @closeModal="closeModal"></modal>
       <div class="d-flex bd-highlight">
         <div class="p-2 bd-highlight">
           <input type="text" class="form-control" v-model="search" placeholder="Cari">
         </div>
-        <div class="ml-auto p-2 bd-highlight">
+        <div class="ml-auto p-2 bd-highlight"  v-if="$store.state.menuMemo != 'riwayat'">
           <button class="btn btn-info mb-2" @click="tambah">Tambah</button> 
         </div>
       </div>
@@ -49,7 +81,7 @@ export default {
             <th scope="col">Tanggal Retur</th>
             <th scope="col">Jenis Retur</th>
             <th scope="col">Customer</th>
-            <th scope="col">Status</th>
+            <th scope="col" v-if="$store.state.menuMemo != 'riwayat'">Status</th>
             <th scope="col">Aksi</th>
           </tr>
         </thead>
@@ -65,12 +97,19 @@ export default {
               </span>
             </td>
             <td>{{ data.customer }}</td>
-            <td><span class="red-text badge">{{ data.status }}</span></td>
+            <td v-if="$store.state.menuMemo != 'riwayat'"><span class="red-text badge">{{ data.status }}</span></td>
             <td>
-              <button class="btn btn-outline-primary btn-sm">
-                <i class="fas fa-eye"></i>
-                Detail
-              </button>
+              <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></div>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" type="button" id="showmodal" @click="showDetail(data.id)">
+                        <i class="fas fa-eye"></i>
+                        Detail
+                    </button>
+                    <button class="dropdown-item" v-if="$store.state.menuMemo != 'riwayat'" type="button" @click="selesaikan(data.id)">
+                        <i class="fas fa-check"></i>
+                        Selesaikan Retur
+                    </button>
+                </div>
             </td>
           </tr>
         </tbody>
