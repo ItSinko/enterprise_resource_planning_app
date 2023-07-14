@@ -19,7 +19,7 @@ use App\Models\NoseriDetailLogistik;
 use App\Models\NoseriDetailPesanan;
 use Illuminate\Http\Request;
 use PDF;
-use DB;
+
 use App\Models\Pesanan;
 use App\Models\TFProduksi;
 use App\Models\TFProduksiDetail;
@@ -28,6 +28,7 @@ use App\Models\OutgoingPesananPart;
 use App\Models\Pengiriman;
 use Carbon\Carbon as CarbonCarbon;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
@@ -1059,6 +1060,13 @@ class LogistikController extends Controller
                 }
             })
             ->addColumn('button', function ($data) {
+                $input_co = $data->clogprd + $data->clogpart + $data->clogjasa;
+                if($input_co > 0){
+                    $class = '';
+                }else{
+                    $class = 'd-none';
+                }
+
                 $name = explode('/', $data->so);
                 $x = $name[1];
                 $y = "";
@@ -1070,9 +1078,20 @@ class LogistikController extends Controller
                     $y = $data->Spb->id;
                 }
                 $z = 'proses';
-                return '<a href="' . route('logistik.so.detail', [$z, $y, $x]) . '" type="button" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-eye"></i> Detail
-                    </a>';
+                // return '<a href="' . route('logistik.so.detail', [$z, $y, $x]) . '" type="button" class="btn btn-outline-primary btn-sm">
+                //         <i class="fas fa-eye"></i> Detail
+                //     </a>';
+                return '<div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></div>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a href="' . route('logistik.so.detail', [$z, $y, $x]) . '"  >
+                <button class="dropdown-item" type="button">
+                <i class="fas fa-eye"></i> Detail
+                </button>
+            </a>
+                            <button class="dropdown-item batalmodal '.$class .'" type="button" data-id="'.$data->id.'"><i class="fas fa-times "></i>
+                            <b class="text-danger">Batal</b>
+                            </button>
+                </div>';
             })
             ->rawColumns(['status', 'button', 'batas'])
             ->setRowClass(function ($data) {
@@ -2898,14 +2917,6 @@ class LogistikController extends Controller
             return view('page.logistik.so.detail_ekatalog', ['proses' => $proses, 'status' => $status, 'data' => $data, 'detail_id' => $detail_id, 'value' => $value, 'status' => $status]);
         }
     }
-
-    public function cancel_so($id)
-    {
-        $p = Pesanan::where('id', $id)->with(['Ekatalog.Customer.Provinsi', 'Spa.Customer.Provinsi', 'Spb.Customer.Provinsi'])->first();
-
-        return view('page.logistik.so.cancel', ['id' => $id, 'p' => $p]);
-    }
-
     public function create_logistik_view($jenis)
     {
         return view('page.logistik.so.create', ['jenis' => $jenis]);
@@ -4252,5 +4263,100 @@ class LogistikController extends Controller
     function getYear()
     {
         return  Carbon::now()->format('Y');
+    }
+
+
+
+    public function cancel_so(Request $request)
+    {
+        $produk = DB::select('select count(nl.id) as count , group_concat(nl.id) as id from noseri_logistik nl
+        left join noseri_detail_pesanan ndp on ndp.id = nl.noseri_detail_pesanan_id
+        left join t_gbj_noseri tgn on tgn.id = ndp.t_tfbj_noseri_id
+        left join t_gbj_detail tgd on tgd.id = tgn.t_gbj_detail_id
+        left join t_gbj tg on tg.id = tgd.t_gbj_id
+        left join pesanan p on p.id = tg.pesanan_id
+        where p.id = ?', [$request->id]);
+
+        $part = DB::select("select count(dlp.id) as count , group_concat(dlp.id) as id from detail_logistik_part dlp
+        left join detail_pesanan_part dpp on dpp.id = dlp.detail_pesanan_part_id
+        left join m_sparepart ms on ms.id = dpp.m_sparepart_id
+        where ms.kode not like '%Jasa%' and dpp.pesanan_id = ?", [$request->id] );
+
+
+        if( $produk[0]->count > 0){
+            $pid =  explode(',', $produk[0]->id);
+            $coo = DB::select("select count(nc.id) as count  from noseri_coo nc where nc.noseri_logistik_id in  (?)", [$produk[0]->id] );
+
+            if($coo[0]->count > 0){
+                return response()->json([
+                    'data' => 'terpakai',
+                    'message' => 'Ada kesalahan, No seri sudah terpakai',
+                ], 200);
+            }
+            try {
+                $detail_logistik = DB::select('select group_concat(distinct (logistik_id)) as logistik_id ,   group_concat(dl.id) as id  from detail_logistik dl
+                left join detail_pesanan_produk dpp on dl.detail_pesanan_produk_id = dpp.id
+                left join detail_pesanan dp on dpp.detail_pesanan_id = dp.id
+                where dp.pesanan_id = ? ', [$request->id]);
+
+
+
+                NoseriDetailLogistik::whereIn('id', $pid)->delete();
+
+                DetailLogistik::whereIn('id',explode(',', $detail_logistik[0]->id))->delete();
+
+                // if( $part[0]->count == 0 || $jasa[0]->count == 0){
+                // Logistik::whereIn('id',explode(',', $detail_logistik[0]->logistik_id))->delete();
+                // }
+
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'message' => 'Ada kesalahan, batal transaksi gagal',
+                ], 500);
+            }
+        }
+
+        if( $part[0]->count > 0){
+            $ptid =  explode(',', $part[0]->id);
+
+            try {
+
+                $detail_logistik_part = DB::select("select group_concat(distinct (logistik_id)) as logistik_id ,  group_concat(dlp.id) as id from detail_logistik_part dlp
+                left join detail_pesanan_part dpp on dlp.detail_pesanan_part_id  = dpp.id
+                left join m_sparepart ms on ms.id = dpp.m_sparepart_id
+                left join pesanan p on p.id = dpp.pesanan_id
+                where p.id = ? ", [$request->id]);
+
+                DetailLogistikPart::whereIn('id',explode(',', $detail_logistik_part[0]->id))->delete();
+
+
+            } catch (\Throwable $th) {
+                return response()->json(' Ada kesalahan, batal transaksi gagal', 500);
+            }
+        }
+
+
+        $log = DB::select("select group_concat(distinct (logistik_id)) as produk , (
+            select group_concat(distinct (logistik_id)) as logistik_id  from detail_logistik_part dlp
+            left join detail_pesanan_part dpp on dlp.detail_pesanan_part_id  = dpp.id
+            left join m_sparepart ms on ms.id = dpp.m_sparepart_id
+            left join pesanan p on p.id = dpp.pesanan_id
+            where p.id = ?
+            ) as part_jasa from detail_logistik dl
+                            left join detail_pesanan_produk dpp on dl.detail_pesanan_produk_id = dpp.id
+                            left join detail_pesanan dp on dpp.detail_pesanan_id = dp.id
+                            where dp.pesanan_id = ?",[$request->id,$request->id]);
+
+        Logistik::whereIn('id',explode(',', $log[0]->produk))->delete();
+        Logistik::whereIn('id',explode(',', $log[0]->part_jasa))->delete();
+
+
+
+    }
+
+    public function cancel_so_view($id)
+    {
+        $data = Pesanan::find($id);
+        return view('page.logistik.so.cancel',['data' => $data,'id' => $id]);
     }
 }

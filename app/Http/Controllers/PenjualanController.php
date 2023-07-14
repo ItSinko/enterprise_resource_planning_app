@@ -3916,7 +3916,7 @@ class PenjualanController extends Controller
 
         $poid = $ekatalog->pesanan_id;
         $ekatalog->customer_id = $c_id;
-        $ekatalog->provinsi_id = $request->provinsi;
+        $ekatalog->provinsi_id = $request->provinsi == 'NULL' ? NULL : $request->provinsi;
         $ekatalog->deskripsi = $request->deskripsi;
         $ekatalog->instansi = $request->instansi;
         $ekatalog->alamat = $request->alamatinstansi;

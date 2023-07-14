@@ -203,18 +203,17 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="batalmodal" tabindex="-1" role="dialog" aria-labelledby="batalmodal"
-                aria-hidden="true">
+            <div class="modal fade" id="batalmodal" data-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="batalmodal"
+            aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
                     <div class="modal-content" style="margin: 10px">
-                        <div class="modal-header bg-navy">
-                            <h4 id="modal-title">Pesanan Batal</h4>
+                        <div class="modal-header">
+                            <h4 id="modal-title">Konfirmasi Batal</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body" id="batal">
-
                         </div>
                     </div>
                 </div>
@@ -256,7 +255,87 @@
 @stop
 @section('adminlte_js')
     <script>
+        $(document).on('submit', '#batal_so_log', function(e) {
+                e.preventDefault();
+                var action = $(this).attr('action');
+                console.log(action);
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    data: $('#batal_so_log').serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        // console.log(response)
+                            if (response['data'] == "terpakai") {
+                            swal.fire(
+                                'Gagal',
+                                response['message'],
+                                'error'
+                            );
+                        }
+                        //     if (response['data'] == "berhasil") {
+                        //     swal.fire(
+                        //         'Berhasil',
+                        //         response['message'],
+                        //         'success'
+                        //     ).then(function() {
+                        //         $('.modal').modal('hide')
+                        //         $('#showtable').DataTable().ajax.url('/api/dc/so/data/semua').load();
+                        //         selesaitable()
+
+                        //  });
+                        // }
+                    },
+                    error: function(xhr, status, error) {
+                        swal.fire(
+                            'Error',
+                            'Ada kesalahan, batal transaksi gagal',
+                            'warning'
+                        );
+
+                    }
+                });
+                return false;
+            });
+
         $(function() {
+
+            $("#showtable").on('click', '.batalmodal', function(event) {
+                event.preventDefault();
+                var id = $(this).data('id');
+                console.log(id)
+                swal.fire({
+                    title: 'Batalkan Transaksi',
+                    text: "Data transaksi ini akan terhapus semua",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    cancelButtonText: 'Tidak',
+                    confirmButtonText: 'Iya',
+                    }).then(function(isConfirm) {
+                        if (isConfirm.value === true) {
+                            $.ajax({
+                                url: '/logistik/so/cancel/' + id,
+                                success: function(result) {
+                                    $('#batalmodal').modal("show");
+                                    $('#batal').html(result).show();
+                                },
+                                error: function(jqXHR, testStatus, error) {
+                                    alert("Page cannot open. Error:" + error);
+                                    $('#loader').hide();
+                                },
+                                timeout: 8000
+                              })
+                        }
+                    })
+            });
+
+
+
+
+
+
             var showtable = $('#showtable').DataTable({
                 destroy: true,
                 processing: true,
@@ -317,31 +396,7 @@
                 $('#batalmodal').find('#modal-overlay').addClass('hide');
             });
 
-            $("#showtable").on('click', '.batalmodal', function(event) {
-                event.preventDefault();
-                var id = $(this).data('id');
-                var jenis = $(this).data('jenis');
-                $.ajax({
-                    url: '/logistik/so/cancel/' + id,
-                    beforeSend: function() {
-                        $('#loader').show();
-                    },
-                    success: function(result) {
-                        $('#batalmodal').modal("show");
-                        $('#batal').html(result).show();
-                        produktable(id, jenis);
-                    },
-                    complete: function() {
-                        $('#loader').hide();
-                    },
-                    error: function(jqXHR, testStatus, error) {
-                        console.log(error);
-                        alert("Page cannot open. Error:" + error);
-                        $('#loader').hide();
-                    },
-                    timeout: 8000
-                })
-            });
+
 
             function produktable(id, jenis) {
                 $('#produktable').DataTable({

@@ -226,9 +226,7 @@
 @stop
 @section('adminlte_js')
     <script>
-
-
-$(document).on('submit', '#batal_so_dc', function(e) {
+    $(document).on('submit', '#batal_so_dc', function(e) {
                 e.preventDefault();
                 var action = $(this).attr('action');
                 console.log(action);
@@ -437,5 +435,6 @@ $(document).on('submit', '#batal_so_dc', function(e) {
                 return false;
             });
 
-    </script>
-@stop
+
+        </script>
+        @stop
