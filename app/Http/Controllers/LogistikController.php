@@ -4269,6 +4269,7 @@ class LogistikController extends Controller
 
     public function cancel_so(Request $request)
     {
+
         $produk = DB::select('select count(nl.id) as count , group_concat(nl.id) as id from noseri_logistik nl
         left join noseri_detail_pesanan ndp on ndp.id = nl.noseri_detail_pesanan_id
         left join t_gbj_noseri tgn on tgn.id = ndp.t_tfbj_noseri_id
@@ -4282,6 +4283,17 @@ class LogistikController extends Controller
         left join m_sparepart ms on ms.id = dpp.m_sparepart_id
         where ms.kode not like '%Jasa%' and dpp.pesanan_id = ?", [$request->id] );
 
+
+        $log = DB::select("select group_concat(distinct (logistik_id)) as produk , (
+            select group_concat(distinct (logistik_id)) as logistik_id  from detail_logistik_part dlp
+            left join detail_pesanan_part dpp on dlp.detail_pesanan_part_id  = dpp.id
+            left join m_sparepart ms on ms.id = dpp.m_sparepart_id
+            left join pesanan p on p.id = dpp.pesanan_id
+            where p.id = ?
+            ) as part_jasa from detail_logistik dl
+                            left join detail_pesanan_produk dpp on dl.detail_pesanan_produk_id = dpp.id
+                            left join detail_pesanan dp on dpp.detail_pesanan_id = dp.id
+                            where dp.pesanan_id = ?",[$request->id,$request->id]);
 
         if( $produk[0]->count > 0){
             $pid =  explode(',', $produk[0]->id);
@@ -4305,9 +4317,9 @@ class LogistikController extends Controller
 
                 DetailLogistik::whereIn('id',explode(',', $detail_logistik[0]->id))->delete();
 
-                // if( $part[0]->count == 0 || $jasa[0]->count == 0){
-                // Logistik::whereIn('id',explode(',', $detail_logistik[0]->logistik_id))->delete();
-                // }
+                if($log[0]->part_jasa == NULL){
+                    Logistik::whereIn('id',explode(',', $log[0]->produk))->delete();
+                }
 
             } catch (\Throwable $th) {
                 return response()->json([
@@ -4328,30 +4340,12 @@ class LogistikController extends Controller
                 where p.id = ? ", [$request->id]);
 
                 DetailLogistikPart::whereIn('id',explode(',', $detail_logistik_part[0]->id))->delete();
-
+                Logistik::whereIn('id',explode(',', $log[0]->part_jasa))->delete();
 
             } catch (\Throwable $th) {
                 return response()->json(' Ada kesalahan, batal transaksi gagal', 500);
             }
         }
-
-
-        $log = DB::select("select group_concat(distinct (logistik_id)) as produk , (
-            select group_concat(distinct (logistik_id)) as logistik_id  from detail_logistik_part dlp
-            left join detail_pesanan_part dpp on dlp.detail_pesanan_part_id  = dpp.id
-            left join m_sparepart ms on ms.id = dpp.m_sparepart_id
-            left join pesanan p on p.id = dpp.pesanan_id
-            where p.id = ?
-            ) as part_jasa from detail_logistik dl
-                            left join detail_pesanan_produk dpp on dl.detail_pesanan_produk_id = dpp.id
-                            left join detail_pesanan dp on dpp.detail_pesanan_id = dp.id
-                            where dp.pesanan_id = ?",[$request->id,$request->id]);
-
-        Logistik::whereIn('id',explode(',', $log[0]->produk))->delete();
-        Logistik::whereIn('id',explode(',', $log[0]->part_jasa))->delete();
-
-
-
     }
 
     public function cancel_so_view($id)

@@ -2484,7 +2484,6 @@ class DcController extends Controller
                 'coo_no' =>   $coo_no[$key_c],
                 'tahun' =>   $tahun[$key_c],
                 'noseri' =>   $seri[$key_c]
-
             );
         }
 
