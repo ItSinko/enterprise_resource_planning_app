@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <html>
     <head>
         <style>
@@ -9,7 +10,7 @@
             }
 
 
-            main {
+            /* main {
                 position: relative;
                 top: 190px;
                 width: 100%;
@@ -17,30 +18,29 @@
             }
 
             header {
-                position: fixed;
+                position: relative;
                 top: -60px;
                 left: 0px;
                 right: 0px;
                 height: 250px;
                 margin-bottom: 100px;
-                /** Extra personal styles **/
              background-color: #ffffff;
                 color: rgb(0, 0, 0);
                 line-height: 20px;
-            }
+            } */
 
             footer {
 
-                position: fixed;
+                /* position: relative;
                 bottom: -10px;
                 left: 0px;
                 right: 0px;
                 height: 50px;
                 top: 710px;
-                /** Extra personal styles **/
                 background-color: #ffffff;
                 color: rgb(0, 0, 0);
-                line-height: 20px;
+                line-height: 20px; */
+                margin-top: 10px;
             }
 
 
@@ -147,6 +147,7 @@
                                             <span>BAYAR SINKO </span>
                                       @default
                                       <span>NON BAYAR<span>
+                                        @break
                                   @endswitch
                               </td>
 
@@ -155,68 +156,8 @@
                       </tr>
                       </table>
         </header>
-
-        <footer>
-            <table id="tabel" class="table table-hover styled-table table-striped" border="0" style="table-layout: fixed; width: 100%; border-collapse: collapse; ">
-                <tr>
-                  <td class="align-left vera" width="12%">
-                    Keterangan
-                  </td>
-                  <td class="align-left"  style=" border: 1px solid;">
-                    {{$data->paket}}<br> {{$data->ket}}
-                </td>
-                </tr>
-            </table>
-            <br>
-            <table id="tabel" class="table table-hover styled-table table-striped" border="0" style="table-layout: fixed; width: 100%; border-collapse: collapse; ">
-                <tr>
-                  <td class="align-center">
-                    Diterima Oleh,
-                  </td>
-                  <td class="align-center">
-                    Dibawa Oleh,
-                  </td>
-                  <td class="align-center">
-                  Dibuat Oleh,
-                  </td>
-                </tr>
-                <td class="align-right" colspan="2" >
-                   <br>
-                   <br>
-                   <br>
-
-                <tr>
-                  <td class="align-center">
-                    <hr style="width:30%">
-
-                  </td>
-                  <td class="align-center">
-                    <hr style="width:40%">
-                    {{-- KURIR --}}
-                  </td>
-                  <td class="align-center">
-                    <hr style="width:30%">
-                    {{-- LOGISTIK --}}
-                  </td>
-                </tr>
-                <td class="align-right" colspan="3" >
-                    <br>
-
-
-                 <tr>
-                <tr>
-                  <td class="align-right" colspan="3">
-                <i>No Dokumen : SPA-FR/GUD-04, Tanggal Terbit : 20 Maret 2020, Revisi : 02</i>
-                  </td>
-
-                </tr>
-            </table>
-        </footer>
-
         <!-- Wrap the content of your PDF inside a main tag -->
         <main>
-            {{-- Hal -1 --}}
-            {{-- @for ($i = 1; $i <= $hal; $i++) --}}
                 <table id="tabel" class="table table-hover styled-table table-striped items" border="1" style="table-layout: fixed; width: 100%; border-collapse: collapse; ">
                     <thead>
                        <tr>
@@ -262,7 +203,7 @@
                                 {{ $item->satuan}}
                               </td>
                           </tr>
-                          @if(isset($item->noseri)){
+                          @if(isset($item->noseri))
                           <tr>
                             <td class="vera" colspan="5">
                                 <b>No Seri</b> : <br>
@@ -270,7 +211,6 @@
 
                              </td>
                           </tr>
-                          }
                           @endif
 
 
@@ -301,5 +241,71 @@
 
                 {{-- <div style="page-break-after: never;"> </div> --}}
         </main>
+        
+        <footer>
+          <table id="tabel" class="table table-hover styled-table table-striped" border="0" style="table-layout: fixed; width: 100%; border-collapse: collapse; ">
+              <tr>
+                <td class="align-left vera" width="12%">
+                  Keterangan
+                </td>
+                <td class="align-left"  style=" border: 1px solid;">
+                  {{$data->paket}}<br> {{$data->ket}}
+              </td>
+              </tr>
+          </table>
+          <br>
+          <table id="tabel" class="table table-hover styled-table table-striped" border="0" style="table-layout: fixed; width: 100%; border-collapse: collapse; ">
+              <tr>
+                <td class="align-center">
+                  Diterima Oleh,
+                </td>
+                <td class="align-center">
+                  Dibawa Oleh,
+                </td>
+                <td class="align-center">
+                Dibuat Oleh,
+                </td>
+              </tr>
+              <td class="align-right" colspan="2" >
+                 <br>
+                 <br>
+                 <br>
+
+              <tr>
+                <td class="align-center">
+                  <hr style="width:30%">
+
+                </td>
+                <td class="align-center">
+                  <hr style="width:40%">
+                  {{-- KURIR --}}
+                </td>
+                <td class="align-center">
+                  <hr style="width:30%">
+                  {{-- LOGISTIK --}}
+                </td>
+              </tr>
+              <td class="align-right" colspan="3" >
+                  <br>
+
+
+               <tr>
+              <tr>
+                <td class="align-right" colspan="3">
+              <i>No Dokumen : SPA-FR/GUD-04, Tanggal Terbit : 20 Maret 2020, Revisi : 02</i>
+                </td>
+
+              </tr>
+          </table>
+      </footer>
     </body>
 </html>
+<script>
+  $(document).ready(function() {
+    window.print();
+  });
+  // click cancel close window
+  window.onafterprint = function(){
+    window.close();
+  }
+</script>
