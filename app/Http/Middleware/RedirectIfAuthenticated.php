@@ -56,6 +56,8 @@ class RedirectIfAuthenticated
                     return redirect('/lab/dashboard');
                 } else if ($request->user()->hasRole("14")) {
                     return redirect('/administrator/dashboard');
+                } else if ($request->user()->hasRole("30")) {
+                    return redirect('/hr/dashboard');
                 }
             }
         }

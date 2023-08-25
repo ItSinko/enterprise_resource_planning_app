@@ -499,5 +499,7 @@ Route::group(['prefix' => '/gk', 'middleware' => ['auth', 'divisi:gk,dirut']], f
 
 Route::view('/uit', 'page.login_page.index');
 
+Route::view('/hr/{any?}', 'page.hr.index')->where('any', '.*');
+
 Route::namespace('v2')->group(__DIR__ . '/kesehatan/kesehatan.php');
 Route::namespace('lab')->group(__DIR__ . '/inventory/web.php');

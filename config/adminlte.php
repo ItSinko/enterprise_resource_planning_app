@@ -1732,18 +1732,26 @@ return [
             'header' => 'Setting',
             'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
+        // hr
+        [
+            'text' => 'Meeting',
+            'url' => '/hr/meeting',
+            'icon' => 'fas fa-users',
+            'auth' => [30],
+        ],
         [
             'text' => 'Ubah Password',
             'icon' => 'fa-solid fa-gear',
             'url' => '/edit_pwd',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 30]
         ],
         [
             'text' => 'Monitoring Lap. Teknis',
             'icon' => 'fa-solid fa-chart-line',
             'url' => 'https://docs.google.com/spreadsheets/d/1OxZY8JTqDBrIm89A9cTcTnRndRBOUCtnblY0f0F76p4/edit?usp=sharing',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 30]
         ],
+
     ],
 
     /*
