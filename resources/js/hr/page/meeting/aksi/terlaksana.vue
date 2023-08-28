@@ -1,19 +1,31 @@
 <script>
 import dokumentasi from './dokumentasi.vue'
+import axios from 'axios'
+import VueSelect from 'vue-select'
 export default {
     components: {
+        VueSelect,
         dokumentasi,
     },
     props: ['meeting'],
     data() {
         return {
-            notulensi: '',
-            dokumentasi: {
-                foto: [],
-                video: [],
-                rekaman: [],
-                lainnya: [],
+            form: {
+                dokumentasi: {
+                    foto: [],
+                    video: [],
+                    rekaman: [],
+                    lainnya: [],
+                },
+                notulensi: [
+                    {
+                        pic: '',
+                        isi: '',
+                    }
+                ],
+                hasil: '',
             },
+            karyawan: [],
         }
     },
     methods: {
@@ -22,7 +34,24 @@ export default {
                 $('.modalterlaksana').modal('hide')
             })
             this.$emit('closeModal')
-        }
+        },
+        async getDataKaryawan() {
+            try {
+                const response = await axios.get('/api/karyawan_all')
+                this.karyawan = response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        tambahpic(){
+            this.form.notulensi.push({
+                pic: '',
+                isi: '',
+            })
+        },
+    },
+    mounted() {
+        this.getDataKaryawan()
     },
 }
 </script>
@@ -40,23 +69,42 @@ export default {
                     <div class="form-group row">
                         <label for="tanggal" class="col-sm-2 col-form-label">Tanggal</label>
                         <div class="col-sm-10">
-                            <input type="date" class="form-control" v-model="meeting.tanggal">
+                            <input type="date" class="form-control" v-model="form.tanggal">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="meeting.mulai">
+                            <input type="time" class="form-control" v-model="form.mulai">
                         </div>
                         -
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="meeting.selesai">
+                            <input type="time" class="form-control" v-model="form.selesai">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="" class="col-sm-2 col-form-label">Hasil Notulen</label>
+                        <label for="" class="col-sm-2 col-form-label">Hasil Notulensi</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" rows="10" v-model="notulensi"></textarea>
+                            <div class="d-flex flex-row-reverse bd-highlight">
+                                <div class="p-2 bd-highlight"><button class="btn btn-primary" @click="tambahpic">Tambah</button></div>
+                            </div>
+                            <div v-for="(notulen, idx) in form.notulensi" class="row mb-1">
+                                <div class="col-sm-4">
+                                    <vue-select v-model="notulen.pic" :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" placeholder="penanggung jawab" />
+                                </div>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" v-model="notulen.isi" placeholder="Isi Notulensi"></textarea>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-danger" @click="form.notulensi.splice(idx, 1)">x</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label">Hasil Rapat</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" v-model="form.hasil"></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -78,16 +126,16 @@ export default {
                             </ul>
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="pills-foto" role="tabpanel" aria-labelledby="pills-foto-tab">
-                                    <dokumentasi :file="dokumentasi.foto" format="jpg, jpeg, png" />
+                                    <dokumentasi :file="form.dokumentasi.foto" format="jpg, jpeg, png" />
                                 </div>
                                 <div class="tab-pane fade" id="pills-video" role="tabpanel" aria-labelledby="pills-video-tab">
-                                    <dokumentasi :file="dokumentasi.video" format="mp4, mkv" />
+                                    <dokumentasi :file="form.dokumentasi.video" format="mp4, mkv" />
                                 </div>
                                 <div class="tab-pane fade" id="pills-rekaman" role="tabpanel" aria-labelledby="pills-rekaman-tab">
-                                    <dokumentasi :file="dokumentasi.rekaman" format="mp3, wav" /> 
+                                    <dokumentasi :file="form.dokumentasi.rekaman" format="mp3, wav" /> 
                                 </div>
                                 <div class="tab-pane fade" id="pills-lainnya" role="tabpanel" aria-labelledby="pills-lainnya-tab">
-                                    <dokumentasi :file="dokumentasi.lainnya" />
+                                    <dokumentasi :file="form.dokumentasi.lainnya" />
                                 </div>
                             </div>
                         </div>

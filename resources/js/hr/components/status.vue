@@ -6,10 +6,21 @@ export default {
             status = status.toLowerCase()
             if(status == 'selesai'){
                 return 'badge-success'
-            }else if(status == 'belum_selesai'){
+            }else if(status == 'belum_terlaksana'){
                 return 'badge-danger'
             }else{
                 return 'badge-warning'
+            }
+        },
+        statusText(status){
+            status = status.toLowerCase()
+            // change underscore to space
+            if(status == 'selesai'){
+                return 'Selesai'
+            }else if(status == 'belum_terlaksana'){
+                return 'Belum Terlaksana'
+            }else{
+                return 'Menyusun Hasil Meeting'
             }
         }
     },
@@ -17,6 +28,6 @@ export default {
 </script>
 <template>
     <div>
-        <span :class="'badge ' + statusColor(status)">{{ status }}</span>
+        <span :class="'badge ' + statusColor(status)">{{ statusText(status) }}</span>
     </div>
 </template>
