@@ -2,11 +2,13 @@
 import Header from '../../components/header.vue'
 import Table from './table.vue'
 import pagination from '../../components/pagination.vue';
+import Tambah from './tambah'
 export default {
     components: {
         Header,
         Table,
-        pagination
+        pagination,
+        Tambah
     },
     data() {
         return {
@@ -43,11 +45,22 @@ export default {
                     lokasi: 'Gedung A',
                 }
             ],
+            // modal tambah
+            modalTambah: false,
         }
     },
     methods: {
         updatePage(page){
             this.renderPaginate = page
+        },
+        tambahMeeting(){
+            this.modalTambah = true
+            this.$nextTick(() => {
+                $('.modalMeetingBaru').modal('show');
+            })
+        },
+        closeTambah(){
+            this.modalTambah = false
         }
     },
     computed: {
@@ -64,10 +77,15 @@ export default {
 <template>
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
+        <Tambah v-if="modalTambah" @closeModal="closeTambah" />
         <div class="card">
             <div class="card-body">
                 <div class="d-flex bd-highlight mb-3">
                     <div class="mr-auto p-2 bd-highlight">
+                        <button class="btn btn-primary" @click="tambahMeeting">
+                            <i class="fa fa-plus"></i>
+                            Tambah
+                        </button>
                     </div>
                     <div class="p-2 bd-highlight">
                         <div class="input-group">

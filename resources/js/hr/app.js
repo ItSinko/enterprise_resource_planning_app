@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 import VueSweetalert2 from "vue-sweetalert2"
 import Vuex from 'vuex';
 import storeData from './store'
+import "vue-select/dist/vue-select.css";
 
 window.Vue = require('vue').default;
 Vue.use(VueRouter);

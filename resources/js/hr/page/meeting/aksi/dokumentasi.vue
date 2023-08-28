@@ -7,22 +7,25 @@
           file: null,
         });
       },
-      removeFile(idx) {
-        this.file.splice(idx, 1);
+      removeFile(item) {
+        const index = this.file.indexOf(item);
+        if (index > -1) {
+          this.file.splice(index, 1);
+        }
       },
       handleFileChange(idx) {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
-          const allowedFormats = this.format.split(',').map(format => format.trim());
+          const allowedFormats = this.format ? this.format.split(',').map(format => format.trim()) : ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'mp4', 'mkv', 'avi', 'mp3', 'wav', 'zip', 'rar'];
           const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
 
-          console.log(allowedFormats);
-            console.log(fileExtension);
-
-            if (allowedFormats.includes(fileExtension)) {
+            if (allowedFormats.find(format => format === fileExtension)) {
                 this.file[idx].file = selectedFile;
+                this.file[idx].name = selectedFile.name;
             } else {
                 alert('Format file tidak sesuai');
+                this.file[idx] = null;
+                this.$refs.file[idx].value = '';
             }
         }
       },
@@ -38,10 +41,10 @@
       </div>
       <div class="row my-1" v-for="(data, idx) in file" :key="idx">
         <div class="col-10">
-          <input type="file" class="form-control" :accept="format" @change="handleFileChange(idx)">
+          <input type="file" class="form-control" :accept="format" @change="handleFileChange(idx)" ref="file" />
         </div>
         <div class="col-2">
-          <button class="btn btn-outline-danger" @click="removeFile(idx)">x</button>
+          <button class="btn btn-outline-danger" @click="removeFile(data)">x</button>
         </div>
       </div>
     </div>
