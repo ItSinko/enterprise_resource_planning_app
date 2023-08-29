@@ -10,6 +10,7 @@ export default {
     props: ['meeting'],
     data() {
         return {
+            cloneMeeting: JSON.parse(JSON.stringify(this.meeting)),
             form: {
                 dokumentasi: {
                     foto: [],
@@ -62,6 +63,14 @@ export default {
     mounted() {
         this.getDataKaryawan()
     },
+    computed: {
+        showKeteranganKetidaksesuaian(){
+            if(this.meeting.tanggal != this.cloneMeeting.tanggal || this.meeting.lokasi != this.cloneMeeting.lokasi || this.meeting.mulai != this.cloneMeeting.mulai || this.meeting.selesai != this.cloneMeeting.selesai){
+                return true
+            }
+            return false
+        },
+    }
 }
 </script>
 <template>
@@ -76,20 +85,28 @@ export default {
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="tanggal" class="col-sm-2 col-form-label">Tanggal</label>
-                        <div class="col-sm-10">
-                            <input type="date" class="form-control" v-model="form.tanggal">
+                        <div class="col-sm-6">
+                            <label for="tanggal" class="col-form-label">Tanggal</label>
+                            <input type="date" class="form-control" v-model="meeting.tanggal">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="tanggal" class="col-form-label">Lokasi</label>
+                            <input type="text" class="form-control" v-model="meeting.lokasi">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="form.mulai">
+                            <input type="time" class="form-control" v-model="meeting.mulai">
                         </div>
                         -
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="form.selesai">
+                            <input type="time" class="form-control" v-model="meeting.selesai">
                         </div>
+                    </div>
+                    <div class="form-group" v-if="showKeteranganKetidaksesuaian">
+                        <label for="">Keterangan Ketidaksesuaian</label>
+                        <textarea class="form-control" v-model="form.keteranganketidaksesuaian"></textarea>
                     </div>
                     <div class="form-group row">
                         <label for="" class="col-sm-2 col-form-label">Hasil Notulensi</label>

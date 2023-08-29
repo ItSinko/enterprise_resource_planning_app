@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         showTerlaksana(data){
-            this.dataTerlaksana = data
+            this.dataTerlaksana = JSON.parse(JSON.stringify(data))
             this.modalTerlaksana = true
             this.$nextTick(() => {
                 $('.modalterlaksana').modal('show')

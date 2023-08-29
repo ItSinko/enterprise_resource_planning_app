@@ -1,6 +1,6 @@
 <script>
 import moment from "moment";
-import pagination from '../../../components/pagination.vue';
+import pagination from "../../../components/pagination.vue";
 export default {
     components: {
         pagination,
@@ -13,11 +13,23 @@ export default {
                     peserta: [
                         {
                             nama: "Peserta 1",
-                            catatan: "Catatan Peserta 1",
+                            alasan: "Catatan Peserta 1",
+                            kehadiran: "Hadir",
                         },
                         {
                             nama: "Peserta 2",
-                            catatan: "Catatan Peserta 2",
+                            kehadiran: "Tidak Hadir",
+                            alasan: "Catatan Peserta 2",
+                            dokumen_pendukung: [
+                                {
+                                    nama: "Dokumen 1",
+                                    link: "#",
+                                },
+                                {
+                                    nama: "Dokumen 2",
+                                    link: "#",
+                                },
+                            ],
                         },
                     ],
                 },
@@ -26,11 +38,23 @@ export default {
                     peserta: [
                         {
                             nama: "Peserta 3",
-                            catatan: "Catatan Peserta 3",
+                            kehadiran: "Hadir",
+                            alasan: "Catatan Peserta 3",
                         },
                         {
                             nama: "Peserta 4",
-                            catatan: "Catatan Peserta 4",
+                            kehadiran: "Tidak Hadir",
+                            alasan: "Catatan Peserta 4",
+                            dokumen_pendukung: [
+                                {
+                                    nama: "Dokumen 3",
+                                    link: "#",
+                                },
+                                {
+                                    nama: "Dokumen 4",
+                                    link: "#",
+                                },
+                            ],
                         },
                     ],
                 },
@@ -39,11 +63,23 @@ export default {
                     peserta: [
                         {
                             nama: "Peserta 5",
-                            catatan: "Catatan Peserta 5",
+                            kehadiran: "Hadir",
+                            alasan: "Catatan Peserta 5",
                         },
                         {
                             nama: "Peserta 6",
-                            catatan: "Catatan Peserta 6",
+                            kehadiran: "Tidak Hadir",
+                            alasan: "Catatan Peserta 6",
+                            dokumen_pendukung: [
+                                {
+                                    nama: "Dokumen 5",
+                                    link: "#",
+                                },
+                                {
+                                    nama: "Dokumen 6",
+                                    link: "#",
+                                },
+                            ],
                         },
                     ],
                 },
@@ -51,13 +87,16 @@ export default {
             itemfeedback: [],
             search: "",
             renderPaginate: [],
+            selectedData: 0,
+            alasan_perubahan: "Perubahan",
         };
     },
     methods: {
         formatDate(date) {
             return moment(date).lang("id").format("dddd, DD MMMM YYYY");
         },
-        selectItem(item) {
+        selectItem(item, idx) {
+            this.selectedData = idx;
             this.itemfeedback = JSON.parse(JSON.stringify(item.peserta));
         },
         getFeedbackIndex0() {
@@ -71,14 +110,16 @@ export default {
         this.itemfeedback = this.getFeedbackIndex0();
     },
     computed: {
-        paginateData(){
+        paginateData() {
             return this.itemfeedback.filter((data) => {
                 return Object.keys(data).some((key) => {
-                    return String(data[key]).toLowerCase().includes(this.search.toLowerCase())
-                })
-            })
+                    return String(data[key])
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase());
+                });
+            });
         },
-    }
+    },
 };
 </script>
 <template>
@@ -101,34 +142,57 @@ export default {
                         type="button"
                         role="tab"
                         :aria-controls="'pills-' + item.tanggal"
-                        @click="selectItem(item)"
-
+                        @click="selectItem(item, idx)"
                     >
-                        {{ formatDate(item.tanggal) }}
+                        Rencana Meeting {{ idx + 1 }}
                     </a>
                 </li>
             </ul>
             <div class="d-flex bd-highlight mb-3">
                 <div class="mr-auto p-2 bd-highlight">
-                    
+                    <div v-if="selectedData != 0">
+                        <small class="text-muted">Alasan Perubahan</small>
+                        <div class="margin">
+                            <b id="distributor">
+                                {{ alasan_perubahan }}
+                            </b>
+                        </div>
+                    </div>
                 </div>
                 <div class="p-2 bd-highlight">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cari..." v-model="search">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Cari..."
+                            v-model="search"
+                        />
                     </div>
                 </div>
             </div>
             <table class="table">
                 <thead>
                     <tr>
-                    <th>Nama Peserta</th>
-                    <th>Catatan</th>
-                </tr>
+                        <th>Nama Peserta</th>
+                        <th>Kehadiran</th>
+                        <th>Alasan</th>
+                        <th>Dokumen Pendukung Ketidakhadiran</th>
+                    </tr>
                 </thead>
                 <tbody v-if="renderPaginate.length > 0">
                     <tr v-for="(peserta, idx) in renderPaginate" :key="idx">
                         <td>{{ peserta.nama }}</td>
-                        <td>{{ peserta.catatan }}</td>
+                        <td>{{ peserta.kehadiran }}</td>
+                        <td>{{ peserta.alasan }}</td>
+                        <td>
+                            <div v-if="peserta.dokumen_pendukung">
+                                <a 
+                                    v-for="(dokumen, idx) in peserta.dokumen_pendukung"
+                                    :key="idx"
+                                    :href="dokumen.link">{{ dokumen.nama }}<span v-if="idx != peserta.dokumen_pendukung.length - 1">, </span>
+                                </a>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
                 <tbody v-else>
