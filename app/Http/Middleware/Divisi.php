@@ -60,7 +60,7 @@ class Divisi
         } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
             return redirect('/mtc/air/masuk');
         } else if ($request->user()->hasRole("30")) {
-            return redirect('/hr/dashboard');
+            return redirect('/hr/meeting');
         }
     }
 }

@@ -4,7 +4,7 @@ export default {
     methods: {
         statusColor(status){
             status = status.toLowerCase()
-            if(status == 'selesai'){
+            if(status == 'terlaksana'){
                 return 'badge-success'
             }else if(status == 'belum_terlaksana'){
                 return 'badge-danger'
@@ -15,8 +15,8 @@ export default {
         statusText(status){
             status = status.toLowerCase()
             // change underscore to space
-            if(status == 'selesai'){
-                return 'Selesai'
+            if(status == 'terlaksana'){
+                return 'Terlaksana'
             }else if(status == 'belum_terlaksana'){
                 return 'Belum Terlaksana'
             }else{

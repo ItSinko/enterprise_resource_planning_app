@@ -72,6 +72,9 @@ export default {
             this.catatanData = null
             this.modalCatatan = false
         },
+        detail(id){
+            this.$router.push({ name: 'detail-meeting', params: { id: id } })
+        }
     },
 }
 </script>
@@ -105,10 +108,9 @@ export default {
                     <td>{{ data.selesai }}</td>
                     <td>{{ data.lokasi }}</td>
                     <td><status :status="data.status" /></td>
-
                     <td>
                         <div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="true"><i class="fas fa-ellipsis-v"></i></div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-if="data.status == 'menyusun'">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-if="data.status == 'belum_terlaksana'">
                             <a>
                                 <button class="dropdown-item" type="button">
                                     <i class="fas fa-print"></i>
@@ -122,7 +124,7 @@ export default {
                                 </button>
                             </a>
                             <a>
-                                <button class="dropdown-item" type="button" >
+                                <button class="dropdown-item" type="button" @click="detail(data.id)">
                                     <i class="fas fa-eye"></i>
                                     Detail
                                 </button>
@@ -140,19 +142,27 @@ export default {
                                 </button>
                             </a>
                         </div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'belum_terlaksana'">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'menyusun'">
                             <a>
                                 <button class="dropdown-item" @click="catatanPeserta(data)">
-                                    <i class="fas fa-eye"></i>
+                                    <i class="fas fa-edit"></i>
                                     Catatan Peserta
+                                </button>
+                                <button class="dropdown-item" type="button" @click="detail(data.id)">
+                                    <i class="fas fa-eye"></i>
+                                    Detail
                                 </button>
                             </a>
                         </div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'selesai'">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'terlaksana'">
                             <a>
                                 <button class="dropdown-item">
                                     <i class="fas fa-print"></i>
                                     Cetak Hasil Meeting
+                                </button>
+                                <button class="dropdown-item" type="button" @click="detail(data.id)">
+                                    <i class="fas fa-eye"></i>
+                                    Detail
                                 </button>
                             </a>
                         </div>
