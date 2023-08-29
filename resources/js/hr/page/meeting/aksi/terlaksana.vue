@@ -23,7 +23,11 @@ export default {
                         isi: '',
                     }
                 ],
-                hasil: '',
+                hasil: [
+                    {
+                        isi: '',
+                    }
+                ],
             },
             karyawan: [],
         }
@@ -46,6 +50,11 @@ export default {
         tambahpic(){
             this.form.notulensi.push({
                 pic: '',
+                isi: '',
+            })
+        },
+        tambahhasil(){
+            this.form.hasil.push({
                 isi: '',
             })
         },
@@ -104,7 +113,17 @@ export default {
                     <div class="form-group row">
                         <label for="" class="col-sm-2 col-form-label">Hasil Rapat</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" v-model="form.hasil"></textarea>
+                            <div class="d-flex flex-row-reverse bd-highlight">
+                                <div class="p-2 bd-highlight"><button class="btn btn-primary" @click="tambahhasil">Tambah</button></div>
+                            </div>
+                            <div v-for="(hasil, idx) in form.hasil" class="row">
+                                <div class="col-10">
+                                    <textarea class="form-control mb-2" v-model="hasil.isi"></textarea> 
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-danger" @click="form.hasil.splice(idx, 1)">x</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">

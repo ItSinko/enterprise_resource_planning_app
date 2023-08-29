@@ -84,7 +84,7 @@ export default {
 <template>
     <div class="card">
         <div class="card-body">
-            <h4 class="mb-4">Feedback Peserta</h4>
+            <h4 class="mb-4">Feedback Peserta (Kehadiran)</h4>
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li
                     class="nav-item"

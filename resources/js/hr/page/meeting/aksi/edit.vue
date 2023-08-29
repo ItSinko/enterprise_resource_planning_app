@@ -1,9 +1,15 @@
 <script>
 import VueSelect from 'vue-select'
+import axios from 'axios';
 export default {
     props: ['meeting'],
     components: {
         VueSelect
+    },
+    data() {
+        return {
+            karyawan: [],
+        }
     },
     methods: {
         closeModal() {
@@ -44,11 +50,22 @@ export default {
             }
             return true
         },
+        async getDataKaryawan() {
+            try {
+                const response = await axios.get('/api/karyawan_all')
+                this.karyawan = response.data
+            } catch (error) {
+                console.log(error)
+            }
+        },
         simpan() {
             this.cekMulaiSelesai()
             this.cekSelesaiMulai()
         }
     },
+    mounted() {
+        this.getDataKaryawan()
+    }
 }
 </script>
 <template>
@@ -65,6 +82,16 @@ export default {
                     <div class="form-group">
                         <label for="">Deskripsi / Agenda Meeting</label>
                         <textarea class="form-control" v-model="meeting.deskripsi"></textarea>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="">Notulen</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
+                        </div>
+                        <div class="col">
+                            <label for="">Moderator</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="">Tanggal Meeting</label>

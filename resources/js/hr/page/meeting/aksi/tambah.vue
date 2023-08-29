@@ -10,6 +10,8 @@ export default {
             karyawan: [],
             meeting: {
                 judul: '',
+                notulen: '',
+                moderator: '',
                 deskripsi: '',
                 tanggal: '',
                 mulai: '',
@@ -91,6 +93,16 @@ export default {
                     <div class="form-group">
                         <label for="">Judul Meeting</label>
                         <input type="text" class="form-control" v-model="meeting.judul">
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="">Notulen</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
+                        </div>
+                        <div class="col">
+                            <label for="">Moderator</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="">Deskripsi / Agenda Meeting</label>

@@ -73,7 +73,9 @@ export default {
                                     </b>
                                 </div>
                             </div>
-                            <div class="margin">
+                        </div>
+                    </div>
+                    <div class="margin">
                                 <div>
                                     <small class="text-muted">Deskripsi</small>
                                 </div>
@@ -81,8 +83,6 @@ export default {
                                     <b id="no_so">{{ meeting.deskripsi }}</b>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
