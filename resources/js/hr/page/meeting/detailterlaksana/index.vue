@@ -67,6 +67,10 @@ export default {
                                 nama: "Foto 4",
                                 link: "https://picsum.photos/200/300",
                             },
+                            {
+                                nama: "Foto 4",
+                                link: "https://picsum.photos/200/300",
+                            },
                         ],
                     },
                     {

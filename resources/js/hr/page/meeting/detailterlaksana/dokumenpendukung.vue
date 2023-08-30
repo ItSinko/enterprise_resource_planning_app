@@ -11,7 +11,8 @@ export default {
     <div class="card">
         <div class="card-body">
             <div class="card-body">
-                <div class="margin" v-for="meet in meeting">
+                <div class="margin" v-for="(meet, idx) in meeting">
+                    <hr v-if="idx > 0" />
                     <h4 class="my-4 text-capitalize">{{ meet.jenis }}</h4>
                     <div class="row">
                         <div v-for="dokumen in meet.dokumen" class="col-3">
