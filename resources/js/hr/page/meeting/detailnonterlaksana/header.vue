@@ -10,20 +10,12 @@ export default {
     data() {
         return {
             itemPendukung: [],
-            selectedData: 0,
         }
     },
     methods: {
         changeFormatDate(date) {
             return moment(date).lang("id").format("dddd, DD MMMM YYYY");
         },
-        selectItem(item, idx) {
-            this.selectedData = idx;
-            this.itemPendukung = item;
-        },
-    },
-    mounted() {
-        this.itemPendukung = this.meeting.dokumen_pendukung[0];
     },
 };
 </script>
@@ -100,21 +92,29 @@ export default {
                                 <b id="no_so">{{ meeting.deskripsi }}</b>
                             </div>
                         </div>
+                        <div v-if="meeting.alasan_perubahan_meeting">
+                            <small class="text-muted">Alasan Perubahan Meeting</small>
+                            <div class="margin">
+                                <b id="distributor">
+                                    {{ meeting.alasan_perubahan_meeting }}
+                                </b>
+                            </div>
+                        </div>
+                        <div v-if="meeting.alasan_pembatalan_meeting">
+                            <small class="text-muted">Alasan Pembatalan Meeting</small>
+                            <div class="margin">
+                                <b id="distributor">
+                                    {{ meeting.alasan_pembatalan_meeting }}
+                                </b>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card" v-if="meeting.status == 'terlaksana'">
             <div class="card-body">
-                <div v-if="meeting.alasan_perubahan_meeting">
-                    <small class="text-muted">Alasan Perubahan Meeting</small>
-                    <div class="margin">
-                        <b id="distributor">
-                            {{ meeting.alasan_perubahan_meeting }}
-                        </b>
-                    </div>
-                </div>
-                <div class="margin mt-2">
+                <div class="margin">
                     <small class="text-muted">Dokumen Pendukung</small>
                     <ul
                         class="nav nav-pills mb-3"

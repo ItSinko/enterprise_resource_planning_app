@@ -16,6 +16,7 @@ export default {
                 tanggal: '',
                 mulai: '',
                 selesai: '',
+                // jumlah tetap ada di belakang
                 jumlah_peserta: '',
                 lokasi: '',
                 peserta: [],
@@ -94,16 +95,6 @@ export default {
                         <label for="">Judul Meeting</label>
                         <input type="text" class="form-control" v-model="meeting.judul">
                     </div>
-                    <div class="form-group row">
-                        <div class="col">
-                            <label for="">Notulen</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
-                        </div>
-                        <div class="col">
-                            <label for="">Moderator</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="">Deskripsi / Agenda Meeting</label>
                         <textarea class="form-control" v-model="meeting.deskripsi"></textarea>
@@ -122,9 +113,15 @@ export default {
                             <input type="time" class="form-control" v-model="meeting.selesai">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="">Jumlah Peserta Meeting</label>
-                        <input type="text" class="form-control" @keypress="inputNumberOnly" v-model.number="meeting.jumlah_peserta">
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="">Notulen</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
+                        </div>
+                        <div class="col">
+                            <label for="">Moderator</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="">Lokasi Meeting</label>

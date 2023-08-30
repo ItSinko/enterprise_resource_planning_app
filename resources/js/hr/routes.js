@@ -1,6 +1,7 @@
 import VueRouter from "vue-router";
 import Dashboard from "./page/meeting";
-import Detail from "./page/meeting/detail";
+import DetailTerlaksana from "./page/meeting/detailterlaksana";
+import DetailNonTerlaksana from "./page/meeting/detailnonterlaksana";
 
 const routes = [
     {
@@ -9,9 +10,14 @@ const routes = [
         name: "dashboard"
     },
     {
-        path: "/hr/meeting/detail/:id",
-        component: Detail,
-        name: "detail-meeting"
+        path: "/hr/meeting/detailterlaksana/:id",
+        component: DetailTerlaksana,
+        name: "detail-meeting-terlaksana"
+    },
+    {
+        path: "/hr/meeting/detailnonterlaksana/:id",
+        component: DetailNonTerlaksana,
+        name: "detail-meeting-nonterlaksana"
     }
 ];
 

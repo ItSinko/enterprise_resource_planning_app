@@ -3,24 +3,48 @@ export default {
     props: ['status'],
     methods: {
         statusColor(status){
-            status = status.toLowerCase()
-            if(status == 'terlaksana'){
-                return 'badge-success'
-            }else if(status == 'belum_terlaksana'){
-                return 'badge-danger'
-            }else{
-                return 'badge-warning'
+            if(typeof status == 'string'){
+                status = status.toLowerCase()
+            }
+            switch(status){
+                case 'terlaksana':
+                    return 'badge-success'
+                    break;
+                case 'belum_terlaksana':
+                    return 'badge-danger'
+                    break;
+                case 'menyusun_hasil_meeting':
+                    return 'badge-warning'
+                    break;
+                case 'batal':
+                    return 'badge-danger'
+                    break;
+                default:
+                    return 'badge-warning'
             }
         },
         statusText(status){
-            status = status.toLowerCase()
-            // change underscore to space
-            if(status == 'terlaksana'){
-                return 'Terlaksana'
-            }else if(status == 'belum_terlaksana'){
-                return 'Belum Terlaksana'
-            }else{
-                return 'Menyusun Hasil Meeting'
+            if(typeof status == 'string'){
+                status = status.toLowerCase()
+            }
+            switch(status){
+                case 'terlaksana':
+                    return 'Terlaksana'
+                    break;
+                case 'belum_terlaksana':
+                    return 'Belum Terlaksana'
+                    break;
+                case 'menyusun_hasil_meeting':
+                    return 'Menyusun Hasil Meeting'
+                    break;
+                case 'batal':
+                    return 'Batal'
+                    break;
+                default:
+                    if(typeof status == 'string'){
+                        return status.replace(/_/g, ' ')
+                    }
+                    return status
             }
         }
     },

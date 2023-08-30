@@ -41,19 +41,19 @@ export default {
                         jenis: "foto",
                         dokumen: [
                             {
-                                nama: "Dokumen 1",
+                                nama: "Foto 1",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 2",
+                                nama: "Foto 2",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 3",
+                                nama: "Foto 3",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 4",
+                                nama: "Foto 4",
                                 link: "#",
                             }
                         ]
@@ -62,19 +62,19 @@ export default {
                         jenis: "video",
                         dokumen: [
                             {
-                                nama: "Dokumen 5",
+                                nama: "video 5",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 6",
+                                nama: "video 6",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 7",
+                                nama: "video 7",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 8",
+                                nama: "video 8",
                                 link: "#",
                             }
                         ]
@@ -83,19 +83,19 @@ export default {
                         jenis: "rekaman",
                         dokumen: [
                             {
-                                nama: "Dokumen 9",
+                                nama: "rekaman 9",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 10",
+                                nama: "rekaman 10",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 11",
+                                nama: "rekaman 11",
                                 link: "#",
                             },
                             {
-                                nama: "Dokumen 12",
+                                nama: "rekaman 12",
                                 link: "#",
                             }
                         ]

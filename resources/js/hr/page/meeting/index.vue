@@ -32,7 +32,9 @@ export default {
                     tanggal: '2023-01-01',
                     mulai: '08:00',
                     selesai: '09:00',
+                    // count array peserta
                     jumlah_peserta: 10,
+                    peserta : null,
                     status: 'menyusun',
                     lokasi: 'Gedung A',
                 },
@@ -42,7 +44,9 @@ export default {
                     tanggal: '2023-02-01',
                     mulai: '08:00',
                     selesai: '09:00',
+                    // count array peserta
                     jumlah_peserta: 10,
+                    peserta : null,
                     status: 'belum_terlaksana',
                     lokasi: 'Gedung A',
                 },

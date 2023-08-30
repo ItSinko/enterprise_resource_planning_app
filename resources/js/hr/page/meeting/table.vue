@@ -72,8 +72,12 @@ export default {
             this.catatanData = null
             this.modalCatatan = false
         },
-        detail(id){
-            this.$router.push({ name: 'detail-meeting', params: { id: id } })
+        detail(id, status){
+            if(status == 'terlaksana'){
+                this.$router.push({ name: 'detail-meeting-terlaksana', params: { id: id } })
+            } else {
+                this.$router.push({ name: 'detail-meeting-nonterlaksana', params: { id: id } })
+            }
         }
     },
 }
@@ -124,7 +128,7 @@ export default {
                                 </button>
                             </a>
                             <a>
-                                <button class="dropdown-item" type="button" @click="detail(data.id)">
+                                <button class="dropdown-item" type="button" @click="detail(data.id, data.status)">
                                     <i class="fas fa-eye"></i>
                                     Detail
                                 </button>
@@ -148,7 +152,7 @@ export default {
                                     <i class="fas fa-edit"></i>
                                     Catatan Peserta
                                 </button>
-                                <button class="dropdown-item" type="button" @click="detail(data.id)">
+                                <button class="dropdown-item" type="button" @click="detail(data.id, data.status)">
                                     <i class="fas fa-eye"></i>
                                     Detail
                                 </button>
@@ -160,7 +164,7 @@ export default {
                                     <i class="fas fa-print"></i>
                                     Cetak Hasil Meeting
                                 </button>
-                                <button class="dropdown-item" type="button" @click="detail(data.id)">
+                                <button class="dropdown-item" type="button" @click="detail(data.id, data.status)">
                                     <i class="fas fa-eye"></i>
                                     Detail
                                 </button>

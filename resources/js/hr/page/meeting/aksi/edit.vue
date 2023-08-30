@@ -83,16 +83,6 @@ export default {
                         <label for="">Deskripsi / Agenda Meeting</label>
                         <textarea class="form-control" v-model="meeting.deskripsi"></textarea>
                     </div>
-                    <div class="form-group row">
-                        <div class="col">
-                            <label for="">Notulen</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
-                        </div>
-                        <div class="col">
-                            <label for="">Moderator</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="">Tanggal Meeting</label>
                         <input type="date" class="form-control" v-model="meeting.tanggal">
@@ -107,9 +97,20 @@ export default {
                             <input type="time" class="form-control" v-model="meeting.selesai">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="">Notulen</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
+                        </div>
+                        <div class="col">
+                            <label for="">Moderator</label>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
+                        </div>
+                    </div>
+                    <!-- diubah ke peserta seperti tambah dan value jumlah peserta menghitung array peserta -->
                     <div class="form-group">
-                        <label for="">Jumlah Peserta Meeting</label>
-                        <input type="text" class="form-control" @keypress="inputNumberOnly" v-model.number="meeting.jumlah_peserta">
+                        <label for="">Peserta Meeting</label>
+                        <vue-select multiple :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.peserta"/>
                     </div>
                     <div class="form-group">
                         <label for="">Lokasi Meeting</label>
