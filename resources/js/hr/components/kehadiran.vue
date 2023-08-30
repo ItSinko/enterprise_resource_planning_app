@@ -13,6 +13,12 @@ export default {
                 case 'tidak_hadir':
                     return 'fa-times-circle text-danger'
                     break;
+                case 'sesuai':
+                    return 'fa-check-circle text-success'
+                    break;
+                case 'tidak_sesuai':
+                    return 'fa-times-circle text-danger'
+                    break;
                 default:
                     return 'fa-question-circle text-warning'
             }

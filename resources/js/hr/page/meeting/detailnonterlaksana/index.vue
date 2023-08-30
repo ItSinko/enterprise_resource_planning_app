@@ -29,6 +29,7 @@ export default {
                 {
                     id: 1,
                     no_meeting: "Meet-1",
+                    judul: "Meeting 1",
                     deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                     tanggal: "2023-01-01",
                     notulen: "Notulen 1",
