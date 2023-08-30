@@ -146,7 +146,7 @@ export default {
                                 </button>
                             </a>
                         </div>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'menyusun'">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-else-if="data.status == 'menyusun_hasil_meeting'">
                             <a>
                                 <button class="dropdown-item" @click="catatanPeserta(data)">
                                     <i class="fas fa-edit"></i>

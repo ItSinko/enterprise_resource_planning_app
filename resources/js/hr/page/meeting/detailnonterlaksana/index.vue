@@ -28,9 +28,11 @@ export default {
             meeting: [
                 {
                     id: 1,
-                    judul: "Meeting 1",
+                    no_meeting: "Meet-1",
                     deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                     tanggal: "2023-01-01",
+                    notulen: "Notulen 1",
+                    moderator: "Moderator 1",
                     mulai: "08:00",
                     selesai: "09:00",
                     jumlah_peserta: 10,
@@ -40,12 +42,14 @@ export default {
                     peserta: [
                         {
                             nama: "Peserta 1",
+                            divisi: "Divisi 1",
                             alasan: "Catatan Peserta 1",
-                            kehadiran: "Hadir",
+                            kehadiran: "hadir",
                         },
                         {
                             nama: "Peserta 2",
-                            kehadiran: "Tidak Hadir",
+                            divisi: "Divisi 2",
+                            kehadiran: "tidak_hadir",
                             alasan: "Catatan Peserta 2",
                             dokumen_pendukung: [
                                 {
@@ -62,9 +66,12 @@ export default {
                 },
                 {
                     id: 2,
+                    no_meeting: "Meet-1",
                     judul: "Meeting 1",
                     deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                     tanggal: "2023-02-01",
+                    notulen: "Notulen 1",
+                    moderator: "Moderator 1",
                     mulai: "09:00",
                     selesai: "10:00",
                     jumlah_peserta: 10,
@@ -74,12 +81,14 @@ export default {
                     peserta: [
                         {
                             nama: "Peserta 3",
+                            divisi: "Divisi 3",
                             alasan: "Catatan Peserta 1",
-                            kehadiran: "Hadir",
+                            kehadiran: "hadir",
                         },
                         {
                             nama: "Peserta 4",
-                            kehadiran: "Tidak Hadir",
+                            divisi: "Divisi 4",
+                            kehadiran: "tidak_hadir",
                             alasan: "Catatan Peserta 2",
                             dokumen_pendukung: [
                                 {
@@ -93,10 +102,49 @@ export default {
                             ],
                         },
                     ]
-                }
+                },
+                {
+                    id: 2,
+                    no_meeting: "Meet-1",
+                    judul: "Meeting 1",
+                    deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+                    tanggal: "2023-02-01",
+                    notulen: "Notulen 1",
+                    moderator: "Moderator 1",
+                    mulai: "09:00",
+                    selesai: "10:00",
+                    jumlah_peserta: 10,
+                    status: "batal",
+                    lokasi: "Gedung A",
+                    alasan_pembatalan_meeting: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+                    peserta: [
+                        {
+                            nama: "Peserta 3",
+                            divisi: "Divisi 3",
+                            alasan: "Catatan Peserta 1",
+                            kehadiran: "hadir",
+                        },
+                        {
+                            nama: "Peserta 4",
+                            divisi: "Divisi 4",
+                            kehadiran: "tidak_hadir",
+                            alasan: "Catatan Peserta 2",
+                            dokumen_pendukung: [
+                                {
+                                    nama: "Dokumen 1",
+                                    link: "#",
+                                },
+                                {
+                                    nama: "Dokumen 2",
+                                    link: "#",
+                                },
+                            ],
+                        },
+                    ]
+                },
             ],
             itemMeetingSelected: [],
-            selectedData: 0
+            selectedData: 0,
         };
     },
     methods: {
@@ -113,6 +161,11 @@ export default {
     },
     created() {
         this.itemMeetingSelected = this.meeting[0];
+    },
+    computed: {
+        lengthMeeting() {
+            return this.meeting.length;
+        },
     },
 };
 </script>
@@ -141,7 +194,7 @@ export default {
                     </a>
                 </li>
             </ul>
-        <HeaderDetail :meeting="itemMeetingSelected" />
+        <HeaderDetail :meeting="itemMeetingSelected" :lengthMeet="lengthMeeting" :selectedIndex="selectedData"/>
         <Item :meeting="itemMeetingSelected.peserta" />
     </div>
 </template>

@@ -35,7 +35,7 @@ export default {
                     // count array peserta
                     jumlah_peserta: 10,
                     peserta : null,
-                    status: 'menyusun',
+                    status: 'menyusun_hasil_meeting',
                     lokasi: 'Gedung A',
                 },
                 {

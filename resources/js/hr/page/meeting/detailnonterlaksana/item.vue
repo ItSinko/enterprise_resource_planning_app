@@ -1,9 +1,11 @@
 <script>
 import moment from "moment";
 import pagination from "../../../components/pagination.vue";
+import kehadiran from "../../../components/kehadiran.vue";
 export default {
     components: {
         pagination,
+        kehadiran,
     },
     data() {
         return {
@@ -50,9 +52,10 @@ export default {
                 </div>
             </div>
             <table class="table">
-                <thead>
+                <thead class="text-center">
                     <tr>
                         <th>Nama Peserta</th>
+                        <th>Divisi</th>
                         <th>Kehadiran</th>
                         <th>Alasan</th>
                         <th>Dokumen Pendukung Ketidakhadiran</th>
@@ -60,10 +63,11 @@ export default {
                 </thead>
                 <tbody v-if="renderPaginate.length > 0">
                     <tr v-for="(peserta, idx) in renderPaginate" :key="idx">
-                        <td>{{ peserta.nama }}</td>
-                        <td>{{ peserta.kehadiran }}</td>
+                        <td >{{ peserta.nama }}</td>
+                        <td class="text-center">{{ peserta.divisi }}</td>
+                        <td class="text-center"><kehadiran :kehadiran="peserta.kehadiran" /></td>
                         <td>{{ peserta.alasan }}</td>
-                        <td>
+                        <td class="text-center">
                             <div v-if="peserta.dokumen_pendukung">
                                 <a 
                                     v-for="(dokumen, idx) in peserta.dokumen_pendukung"
@@ -71,6 +75,7 @@ export default {
                                     :href="dokumen.link">{{ dokumen.nama }}<span v-if="idx != peserta.dokumen_pendukung.length - 1">, </span>
                                 </a>
                             </div>
+                            <span v-else>-</span>
                         </td>
                     </tr>
                 </tbody>
