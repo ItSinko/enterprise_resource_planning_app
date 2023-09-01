@@ -67,7 +67,7 @@
         }
 
     .td-width-header {
-      width: 35%;
+      width: 40%;
     }
 
     main>table{
@@ -186,7 +186,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td class="td-width-header">Keterangan Pengiriman</td>
+                        <td class="td-width-header">Ket. Pengiriman</td>
                         <td>:
                           @switch($data->ket)
                               @case('bayar_tujuan')
@@ -226,12 +226,23 @@
                         $name = explode('/', $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->so);
                         if ($name[1] == 'EKAT') {
                             echo    $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->Ekatalog->no_paket;
-                        }  else  {
-                            echo 'OFFLINE';
+                            echo '<br>';
+                            echo    $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->Ekatalog->ket;
+                        }  else if($name[1] == 'SPA')  {
+                            echo 'OFFLINE <br> ';
+                            echo $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->Spa->ket;
+                        }else{
+                            echo 'OFFLINE <br> ';
+                            echo $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->Spb->ket;
                         }
                     } else {
-
-                             echo 'OFFLINE';
+                        if($name[1] == 'SPA')  {
+                            echo 'OFFLINE <br> ';
+                            echo $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->Spa->ket;
+                        }else{
+                            echo 'OFFLINE <br> ';
+                            echo $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->Spb->ket;
+                        }
                     }
                     ?>
                         <br>
@@ -313,81 +324,68 @@
                        </tr>
                     </thead>
                     <tbody style="page-break-after: avoid !important;">
-                    @php $no = 0; @endphp
-                     @foreach($data_produk as $e)
-                     @if(isset($e->DetailPesananProduk))
-                     @php $no =$loop->iteration; @endphp
-                        <tr
-                        @if(count ($e->NoseriDetailLogistik) <= 0)
-                        style="border-bottom: 1px solid black"
-                        @endif
-                        >
-                            <td class="vera align-center">
-                                {{ $loop->iteration }}
-                            </td>
-                            <td class="vera align-center">
-                              {{-- @if($item->kode == null)
-                                -
+                      @foreach ($data_produk as $key => $item)
+                      <tr
+                      @if(!isset($item['detail']))
+                          style="border-bottom: 1px solid black"
+                      @endif
+                      >
+                          <td class="vera align-center">
+                              {{ $key+1 }}
+                          </td>
+                          <td class="vera align-center">
+                              @if(isset($item['kode']))
+                                  {{ $item['kode'] }}
                               @else
-                                {{$item->kode}}
-                              @endif --}}
-                            </td>
-                            <td class="vera">
-                                @if($e->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias != NULL)
-                                {{$e->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias}}
-                                @else
-                                {{$e->DetailPesananProduk->GudangBarangJadi->Produk->nama}} - {{$e->DetailPesananProduk->GudangBarangJadi->nama}}
-                                @endif
-                            </td>
-                            <td class="vera">
-                                {{$e->NoseriDetailLogistik->count()}}.00
-                            </td>
-                              <td class="vera">
-                               UNIT
+                                  -
+                              @endif
+                          </td>
+                          <td class="vera">
+                              {{ $item['nama'] }}
+                          </td>
+                          @php
+                              $jumlah = 0;
+                              if(isset($item['detail'])){
+                                  foreach ($item['detail'] as $key => $detail) {
+                                      // count array length of noseri
+                                      $jumlah += count($detail['seri']);
+                                  }
+                              } else {
+                                  $jumlah = $item['jumlah'];
+                              }
+
+                              $satuan = null;
+                              if(isset($item['detail'])){
+                                  $satuan = $item['detail'][0]['satuan'];
+                              } else {
+                                  $satuan = $item['satuan'];
+                              }
+                          @endphp
+                          <td class="vera">
+                              {{ $jumlah }}.00
+                          </td>
+                          <td class="vera">
+                              {{ $satuan }}
+                          </td>
+                      </tr>
+                      @if(isset($item['detail']))
+                          <tr style="border-bottom: 1px solid black">
+                              <td></td>
+                              <td class="vera" colspan="4">
+                                  <b>No Seri</b> : <br>
+                                  @foreach ($item['detail'] as $key => $detail)
+                                      {{ $detail['nama'] }} :
+
+                                      @foreach ($detail['seri'] as $seriDetail)
+                                          {{ $seriDetail['seri'] }}@if (!$loop->last),@endif
+                                      @endforeach
+                                      <br />
+                                  @endforeach
                               </td>
                           </tr>
-
-                          @if(count ($e->NoseriDetailLogistik) > 0)
-                          <tr style="border-bottom: 1px solid black">
-                            <td class="vera" colspan="5">
-                                <b>No Seri</b> : <br>
-                                @foreach($e->NoseriDetailLogistik as $x)
-                                {{$x->NoseriDetailPesanan->NoseriTGbj->NoseriBarangJadi->noseri}}
-                                @if( !$loop->last)
-                                ,
-                                @endif
-                                @endforeach
-                             </td>
-                          </tr>
-                          @endif
-                        @else
-
-
-                        <tr>
-                            <td>{{$loop->iteration + $no}}</td>
-                            <td>{{$e->DetailPesananPart->Sparepart->kode}}</td>
-                            <td class="wb align-left">
-                                {{$e->DetailPesananPart->Sparepart->nama}}
-                            </td>
-                            <td class="nospace align-right">{{$e->DetailPesananPart->jumlah}}.00</td>
-                            <td class="wb">
-                                UNIT
-                            </td>
-                        </tr>
-
-                        @endif
-                          @endforeach
-                        {{-- <tr>
-                            <td class="align-center" colspan="3">
-
-                            </td>
-                            <td class="align-center" colspan="3">
-                              <b>Total 1 Coly</b>
-                            </td>
-
-
-                          </tr> --}}
-                    </tbody>
+                      @endif
+                  @endforeach
+                  </tbody>
                 </table>
                 {{-- lama --}}
                 @if($data->dimensi != "")

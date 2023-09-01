@@ -42,16 +42,129 @@ class LogistikController extends Controller
     public function pdf_surat_jalan($id)
     {
         $data = Logistik::find($id);
+        $items = array();
         $data_produk = "";
         if (isset($data->DetailLogistik[0]) && !isset($data->DetailLogistikPart)) {
-            $data_produk = DetailLogistik::where('logistik_id', $id)->get();
+            $data_prd = DetailLogistik::with(['NoseriDetailLogistik.NoseriDetailPesanan.NoseriTGbj.NoseriBarangJadi','DetailPesananProduk.GudangBarangJadi.Produk','DetailPesananProduk.DetailPesanan.PenjualanProduk'])->where('logistik_id', $id)->get();
+
+            foreach($data_prd as $key => $prd){
+                $set_produk[$key] = array(
+                    'id' => $prd->id,
+                    'nama_alias' => $prd->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias,
+                    'nama_produk' => $prd->DetailPesananProduk->GudangBarangJadi->Produk->nama,
+                    'variasi' => $prd->DetailPesananProduk->GudangBarangJadi->nama,
+                    'detail_pesanan_id' => $prd->DetailPesananProduk->detail_pesanan_id,
+                    'detail_pesanan_produk_id' => $prd->detail_pesanan_produk_id,
+
+                );
+                foreach($prd->NoseriDetailLogistik as $key_seri => $seri){
+                    $set_produk[$key]['noseri'][$key_seri] = array(
+                        'seri' => $seri->NoseriDetailPesanan->NoseriTGbj->NoseriBarangJadi->noseri
+                    );
+                }
+            }
+
+
+            foreach($set_produk as $prd){
+                $id = $prd["detail_pesanan_id"];
+                $nama = $prd["nama_alias"];
+               if (!isset($data_prds[$id])) {
+                   $data_prds[$id] = array(
+                       "id" => $id,
+                       "nama" => $nama,
+                       "detail" => array()
+                   );
+               }
+
+
+               $data_prds[$id]["detail"][] = array(
+                   "kode"=> '',
+                   "nama"=> $prd['nama_produk'] . ' ' . $prd['variasi'],
+                   "satuan"=> 'UNIT',
+                   "seri"=> $prd['noseri']
+               );
+            }
+
+            $items = $data_prds;
         } else if (!isset($data->DetailLogistik[0]) && isset($data->DetailLogistikPart)) {
-            $data_produk = DetailLogistikPart::where('logistik_id', $id)->get();
+            // $data_produk = DetailLogistikPart::where('logistik_id', $id)->get();
+            $data_prt = DetailLogistikPart::with('DetailPesananPart.Sparepart')->where('logistik_id', $id)->get();
+                       //Part
+                       if (count($data_prt) > 0) {
+                        foreach($data_prt as $key_p => $prt){
+                                    $part[$key_p]= array(
+                                        "kode"=> $prt->DetailPesananPart->Sparepart->kode,
+                                        "nama"=>$prt->DetailPesananPart->Sparepart->nama,
+                                        "jumlah"=> $prt->jumlah,
+                                        "satuan"=> 'UNIT',
+                                    );
+                                  }
+                                   $items = $part;
+                        }
+
         } else {
-            $data_prd = DetailLogistik::where('logistik_id', $id)->get();
-            $data_prt = DetailLogistikPart::where('logistik_id', $id)->get();
-            $data_produk = $data_prd->merge($data_prt);
+            $data_prd = DetailLogistik::with(['NoseriDetailLogistik.NoseriDetailPesanan.NoseriTGbj.NoseriBarangJadi','DetailPesananProduk.GudangBarangJadi.Produk','DetailPesananProduk.DetailPesanan.PenjualanProduk'])->where('logistik_id', $id)->get();
+            $data_prt = DetailLogistikPart::with('DetailPesananPart.Sparepart')->where('logistik_id', $id)->get();
+            // $data_produk = $data_prd->merge($data_prt);
+
+            //Part
+            if (count($data_prt) > 0) {
+                foreach($data_prt as $key_p => $prt){
+                            $part[$key_p]= array(
+                                "kode"=> $prt->DetailPesananPart->Sparepart->kode,
+                                "nama"=>$prt->DetailPesananPart->Sparepart->nama,
+                                "jumlah"=> $prt->jumlah,
+                                "satuan"=> 'UNIT',
+                            );
+                          }
+                           $items = $part;
+                }
+
+            //Produks
+             if (count($data_prd) > 0) {
+                foreach($data_prd as $key => $prd){
+                    $set_produk[$key] = array(
+                        'id' => $prd->id,
+                        'nama_alias' => $prd->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias,
+                        'nama_produk' => $prd->DetailPesananProduk->GudangBarangJadi->Produk->nama,
+                        'variasi' => $prd->DetailPesananProduk->GudangBarangJadi->nama,
+                        'detail_pesanan_id' => $prd->DetailPesananProduk->detail_pesanan_id,
+                        'detail_pesanan_produk_id' => $prd->detail_pesanan_produk_id,
+
+                    );
+                    foreach($prd->NoseriDetailLogistik as $key_seri => $seri){
+                        $set_produk[$key]['noseri'][$key_seri] = array(
+                            'seri' => $seri->NoseriDetailPesanan->NoseriTGbj->NoseriBarangJadi->noseri
+                        );
+                    }
+                }
+
+             foreach($set_produk as $prd){
+                 $id = $prd["detail_pesanan_id"];
+                 $nama = $prd["nama_alias"];
+                if (!isset($data_prds[$id])) {
+                    $data_prds[$id] = array(
+                        "id" => $id,
+                        "nama" => $nama,
+                        "detail" => array()
+                    );
+                }
+
+
+                $data_prds[$id]["detail"][] = array(
+                    "kode"=> '',
+                    "nama"=> $prd['nama_produk'] . ' ' . $prd['variasi'],
+                    "satuan"=> 'UNIT',
+                    "seri"=> $prd['noseri']
+                );
+             }
+
+             $items = array_merge($items,$data_prds);
+             }
+
         }
+
+        //return response()->json($items);
 
         if (isset($data->DetailLogistik[0])) {
             $name = explode('/', $data->DetailLogistik[0]->DetailPesananProduk->DetailPesanan->Pesanan->so);
@@ -64,8 +177,9 @@ class LogistikController extends Controller
         if($pesanan == "SPB"){
             return view('page.logistik.surat.surat_jalan_kirim_spb', ['data' => $data,'data_produk' => $data_produk]);
         }else{
+
             $customPaper = array(0,0,605.44,788.031);
-            $pdf = PDF::loadView('page.logistik.surat.surat_jalan_kirim', ['data' => $data, 'data_produk' => $data_produk])->setPaper($customPaper);
+            $pdf = PDF::loadView('page.logistik.surat.surat_jalan_kirim', ['data' => $data, 'data_produk' => $items])->setPaper($customPaper);
          return $pdf->stream('');
 
         }
@@ -2490,6 +2604,7 @@ class LogistikController extends Controller
                 } else if (isset($data->DetailLogistikPart)) {
                     return $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->so;
                 }
+
             })
             ->addColumn('sj', function ($data) {
                 return $data->nosurat;
@@ -2525,6 +2640,7 @@ class LogistikController extends Controller
                         return $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->Spb->Customer->nama;
                     }
                 }
+
             })
             ->addColumn('provinsi', function ($data) {
                 if (isset($data->DetailLogistik[0])) {
@@ -2544,6 +2660,7 @@ class LogistikController extends Controller
                         return $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->Spb->Customer->Provinsi->nama;
                     }
                 }
+
             })
             ->addColumn('status', function ($data) {
                 if ($data->status_id  == "10") {
@@ -2577,6 +2694,7 @@ class LogistikController extends Controller
                         $provinsi = $data->DetailLogistikPart->first()->DetailPesananPart->Pesanan->Spb->Customer->Provinsi->id;
                     }
                 }
+
 
                 $string .= '<div class="dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></div>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -3585,7 +3703,7 @@ class LogistikController extends Controller
 
         if ($request->no_sj_exist == 'baru') {
 
-            // if($request->tujuan_pengiriman == NULL || $request->alamat_pengiriman == NULL || $request->kemasan == NULL || $request->keterangan_pengiriman == NULL){
+            // if($request->perusahaan_pengiriman == NULL || $request->alamat_pengiriman == NULL || $request->kemasan == NULL || $request->keterangan_pengiriman == NULL){
             //     return response()->json(['data' => 'error']);
             // }
             if ($request->pengiriman == 'ekspedisi') {
@@ -4992,7 +5110,6 @@ class LogistikController extends Controller
             foreach ($request->produk as $item) {
                 $id = $item["detail_pesanan_id"];
                 $nama_paket = $item["nama_alias"];
-                $shippingNo =' $item["shipping_no"]';
 
                 if (!isset($produk[$id])) {
                     $produk[$id] = array(
@@ -5174,6 +5291,7 @@ class LogistikController extends Controller
                     'ekspedisi' => $ekspedisi,
                     'customer' => $dsb_nama,
                     'perusahaan_pengiriman' => $pesanan->tujuan_kirim,
+                    'alamat_pengiriman' => $pesanan->alamat_kirim,
                 ),
                 'item' => array(
                     'produk' => $prd,

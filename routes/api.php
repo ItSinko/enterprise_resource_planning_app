@@ -554,6 +554,7 @@ Route::prefix('/logistik')->group(function () {
         Route::get('/noseri_array/{produk_id}/{jumlah_kirim}', [App\Http\Controllers\LogistikController::class, 'get_data_noseri_array']);
     });
     Route::group(['prefix' => '/ekspedisi'], function () {
+        Route::get('/all', [App\Http\Controllers\MasterController::class, 'get_data_all_ekspedisi']);
         // Route::get('/data', [App\Http\Controllers\MasterController::class, 'get_data_ekspedisi']);
         Route::get('select/{provinsi}', [App\Http\Controllers\MasterController::class, 'select_ekspedisi']);
         Route::post('detail/{id}', [App\Http\Controllers\MasterController::class, 'get_data_detail_ekspedisi']);

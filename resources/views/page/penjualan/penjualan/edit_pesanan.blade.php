@@ -102,6 +102,13 @@
                                         <div class="invalid-feedback" id="msgtgl_do"></div>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-lg-5 col-md-12 labelket">Keterangan</label>
+                                    <div class="col-lg-5 col-md-12">
+                                        <textarea class="form-control col-form-label" name="keterangan" id="keterangan">{{$data->Pesanan->ket}}</textarea>
+                                        <div class="invalid-feedback" id="msgtgl_do"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">

@@ -270,6 +270,19 @@ class MasterController extends Controller
             ->rawColumns(['status'])
             ->make(true);
     }
+    public function get_data_all_ekspedisi(Request $r) {
+        try {
+            $ekspedisi = Ekspedisi::where('nama', 'LIKE', '%' . $r->input('term', '') . '%')->get();
+
+            return response()->json($ekspedisi);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function get_data_ekspedisi($value1, $value2)
     {
         $x = explode(',', $value1);

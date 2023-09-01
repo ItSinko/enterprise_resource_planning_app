@@ -494,7 +494,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="editmodal" role="dialog" aria-labelledby="editmodal" aria-hidden="true">
+                <div class="modal fade" id="editmodal" role="dialog" aria-labelledby="editmodal" aria-hidden="true" data-backdrop="static">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content" style="margin: 10px">
                             <div class="modal-header bg-info">
@@ -945,6 +945,7 @@
                     url: "/api/logistik/so/data/detail/item/" + pesanan_id,
                     'dataType': 'json',
                     success: function (data) {
+                        console.log(data)
                         if(data.header.perusahaan_pengiriman && data.header.alamat_pengiriman) {
                             // pilihan pengiriman == penjualan
                             $('#pilihan_pengiriman0').prop('checked', true)

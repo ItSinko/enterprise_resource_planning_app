@@ -1862,7 +1862,9 @@ class GudangController extends Controller
             $arr_seri = [];
             $arr_rakit = [];
 
-            if (count($data) == 0 && count($datarakit) == 0) {
+
+            // if (count($data) == 0 && count($datarakit) == 0) {
+            if (count($data) == 0) {
                 return response()->json(['msg' => 'Noseri tersimpan']);
             } else {
                 foreach ($data as $d) {
@@ -1877,9 +1879,9 @@ class GudangController extends Controller
                     return response()->json(['error' => 'Nomor seri ' . implode(', ', $arr_seri) . ' sudah terdaftar di gudang']);
                 }
 
-                if (count($datarakit) > 0) {
-                    return response()->json(['error' => 'Nomor seri ' . implode(', ', $arr_rakit) . ' sudah terdaftar di perakitan']);
-                }
+                // if (count($datarakit) > 0) {
+                //     return response()->json(['error' => 'Nomor seri ' . implode(', ', $arr_rakit) . ' sudah terdaftar di perakitan']);
+                // }
             }
         } catch (\Exception $e) {
             return response()->json([

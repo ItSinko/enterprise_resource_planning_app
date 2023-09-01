@@ -26,6 +26,7 @@ use App\Models\Spb;
 use App\Models\Provinsi;
 use App\Models\SaveResponse;
 use App\Models\SystemLog;
+use App\Models\TFProduksi;
 use PDF;
 use Carbon\Doctrine\CarbonType;
 use Illuminate\Http\Request;
@@ -3749,7 +3750,7 @@ class PenjualanController extends Controller
                 $tgl_po = $request->tanggal_po_ekat;
                 $no_do = $request->no_do_ekat;
                 $tgl_do = $request->tanggal_do_ekat;
-                $ket_po = $request->keterangan_po_ekat;
+                $ket_po = $request->keterangan_ekat;
                 if ($request->status == 'sepakat') {
                     $log_id = "9";
                 }
@@ -4137,7 +4138,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             ], 500);
     }
 
-    if ($request->status == 'sepakat' && ( $request->perusahaan_pengiriman == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL || $request->ekspedisi == NULL) ) {
+    if ($request->status == 'sepakat' && ( $request->perusahaan_pengiriman == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL ) ) {
         return response()->json([
             'message' => 'Cek Form Kembali',
         ], 500);
@@ -4194,7 +4195,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
         $p->kemasan = $request->kemasan;
         $p->ekspedisi_id = $request->ekspedisi;
         $p->ket_kirim = $request->keterangan_pengiriman;
-        $p->ket = $request->keterangan_po_ekat;
+        $p->ket = $request->keterangan_ekat;
 
 
         if ($request->status_akn == "sepakat" && $request->no_po_ekat != NULL) {
@@ -4308,8 +4309,8 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
     }
     public function update_spa(Request $request, $id)
     {
-        //dd($request->all());
-        if ($request->perusahaan_pengiriman_nonakn == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL || $request->ekspedisi == NULL)  {
+       //dd($request->all());
+        if ($request->perusahaan_pengiriman_nonakn == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL )  {
             return response()->json([
                 'message' => 'Cek Form Kembali',
             ], 500);
@@ -4614,6 +4615,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                 if (!empty($request->no_do) && !empty($request->tgl_do)) {
                     $po->no_do = $request->no_do;
                     $po->tgl_do = $request->tgl_do;
+                    $po->ket = $request->keterangan;
                     $pou = $po->save();
                     if (!$pou) {
                         $bool = false;
@@ -4621,6 +4623,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                 } else if (empty($request->no_do) && empty($request->tgl_do)) {
                     $po->no_do = "";
                     $po->tgl_do = NULL;
+                    $po->ket = $request->keterangan;
                     $pou = $po->save();
                     $bool = true;
                 } else {
@@ -4634,6 +4637,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             if (!empty($request->no_do) && !empty($request->tgl_do)) {
                 $po->no_do = $request->no_do;
                 $po->tgl_do = $request->tgl_do;
+                $po->ket = $request->keterangan;
                 $pou = $po->save();
 
                 if (!$pou) {
@@ -4642,6 +4646,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             } else if (empty($request->no_do) && empty($request->tgl_do)) {
                 $po->no_do = "";
                 $po->tgl_do = NULL;
+                $po->ket = $request->keterangan;
                 $pou = $po->save();
                 $bool = true;
             } else {
@@ -7508,7 +7513,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             if ($pesanan->Ekatalog){
                 $cs = $pesanan->Ekatalog->Customer->nama;
                 $alamat_cs = $pesanan->Ekatalog->Customer->alamat;
-                $ket_paket =$pesanan->Ekatalog->instansi;
+                $ket_paket =$pesanan->ket;
                 $no_paket = $pesanan->Ekatalog->no_paket;
                 $catatan =  $pesanan->Ekatalog->ket;
 
@@ -7516,15 +7521,15 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                 $cs = $pesanan->Spa->Customer->nama;
                 $alamat_cs = $pesanan->Spa->Customer->alamat;
                 $ket_paket = '';
-                $no_paket = 'OFFLINE';
-                $catatan =  $pesanan->Spa->ket;
+                $no_paket = $pesanan->ket;
+                $catatan =  '';
 
             }elseif($pesanan->Spb){
                 $cs = $pesanan->Spb->Customer->nama;
                 $alamat_cs = $pesanan->Spb->Customer->alamat;
                 $ket_paket =$pesanan->ket_kirim;
                 $no_paket = '';
-                $catatan =  $pesanan->Spb->ket;
+                $catatan =  $pesanan->ket;
             }
 
 
@@ -7552,7 +7557,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
 
 
 
-        return response()->json($header);
+        // return response()->json($header);
         $pdf = PDF::loadView('page.penjualan.surat.surat-perintah-kirim', ['data' => $header,'pesanan'=> $pesanan,'count_page' => count($data)])->setOptions(['defaultFont' => 'sans-serif'])->setPaper($customPaper);
         return $pdf->stream('');
     }

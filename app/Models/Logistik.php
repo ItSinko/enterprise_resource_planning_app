@@ -9,7 +9,8 @@ class Logistik extends Model
 {
     protected $connection = 'erp';
     protected $table = 'logistik';
-    protected $fillable = ['ekspedisi_id', 'status_id', 'nosurat', 'noresi', 'tgl_kirim', 'nama_pengirim','nama_up','telp_up','tujuan_pengiriman','alamat_pengiriman','kemasan','dimensi','ekspedisi_terusan','ket'];
+    //protected $fillable = ['ekspedisi_id', 'status_id', 'nosurat', 'noresi', 'tgl_kirim', 'nama_pengirim',];
+     protected $fillable = ['ekspedisi_id', 'status_id', 'nosurat', 'noresi', 'tgl_kirim', 'nama_pengirim','nama_up','telp_up','tujuan_pengiriman','alamat_pengiriman','kemasan','dimensi','ekspedisi_terusan','ket'];
 
     public function Ekspedisi()
     {

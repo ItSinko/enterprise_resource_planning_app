@@ -1502,6 +1502,35 @@
                 })
             }
 
+            const getekspedisiall = () => {
+                $('#ekspedisi').select2({
+                    placeholder: "Pilih Ekspedisi",
+                    ajax: {
+                        minimumResultsForSearch: 20,
+                        dataType: 'json',
+                        theme: "bootstrap",
+                        delay: 250,
+                        type: 'GET',
+                        url: '/api/logistik/ekspedisi/all',
+                        data: function(params) {
+                            return {
+                                term: params.term
+                            }
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data, function(obj) {
+                                    return {
+                                        id: obj.id,
+                                        text: obj.nama
+                                    };
+                                })
+                            };
+                        },
+                    }
+                })
+            }
+
             $('#jenis_paket').select2();
             var nopaketdb = "{{ str_replace(['AK1-', 'FKS-', 'KLK-'], '', $e->no_paket) }}";
             var nopaketubah = false;
@@ -1539,9 +1568,11 @@
                 $('input[value="distributor"]').prop('checked', true);
             } else if (alamat_pengiriman == alamat_instansi) {
                 $('input[value="instansi"]').prop('checked', true);
-                ekspedisi(provinsi_instansi)
+                // ekspedisi(provinsi_instansi)
+                getekspedisiall();
             } else {
                 $('input[value="lainnya"]').prop('checked', true);
+                getekspedisiall();
             }
 
             function checkvalidasi() {
@@ -1765,6 +1796,11 @@
                         provinsi_customer = data[0].id_provinsi;
                         $('#alamat_customer').val(data[0].alamat);
                         $('#telepon_customer').val(data[0].telp);
+
+                        if($('input[type="radio"][name="pilihan_pengiriman"]:checked').val() == 'distributor'){
+                            $('#perusahaan_pengiriman').val(data[0].nama);
+                            $('#alamat_pengiriman').val(data[0].alamat);
+                        }
                     }
                 });
 
