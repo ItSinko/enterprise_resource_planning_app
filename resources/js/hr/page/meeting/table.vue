@@ -73,7 +73,7 @@ export default {
             this.modalCatatan = false
         },
         detail(id, status){
-            if(status == 'terlaksana'){
+            if(status == 'terlaksana' || status == 'menyusun_hasil_meeting'){
                 this.$router.push({ name: 'detail-meeting-terlaksana', params: { id: id } })
             } else {
                 this.$router.push({ name: 'detail-meeting-nonterlaksana', params: { id: id } })

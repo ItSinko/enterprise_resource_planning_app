@@ -8,12 +8,49 @@ export default {
 };
 </script>
 <template>
-    <div class="card">
+    <!-- <div class="card">
         <div class="card-body">
             <div class="card-body">
                 <div class="margin" v-for="(meet, idx) in meeting">
                     <hr v-if="idx > 0" />
                     <h4 class="my-4 text-capitalize">{{ meet.jenis }}</h4>
+                    <div class="row">
+                        <div v-for="dokumen in meet.dokumen" class="col-3">
+                            <dokumen
+                                :jenis="meet.jenis"
+                                :link="dokumen.link"
+                                :nama="dokumen.nama"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div id="accordion">
+        <div class="card" v-for="(meet, idx) in meeting">
+            <div class="card-header" :id="'heading' + idx">
+                <h5 class="mb-0">
+                    <button
+                        class="btn btn-link"
+                        data-toggle="collapse"
+                        :data-target="'#collapseOne' + idx"
+                        aria-expanded="true"
+                        :aria-controls="'collapseOne' + idx"
+                    >
+                        {{ meet.jenis }}
+                    </button>
+                </h5>
+            </div>
+
+            <div
+                :id="'collapseOne' + idx"
+                class="collapse"
+                :class="{ show: idx == 0 }"
+                :aria-labelledby="'heading' + idx"
+                data-parent="#accordion"
+            >
+                <div class="card-body">
                     <div class="row">
                         <div v-for="dokumen in meet.dokumen" class="col-3">
                             <dokumen
