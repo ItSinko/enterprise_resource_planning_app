@@ -1,19 +1,43 @@
 <script>
-import pagination from "../../../components/pagination.vue";
+import pagination from "../../../../components/pagination.vue";
+import modal from "./modal.vue";
 export default {
-    props: ["meeting"],
+    props: ["meeting", "status"],
     components: {
         pagination,
+        modal,
     },
     data() {
         return {
             search: "",
             renderPaginate: [],
+            formhasilmeeting: {
+                isi: "",
+            },
         };
     },
     methods: {
         updatePage(page) {
             this.renderPaginate = page;
+        },
+        addHasilMeeting() {
+            this.showModal = true;
+            // reset formhasilmeeting
+            this.formhasilmeeting = {
+                isi: "",
+            };
+            this.$nextTick(() => {
+                $(".modalHasilMeeting").modal("show");
+            });
+        },
+        save() {
+            this.showModal = false;
+            this.$nextTick(() => {
+                $(".modalHasilMeeting").modal("hide");
+            });
+        },
+        close() {
+            this.showModal = false;
         },
     },
     computed: {
@@ -31,17 +55,21 @@ export default {
 </script>
 <template>
     <div class="card">
+        <modal :formhasilmeeting="formhasilmeeting" @save="save" @closeModal="close" />
         <div class="card-body">
-            <div class="d-flex flex-row-reverse bd-highlight">
-                <div class="p-2 bd-highlight">
-                    <div class="input-group">
-                        <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Cari..."
-                            v-model="search"
-                        />
-                    </div>
+            <div class="d-flex">
+                <div class="mr-auto p-2">
+                    <button class="btn btn-primary" @click="addHasilMeeting" v-if="status == 'menyusun_hasil_meeting'">
+                        <i class="fa fa-plus"></i>
+                        Tambah</button>
+                </div>
+                <div class="p-2">
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Cari..."
+                        v-model="search"
+                    />
                 </div>
             </div>
             <table class="table">

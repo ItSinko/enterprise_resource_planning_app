@@ -2,8 +2,8 @@
 import Header from "../../../components/header.vue";
 import HeaderDetail from "./header.vue";
 import Kehadiran from "./kehadiran";
-import HasilNotulensi from "./notulen.vue";
-import HasilMeeting from "./hasilmeeting.vue";
+import HasilNotulensi from "./notulen";
+import HasilMeeting from "./hasilmeeting";
 import DokumenPendukung from "./dokumenpendukung.vue";
 export default {
     components: {
@@ -43,7 +43,7 @@ export default {
                 notulen: "Notulen 1",
                 moderator: "Moderator 1",
                 jumlah_peserta: 10,
-                status: "terlaksana",
+                status: "menyusun_hasil_meeting",
                 lokasi: "Gedung A",
                 alasan_perubahan_meeting:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
@@ -343,7 +343,7 @@ export default {
                 role="tabpanel"
                 aria-labelledby="pills-hasil-notulensi-tab"
             >
-                <hasil-notulensi :meeting="meeting.hasil_notulensi" />
+                <hasil-notulensi :meeting="meeting.hasil_notulensi" :status="meeting.status"/>
             </div>
             <div
                 class="tab-pane fade"
@@ -351,7 +351,7 @@ export default {
                 role="tabpanel"
                 aria-labelledby="pills-hasil-meeting-tab"
             >
-                <hasil-meeting :meeting="meeting.hasil_rapat" />
+                <hasil-meeting :meeting="meeting.hasil_rapat" :status="meeting.status"/>
             </div>
             <div
                 class="tab-pane fade"
