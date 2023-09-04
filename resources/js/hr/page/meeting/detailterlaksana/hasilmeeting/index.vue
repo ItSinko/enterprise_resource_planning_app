@@ -32,6 +32,11 @@ export default {
         },
         save() {
             this.showModal = false;
+            if (this.formhasilmeeting?.idx) {
+                this.meeting[this.formhasilmeeting.idx] = this.formhasilmeeting;
+            } else {
+                this.meeting.push(this.formhasilmeeting);
+            }
             this.$nextTick(() => {
                 $(".modalHasilMeeting").modal("hide");
             });
@@ -39,6 +44,14 @@ export default {
         close() {
             this.showModal = false;
         },
+        editHasilMeeting(data, idx){
+            this.showModal = true;
+            this.formhasilmeeting = JSON.parse(JSON.stringify(data));
+            this.formhasilmeeting.idx = idx;
+            this.$nextTick(() => {
+                $(".modalHasilMeeting").modal("show");
+            });
+        }
     },
     computed: {
         paginateData() {
@@ -77,6 +90,7 @@ export default {
                     <tr>
                         <th>No</th>
                         <th>Hasil Rapat</th>
+                        <th v-if="status == 'menyusun_hasil_meeting'">Aksi</th>
                     </tr>
                 </thead>
                 <tbody v-if="renderPaginate.length > 0">

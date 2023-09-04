@@ -79,7 +79,7 @@ class KaryawanController extends Controller
 
     public function get_karyawan_all(Request $r)
     {
-        $data = Karyawan::where('nama', 'LIKE', '%' . $r->input('term', '') . '%')->get();
+        $data = Karyawan::where('nama', 'LIKE', '%' . $r->input('term', '') . '%')->with('Divisi')->get();
         return response()->json($data);
     }
 

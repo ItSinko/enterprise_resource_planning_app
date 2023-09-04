@@ -13,6 +13,7 @@ export default {
     },
     methods: {
         save() {
+            this.closeModal();
             this.$emit("save");
         },
         async getDataKaryawan() {
@@ -62,7 +63,6 @@ export default {
                         <vue-select
                             :options="karyawan"
                             label="nama"
-                            :reduce="(karyawan) => karyawan.id"
                             v-model="formnotulen.penanggungjawab"
                         />
                     </div>
@@ -70,41 +70,6 @@ export default {
                     <div class="form-group">
                         <label for="">Uraian</label>
                         <textarea class="form-control" v-model="formnotulen.isi"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">Kesesuaian</label>
-                        <div class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="inlineRadioOptions"
-                                id="inlineRadio1"
-                                v-model="formnotulen.kesesuaian"
-                                value="sesuai"
-                            />
-                            <label class="form-check-label" for="inlineRadio1"
-                                >Sesuai</label
-                            >
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="inlineRadioOptions"
-                                id="inlineRadio2"
-                                v-model="formnotulen.kesesuaian"
-                                value="tidak_sesuai"
-                            />
-                            <label class="form-check-label" for="inlineRadio2"
-                                >Tidak Sesuai</label
-                            >
-                        </div>
-                    </div>
-
-                    <div class="form-group" v-if="formnotulen.kesesuaian == 'tidak_sesuai'">
-                      <label for="">Catatan</label>
-                      <textarea class="form-control" v-model="formnotulen.catatan"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

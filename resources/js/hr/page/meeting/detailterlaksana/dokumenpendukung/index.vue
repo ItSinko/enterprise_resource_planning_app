@@ -1,7 +1,7 @@
 <script>
-import dokumen from "../../../components/dokumen.vue";
+import dokumen from "../../../../components/dokumen.vue";
 export default {
-    props: ["meeting"],
+    props: ["meeting", "status"],
     components: {
         dokumen,
     },
@@ -9,6 +9,11 @@ export default {
 </script>
 <template>
     <div id="accordion">
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <div class="p-2 bd-highlight">
+                <button class="btn btn-primary mb-2">Tambah Dokumen</button>
+            </div>
+        </div>
         <div class="card" v-for="(meet, idx) in meeting">
             <div class="card-header" :id="'heading' + idx">
                 <h5 class="mb-0">

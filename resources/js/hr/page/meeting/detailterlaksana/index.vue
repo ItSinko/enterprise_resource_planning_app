@@ -4,7 +4,7 @@ import HeaderDetail from "./header.vue";
 import Kehadiran from "./kehadiran";
 import HasilNotulensi from "./notulen";
 import HasilMeeting from "./hasilmeeting";
-import DokumenPendukung from "./dokumenpendukung.vue";
+import DokumenPendukung from "./dokumenpendukung";
 export default {
     components: {
         Header,
@@ -229,6 +229,7 @@ export default {
                 ],
                 hasil_notulensi: [
                     {
+                        id: 1,
                         penanggungjawab: "Tan Evi",
                         divisi: "Divisi 1",
                         isi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
@@ -236,9 +237,10 @@ export default {
                         created_at: "2023-01-01 08:00",
                     },
                     {
+                        id: 2,
                         penanggungjawab: "Bangkit Nata Satria ",
                         divisi: "Divisi 1",
-                        isi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+                        isi: "Voluptatum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                         kesesuaian: "tidak_sesuai",
                         created_at: "2023-01-01 08:00",
                         catatan: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
@@ -246,9 +248,11 @@ export default {
                 ],
                 hasil_rapat: [
                     {
+                        id: 1,
                         isi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                     },
                     {
+                        id: 2,
                         isi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                     },
                 ],
@@ -359,7 +363,7 @@ export default {
                 role="tabpanel"
                 aria-labelledby="pills-dokumen-pendukung-tab"
             >
-                <dokumen-pendukung :meeting="meeting.dokumen_pendukung" />
+                <dokumen-pendukung :meeting="meeting.dokumen_pendukung" :status="meeting.status"/>
             </div>
         </div>
     </div>

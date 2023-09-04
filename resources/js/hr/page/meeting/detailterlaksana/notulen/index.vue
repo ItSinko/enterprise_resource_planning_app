@@ -1,32 +1,8 @@
 <script>
-var rij;
-
-function start() {
-  rij = event.target;
-}
-function dragover() {
-  var e = event;
-  e.preventDefault();
-
-  let children = Array.from(e.target.parentNode.parentNode.children);
-
-  if (children.indexOf(e.target.parentNode) > children.indexOf(rij))
-    e.target.parentNode.after(rij);
-  else e.target.parentNode.before(rij);
-
-  var table = document.getElementById("table");
-
-  var row = table.rows;
-  for (var j = 1; j < row.length; j++) {
-    document.getElementById("table").rows[j].cells.item(0).innerHTML =
-      "marker" + j;
-  }
-}
-// this is where the draggability code ends
-
 import moment from "moment";
 import kehadiran from "../../../../components/kehadiran.vue";
 import modal from "./modal.vue";
+import Sortable from "sortablejs";
 export default {
     props: ["meeting", "status"],
     components: {
@@ -43,12 +19,20 @@ export default {
                 kesesuaian: "",
                 catatan: "",
             },
-            dragged: null,
+            dragNdrop: [],
         };
     },
     methods: {
         formatDateTime(date) {
             return moment(date).lang("id").format("DD/MM/YYYY HH:mm");
+        },
+        editNotulen(data, idx) {
+            this.showModal = true;
+            this.formnotulen = JSON.parse(JSON.stringify(data));
+            this.formnotulen.idx = idx;
+            this.$nextTick(() => {
+                $(".modalNotulen").modal("show");
+            });
         },
         addNotulen() {
             this.showModal = true;
@@ -68,31 +52,57 @@ export default {
         },
         save() {
             this.showModal = false;
-            this.$nextTick(() => {
-                $(".modalNotulen").modal("hide");
+            if (this.formnotulen?.idx) {
+                this.meeting[this.formnotulen.idx] = this.formnotulen;
+            } else {
+                this.meeting.push(this.formnotulen);
+            }
+        },
+        initSortable() {
+            let table = document.querySelector(".tbodyDragNDrop");
+            const _self = this;
+            // this way we avoid data binding
+
+            Sortable.create(table, {
+                onEnd({ newIndex, oldIndex }) {
+                    _self.meeting.splice(
+                        newIndex,
+                        0,
+                        ..._self.meeting.splice(oldIndex, 1)
+                    );
+                },
             });
         },
-        start() {
-            console.log("start");
-        },
-        dragover() {
-            console.log("dragover");
+    },
+    mounted() {
+        this.initSortable();
+    },
+    watch: {
+        meeting() {
+            this.initSortable();
         },
     },
 };
-
-
-
 </script>
 <template>
     <div class="card">
-    <modal :formnotulen="formnotulen" @save="save" v-if="showModal" @closeModal="close"/>
+        <modal
+            :formnotulen="formnotulen"
+            @save="save"
+            v-if="showModal"
+            @closeModal="close"
+        />
         <div class="card-body">
             <div class="d-flex">
                 <div class="mr-auto p-2">
-                    <button class="btn btn-primary" @click="addNotulen" v-if="status == 'menyusun_hasil_meeting'">
+                    <button
+                        class="btn btn-primary"
+                        @click="addNotulen"
+                        v-if="status == 'menyusun_hasil_meeting'"
+                    >
                         <i class="fa fa-plus"></i>
-                        Tambah</button>
+                        Tambah
+                    </button>
                 </div>
                 <div class="p-2">
                     <input
@@ -103,7 +113,7 @@ export default {
                     />
                 </div>
             </div>
-            <table class="table" id="table">
+            <table class="table">
                 <thead class="text-center">
                     <tr>
                         <th rowspan="2">No</th>
@@ -111,32 +121,51 @@ export default {
                         <th rowspan="2">Uraian</th>
                         <th colspan="2">Kesesuian</th>
                         <th rowspan="2">Catatan</th>
+                        <th rowspan="2" v-if="status == 'menyusun_hasil_meeting'">Aksi</th>
                     </tr>
                     <tr>
                         <th>Hasil</th>
                         <th>Dicek Oleh</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(item, idx) in meeting"
-                    @draggable="true"
-                    @ondragstart="start()"
-                    @ondragover="dragover()"
-                    >
+                <tbody class="tbodyDragNDrop">
+                    <tr v-for="(item, idx) in meeting" :key="item.isi">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td class="text-center">
-                            {{ item.penanggungjawab }} - {{ item.divisi }}
+                            {{
+                                item.penanggungjawab?.nama
+                                    ? item.penanggungjawab?.nama
+                                    : item.penanggungjawab
+                            }}
+                            - {{ item.penanggungjawab?.divisi?.nama 
+                                ? item.penanggungjawab?.divisi?.nama
+                                : item.divisi
+                             }}
                         </td>
                         <td>{{ item.isi }}</td>
                         <td class="text-center">
                             <kehadiran :kehadiran="item.kesesuaian" />
                         </td>
                         <td class="text-center">
-                            {{ item.penanggungjawab }},
-                            {{ formatDateTime(item.created_at) }}
+                            <div v-if="status != 'menyusun_hasil_meeting'">
+                                {{
+                                    item.penanggungjawab?.nama
+                                        ? item.penanggungjawab?.nama
+                                        : item.penanggungjawab
+                                }}
+                                {{ formatDateTime(item.created_at) }}
+                            </div>
                         </td>
                         <td>
                             {{ item.catatan ?? "-" }}
+                        </td>
+                        <td v-if="item?.id == undefined">
+                            <button class="btn btn-outline-warning" @click="editNotulen(item, idx)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" @click="meeting.splice(idx, 1)">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -144,3 +173,8 @@ export default {
         </div>
     </div>
 </template>
+<style>
+.tbodyDragNDrop > tr {
+    cursor: grab;
+}
+</style>
