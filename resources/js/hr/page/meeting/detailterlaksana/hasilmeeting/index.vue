@@ -78,6 +78,7 @@ export default {
                 </div>
                 <div class="p-2">
                     <input
+                        v-if="status != 'menyusun_hasil_meeting'"
                         type="text"
                         class="form-control"
                         placeholder="Cari..."
@@ -93,19 +94,28 @@ export default {
                         <th v-if="status == 'menyusun_hasil_meeting'">Aksi</th>
                     </tr>
                 </thead>
-                <tbody v-if="renderPaginate.length > 0">
+                <tbody v-if="status == 'menyusun_hasil_meeting'">
+                    <tr v-for="(item, idx) in meeting" >
+                        <td class="text-center">{{ idx + 1 }}</td>
+                        <td>{{ item.isi }}</td>
+                        <td v-if="item?.id == undefined">
+                            <!-- <button class="btn btn-outline-warning" @click="editHasilMeeting(item, idx)">
+                                <i class="fa fa-edit"></i>
+                            </button> -->
+                            <button class="btn btn-outline-danger" @click="meeting.splice(idx, 1)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-if="status != 'menyusun_hasil_meeting'">
                     <tr v-for="(item, idx) in renderPaginate" :key="idx">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td>{{ item.isi }}</td>
                     </tr>
                 </tbody>
-                <tbody v-else>
-                    <tr>
-                        <td colspan="2" class="text-center">Tidak ada data</td>
-                    </tr>
-                </tbody>
             </table>
-            <pagination :DataTable="paginateData" @updatePage="updatePage" />
+            <pagination :DataTable="paginateData" @updatePage="updatePage" v-if="status != 'menyusun_hasil_meeting'"/>
         </div>
     </div>
 </template>

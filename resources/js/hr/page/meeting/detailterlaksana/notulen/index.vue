@@ -1,28 +1,33 @@
 <script>
 import moment from "moment";
 import kehadiran from "../../../../components/kehadiran.vue";
+import pagination from "../../../../components/pagination.vue";
 import modal from "./modal.vue";
 import Sortable from "sortablejs";
 export default {
     props: ["meeting", "status"],
     components: {
         kehadiran,
+        pagination,
         modal,
     },
     data() {
         return {
             search: "",
             showModal: false,
+            renderPaginate: [],
             formnotulen: {
                 penanggungjawab: "",
                 isi: "",
                 kesesuaian: "",
                 catatan: "",
             },
-            dragNdrop: [],
         };
     },
     methods: {
+        updatePage(page) {
+            this.renderPaginate = page;
+        },
         formatDateTime(date) {
             return moment(date).lang("id").format("DD/MM/YYYY HH:mm");
         },
@@ -74,6 +79,17 @@ export default {
             });
         },
     },
+    computed: {
+        paginateData() {
+            return this.meeting.filter((data) => {
+                return Object.keys(data).some((key) => {
+                    return String(data[key])
+                        .toLowerCase()
+                        .includes(this.search.toLowerCase());
+                });
+            });
+        },
+    },
     mounted() {
         this.initSortable();
     },
@@ -104,7 +120,7 @@ export default {
                         Tambah
                     </button>
                 </div>
-                <div class="p-2">
+                <div class="p-2" v-if="status != 'menyusun_hasil_meeting'">
                     <input
                         type="text"
                         class="form-control"
@@ -121,14 +137,22 @@ export default {
                         <th rowspan="2">Uraian</th>
                         <th colspan="2">Kesesuian</th>
                         <th rowspan="2">Catatan</th>
-                        <th rowspan="2" v-if="status == 'menyusun_hasil_meeting'">Aksi</th>
+                        <th
+                            rowspan="2"
+                            v-if="status != 'menyusun_hasil_meeting'"
+                        >
+                            Aksi
+                        </th>
                     </tr>
                     <tr>
                         <th>Hasil</th>
                         <th>Dicek Oleh</th>
                     </tr>
                 </thead>
-                <tbody class="tbodyDragNDrop">
+                <tbody
+                    class="tbodyDragNDrop"
+                    v-if="status == 'menyusun_hasil_meeting'"
+                >
                     <tr v-for="(item, idx) in meeting" :key="item.isi">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td class="text-center">
@@ -137,10 +161,12 @@ export default {
                                     ? item.penanggungjawab?.nama
                                     : item.penanggungjawab
                             }}
-                            - {{ item.penanggungjawab?.divisi?.nama 
-                                ? item.penanggungjawab?.divisi?.nama
-                                : item.divisi
-                             }}
+                            -
+                            {{
+                                item.penanggungjawab?.divisi?.nama
+                                    ? item.penanggungjawab?.divisi?.nama
+                                    : item.divisi
+                            }}
                         </td>
                         <td>{{ item.isi }}</td>
                         <td class="text-center">
@@ -160,16 +186,46 @@ export default {
                             {{ item.catatan ?? "-" }}
                         </td>
                         <td v-if="item?.id == undefined">
-                            <button class="btn btn-outline-warning" @click="editNotulen(item, idx)">
+                            <button
+                                class="btn btn-outline-warning"
+                                @click="editNotulen(item, idx)"
+                            >
                                 <i class="fa fa-edit"></i>
                             </button>
-                            <button class="btn btn-outline-danger" @click="meeting.splice(idx, 1)">
+                            <button
+                                class="btn btn-outline-danger"
+                                @click="meeting.splice(idx, 1)"
+                            >
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
                     </tr>
                 </tbody>
+                <tbody v-if="status != 'menyusun_hasil_meeting'">
+                    <tr v-for="(item, idx) in renderPaginate" :key="item.isi">
+                        <td class="text-center">{{ idx + 1 }}</td>
+                        <td class="text-center">
+                            {{ item.penanggungjawab }} - {{ item.divisi }}
+                        </td>
+                        <td>{{ item.isi }}</td>
+                        <td class="text-center">
+                            <kehadiran :kehadiran="item.kesesuaian" />
+                        </td>
+                        <td class="text-center">
+                            {{ item.penanggungjawab }},
+                            {{ formatDateTime(item.created_at) }}
+                        </td>
+                        <td>
+                            {{ item.catatan ?? "-" }}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
+            <pagination
+                :DataTable="paginateData"
+                @updatePage="updatePage"
+                v-if="status != 'menyusun_hasil_meeting'"
+            />
         </div>
     </div>
 </template>
