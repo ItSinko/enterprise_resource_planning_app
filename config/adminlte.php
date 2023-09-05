@@ -227,11 +227,9 @@ return [
         [
             'header' => ''
         ],
+        // dashboard meeting
         [
-            'text'        => 'Beranda',
-            'url'         => '',
-            'icon'        => 'nav-icon fa fa-home',
-            'auth'        => [24]
+            'text' => 'Beranda',
         ],
         [
             'text'        => 'Beranda',
@@ -1727,6 +1725,16 @@ return [
             'icon' => 'fas fa-dolly fa-fw',
             'url' => '/manager/logistik/show',
             'auth' => [32],
+        ],
+        [
+            'header' => 'Meeting',
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        [
+            'text'        => 'Jadwal Meeting',
+            'url'         => '/meeting/jadwal_meet',
+            'icon'        => 'nav-icon fa fa-calendar',
+            'auth'        => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
         [
             'header' => 'Setting',
