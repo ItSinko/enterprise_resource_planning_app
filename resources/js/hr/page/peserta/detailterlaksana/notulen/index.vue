@@ -63,23 +63,6 @@ export default {
                 this.meeting.push(this.formnotulen);
             }
         },
-        initSortable() {
-            let table = document.querySelector(".tbodyDragNDrop");
-            const _self = this;
-            // this way we avoid data binding
-
-            if (this.status == "menyusun_hasil_meeting") {
-                Sortable.create(table, {
-                    onEnd({ newIndex, oldIndex }) {
-                        _self.meeting.splice(
-                            newIndex,
-                            0,
-                            ..._self.meeting.splice(oldIndex, 1)
-                        );
-                    },
-                });
-            }
-        },
     },
     computed: {
         paginateData() {
@@ -93,12 +76,6 @@ export default {
         },
     },
     mounted() {
-        this.initSortable();
-    },
-    watch: {
-        meeting() {
-            this.initSortable();
-        },
     },
 };
 </script>
