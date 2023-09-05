@@ -34,7 +34,7 @@ export default {
         saveHasilMeeting() {
             this.showModal = false;
             if (this.formhasilmeeting?.idx) {
-                this.meeting[this.formhasilmeeting.idx] = this.formhasilmeeting;
+                this.meeting[this.formhasilmeeting.idx - 1] = this.formhasilmeeting;
             } else {
                 this.meeting.push(this.formhasilmeeting);
             }
@@ -48,7 +48,7 @@ export default {
         editHasilMeeting(data, idx) {
             this.showModal = true;
             this.formhasilmeeting = JSON.parse(JSON.stringify(data));
-            this.formhasilmeeting.idx = idx;
+            this.formhasilmeeting.idx = idx + 1;
             this.$nextTick(() => {
                 $(".modalHasilMeeting").modal("show");
             });
@@ -109,7 +109,7 @@ export default {
                     <tr v-for="(item, idx) in meeting" :key="idx">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td>{{ item.isi }}</td>
-                        <td v-if="item?.id == undefined">
+                        <td>
                             <button
                                 class="btn btn-outline-warning"
                                 @click="editHasilMeeting(item, idx)"
