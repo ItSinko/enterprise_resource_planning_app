@@ -133,22 +133,35 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div class="margin">
-                        <div>
-                            <small class="text-muted">Deskripsi</small>
+                    <div class="d-flex bd-highlight">
+                        <div class="flex-grow-1 bd-highlight">
+                            <div class="margin">
+                                <div>
+                                    <small class="text-muted">Deskripsi</small>
+                                </div>
+                                <div>
+                                    <b id="no_so">{{ meeting.deskripsi }}</b>
+                                </div>
+                            </div>
+                            <div v-if="meeting.alasan_perubahan_meeting">
+                                <small class="text-muted"
+                                    >Alasan Perubahan Meeting</small
+                                >
+                                <div class="margin">
+                                    <b id="distributor">
+                                        {{ meeting.alasan_perubahan_meeting }}
+                                    </b>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <b id="no_so">{{ meeting.deskripsi }}</b>
-                        </div>
-                    </div>
-                    <div v-if="meeting.alasan_perubahan_meeting">
-                        <small class="text-muted"
-                            >Alasan Perubahan Meeting</small
+                        <div
+                            class="p-2 bd-highlight"
+                            v-if="meeting.status == 'menyusun_hasil_meeting'"
                         >
-                        <div class="margin">
-                            <b id="distributor">
-                                {{ meeting.alasan_perubahan_meeting }}
-                            </b>
+                            <button class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-save"></i>
+                                Simpan
+                            </button>
                         </div>
                     </div>
                 </div>
