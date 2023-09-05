@@ -24,11 +24,11 @@ export default {
                 },
                 {
                     name: "Meeting",
-                    link: "/hr/meeting",
+                    link: "/meeting/jadwal_meet",
                 },
                 {
                     name: "Detail Meeting",
-                    link: "/hr/meeting/detail",
+                    link: "/meeting/jadwal_meet/detail",
                 },
             ],
             meeting: {

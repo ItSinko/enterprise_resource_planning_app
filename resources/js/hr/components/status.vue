@@ -11,7 +11,7 @@ export default {
                     return "badge-success";
                     break;
                 case "belum_terlaksana":
-                    return "badge-danger";
+                    return "badge-primary";
                     break;
                 case "menyusun_hasil_meeting":
                     return "badge-warning";

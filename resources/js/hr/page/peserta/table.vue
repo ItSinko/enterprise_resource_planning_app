@@ -13,7 +13,7 @@ export default {
         return {
             modalKehadiran: false,
             dataKehadiran: null,
-        }
+        };
     },
     methods: {
         openModalKehadiran(data) {
@@ -26,12 +26,12 @@ export default {
         detail(id, status) {
             if (status == "terlaksana" || status == "menyusun_hasil_meeting") {
                 this.$router.push({
-                    name: "detail-meeting-terlaksana",
+                    name: "jadwal-meeting-peserta-detail-terlaksana",
                     params: { id: id },
                 });
             } else {
                 this.$router.push({
-                    name: "detail-meeting-nonterlaksana",
+                    name: "jadwal-meeting-peserta-detail-nonterlaksana",
                     params: { id: id },
                 });
             }
@@ -41,7 +41,11 @@ export default {
 </script>
 <template>
     <div>
-        <kehadiran v-if="modalKehadiran" @closeModal="modalKehadiran = false" :kehadiran="dataKehadiran"/>
+        <kehadiran
+            v-if="modalKehadiran"
+            @closeModal="modalKehadiran = false"
+            :kehadiran="dataKehadiran"
+        />
         <table class="table">
             <thead>
                 <tr>
@@ -83,21 +87,39 @@ export default {
                             aria-labelledby="dropdownMenuButton"
                             v-if="data.status == 'belum_terlaksana'"
                         >
-                            <button class="dropdown-item" @click="openModalKehadiran(data)">
-                                <i class="fas fa-check-circle"></i>
-                                Kehadiran
-                            </button>
+                            <a>
+                                <button
+                                    class="dropdown-item"
+                                    @click="openModalKehadiran(data)"
+                                >
+                                    <i class="fas fa-check-circle"></i>
+                                    Kehadiran
+                                </button>
+                                <button
+                                    class="dropdown-item"
+                                    @click="detail(data.id, data.status)"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </button>
+                            </a>
                         </div>
                         <div
                             class="dropdown-menu"
                             aria-labelledby="dropdownMenuButton"
                             v-if="data.status == 'menyusun_hasil_meeting'"
                         >
-                            <button class="dropdown-item" @click="detail(data.id, data.status)">
-                                <i class="fas fa-eye"></i>
+                        <a>
+                            <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    @click="detail(data.id, data.status)"
+                                >
+                                    <i class="fas fa-eye"></i>
                                     Detail
-                            </button>
-                        </div>
+                                </button>
+                        </a>
+                    </div>
                     </td>
                 </tr>
             </tbody>

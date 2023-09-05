@@ -3,6 +3,8 @@ import Dashboard from "./page/meeting";
 import DetailTerlaksana from "./page/meeting/detailterlaksana";
 import DetailNonTerlaksana from "./page/meeting/detailnonterlaksana";
 import JadwalMeetingPeserta from "./page/peserta"
+import JadwalMeetingPesertaDetailTerlaksana from "./page/peserta/detailterlaksana"
+import JadwalMeetingPesertaDetailNonTerlaksana from "./page/peserta/detailnonterlaksana"
 
 const routes = [
     {
@@ -24,6 +26,16 @@ const routes = [
         path: "/meeting/jadwal_meet",
         component: JadwalMeetingPeserta,
         name: "jadwal-meeting-peserta"
+    },
+    {
+        path: "/meeting/jadwal_meet_terlaksana/:id",
+        component: JadwalMeetingPesertaDetailTerlaksana,
+        name: "jadwal-meeting-peserta-detail-terlaksana"
+    },
+    {
+        path: "/meeting/jadwal_meet_nonterlaksana/:id",
+        component: JadwalMeetingPesertaDetailNonTerlaksana,
+        name: "jadwal-meeting-peserta-detail-nonterlaksana"
     }
 ];
 

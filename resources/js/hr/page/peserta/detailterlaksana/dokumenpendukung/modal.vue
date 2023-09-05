@@ -1,5 +1,5 @@
 <script>
-import dokumentasi from "../../aksi/dokumentasi.vue";
+import dokumentasi from "../../../meeting/aksi/dokumentasi.vue";
 export default {
     components: {
         dokumentasi,
