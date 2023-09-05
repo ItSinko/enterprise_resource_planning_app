@@ -125,6 +125,12 @@ export default {
                         </td>
                     </tr>
                 </tbody>
+                <tbody v-if="status != 'menyusun_hasil_meeting'">
+                    <tr v-for="(item, idx) in renderPaginate" :key="idx">
+                        <td class="text-center">{{ idx + 1 }}</td>
+                        <td>{{ item.isi }}</td>
+                    </tr>
+                </tbody>
             </table>
             <pagination
                 :DataTable="paginateData"

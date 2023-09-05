@@ -68,15 +68,17 @@ export default {
             const _self = this;
             // this way we avoid data binding
 
-            Sortable.create(table, {
-                onEnd({ newIndex, oldIndex }) {
-                    _self.meeting.splice(
-                        newIndex,
-                        0,
-                        ..._self.meeting.splice(oldIndex, 1)
-                    );
-                },
-            });
+            if (this.status == "menyusun_hasil_meeting") {
+                Sortable.create(table, {
+                    onEnd({ newIndex, oldIndex }) {
+                        _self.meeting.splice(
+                            newIndex,
+                            0,
+                            ..._self.meeting.splice(oldIndex, 1)
+                        );
+                    },
+                });
+            }
         },
     },
     computed: {

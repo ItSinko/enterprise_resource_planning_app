@@ -27,7 +27,7 @@ export default {
         <Modal v-if="modal" @closeModal="modal = false"/>
         <div class="d-flex flex-row-reverse bd-highlight">
             <div class="p-2 bd-highlight">
-                <button class="btn btn-primary mb-2" @click="openModalTambah">Tambah Dokumen</button>
+                <button class="btn btn-primary mb-2" @click="openModalTambah" v-if="status == 'menyusun_hasil_meeting'">Tambah Dokumen</button>
             </div>
         </div>
         <div class="card" v-for="(meet, idx) in meeting">
