@@ -622,6 +622,13 @@ return [
             'icon' => 'fas fa-table',
             'auth' => [14]
         ],
+        // direksi and IT
+        [
+            'text' => 'Jadwal Meeting',
+            'url' => '/meeting/jadwalmeeting',
+            'icon' => 'fas fa-calendar-alt',
+            'auth' => [14]
+        ],
         // [
         //     'text'    => 'Part',
         //     'icon'    => 'fas fa-boxes',
@@ -1730,6 +1737,7 @@ return [
             'header' => 'Meeting',
             'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
+        // peserta meet
         [
             'text'        => 'Jadwal Meeting',
             'url'         => '/meeting/jadwal_meet',

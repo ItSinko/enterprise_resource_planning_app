@@ -126,6 +126,10 @@ export default {
                             v-if="data.status == 'terlaksana'"
                         >
                             <a>
+                                <button class="dropdown-item">
+                                    <i class="fas fa-print"></i>
+                                    Cetak Hasil Meeting
+                                </button>
                                 <button
                                     class="dropdown-item"
                                     type="button"

@@ -5,6 +5,9 @@ import DetailNonTerlaksana from "./page/meeting/detailnonterlaksana";
 import JadwalMeetingPeserta from "./page/peserta"
 import JadwalMeetingPesertaDetailTerlaksana from "./page/peserta/detailterlaksana"
 import JadwalMeetingPesertaDetailNonTerlaksana from "./page/peserta/detailnonterlaksana"
+import JadwalMeetingDireksi from "./page/direksi"
+import JadwalMeetingDireksiDetailTerlaksana from "./page/direksi/detailterlaksana"
+import JadwalMeetingDireksiDetailNonTerlaksana from "./page/direksi/detailnonterlaksana"
 
 const routes = [
     {
@@ -36,6 +39,21 @@ const routes = [
         path: "/meeting/jadwal_meet_nonterlaksana/:id",
         component: JadwalMeetingPesertaDetailNonTerlaksana,
         name: "jadwal-meeting-peserta-detail-nonterlaksana"
+    },
+    {
+        path: "/meeting/jadwalmeeting",
+        component: JadwalMeetingDireksi,
+        name: "jadwal-meeting-direksi"
+    },
+    {
+        path: "/meeting/jadwalmeeting_terlaksana/:id",
+        component: JadwalMeetingDireksiDetailTerlaksana,
+        name: "jadwal-meeting-direksi-detail-terlaksana"
+    },
+    {
+        path: "/meeting/jadwalmeeting_nonterlaksana/:id",
+        component: JadwalMeetingDireksiDetailNonTerlaksana,
+        name: "jadwal-meeting-direksi-detail-nonterlaksana"
     }
 ];
 

@@ -66,7 +66,7 @@ export default {
                         <td >{{ peserta.nama }}</td>
                         <td class="text-center">{{ peserta.divisi }}</td>
                         <td class="text-center"><kehadiran :kehadiran="peserta.kehadiran" /></td>
-                        <td>{{ peserta.alasan }}</td>
+                        <td>{{ peserta.alasan ? peserta.alasan : '-' }}</td>
                         <td class="text-center">
                             <div v-if="peserta.dokumen_pendukung">
                                 <a 

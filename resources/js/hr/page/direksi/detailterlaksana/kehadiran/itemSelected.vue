@@ -1,7 +1,7 @@
 <script>
 import moment from "moment";
-import pagination from "../../../components/pagination.vue";
-import kehadiran from "../../../components/kehadiran.vue";
+import pagination from "../../../../components/pagination.vue";
+import kehadiran from "../../../../components/kehadiran.vue";
 export default {
     components: {
         pagination,
@@ -38,7 +38,6 @@ export default {
 <template>
     <div class="card">
         <div class="card-body">
-            <h4 class="mb-4">Feedback Peserta (Kehadiran)</h4>
             <div class="d-flex flex-row-reverse bd-highlight">
                 <div class="p-2 bd-highlight">
                     <div class="input-group">
@@ -63,16 +62,28 @@ export default {
                 </thead>
                 <tbody v-if="renderPaginate.length > 0">
                     <tr v-for="(peserta, idx) in renderPaginate" :key="idx">
-                        <td >{{ peserta.nama }}</td>
+                        <td>{{ peserta.nama }}</td>
                         <td class="text-center">{{ peserta.divisi }}</td>
-                        <td class="text-center"><kehadiran :kehadiran="peserta.kehadiran" /></td>
+                        <td class="text-center">
+                            <kehadiran :kehadiran="peserta.kehadiran" />
+                        </td>
                         <td>{{ peserta.alasan ? peserta.alasan : '-' }}</td>
                         <td class="text-center">
                             <div v-if="peserta.dokumen_pendukung">
-                                <a 
-                                    v-for="(dokumen, idx) in peserta.dokumen_pendukung"
+                                <a
+                                    v-for="(
+                                        dokumen, idx
+                                    ) in peserta.dokumen_pendukung"
                                     :key="idx"
-                                    :href="dokumen.link">{{ dokumen.nama }}<span v-if="idx != peserta.dokumen_pendukung.length - 1">, </span>
+                                    :href="dokumen.link"
+                                    >{{ dokumen.nama
+                                    }}<span
+                                        v-if="
+                                            idx !=
+                                            peserta.dokumen_pendukung.length - 1
+                                        "
+                                        >,
+                                    </span>
                                 </a>
                             </div>
                             <span v-else>-</span>
@@ -81,7 +92,7 @@ export default {
                 </tbody>
                 <tbody v-else>
                     <tr>
-                        <td colspan="2" class="text-center">Tidak ada data</td>
+                        <td colspan="5" class="text-center">Tidak ada data</td>
                     </tr>
                 </tbody>
             </table>
