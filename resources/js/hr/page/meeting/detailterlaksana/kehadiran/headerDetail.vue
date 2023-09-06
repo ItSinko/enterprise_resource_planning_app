@@ -59,7 +59,7 @@ export default {
                                         {{ meeting.notulen }}
                                     </b>
                                 </div>
-                                <small class="text-muted">Moderatori</small>
+                                <small class="text-muted">Moderator</small>
                                 <div class="margin">
                                     <b id="distributor">
                                         {{ meeting.moderator }}

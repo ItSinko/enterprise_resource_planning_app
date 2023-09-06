@@ -59,7 +59,7 @@ export default {
                                         {{ meeting.notulen }}
                                     </b>
                                 </div>
-                                <small class="text-muted">Moderatori</small>
+                                <small class="text-muted">Moderator</small>
                                 <div class="margin">
                                     <b id="distributor">
                                         {{ meeting.moderator }}
@@ -165,11 +165,11 @@ export default {
                                         >Alasan Perubahan Meeting</small
                                     >
                                     <div class="margin">
-                                        <b id="distributor">
+                                        <div class="badge badge-danger">
                                             {{
                                                 meeting.alasan_perubahan_meeting
                                             }}
-                                        </b>
+                                        </div>
                                     </div>
                                 </div>
                                 <div v-if="meeting.alasan_pembatalan_meeting">
@@ -177,11 +177,11 @@ export default {
                                         >Alasan Pembatalan Meeting</small
                                     >
                                     <div class="margin">
-                                        <b id="distributor">
+                                        <div class="badge badge-danger">
                                             {{
                                                 meeting.alasan_pembatalan_meeting
                                             }}
-                                        </b>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

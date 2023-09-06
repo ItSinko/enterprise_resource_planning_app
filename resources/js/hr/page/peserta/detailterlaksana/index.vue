@@ -43,7 +43,7 @@ export default {
                 notulen: "Notulen 1",
                 moderator: "Moderator 1",
                 jumlah_peserta: 10,
-                status: "terlaksana",
+                status: "menyusun_hasil_meeting",
                 lokasi: "Gedung A",
                 alasan_perubahan_meeting:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",

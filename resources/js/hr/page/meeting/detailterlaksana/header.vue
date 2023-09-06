@@ -148,9 +148,9 @@ export default {
                                     >Alasan Perubahan Meeting</small
                                 >
                                 <div class="margin">
-                                    <b id="distributor">
+                                    <div class="badge badge-danger">
                                         {{ meeting.alasan_perubahan_meeting }}
-                                    </b>
+                                    </div>
                                 </div>
                             </div>
                         </div>
