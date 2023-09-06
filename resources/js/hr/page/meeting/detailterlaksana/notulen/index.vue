@@ -175,7 +175,7 @@ export default {
                             <kehadiran :kehadiran="item.kesesuaian" />
                         </td>
                         <td class="text-center">
-                            <div v-if="status != 'menyusun_hasil_meeting'">
+                            <div v-if="item.kesesuaian">
                                 {{
                                     item.penanggungjawab?.nama
                                         ? item.penanggungjawab?.nama
@@ -183,9 +183,12 @@ export default {
                                 }}
                                 {{ formatDateTime(item.created_at) }}
                             </div>
+                            <div v-else>
+                                -
+                            </div>
                         </td>
                         <td>
-                            {{ item.catatan ?? "-" }}
+                            {{ item.catatan ? item.catatan : "-" }}
                         </td>
                         <td v-if="item?.id == undefined">
                             <button

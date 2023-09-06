@@ -235,6 +235,18 @@ export default {
                                 </button>
                             </a>
                         </div>
+                        <div                             class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton"
+                            v-else-if="data.status == 'batal'">
+                            <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    @click="detail(data.id, data.status)"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>

@@ -44,7 +44,6 @@ export default {
                         {
                             nama: "Peserta 1",
                             divisi: "Divisi 1",
-                            alasan: "Catatan Peserta 1",
                             kehadiran: "hadir",
                         },
                         {
@@ -83,7 +82,6 @@ export default {
                         {
                             nama: "Peserta 3",
                             divisi: "Divisi 3",
-                            alasan: "Catatan Peserta 1",
                             kehadiran: "hadir",
                         },
                         {
@@ -122,7 +120,6 @@ export default {
                         {
                             nama: "Peserta 3",
                             divisi: "Divisi 3",
-                            alasan: "Catatan Peserta 1",
                             kehadiran: "hadir",
                         },
                         {

@@ -3,7 +3,6 @@ import moment from "moment";
 import kehadiran from "../../../../components/kehadiran.vue";
 import pagination from "../../../../components/pagination.vue";
 import modal from "./modal.vue";
-import Sortable from "sortablejs";
 export default {
     props: ["meeting", "status"],
     components: {
@@ -16,12 +15,7 @@ export default {
             search: "",
             showModal: false,
             renderPaginate: [],
-            formnotulen: {
-                penanggungjawab: "",
-                isi: "",
-                kesesuaian: "",
-                catatan: "",
-            },
+            formnotulen: null,
         };
     },
     methods: {
@@ -31,38 +25,17 @@ export default {
         formatDateTime(date) {
             return moment(date).lang("id").format("DD/MM/YYYY HH:mm");
         },
-        editNotulen(data, idx) {
-            this.showModal = true;
-            this.formnotulen = JSON.parse(JSON.stringify(data));
-            this.formnotulen.idx = idx;
-            this.$nextTick(() => {
-                $(".modalNotulen").modal("show");
-            });
-        },
-        addNotulen() {
-            this.showModal = true;
-            // reset formnotulen
-            this.formnotulen = {
-                penanggungjawab: "",
-                isi: "",
-                kesesuaian: "",
-                catatan: "",
-            };
-            this.$nextTick(() => {
-                $(".modalNotulen").modal("show");
-            });
-        },
         close() {
             this.showModal = false;
         },
-        save() {
-            this.showModal = false;
-            if (this.formnotulen?.idx) {
-                this.meeting[this.formnotulen.idx] = this.formnotulen;
-            } else {
-                this.meeting.push(this.formnotulen);
-            }
-        },
+        kesesuaian(data){
+            this.formnotulen = JSON.parse(JSON.stringify(data));
+            this.formnotulen.kesesuaian = 'belum_dicek';
+            this.showModal = true;
+            this.$nextTick(() => {
+                $(".modalNotulen").modal("show");
+            });
+        }
     },
     computed: {
         paginateData() {
@@ -75,31 +48,15 @@ export default {
             });
         },
     },
-    mounted() {
-    },
 };
 </script>
 <template>
     <div class="card">
-        <modal
-            :formnotulen="formnotulen"
-            @save="save"
-            v-if="showModal"
-            @closeModal="close"
-        />
+        <modal v-if="showModal" :meeting="formnotulen" @closeModal="showModal = false" />
         <div class="card-body">
             <div class="d-flex">
-                <div class="mr-auto p-2">
-                    <button
-                        class="btn btn-primary"
-                        @click="addNotulen"
-                        v-if="status == 'menyusun_hasil_meeting'"
-                    >
-                        <i class="fa fa-plus"></i>
-                        Tambah
-                    </button>
-                </div>
-                <div class="p-2" v-if="status != 'menyusun_hasil_meeting'">
+                <div class="mr-auto p-2"></div>
+                <div class="p-2">
                     <input
                         type="text"
                         class="form-control"
@@ -118,7 +75,7 @@ export default {
                         <th rowspan="2">Catatan</th>
                         <th
                             rowspan="2"
-                            v-if="status != 'menyusun_hasil_meeting'"
+                            v-if="status == 'menyusun_hasil_meeting'"
                         >
                             Aksi
                         </th>
@@ -128,59 +85,7 @@ export default {
                         <th>Dicek Oleh</th>
                     </tr>
                 </thead>
-                <tbody
-                    class="tbodyDragNDrop"
-                    v-if="status == 'menyusun_hasil_meeting'"
-                >
-                    <tr v-for="(item, idx) in meeting" :key="item.isi">
-                        <td class="text-center">{{ idx + 1 }}</td>
-                        <td class="text-center">
-                            {{
-                                item.penanggungjawab?.nama
-                                    ? item.penanggungjawab?.nama
-                                    : item.penanggungjawab
-                            }}
-                            -
-                            {{
-                                item.penanggungjawab?.divisi?.nama
-                                    ? item.penanggungjawab?.divisi?.nama
-                                    : item.divisi
-                            }}
-                        </td>
-                        <td>{{ item.isi }}</td>
-                        <td class="text-center">
-                            <kehadiran :kehadiran="item.kesesuaian" />
-                        </td>
-                        <td class="text-center">
-                            <div v-if="status != 'menyusun_hasil_meeting'">
-                                {{
-                                    item.penanggungjawab?.nama
-                                        ? item.penanggungjawab?.nama
-                                        : item.penanggungjawab
-                                }}
-                                {{ formatDateTime(item.created_at) }}
-                            </div>
-                        </td>
-                        <td>
-                            {{ item.catatan ?? "-" }}
-                        </td>
-                        <td v-if="item?.id == undefined">
-                            <button
-                                class="btn btn-outline-warning"
-                                @click="editNotulen(item, idx)"
-                            >
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <button
-                                class="btn btn-outline-danger"
-                                @click="meeting.splice(idx, 1)"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody v-if="status != 'menyusun_hasil_meeting'">
+                <tbody v-if="renderPaginate.length > 0">
                     <tr v-for="(item, idx) in renderPaginate" :key="item.isi">
                         <td class="text-center">{{ idx + 1 }}</td>
                         <td class="text-center">
@@ -191,20 +96,31 @@ export default {
                             <kehadiran :kehadiran="item.kesesuaian" />
                         </td>
                         <td class="text-center">
-                            {{ item.penanggungjawab }},
-                            {{ formatDateTime(item.created_at) }}
+                            <div v-if="item.kesesuaian">
+                                {{ item.penanggungjawab }},
+                                {{ formatDateTime(item.created_at) }}
+                            </div>
+                            <div v-else>-</div>
                         </td>
                         <td>
-                            {{ item.catatan ?? "-" }}
+                            {{ item.catatan ? item.catatan : "-" }}
+                        </td>
+                        <td v-if="status != 'terlaksana'">
+                            <button class="btn btn-outline-primary" @click="kesesuaian(item)" v-if="item.access == 'granted'">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            Data tidak ditemukan
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <pagination
-                :DataTable="paginateData"
-                @updatePage="updatePage"
-                v-if="status != 'menyusun_hasil_meeting'"
-            />
+            <pagination :DataTable="paginateData" @updatePage="updatePage" />
         </div>
     </div>
 </template>

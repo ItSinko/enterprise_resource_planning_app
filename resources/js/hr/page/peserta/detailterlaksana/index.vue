@@ -43,7 +43,7 @@ export default {
                 notulen: "Notulen 1",
                 moderator: "Moderator 1",
                 jumlah_peserta: 10,
-                status: "menyusun_hasil_meeting",
+                status: "terlaksana",
                 lokasi: "Gedung A",
                 alasan_perubahan_meeting:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
@@ -166,7 +166,6 @@ export default {
                             {
                                 nama: "Peserta 1",
                                 divisi: "Divisi 1",
-                                alasan: "Catatan Peserta 1",
                                 kehadiran: "hadir",
                             },
                             {
@@ -205,7 +204,6 @@ export default {
                             {
                                 nama: "Peserta 3",
                                 divisi: "Divisi 3",
-                                alasan: "Catatan Peserta 1",
                                 kehadiran: "hadir",
                             },
                             {
@@ -235,6 +233,7 @@ export default {
                         isi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
                         kesesuaian: "sesuai",
                         created_at: "2023-01-01 08:00",
+                        access: "not_granted",
                     },
                     {
                         id: 2,
@@ -244,6 +243,15 @@ export default {
                         kesesuaian: "tidak_sesuai",
                         created_at: "2023-01-01 08:00",
                         catatan: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+                        access: "not_granted",
+                    },
+                    {
+                        id: 3,
+                        penanggungjawab: "Nur Kholidah",
+                        divisi: "Divisi 1",
+                        isi: "Rerum, voluptatum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+                        created_at: "2023-01-01 08:00",
+                        access: "granted",
                     },
                 ],
                 hasil_rapat: [

@@ -67,7 +67,7 @@ export default {
                         <td class="text-center">
                             <kehadiran :kehadiran="peserta.kehadiran" />
                         </td>
-                        <td>{{ peserta.alasan }}</td>
+                        <td>{{ peserta.alasan ?? '-' }}</td>
                         <td class="text-center">
                             <div v-if="peserta.dokumen_pendukung">
                                 <a

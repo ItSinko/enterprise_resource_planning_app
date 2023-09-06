@@ -154,15 +154,6 @@ export default {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="p-2 bd-highlight"
-                            v-if="meeting.status == 'menyusun_hasil_meeting'"
-                        >
-                            <button class="btn btn-outline-primary btn-lg">
-                                <i class="fas fa-save"></i>
-                                Simpan
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -109,8 +109,8 @@ export default {
                             aria-labelledby="dropdownMenuButton"
                             v-if="data.status == 'menyusun_hasil_meeting'"
                         >
-                        <a>
-                            <button
+                            <a>
+                                <button
                                     class="dropdown-item"
                                     type="button"
                                     @click="detail(data.id, data.status)"
@@ -118,8 +118,40 @@ export default {
                                     <i class="fas fa-eye"></i>
                                     Detail
                                 </button>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+                        <div
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton"
+                            v-if="data.status == 'terlaksana'"
+                        >
+                            <a>
+                                <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    @click="detail(data.id, data.status)"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </button>
+                            </a>
+                        </div>
+                        <div
+                            class="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton"
+                            v-if="data.status == 'batal'"
+                        >
+                            <a>
+                                <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    @click="detail(data.id, data.status)"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                    Detail
+                                </button>
+                            </a>
+                        </div>
                     </td>
                 </tr>
             </tbody>

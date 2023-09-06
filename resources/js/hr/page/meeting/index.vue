@@ -66,6 +66,16 @@ export default {
                     jumlah_peserta: 10,
                     status: 'terlaksana',
                     lokasi: 'Gedung A',
+                },
+                {
+                    id: 4,
+                    nama: 'Meeting 3',
+                    tanggal: '2023-02-01',
+                    mulai: '08:00',
+                    selesai: '09:00',
+                    jumlah_peserta: 10,
+                    status: 'batal',
+                    lokasi: 'Gedung A',
                 }
             ]
         }

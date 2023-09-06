@@ -1,33 +1,16 @@
 <script>
 import dokumen from "../../../../components/dokumen.vue";
-import Modal from "./modal.vue";
 export default {
     props: ["meeting", "status"],
     components: {
         dokumen,
-        Modal,
-    },
-    data() {
-        return {
-            modal: false,
-        }
-    },
-    methods: {
-        openModalTambah() {
-            this.modal = true;
-            this.$nextTick(() => {
-                $(".modalDokumenPendukung").modal("show");
-            });
-        },
     },
 };
 </script>
 <template>
     <div id="accordion">
-        <Modal v-if="modal" @closeModal="modal = false"/>
         <div class="d-flex flex-row-reverse bd-highlight">
             <div class="p-2 bd-highlight">
-                <button class="btn btn-primary mb-2" @click="openModalTambah" v-if="status == 'menyusun_hasil_meeting'">Tambah Dokumen</button>
             </div>
         </div>
         <div class="card" v-for="(meet, idx) in meeting">
