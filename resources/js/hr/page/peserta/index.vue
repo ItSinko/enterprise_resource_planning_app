@@ -219,7 +219,7 @@ export default {
                                             <div class="px-3 py-3">
                                                 <div class="form-group">
                                                     <label for="jenis_penjualan"
-                                                        >Keterangan</label
+                                                        >Kehadiran</label
                                                     >
                                                 </div>
                                                 <div
