@@ -1,7 +1,7 @@
 <script>
 import Header from "../../../components/header.vue";
 import HeaderDetail from "./header.vue";
-import Item from "./item.vue";  
+import Item from "./item.vue";
 export default {
     components: {
         Header,
@@ -18,11 +18,11 @@ export default {
                 },
                 {
                     name: "Meeting",
-                    link: "/hr/meeting",
+                    link: "/meeting/hr",
                 },
                 {
                     name: "Detail Meeting",
-                    link: "/hr/meeting/detail",
+                    link: "/meeting/hr/detail",
                 },
             ],
             meeting: [
@@ -152,7 +152,7 @@ export default {
                 this.$emit("closeModal");
             });
         },
-        selectItem(item, idx){
+        selectItem(item, idx) {
             this.selectedData = idx;
             this.itemMeetingSelected = JSON.parse(JSON.stringify(item));
         },
@@ -171,28 +171,15 @@ export default {
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li
-                    class="nav-item"
-                    role="presentation"
-                    v-for="(item, idx) in meeting"
-                    :key="idx"
-                >
-                    <a
-                        class="nav-link"
-                        :id="'pills-' + idx + '-tab'"
-                        :class="{ active: idx === 0 }"
-                        data-toggle="pill"
-                        :data-target="'#pills-' + idx"
-                        type="button"
-                        role="tab"
-                        :aria-controls="'pills-' + idx"
-                        @click="selectItem(item, idx)"
-                    >
-                        Rencana Meeting {{ idx + 1 }}
-                    </a>
-                </li>
-            </ul>
-        <HeaderDetail :meeting="itemMeetingSelected" :lengthMeet="lengthMeeting" :selectedIndex="selectedData"/>
+            <li class="nav-item" role="presentation" v-for="(item, idx) in meeting" :key="idx">
+                <a class="nav-link" :id="'pills-' + idx + '-tab'" :class="{ active: idx === 0 }" data-toggle="pill"
+                    :data-target="'#pills-' + idx" type="button" role="tab" :aria-controls="'pills-' + idx"
+                    @click="selectItem(item, idx)">
+                    Rencana Meeting {{ idx + 1 }}
+                </a>
+            </li>
+        </ul>
+        <HeaderDetail :meeting="itemMeetingSelected" :lengthMeet="lengthMeeting" :selectedIndex="selectedData" />
         <Item :meeting="itemMeetingSelected.peserta" />
     </div>
 </template>

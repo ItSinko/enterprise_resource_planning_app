@@ -129,7 +129,7 @@ export default {
                                         <b id="no_so">
                                             <a
                                                 :href="
-                                                    '/hr/meeting/undangan/' +
+                                                    '/meeting/hr/undangan/' +
                                                     meeting.id
                                                 "
                                                 target="_blank"

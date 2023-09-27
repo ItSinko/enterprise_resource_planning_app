@@ -24,11 +24,11 @@ export default {
                 },
                 {
                     name: "Meeting",
-                    link: "/hr/meeting",
+                    link: "/meeting/hr",
                 },
                 {
                     name: "Detail Meeting",
-                    link: "/hr/meeting/detail",
+                    link: "/meeting/hr/detail",
                 },
             ],
             meeting: {
@@ -274,94 +274,46 @@ export default {
         <HeaderDetail :meeting="meeting" />
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <a
-                    class="nav-link active"
-                    id="pills-kehadiran-tab"
-                    data-toggle="pill"
-                    data-target="#pills-kehadiran"
-                    type="button"
-                    role="tab"
-                    aria-controls="pills-kehadiran"
-                    aria-selected="true"
-                >
+                <a class="nav-link active" id="pills-kehadiran-tab" data-toggle="pill" data-target="#pills-kehadiran"
+                    type="button" role="tab" aria-controls="pills-kehadiran" aria-selected="true">
                     Kehadiran
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a
-                    class="nav-link"
-                    id="pills-hasil-notulensi-tab"
-                    data-toggle="pill"
-                    data-target="#pills-hasil-notulensi"
-                    type="button"
-                    role="tab"
-                    aria-controls="pills-hasil-notulensi"
-                    aria-selected="false"
-                >
+                <a class="nav-link" id="pills-hasil-notulensi-tab" data-toggle="pill" data-target="#pills-hasil-notulensi"
+                    type="button" role="tab" aria-controls="pills-hasil-notulensi" aria-selected="false">
                     Hasil Notulensi
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a
-                    class="nav-link"
-                    id="pills-hasil-meeting-tab"
-                    data-toggle="pill"
-                    data-target="#pills-hasil-meeting"
-                    type="button"
-                    role="tab"
-                    aria-controls="pills-hasil-meeting"
-                    aria-selected="false"
-                >
+                <a class="nav-link" id="pills-hasil-meeting-tab" data-toggle="pill" data-target="#pills-hasil-meeting"
+                    type="button" role="tab" aria-controls="pills-hasil-meeting" aria-selected="false">
                     Hasil Meeting
                 </a>
             </li>
             <li class="nav-item" role="presentation">
-                <a
-                    class="nav-link"
-                    id="pills-dokumen-pendukung-tab"
-                    data-toggle="pill"
-                    data-target="#pills-dokumen-pendukung"
-                    type="button"
-                    role="tab"
-                    aria-controls="pills-dokumen-pendukung"
-                    aria-selected="false"
-                >
+                <a class="nav-link" id="pills-dokumen-pendukung-tab" data-toggle="pill"
+                    data-target="#pills-dokumen-pendukung" type="button" role="tab" aria-controls="pills-dokumen-pendukung"
+                    aria-selected="false">
                     Dokumen Pendukung
                 </a>
             </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
-            <div
-                class="tab-pane fade show active"
-                id="pills-kehadiran"
-                role="tabpanel"
-                aria-labelledby="pills-kehadiran-tab"
-            >
+            <div class="tab-pane fade show active" id="pills-kehadiran" role="tabpanel"
+                aria-labelledby="pills-kehadiran-tab">
                 <kehadiran :meeting="meeting.kehadiran" />
             </div>
-            <div
-                class="tab-pane fade"
-                id="pills-hasil-notulensi"
-                role="tabpanel"
-                aria-labelledby="pills-hasil-notulensi-tab"
-            >
-                <hasil-notulensi :meeting="meeting.hasil_notulensi" :status="meeting.status"/>
+            <div class="tab-pane fade" id="pills-hasil-notulensi" role="tabpanel"
+                aria-labelledby="pills-hasil-notulensi-tab">
+                <hasil-notulensi :meeting="meeting.hasil_notulensi" :status="meeting.status" />
             </div>
-            <div
-                class="tab-pane fade"
-                id="pills-hasil-meeting"
-                role="tabpanel"
-                aria-labelledby="pills-hasil-meeting-tab"
-            >
-                <hasil-meeting :meeting="meeting.hasil_rapat" :status="meeting.status"/>
+            <div class="tab-pane fade" id="pills-hasil-meeting" role="tabpanel" aria-labelledby="pills-hasil-meeting-tab">
+                <hasil-meeting :meeting="meeting.hasil_rapat" :status="meeting.status" />
             </div>
-            <div
-                class="tab-pane fade"
-                id="pills-dokumen-pendukung"
-                role="tabpanel"
-                aria-labelledby="pills-dokumen-pendukung-tab"
-            >
-                <dokumen-pendukung :meeting="meeting.dokumen_pendukung" :status="meeting.status"/>
+            <div class="tab-pane fade" id="pills-dokumen-pendukung" role="tabpanel"
+                aria-labelledby="pills-dokumen-pendukung-tab">
+                <dokumen-pendukung :meeting="meeting.dokumen_pendukung" :status="meeting.status" />
             </div>
         </div>
     </div>

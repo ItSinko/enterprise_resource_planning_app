@@ -59,9 +59,7 @@ export default {
                         <div class="p-2 cust">
                             <div class="margin">
                                 <div>
-                                    <small class="text-muted"
-                                        >Jadwal Meeting</small
-                                    >
+                                    <small class="text-muted">Jadwal Meeting</small>
                                 </div>
                             </div>
                             <div class="margin">
@@ -73,8 +71,7 @@ export default {
                             <div class="margin">
                                 <b id="distributor">
                                     {{ meeting.mulai }} -
-                                    {{ meeting.selesai }} WIB</b
-                                >
+                                    {{ meeting.selesai }} WIB</b>
                             </div>
                         </div>
                         <div class="p-2">
@@ -91,9 +88,7 @@ export default {
                                     <small class="text-muted">Jumlah</small>
                                 </div>
                                 <div>
-                                    <b id="no_so"
-                                        >{{ meeting.jumlah_peserta }} Peserta</b
-                                    >
+                                    <b id="no_so">{{ meeting.jumlah_peserta }} Peserta</b>
                                 </div>
                             </div>
                         </div>
@@ -108,22 +103,14 @@ export default {
                                     </b>
                                 </div>
                                 <div>
-                                    <small class="text-muted"
-                                        >Cetak Laporan</small
-                                    >
+                                    <small class="text-muted">Cetak Laporan</small>
                                 </div>
                                 <div>
                                     <b id="no_so">
-                                        <a
-                                            :href="
-                                                '/hr/meeting/undangan/' +
-                                                meeting.id
-                                            "
-                                            target="_blank"
-                                        >
-                                            <button
-                                                class="btn btn-success btn-sm mr-2 mb-2"
-                                            >
+                                        <a :href="'/meeting/hr/undangan/' +
+                                            meeting.id
+                                            " target="_blank">
+                                            <button class="btn btn-success btn-sm mr-2 mb-2">
                                                 <i class="fas fa-print"></i>
                                                 Laporan Meeting
                                             </button>
@@ -144,9 +131,7 @@ export default {
                                 </div>
                             </div>
                             <div v-if="meeting.alasan_perubahan_meeting">
-                                <small class="text-muted"
-                                    >Alasan Perubahan Meeting</small
-                                >
+                                <small class="text-muted">Alasan Perubahan Meeting</small>
                                 <div class="margin">
                                     <div class="badge badge-danger">
                                         {{ meeting.alasan_perubahan_meeting }}

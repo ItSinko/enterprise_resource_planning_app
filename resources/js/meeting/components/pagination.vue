@@ -71,6 +71,9 @@ export default {
     watch: {
         renderPaginate(){
             this.$emit('updatePage', this.renderPaginate)
+        },
+        DataTable(){
+            this.currentPage = 1
         }
     },
 }

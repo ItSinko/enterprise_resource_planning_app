@@ -20,7 +20,7 @@ export default {
                 },
                 {
                     name: 'Meeting',
-                    link: '/hr/meeting'
+                    link: '/meeting/hr'
                 },
             ],
             search: '',
@@ -34,7 +34,7 @@ export default {
                     selesai: '09:00',
                     // count array peserta
                     jumlah_peserta: 10,
-                    peserta : null,
+                    peserta: null,
                     status: 'menyusun_hasil_meeting',
                     lokasi: 'Gedung A',
                 },
@@ -46,7 +46,7 @@ export default {
                     selesai: '09:00',
                     // count array peserta
                     jumlah_peserta: 10,
-                    peserta : null,
+                    peserta: null,
                     status: 'belum_terlaksana',
                     lokasi: 'Gedung A',
                 },
@@ -81,31 +81,31 @@ export default {
         }
     },
     methods: {
-        updatePage(page){
+        updatePage(page) {
             this.renderPaginate = page
         },
-        updatePageSelesai(page){
+        updatePageSelesai(page) {
             this.renderPaginateSelesai = page
         },
-        tambahMeeting(){
+        tambahMeeting() {
             this.modalTambah = true
             this.$nextTick(() => {
                 $('.modalMeetingBaru').modal('show');
             })
         },
-        closeTambah(){
+        closeTambah() {
             this.modalTambah = false
         }
     },
     computed: {
-        paginateData(){
+        paginateData() {
             return this.dataTable.filter((data) => {
                 return Object.keys(data).some((key) => {
                     return String(data[key]).toLowerCase().includes(this.search.toLowerCase())
                 })
             })
         },
-        paginateDataSelesai(){
+        paginateDataSelesai() {
             return this.dataTableSelesai.filter((data) => {
                 return Object.keys(data).some((key) => {
                     return String(data[key]).toLowerCase().includes(this.searchSelesai.toLowerCase())
@@ -123,14 +123,17 @@ export default {
             <div class="card-body">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="pills-proses-tab" data-toggle="pill" data-target="#pills-proses" type="button" role="tab" aria-controls="pills-proses" aria-selected="true">Belum Selesai</a>
+                        <a class="nav-link active" id="pills-proses-tab" data-toggle="pill" data-target="#pills-proses"
+                            type="button" role="tab" aria-controls="pills-proses" aria-selected="true">Belum Selesai</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="pills-selesai-tab" data-toggle="pill" data-target="#pills-selesai" type="button" role="tab" aria-controls="pills-selesai" aria-selected="false">Selesai</a>
+                        <a class="nav-link" id="pills-selesai-tab" data-toggle="pill" data-target="#pills-selesai"
+                            type="button" role="tab" aria-controls="pills-selesai" aria-selected="false">Selesai</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-proses" role="tabpanel" aria-labelledby="pills-proses-tab">
+                    <div class="tab-pane fade show active" id="pills-proses" role="tabpanel"
+                        aria-labelledby="pills-proses-tab">
                         <div class="d-flex bd-highlight mb-3">
                             <div class="mr-auto p-2 bd-highlight">
                                 <button class="btn btn-primary" @click="tambahMeeting">
@@ -165,5 +168,4 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
-</template>
+</div></template>

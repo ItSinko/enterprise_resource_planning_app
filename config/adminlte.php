@@ -1750,10 +1750,29 @@ return [
         ],
         // hr
         [
+            'header' => 'HR',
+            'auth' => [30],
+        ],
+        [
             'text' => 'Meeting',
-            'url' => '/hr/meeting',
+            'url' => '/meeting/hr/',
             'icon' => 'fas fa-users',
             'auth' => [30],
+        ],
+        // data karyawan
+        [
+            'header' => 'Data Karyawan',
+            'auth' => [30],
+        ],
+        [
+            'text' => 'Karyawan',
+            'icon' => 'fas fa-users',
+            'url' => '/hr/karyawan',
+            'auth' => [30],
+        ],
+        [
+            'header' => 'Sistem',
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 30]
         ],
         [
             'text' => 'Ubah Password',
@@ -1767,6 +1786,7 @@ return [
             'url' => 'https://docs.google.com/spreadsheets/d/1OxZY8JTqDBrIm89A9cTcTnRndRBOUCtnblY0f0F76p4/edit?usp=sharing',
             'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 30]
         ],
+
 
     ],
 

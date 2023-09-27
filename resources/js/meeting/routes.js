@@ -11,17 +11,17 @@ import JadwalMeetingDireksiDetailNonTerlaksana from "./page/direksi/detailnonter
 
 const routes = [
     {
-        path: "/hr/meeting",
+        path: "/meeting/hr",
         component: Dashboard,
         name: "dashboard"
     },
     {
-        path: "/hr/meeting/detailterlaksana/:id",
+        path: "/meeting/hr/detailterlaksana/:id",
         component: DetailTerlaksana,
         name: "detail-meeting-terlaksana"
     },
     {
-        path: "/hr/meeting/detailnonterlaksana/:id",
+        path: "/meeting/hr/detailnonterlaksana/:id",
         component: DetailNonTerlaksana,
         name: "detail-meeting-nonterlaksana"
     },
