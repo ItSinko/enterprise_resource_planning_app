@@ -1,10 +1,12 @@
 <script>
 import Header from '../../components/header.vue';
 import UploadFile from '../../components/uploadFile.vue'
+import UploadImage from '../../components/uploadImage.vue'
 export default {
     components: {
         Header,
-        UploadFile
+        UploadFile,
+        UploadImage
     },
     data() {
         return {
@@ -89,7 +91,7 @@ export default {
                     <!-- photo -->
                     <div class="card">
                         <div class="card-body">
-                            <p class="card-text">Foto</p>
+                            <UploadImage />
                         </div>
                     </div>
                 </div>
