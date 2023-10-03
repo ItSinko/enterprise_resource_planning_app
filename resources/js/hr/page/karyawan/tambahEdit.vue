@@ -26,6 +26,7 @@ export default {
                 },
             ],
             currentStep: 1,
+            image: null,
         };
     },
     methods: {
@@ -90,8 +91,8 @@ export default {
                 <div class="col-md-4">
                     <!-- photo -->
                     <div class="card">
-                        <div class="card-body">
-                            <UploadImage />
+                        <div class="card-body d-flex justify-content-center">
+                            <UploadImage :image="image" @fileRemoved="image = null" @fileSelected="image = $event" />
                         </div>
                     </div>
                 </div>
@@ -104,7 +105,7 @@ export default {
                         <div class="card-header">
 
                             <h5>
-                               {{ currentStep }}. {{ judul(currentStep) }}
+                                {{ currentStep }}. {{ judul(currentStep) }}
                             </h5>
                         </div>
                         <div class="card-body">
