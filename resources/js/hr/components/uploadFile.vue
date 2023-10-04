@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "VueUploadFiles", // vue component name
+    name: "VueUploadFiles",
     data() {
         return {
             error: "",
@@ -15,6 +15,7 @@ export default {
         maxError: String,
         fileError: String,
         clearAll: String,
+        uploaded: Array,
     },
     methods: {
         dragOver() {
@@ -82,12 +83,28 @@ export default {
                 this.Imgs = values;
             });
         },
+        previewImgsCreated() {
+            let readers = [];
+            if (!this.files.length) return;
+            for (let i = 0; i < this.files.length; i++) {
+                readers.push(this.readAsDataURL(this.files[i]));
+            }
+            Promise.all(readers).then((values) => {
+                this.Imgs = values;
+            });
+        },
         reset() {
             this.$refs.uploadInput.value = null;
             this.Imgs = [];
             this.files = [];
             this.$emit("changed", this.files);
         },
+    },
+    created() {
+        if (this.$props.uploaded.length > 0) {
+            this.files = this.$props.uploaded;
+            this.previewImgsCreated();
+        }
     },
 };
 </script>

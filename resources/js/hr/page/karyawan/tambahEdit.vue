@@ -28,7 +28,7 @@ export default {
                     link: '/hr/karyawan/tambah'
                 },
             ],
-            currentStep: 1,
+            currentStep: 6,
             divisi: [],
             sekolah: [
                 "SD",
@@ -90,12 +90,115 @@ export default {
                     }
                 ],
                 dokumen_pendukung: [],
-            }
+            },
         };
     },
     methods: {
+        cekForm() {
+            // cek validasi
+            let valid = true
+            if (this.currentStep == 1) {
+                const cekStepSatu = [
+                    'nama_pegawai',
+                    'jenis_kelamin',
+                    'tempat_lahir',
+                    'tanggal_lahir',
+                    'email',
+                    'nik',
+                    'alamat_tinggal_sesuai_ktp',
+                    'alamat_tinggal_saat_ini',
+                    'nomor_telepon',
+                ]
+                cekStepSatu.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '') {
+                        valid = false
+                    }
+                })
+                if (!this.validateEmail(this.form.email)) {
+                    valid = false
+                }
+            } else if (this.currentStep == 2) {
+                valid = true
+                const cekStepDua = [
+                    'tanggal_masuk',
+                    'jabatan',
+                    'bagian',
+                    'kode_akun',
+                    'divisi',
+                    'status_karyawan',
+                    'status_pegawai',
+                    'durasi_kontrak',
+                ]
+                cekStepDua.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '') {
+                        valid = false
+                    }
+                })
+            }
+            else if (this.currentStep == 3) {
+                valid = true
+                const cekStepTiga = [
+                    'faskes_kesehatan',
+                ]
+                cekStepTiga.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '') {
+                        valid = false
+                    } 
+                })
+            } else if (this.currentStep == 4) {
+                valid = true
+
+                const cekStepEmpat = [
+                    'sekolah',
+                ]
+
+                cekStepEmpat.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '') {
+                        valid = false
+                    } 
+                })
+            } else if (this.currentStep == 5) {
+                valid = true
+
+                const cekStepKelima = [
+                    'nama_keluarga',
+                    'hubungan_keluarga',
+                    'nomor_telepon_keluarga',
+                    'status',
+                    'nama_suami_istri',
+                ]
+
+                cekStepKelima.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '') {
+                        valid = false
+                    } 
+                })
+            } else if (this.currentStep == 6) {
+                valid = true
+
+                const cekStepEnam = [
+                    'image',
+                    'dokumen_pendukung'
+                ]
+
+                cekStepEnam.forEach(item => {
+                    if (this.form[item] === null || this.form[item] === '' || this.form[item].length === 0) {
+                        valid = false
+                    }
+                })
+            }
+            return valid
+        },
+        validateEmail(email) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        },
         nextStep() {
-            this.currentStep++
+            if (this.cekForm()) {
+                this.currentStep++
+            } else {
+                this.$swal('Error', 'Cek kembali form anda', 'error')
+            }
         },
         previousStep() {
             this.currentStep--
@@ -154,6 +257,13 @@ export default {
                 no_bpjs: null
             })
         },
+        simpan() {
+            if (this.cekForm()) {
+                this.$swal('Berhasil', 'Data berhasil disimpan', 'success')
+            } else {
+                this.$swal('Error', 'Harap isi semua form', 'error')
+            }
+        }
     },
     computed: {
         isFirstStep() {
@@ -183,6 +293,20 @@ export default {
                 this.form.nama_instansi_kontrak = null
             }
         },
+        'form.no_bpjs_kesehatan': function (val) {
+            if (val === null) {
+                delete this.form.faskes_kesehatan
+            } else {
+                this.form.faskes_kesehatan = null
+            }
+        },
+        'form.status': function (val) {
+            if (val !== 'menikah') {
+                delete this.form.nama_suami_istri
+            } else {
+                this.form.nama_suami_istri = null
+            }
+        },
     }
 }
 </script>
@@ -199,10 +323,10 @@ export default {
                             <h5>Foto Karyawan
                                 <span class="text-red">*</span>
                             </h5>
-                            
+
                         </div>
                         <div class="card-body d-flex justify-content-center">
-                            <UploadImage :image="form.image" @fileRemoved="image = null" @fileSelected="image = $event" />
+                            <UploadImage :image="form.image" @fileRemoved="form.image = null" @fileSelected="form.image = $event" />
                         </div>
                     </div>
                 </div>
@@ -225,8 +349,7 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Nama Pegawai <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.nama_pegawai"
-                                                placeholder="">
+                                            <input type="text" class="form-control" v-model="form.nama_pegawai">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Jenis Kelamin <span class="text-red">*</span></label>
@@ -238,23 +361,21 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Tempat Lahir <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.tempat_lahir"
-                                                placeholder="">
+                                            <input type="text" class="form-control" v-model="form.tempat_lahir">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Tanggal Lahir <span class="text-red">*</span></label>
-                                            <input type="date" class="form-control" v-model="form.tanggal_lahir"
-                                                placeholder="">
+                                            <input type="date" class="form-control" v-model="form.tanggal_lahir">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Email <span class="text-red">*</span></label>
-                                            <input type="email" class="form-control" v-model="form.email" placeholder="">
+                                            <input type="email" class="form-control" v-model="form.email">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">NIK <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.nik" placeholder=""
+                                            <input type="text" class="form-control" v-model="form.nik"
                                                 @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
@@ -299,7 +420,7 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Kode Akun <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.kode_akun" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Upah Lembur <span class="text-red">*</span></label>
@@ -308,13 +429,14 @@ export default {
                                         <div class="form-group">
                                             <label for="">No. Rekening</label>
                                             <input type="text" class="form-control" @keypress="numberOnly($event)"
+                                                v-model="form.no_rekening"
                                                 placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Jabatan <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.jabatan" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Divisi <span class="text-red">*</span></label>
@@ -333,11 +455,12 @@ export default {
                                         </div>
                                         <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
                                             <label for="">Durasi Kontrak <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.durasi_kontrak"
+                                                @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
                                             <label for="">Nama Instansi untuk Kontrak atau Outsourcing</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.nama_instansi_kontrak">
                                         </div>
                                     </div>
                                 </div>
@@ -348,24 +471,24 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No NPWP</label>
-                                            <input type="text" class="form-control" v-model="form.no_npwp" placeholder=""
+                                            <input type="text" class="form-control" v-model="form.no_npwp"
                                                 @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">No BPJS Ketenagakerjaan</label>
                                             <input type="text" class="form-control" v-model="form.no_bpjs_ketenagakerjaan"
-                                                placeholder="" @keypress="numberOnly($event)">
+                                                @keypress="numberOnly($event)">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No BPJS Kesehatan</label>
                                             <input type="text" class="form-control" v-model="form.no_bpjs_kesehatan"
-                                                placeholder="" @keypress="numberOnly($event)">
+                                                @keypress="numberOnly($event)">
                                         </div>
-                                        <div class="form-group">
-                                            <label for="">Faskes Kesehatan <span class="text-red"
-                                                    v-if="form.no_bpjs_kesehatan !== null">*</span></label>
+                                        <div class="form-group"
+                                            v-if="form.no_bpjs_kesehatan !== null && form.no_bpjs_kesehatan !== ''">
+                                            <label for="">Faskes Kesehatan <span class="text-red">*</span></label>
                                             <select class="form-control" v-model="form.faskes_kesehatan">
                                                 <option selected>Pilih Faskes Kesehatan</option>
                                                 <option v-for="tingkat in 3" :value="tingkat" :key="tingkat">Tingkat {{
@@ -386,8 +509,7 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bidang / Jurusan</label>
-                                            <input type="text" class="form-control" placeholder=""
-                                                v-model="form.bidang_jurusan">
+                                            <input type="text" class="form-control" v-model="form.bidang_jurusan">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -441,19 +563,20 @@ export default {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Nama Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.nama_keluarga"
-                                                placeholder="">
+                                            <label for="">Nama Keluarga yang dapat dihubungi <span
+                                                    class="text-red">*</span></label>
+                                            <input type="text" class="form-control" v-model="form.nama_keluarga">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Hubungan Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.hubungan_keluarga"
-                                                placeholder="">
+                                            <label for="">Hubungan Keluarga yang dapat dihubungi <span
+                                                    class="text-red">*</span></label>
+                                            <input type="text" class="form-control" v-model="form.hubungan_keluarga">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Nomor Telepon Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
+                                            <label for="">Nomor Telepon Keluarga yang dapat dihubungi <span
+                                                    class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.nomor_telepon_keluarga"
-                                                placeholder="" @keypress="numberOnly($event)">
+                                                @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Status <span class="text-red">*</span></label>
@@ -465,12 +588,11 @@ export default {
                                                 <option value="janda" v-else>Janda</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" v-if="form.status === 'menikah'">
                                             <label for="">Nama
                                                 {{ form.jenis_kelamin === 'laki-laki' ? 'Istri' : 'Suami' }}</label>
-                                                 <span class="text-red" v-if="form.status === 'menikah'">*</span>
-                                            <input type="text" class="form-control" v-model="form.nama_suami_istri"
-                                                placeholder="">
+                                            <span class="text-red">*</span>
+                                            <input type="text" class="form-control" v-model="form.nama_suami_istri">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -533,7 +655,7 @@ export default {
                             </div>
 
                             <div v-if="currentStep === 6">
-                                <UploadFile :Imgs="form.dokumen_pendukung" @changed = "form.dokumen_pendukung = $event" />
+                                <UploadFile :uploaded="form.dokumen_pendukung" @changed="form.dokumen_pendukung = $event" />
                             </div>
 
                         </div>
@@ -554,7 +676,7 @@ export default {
                                         Selanjutnya
                                     </button>
 
-                                    <button class="btn btn-success ml-3" v-if="isLastStep">
+                                    <button class="btn btn-success ml-3" v-if="isLastStep" @click="simpan">
                                         Simpan
                                     </button>
                                 </div>
@@ -576,5 +698,6 @@ export default {
 .scrollable {
     overflow-y: auto;
     max-height: 300px;
+    height: 200px;
 }
 </style>
