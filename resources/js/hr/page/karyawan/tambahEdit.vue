@@ -34,6 +34,13 @@ export default {
                 "SD",
                 "SMP",
                 "SMA",
+                "D1",
+                "D2",
+                "D3",
+                "D4",
+                "S1",
+                "S2",
+                "S3"
             ],
             form: {
                 image: null,
@@ -82,12 +89,7 @@ export default {
                         no_bpjs: null
                     }
                 ],
-                dokumen_pendukung: [
-                    {
-                        nama_dokumen: null,
-                        file: null
-                    }
-                ]
+                dokumen_pendukung: [],
             }
         };
     },
@@ -135,7 +137,23 @@ export default {
                     label: item.nama
                 }
             })
-        }
+        },
+        tambahSekolah() {
+            if (this.form.sekolah_lanjutan.length < 5) {
+                this.form.sekolah_lanjutan.push({
+                    sekolah: null,
+                    jurusan: null
+                })
+            }
+        },
+        tambahAnak() {
+            this.form.anak.push({
+                nama_anak: null,
+                tempat_lahir: null,
+                tanggal_lahir: null,
+                no_bpjs: null
+            })
+        },
     },
     computed: {
         isFirstStep() {
@@ -154,6 +172,18 @@ export default {
     mounted() {
         this.getDivisi()
     },
+    watch: {
+        // status_karyawan
+        'form.status_karyawan': function (val) {
+            if (val === 'tetap') {
+                delete this.form.durasi_kontrak
+                delete this.form.nama_instansi_kontrak
+            } else {
+                this.form.durasi_kontrak = null
+                this.form.nama_instansi_kontrak = null
+            }
+        },
+    }
 }
 </script>
 <template>
@@ -165,6 +195,12 @@ export default {
                 <div class="col-md-4">
                     <!-- photo -->
                     <div class="card">
+                        <div class="card-header">
+                            <h5>Foto Karyawan
+                                <span class="text-red">*</span>
+                            </h5>
+                            
+                        </div>
                         <div class="card-body d-flex justify-content-center">
                             <UploadImage :image="form.image" @fileRemoved="image = null" @fileSelected="image = $event" />
                         </div>
@@ -177,9 +213,9 @@ export default {
                     </div>
                     <div class="card">
                         <div class="card-header">
-
                             <h5>
                                 {{ currentStep }}. {{ judul(currentStep) }}
+                                <span class="text-red" v-if="currentStep === 6">*</span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -188,51 +224,51 @@ export default {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Nama Pegawai</label>
+                                            <label for="">Nama Pegawai <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.nama_pegawai"
                                                 placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Jenis Kelamin</label>
+                                            <label for="">Jenis Kelamin <span class="text-red">*</span></label>
                                             <select class="form-control" v-model="form.jenis_kelamin">
                                                 <option selected>Pilih Jenis Kelamin</option>
-                                                <option value="Laki-laki">Laki-laki</option>
-                                                <option value="Perempuan">Perempuan</option>
+                                                <option value="laki-laki">Laki-laki</option>
+                                                <option value="perempuan">Perempuan</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Tempat Lahir</label>
+                                            <label for="">Tempat Lahir <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.tempat_lahir"
                                                 placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Tanggal Lahir</label>
+                                            <label for="">Tanggal Lahir <span class="text-red">*</span></label>
                                             <input type="date" class="form-control" v-model="form.tanggal_lahir"
                                                 placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Email</label>
+                                            <label for="">Email <span class="text-red">*</span></label>
                                             <input type="email" class="form-control" v-model="form.email" placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">NIK</label>
+                                            <label for="">NIK <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.nik" placeholder=""
                                                 @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Alamat Tinggal Sesuai KTP</label>
+                                            <label for="">Alamat Tinggal Sesuai KTP <span class="text-red">*</span></label>
                                             <textarea cols="5" class="form-control"
                                                 v-model="form.alamat_tinggal_sesuai_ktp"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Alamat Tinggal Saat ini</label>
+                                            <label for="">Alamat Tinggal Saat ini <span class="text-red">*</span></label>
                                             <textarea cols="5" class="form-control"
                                                 v-model="form.alamat_tinggal_saat_ini"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Nomor Telepon</label>
+                                            <label for="">Nomor Telepon <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.nomor_telepon"
                                                 @keypress="numberOnly($event)" placeholder="">
                                         </div>
@@ -244,12 +280,12 @@ export default {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Tanggal Masuk</label>
+                                            <label for="">Tanggal Masuk <span class="text-red">*</span></label>
                                             <input type="date" class="form-control" v-model="form.tanggal_masuk"
                                                 placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Status Pegawai</label>
+                                            <label for="">Status Pegawai <span class="text-red">*</span></label>
                                             <select class="form-control" v-model="form.status_pegawai">
                                                 <option selected>Pilih Status Pegawai</option>
                                                 <option value="1">Aktif</option>
@@ -257,16 +293,16 @@ export default {
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Bagian</label>
+                                            <label for="">Bagian <span class="text-red">*</span></label>
                                             <v-select :options="divisi" v-model="form.bagian"
                                                 placeholder="Pilih Bagian"></v-select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Kode Akun</label>
+                                            <label for="">Kode Akun <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Upah Lembur</label>
+                                            <label for="">Upah Lembur <span class="text-red">*</span></label>
                                             <input-price v-model="form.upah_lembur" :nilai="form.upah_lembur" />
                                         </div>
                                         <div class="form-group">
@@ -277,16 +313,16 @@ export default {
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Jabatan</label>
+                                            <label for="">Jabatan <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Divisi</label>
+                                            <label for="">Divisi <span class="text-red">*</span></label>
                                             <v-select :options="divisi" v-model="form.divisi"
                                                 placeholder="Pilih Divisi"></v-select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Status Karyawan</label>
+                                            <label for="">Status Karyawan <span class="text-red">*</span></label>
                                             <select class="form-control" v-model="form.status_karyawan">
                                                 <option selected>Pilih Status Karyawan</option>
                                                 <option value="tetap">Tetap</option>
@@ -296,7 +332,7 @@ export default {
                                             </select>
                                         </div>
                                         <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
-                                            <label for="">Durasi Kontrak</label>
+                                            <label for="">Durasi Kontrak <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" placeholder="">
                                         </div>
                                         <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
@@ -312,8 +348,8 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No NPWP</label>
-                                            <input type="text" class="form-control" v-model="form.no_npwp"
-                                                placeholder="" @keypress="numberOnly($event)">
+                                            <input type="text" class="form-control" v-model="form.no_npwp" placeholder=""
+                                                @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">No BPJS Ketenagakerjaan</label>
@@ -328,7 +364,8 @@ export default {
                                                 placeholder="" @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Faskes Kesehatan</label>
+                                            <label for="">Faskes Kesehatan <span class="text-red"
+                                                    v-if="form.no_bpjs_kesehatan !== null">*</span></label>
                                             <select class="form-control" v-model="form.faskes_kesehatan">
                                                 <option selected>Pilih Faskes Kesehatan</option>
                                                 <option v-for="tingkat in 3" :value="tingkat" :key="tingkat">Tingkat {{
@@ -343,24 +380,14 @@ export default {
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Sekolah</label>
-                                            <select class="form-control" v-model="form.sekolah">
-                                                <option selected>Pilih Pendidikan Terakhir</option>
-                                                <option value="SD">SD</option>
-                                                <option value="SMP">SMP</option>
-                                                <option value="SMA">SMA</option>
-                                                <option value="D1">D1</option>
-                                                <option value="D2">D2</option>
-                                                <option value="D3">D3</option>
-                                                <option value="D4">D4</option>
-                                                <option value="S1">S1</option>
-                                                <option value="S2">S2</option>
-                                                <option value="S3">S3</option>
-                                            </select>
+                                            <label for="">Sekolah <span class="text-red">*</span></label>
+                                            <v-select :options="sekolah" v-model="form.sekolah"
+                                                placeholder="Pilih Pendidikan Terakhir"></v-select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bidang / Jurusan</label>
-                                            <input type="text" class="form-control" placeholder="" v-model="form.bidang_jurusan">
+                                            <input type="text" class="form-control" placeholder=""
+                                                v-model="form.bidang_jurusan">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -372,40 +399,35 @@ export default {
                                                     </div>
                                                     <div class="p-2 bd-highlight">
                                                         <!-- hanya bisa menambahkan maksimal 5 -->
-                                                        <button class="btn btn-primary btn-sm" @click="tambahSekolah">Tambah</button>
+                                                        <button class="btn btn-primary btn-sm"
+                                                            @click="tambahSekolah">Tambah</button>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-5">
-                                                        <div class="form-group">
-                                                            <label for="">Sekolah</label>
-                                                            <select class="form-control">
-                                                                <option selected>Pilih Pendidikan Terakhir</option>
-                                                                <option value="SD">SD</option>
-                                                                <option value="SMP">SMP</option>
-                                                                <option value="SMA">SMA</option>
-                                                                <option value="D1">D1</option>
-                                                                <option value="D2">D2</option>
-                                                                <option value="D3">D3</option>
-                                                                <option value="D4">D4</option>
-                                                                <option value="S1">S1</option>
-                                                                <option value="S2">S2</option>
-                                                                <option value="S3">S3</option>
-                                                            </select>
+                                                <div class="scrollable">
+                                                    <div class="row" v-for="(item, index) in form.sekolah_lanjutan"
+                                                        :key="index">
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label for="">Sekolah</label>
+                                                                <v-select :options="sekolah" v-model="item.sekolah"
+                                                                    placeholder="Pilih Pendidikan Terakhir"></v-select>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <div class="form-group">
-                                                            <label for="">Jurusan</label>
-                                                            <input type="text" class="form-control" placeholder="">
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label for="">Jurusan</label>
+                                                                <input type="text" class="form-control" placeholder=""
+                                                                    v-model="item.jurusan">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-2 d-flex align-items-center">
-                                                        <button class="btn btn-outline-danger mt-3">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
+                                                        <div class="col-2 d-flex align-items-center">
+                                                            <button class="btn btn-outline-danger mt-3"
+                                                                @click="form.sekolah_lanjutan.splice(index, 1)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -413,37 +435,42 @@ export default {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div v-if="currentStep === 5">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <label for="">Nama Keluarga yang dapat dihubungi</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <label for="">Nama Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
+                                            <input type="text" class="form-control" v-model="form.nama_keluarga"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Hubungan Keluarga yang dapat dihubungi</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <label for="">Hubungan Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
+                                            <input type="text" class="form-control" v-model="form.hubungan_keluarga"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Nomor Telepon Keluarga yang dapat dihubungi</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <label for="">Nomor Telepon Keluarga yang dapat dihubungi <span class="text-red">*</span></label>
+                                            <input type="text" class="form-control" v-model="form.nomor_telepon_keluarga"
+                                                placeholder="" @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Status</label>
-                                            <select class="form-control">
+                                            <label for="">Status <span class="text-red">*</span></label>
+                                            <select class="form-control" v-model="form.status">
                                                 <option selected>Pilih Status</option>
                                                 <option value="belum_menikah">Belum Menikah</option>
                                                 <option value="menikah">Menikah</option>
-                                                <option value="duda">Duda</option>
-                                                <option value="janda">Janda</option>
+                                                <option value="duda" v-if="form.jenis_kelamin === 'laki-laki'">Duda</option>
+                                                <option value="janda" v-else>Janda</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="">Nama Suami / Istri</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <label for="">Nama
+                                                {{ form.jenis_kelamin === 'laki-laki' ? 'Istri' : 'Suami' }}</label>
+                                                 <span class="text-red" v-if="form.status === 'menikah'">*</span>
+                                            <input type="text" class="form-control" v-model="form.nama_suami_istri"
+                                                placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -454,37 +481,48 @@ export default {
                                                         <h5>Anak</h5>
                                                     </div>
                                                     <div class="p-2 bd-highlight">
-                                                        <!-- hanya bisa menambahkan maksimal 5 -->
-                                                        <button class="btn btn-primary btn-sm">Tambah</button>
+                                                        <button class="btn btn-primary btn-sm"
+                                                            @click="tambahAnak">Tambah</button>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-5">
-                                                        <div class="form-group">
-                                                            <label for="">Nama Anak</label>
-                                                            <input type="text" class="form-control" placeholder="">
+                                                <div class="scrollable">
+                                                    <div class="row" v-for="(item, index) in form.anak" :key="index">
+                                                        <div class="col-1 d-flex align-items-center">
+                                                            <p>{{ index + 1 }}.</p>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="">Tempat Lahir</label>
-                                                            <input type="text" class="form-control" placeholder="">
+                                                        <div class="col-5">
+                                                            <div class="form-group">
+                                                                <label for="">Nama Anak</label>
+                                                                <input type="text" class="form-control"
+                                                                    v-model="item.nama_anak" placeholder="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Tempat Lahir</label>
+                                                                <input type="text" class="form-control"
+                                                                    v-model="item.tempat_lahir" placeholder="">
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <div class="form-group">
-                                                            <label for="">Tgl Lahir</label>
-                                                            <input type="date" class="form-control" placeholder="">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="">Tgl Lahir</label>
+                                                                <input type="date" class="form-control"
+                                                                    v-model="item.tanggal_lahir" placeholder="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">No BPJS</label>
+                                                                <input type="text" class="form-control"
+                                                                    v-model="item.no_bpjs" placeholder=""
+                                                                    @keypress="numberOnly($event)">
+                                                            </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label for="">No BPJS</label>
-                                                            <input type="text" class="form-control" placeholder="">
+                                                        <div class="col-2 d-flex align-items-center">
+                                                            <button class="btn btn-sm btn-outline-danger mt-10"
+                                                                @click="form.anak.splice(index, 1)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-2 d-flex align-items-center">
-                                                        <button class="btn btn-sm btn-outline-danger mt-10">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
                                                     </div>
                                                 </div>
                                                 <hr>
@@ -495,14 +533,20 @@ export default {
                             </div>
 
                             <div v-if="currentStep === 6">
-                                <UploadFile />
+                                <UploadFile :Imgs="form.dokumen_pendukung" @changed = "form.dokumen_pendukung = $event" />
                             </div>
 
                         </div>
                         <div class="card-footer">
-                            <div class="d-flex flex-row-reverse bd-highlight">
+                            <div class="d-flex bd-highlight">
+                                <div class="p-2 flex-grow-1 bd-highlight">
+                                    <p class="text-muted">
+                                        <span class="text-red">*</span>
+                                        Wajib diisi
+                                    </p>
+                                </div>
                                 <div class="p-2 bd-highlight">
-                                    <button class="btn btn-primary" v-if="!isFirstStep" @click="previousStep">
+                                    <button class="btn btn-info" v-if="!isFirstStep" @click="previousStep">
                                         Sebelumnya
                                     </button>
 
@@ -527,5 +571,10 @@ export default {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+
+.scrollable {
+    overflow-y: auto;
+    max-height: 300px;
 }
 </style>

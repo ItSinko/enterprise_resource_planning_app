@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "VueUploadImages", // vue component name
+    name: "VueUploadFiles", // vue component name
     data() {
         return {
             error: "",
@@ -115,7 +115,7 @@ export default {
         </div>
         <div class="imgsPreview" v-show="Imgs.length > 0">
             <button type="button" class="clearButton" @click="reset">
-                {{ clearAll ? clearAll : "clear All" }}
+                {{ clearAll ? clearAll : "Hapus Semua" }}
             </button>
             <div class="row">
                 <div class="col-3" v-for="(img, i) in Imgs" :key="i">
