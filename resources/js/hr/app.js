@@ -7,6 +7,7 @@ import Vuex from 'vuex';
 import storeData from './store'
 import DateFormat from './plugins/dateFormat'
 import numberOnly from './plugins/numberOnly'
+import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
 import 'jquery/dist/jquery.js'
@@ -17,6 +18,7 @@ Vue.use(VueRouter);
 Vue.use(VueSweetalert2);
 Vue.use(DateFormat);
 Vue.use(numberOnly)
+Vue.component("v-select", vSelect);
 
 const store = new Vuex.Store(storeData);
 

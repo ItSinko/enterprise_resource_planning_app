@@ -3,11 +3,13 @@ import axios from 'axios';
 import Header from '../../components/header.vue';
 import UploadFile from '../../components/uploadFile.vue'
 import UploadImage from '../../components/uploadImage.vue'
+import InputPrice from '../../../emiindo/components/inputprice.vue';
 export default {
     components: {
         Header,
         UploadFile,
-        UploadImage
+        UploadImage,
+        InputPrice
     },
     data() {
         return {
@@ -28,6 +30,11 @@ export default {
             ],
             currentStep: 1,
             divisi: [],
+            sekolah: [
+                "SD",
+                "SMP",
+                "SMA",
+            ],
             form: {
                 image: null,
                 nama_pegawai: null,
@@ -43,7 +50,7 @@ export default {
                 status_pegawai: 1,
                 bagian: null,
                 kode_akun: null,
-                upah_lembur: null,
+                upah_lembur: 0,
                 no_rekening: null,
                 jabatan: null,
                 divisi: null,
@@ -125,7 +132,7 @@ export default {
             this.divisi = data.map(item => {
                 return {
                     id: item.id,
-                    label: item.nama_divisi
+                    label: item.nama
                 }
             })
         }
@@ -159,7 +166,7 @@ export default {
                     <!-- photo -->
                     <div class="card">
                         <div class="card-body d-flex justify-content-center">
-                            <UploadImage :image="image" @fileRemoved="image = null" @fileSelected="image = $event" />
+                            <UploadImage :image="form.image" @fileRemoved="image = null" @fileSelected="image = $event" />
                         </div>
                     </div>
                 </div>
@@ -216,13 +223,13 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Alamat Tinggal Sesuai KTP</label>
-                                            <input type="text" class="form-control" v-model="form.alamat_tinggal_sesuai_ktp"
-                                                placeholder="">
+                                            <textarea cols="5" class="form-control"
+                                                v-model="form.alamat_tinggal_sesuai_ktp"></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Alamat Tinggal Saat ini</label>
-                                            <input type="text" class="form-control" v-model="form.alamat_tinggal_saat_ini"
-                                                placeholder="">
+                                            <textarea cols="5" class="form-control"
+                                                v-model="form.alamat_tinggal_saat_ini"></textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Nomor Telepon</label>
@@ -251,7 +258,8 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bagian</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <v-select :options="divisi" v-model="form.bagian"
+                                                placeholder="Pilih Bagian"></v-select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Kode Akun</label>
@@ -259,11 +267,12 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Upah Lembur</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input-price v-model="form.upah_lembur" :nilai="form.upah_lembur" />
                                         </div>
                                         <div class="form-group">
                                             <label for="">No. Rekening</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" @keypress="numberOnly($event)"
+                                                placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -273,23 +282,24 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Divisi</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <v-select :options="divisi" v-model="form.divisi"
+                                                placeholder="Pilih Divisi"></v-select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Status Karyawan</label>
-                                            <select class="form-control">
+                                            <select class="form-control" v-model="form.status_karyawan">
                                                 <option selected>Pilih Status Karyawan</option>
-                                                <option value="Tetap">Tetap</option>
-                                                <option value="Kontrak">Kontrak</option>
-                                                <option value="Outsourcing">Outsourcing</option>
-                                                <option value="Magang">Magang</option>
+                                                <option value="tetap">Tetap</option>
+                                                <option value="kontrak">Kontrak</option>
+                                                <option value="outsourcing">Outsourcing</option>
+                                                <option value="magang">Magang</option>
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
                                             <label for="">Durasi Kontrak</label>
                                             <input type="text" class="form-control" placeholder="">
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
                                             <label for="">Nama Instansi untuk Kontrak atau Outsourcing</label>
                                             <input type="text" class="form-control" placeholder="">
                                         </div>
@@ -302,21 +312,24 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No NPWP</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.no_npwp"
+                                                placeholder="" @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">No BPJS Ketenagakerjaan</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.no_bpjs_ketenagakerjaan"
+                                                placeholder="" @keypress="numberOnly($event)">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">No BPJS Kesehatan</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.no_bpjs_kesehatan"
+                                                placeholder="" @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Faskes Kesehatan</label>
-                                            <select class="form-control">
+                                            <select class="form-control" v-model="form.faskes_kesehatan">
                                                 <option selected>Pilih Faskes Kesehatan</option>
                                                 <option v-for="tingkat in 3" :value="tingkat" :key="tingkat">Tingkat {{
                                                     tingkat }}</option>
@@ -331,7 +344,7 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Sekolah</label>
-                                            <select class="form-control">
+                                            <select class="form-control" v-model="form.sekolah">
                                                 <option selected>Pilih Pendidikan Terakhir</option>
                                                 <option value="SD">SD</option>
                                                 <option value="SMP">SMP</option>
@@ -347,7 +360,7 @@ export default {
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bidang / Jurusan</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" placeholder="" v-model="form.bidang_jurusan">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -359,7 +372,7 @@ export default {
                                                     </div>
                                                     <div class="p-2 bd-highlight">
                                                         <!-- hanya bisa menambahkan maksimal 5 -->
-                                                        <button class="btn btn-primary btn-sm">Tambah</button>
+                                                        <button class="btn btn-primary btn-sm" @click="tambahSekolah">Tambah</button>
                                                     </div>
                                                 </div>
                                             </div>
