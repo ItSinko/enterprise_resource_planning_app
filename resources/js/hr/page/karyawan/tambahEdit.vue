@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import Header from '../../components/header.vue';
 import UploadFile from '../../components/uploadFile.vue'
 import UploadImage from '../../components/uploadImage.vue'
@@ -26,7 +27,61 @@ export default {
                 },
             ],
             currentStep: 1,
-            image: null,
+            divisi: [],
+            form: {
+                image: null,
+                nama_pegawai: null,
+                jenis_kelamin: null,
+                tempat_lahir: null,
+                tanggal_lahir: null,
+                email: null,
+                nik: null,
+                alamat_tinggal_sesuai_ktp: null,
+                alamat_tinggal_saat_ini: null,
+                nomor_telepon: null,
+                tanggal_masuk: null,
+                status_pegawai: 1,
+                bagian: null,
+                kode_akun: null,
+                upah_lembur: null,
+                no_rekening: null,
+                jabatan: null,
+                divisi: null,
+                status_karyawan: null,
+                durasi_kontrak: null,
+                nama_instansi_kontrak: null,
+                no_npwp: null,
+                no_bpjs_ketenagakerjaan: null,
+                no_bpjs_kesehatan: null,
+                faskes_kesehatan: null,
+                sekolah: null,
+                bidang_jurusan: null,
+                sekolah_lanjutan: [
+                    {
+                        sekolah: null,
+                        jurusan: null
+                    }
+                ],
+                nama_keluarga: null,
+                hubungan_keluarga: null,
+                nomor_telepon_keluarga: null,
+                status: null,
+                nama_suami_istri: null,
+                anak: [
+                    {
+                        nama_anak: null,
+                        tempat_lahir: null,
+                        tanggal_lahir: null,
+                        no_bpjs: null
+                    }
+                ],
+                dokumen_pendukung: [
+                    {
+                        nama_dokumen: null,
+                        file: null
+                    }
+                ]
+            }
         };
     },
     methods: {
@@ -64,6 +119,15 @@ export default {
                     return ''
                     break;
             }
+        },
+        async getDivisi() {
+            const { data } = await axios.get('/api/gbj/sel-divisi')
+            this.divisi = data.map(item => {
+                return {
+                    id: item.id,
+                    label: item.nama_divisi
+                }
+            })
         }
     },
     computed: {
@@ -79,6 +143,9 @@ export default {
         calculateProgress() {
             return (this.currentStep) * this.widthProgress
         },
+    },
+    mounted() {
+        this.getDivisi()
     },
 }
 </script>
@@ -115,41 +182,52 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Nama Pegawai</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.nama_pegawai"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Jenis Kelamin</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <select class="form-control" v-model="form.jenis_kelamin">
+                                                <option selected>Pilih Jenis Kelamin</option>
+                                                <option value="Laki-laki">Laki-laki</option>
+                                                <option value="Perempuan">Perempuan</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Tempat Lahir</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.tempat_lahir"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Tanggal Lahir</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="date" class="form-control" v-model="form.tanggal_lahir"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Email</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="email" class="form-control" v-model="form.email" placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">NIK</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.nik" placeholder=""
+                                                @keypress="numberOnly($event)">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Alamat Tinggal Sesuai KTP</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.alamat_tinggal_sesuai_ktp"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Alamat Tinggal Saat ini</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.alamat_tinggal_saat_ini"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Nomor Telepon</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <input type="text" class="form-control" v-model="form.nomor_telepon"
+                                                @keypress="numberOnly($event)" placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -160,11 +238,16 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Tanggal Masuk</label>
-                                            <input type="date" class="form-control" placeholder="">
+                                            <input type="date" class="form-control" v-model="form.tanggal_masuk"
+                                                placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="">Status Pegawai</label>
-                                            <input type="text" class="form-control" placeholder="">
+                                            <select class="form-control" v-model="form.status_pegawai">
+                                                <option selected>Pilih Status Pegawai</option>
+                                                <option value="1">Aktif</option>
+                                                <option value="0">Tidak Aktif</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Bagian</label>
@@ -400,7 +483,6 @@ export default {
 
                             <div v-if="currentStep === 6">
                                 <UploadFile />
-
                             </div>
 
                         </div>
@@ -408,15 +490,15 @@ export default {
                             <div class="d-flex flex-row-reverse bd-highlight">
                                 <div class="p-2 bd-highlight">
                                     <button class="btn btn-primary" v-if="!isFirstStep" @click="previousStep">
-                                        Previous
+                                        Sebelumnya
                                     </button>
 
                                     <button class="btn btn-primary ml-3" v-if="!isLastStep" @click="nextStep">
-                                        Next
+                                        Selanjutnya
                                     </button>
 
                                     <button class="btn btn-success ml-3" v-if="isLastStep">
-                                        Finish
+                                        Simpan
                                     </button>
                                 </div>
                             </div>
