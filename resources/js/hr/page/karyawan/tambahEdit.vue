@@ -28,7 +28,7 @@ export default {
                     link: '/hr/karyawan/tambah'
                 },
             ],
-            currentStep: 6,
+            currentStep: 1,
             divisi: [],
             sekolah: [
                 "SD",
