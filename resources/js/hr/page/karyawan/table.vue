@@ -38,6 +38,9 @@ export default {
         edit(id) {
             this.$router.push({ name: 'edit-karyawan', params: { id } })
         },
+        detail(id) {
+            this.$router.push({ name: 'detail-karyawan', params: { id } })
+        },
         status(id) {
             this.modalPegawai = true;
             this.$nextTick(() => {
@@ -53,7 +56,7 @@ export default {
         <table class="table">
             <thead class="text-center">
                 <tr>
-                    <th>No</th>
+                    <th>No Urut</th>
                     <th>Nama Karyawan</th>
                     <th>Jenis Kelamin</th>
                     <th>Tanggal Masuk</th>

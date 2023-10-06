@@ -10,9 +10,6 @@ import numberOnly from './plugins/numberOnly'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
-import 'jquery/dist/jquery.js'
-import 'bootstrap/dist/js/bootstrap.js'
-
 window.Vue = require('vue').default;
 Vue.use(VueRouter);
 Vue.use(VueSweetalert2);

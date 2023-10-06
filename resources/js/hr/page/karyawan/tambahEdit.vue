@@ -42,6 +42,12 @@ export default {
                 "S2",
                 "S3"
             ],
+            statusKaryawan: [
+                'Tetap',
+                'Kontrak',
+                'Outsourcing',
+                'Magang'
+            ],
             form: {
                 image: null,
                 nama_pegawai: null,
@@ -143,7 +149,7 @@ export default {
                 cekStepTiga.forEach(item => {
                     if (this.form[item] === null || this.form[item] === '') {
                         valid = false
-                    } 
+                    }
                 })
             } else if (this.currentStep == 4) {
                 valid = true
@@ -155,7 +161,7 @@ export default {
                 cekStepEmpat.forEach(item => {
                     if (this.form[item] === null || this.form[item] === '') {
                         valid = false
-                    } 
+                    }
                 })
             } else if (this.currentStep == 5) {
                 valid = true
@@ -171,7 +177,7 @@ export default {
                 cekStepKelima.forEach(item => {
                     if (this.form[item] === null || this.form[item] === '') {
                         valid = false
-                    } 
+                    }
                 })
             } else if (this.currentStep == 6) {
                 valid = true
@@ -326,7 +332,8 @@ export default {
 
                         </div>
                         <div class="card-body d-flex justify-content-center">
-                            <UploadImage :image="form.image" @fileRemoved="form.image = null" @fileSelected="form.image = $event" />
+                            <UploadImage :image="form.image" @fileRemoved="form.image = null"
+                                @fileSelected="form.image = $event" />
                         </div>
                     </div>
                 </div>
@@ -429,8 +436,7 @@ export default {
                                         <div class="form-group">
                                             <label for="">No. Rekening</label>
                                             <input type="text" class="form-control" @keypress="numberOnly($event)"
-                                                v-model="form.no_rekening"
-                                                placeholder="">
+                                                v-model="form.no_rekening" placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -447,10 +453,8 @@ export default {
                                             <label for="">Status Karyawan <span class="text-red">*</span></label>
                                             <select class="form-control" v-model="form.status_karyawan">
                                                 <option selected>Pilih Status Karyawan</option>
-                                                <option value="tetap">Tetap</option>
-                                                <option value="kontrak">Kontrak</option>
-                                                <option value="outsourcing">Outsourcing</option>
-                                                <option value="magang">Magang</option>
+                                                <option v-for="status in statusKaryawan" :value="status" :key="status">
+                                                    {{ status }}</option>
                                             </select>
                                         </div>
                                         <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
