@@ -64,6 +64,10 @@ export default {
             <div class="card-body">
                 <div class="d-flex bd-highlight mb-3">
                     <div class="mr-auto p-2 bd-highlight">
+                        <button class="btn btn-outline-info">
+                            <i class="fa fa-filter"></i>
+                            Filter
+                        </button>
                         <button class="btn btn-primary" @click="tambah">
                             <i class="fa fa-plus"></i>
                             Tambah
