@@ -1,6 +1,15 @@
 <script>
+import modalPegawaiComp from './modalPegawai.vue';
 export default {
     props: ['dataTable'],
+    components: {
+        modalPegawaiComp
+    },
+    data() {
+        return {
+            modalPegawai: false,
+        }
+    },
     methods: {
         image(src) {
             return src ? src : '/assets/image/user/blank.png';
@@ -28,12 +37,19 @@ export default {
         },
         edit(id) {
             this.$router.push({ name: 'edit-karyawan', params: { id } })
-        }
+        },
+        status(id) {
+            this.modalPegawai = true;
+            this.$nextTick(() => {
+                $('.modalPegawai').modal('show');
+            })
+        },
     },
 }
 </script>
 <template>
     <div>
+        <modalPegawaiComp v-if="modalPegawai" @closeModal="modalPegawai = false"></modalPegawaiComp>
         <table class="table">
             <thead class="text-center">
                 <tr>
@@ -77,7 +93,7 @@ export default {
                     </td>
                     <td class="text-center">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" :id="`customSwitch${index}`">
+                            <input type="checkbox" class="custom-control-input" :id="`customSwitch${index}`" @click="status(data.id)">
                             <label class="custom-control-label" :for="`customSwitch${index}`">Aktif</label>
                         </div>
                     </td>
@@ -85,8 +101,8 @@ export default {
                         <button class="btn btn-sm btn-outline-warning" @click="edit(data.id)">
                             <i class="fa fa-edit"></i> Edit
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" @click="hapus(data.id)">
-                            <i class="fa fa-trash"></i> Hapus
+                        <button class="btn btn-sm btn-outline-info" @click="detail(data.id)">
+                            <i class="fa fa-eye"></i> Detail
                         </button>
                     </td>
                 </tr>
