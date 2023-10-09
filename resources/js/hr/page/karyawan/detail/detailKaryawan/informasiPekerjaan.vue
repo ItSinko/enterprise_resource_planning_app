@@ -54,7 +54,7 @@
                                 <div><b id="no_so">1 Tahun</b></div>
                             </div>
                             <div class="margin">
-                                <div><small class="text-muted">Nama Instansi</small></div>
+                                <div><small class="text-muted">Nama Instansi Kontrak / Outsourcing</small></div>
                                 <div><b id="no_so">PT. xxx</b></div>
                             </div>
                         </div>
