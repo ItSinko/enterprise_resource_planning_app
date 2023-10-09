@@ -63,6 +63,10 @@ export default {
                                 <div><b id="no_so">6289898</b></div>
                             </div>
                             <div class="margin">
+                                <div><small class="text-muted">Tanggal Masuk</small></div>
+                                <div><b id="no_so">23 Oktober 2022</b></div>
+                            </div>
+                            <div class="margin">
                                 <div><small class="text-muted">Tanggal Resign</small></div>
                                 <div class="badge badge-danger">23 Oktober 2023</div>
                             </div>

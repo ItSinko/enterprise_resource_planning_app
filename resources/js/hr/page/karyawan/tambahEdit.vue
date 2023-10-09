@@ -73,7 +73,6 @@ export default {
                 no_npwp: null,
                 no_bpjs_ketenagakerjaan: null,
                 no_bpjs_kesehatan: null,
-                faskes_kesehatan: null,
                 sekolah: null,
                 bidang_jurusan: null,
                 sekolah_lanjutan: [
@@ -291,7 +290,7 @@ export default {
     watch: {
         // status_karyawan
         'form.status_karyawan': function (val) {
-            if (val === 'tetap') {
+            if (val === 'Tetap') {
                 delete this.form.durasi_kontrak
                 delete this.form.nama_instansi_kontrak
             } else {
@@ -300,7 +299,7 @@ export default {
             }
         },
         'form.no_bpjs_kesehatan': function (val) {
-            if (val === null) {
+            if (val === null || val === '') {
                 delete this.form.faskes_kesehatan
             } else {
                 this.form.faskes_kesehatan = null
@@ -457,12 +456,12 @@ export default {
                                                     {{ status }}</option>
                                             </select>
                                         </div>
-                                        <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
+                                        <div class="form-group" v-if="form.status_karyawan !== 'Tetap'">
                                             <label for="">Durasi Kontrak <span class="text-red">*</span></label>
                                             <input type="text" class="form-control" v-model="form.durasi_kontrak"
                                                 @keypress="numberOnly($event)">
                                         </div>
-                                        <div class="form-group" v-if="form.status_karyawan !== 'tetap'">
+                                        <div class="form-group" v-if="form.status_karyawan !== 'Tetap'">
                                             <label for="">Nama Instansi untuk Kontrak atau Outsourcing</label>
                                             <input type="text" class="form-control" v-model="form.nama_instansi_kontrak">
                                         </div>
