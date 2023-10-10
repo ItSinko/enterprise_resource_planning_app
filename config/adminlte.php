@@ -624,13 +624,13 @@ return [
         ],
         [
             'text' => 'Finish Goods',
-            'url'  => '/administrator/produk',
+            'url'  => '/administrator/finishgoods',
             'icon' => 'fas fa-archive',
             'auth' => [14, 10]
         ],
         [
             'text' => 'Reworks',
-            'url'  => '/administrator/produk',
+            'url'  => '/administrator/reworks',
             'icon' => 'fas fa-exclamation-triangle',
             'auth' => [14, 10]
         ],

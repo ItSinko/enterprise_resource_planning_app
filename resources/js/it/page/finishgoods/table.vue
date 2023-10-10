@@ -74,6 +74,7 @@ export default {
             :selectProduct="selectProduct"
             :dialogCreate="showDialog"
             :product="product"
+            v-if="showDialog"
         ></Modal>
         <div class="d-flex">
             <v-card flat class="ml-5 mr-auto">
