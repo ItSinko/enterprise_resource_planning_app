@@ -50,11 +50,11 @@ class RedirectIfAuthenticated
                     return redirect('/gbj/dashboard');
                 } else if ($request->user()->hasRole("28")) {
                     return redirect()->route('kesehatan.dashboard');
-                } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
+                } else if ($request->user()->hasRole("16") || $request->user()->hasRole("34")) {
                     return redirect('/mtc/air/masuk');
                 } else if ($request->user()->hasRole("22")) {
                     return redirect('/lab/dashboard');
-                } else if ($request->user()->hasRole("14")) {
+                } else if ($request->user()->hasRole("14")|| $request->user()->hasRole("10")) {
                     return redirect('/administrator/dashboard');
                 }
             }

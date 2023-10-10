@@ -616,13 +616,13 @@ return [
             'text' => 'Kategori Produk',
             'url'  => '/administrator/kategori_produk',
             'icon' => 'fas fa-table',
-            'auth' => [14]
+            'auth' => [14, 10]
         ],
         [
             'text' => 'Produk',
             'url'  => '/administrator/produk',
             'icon' => 'fas fa-table',
-            'auth' => [14]
+            'auth' => [14, 10]
         ],
         // [
         //     'text'    => 'Part',
@@ -1640,13 +1640,13 @@ return [
 
         [
             'header' => 'AIR',
-            'auth' => [16, 10]
+            'auth' => [16, 34]
         ],
 
         [
             'text'    => 'Grafik Air',
             'icon'    => 'fas fa-tint fa-fw',
-            'auth' => [16, 10],
+            'auth' => [16, 34],
             'url' => '/mtc/air/masuk',
             // [
             //     'text' => 'Air Keluar',
@@ -1658,26 +1658,26 @@ return [
 
         [
             'header' => 'LISTRIK',
-            'auth' => [16, 10]
+            'auth' => [16, 34]
         ],
 
         [
             'text' => 'Panel Listrik',
             'icon' => 'fas fa-bolt fa-fw',
             'url' => '/mtc/listrik/panel',
-            'auth' => [16, 10],
+            'auth' => [16, 34],
         ],
         [
             'text' => 'Data Monitoring',
             'icon' => 'fas fa-database fa-fw',
             'url' => '/mtc/listrik/monitoring/table',
-            'auth' => [16, 10],
+            'auth' => [16, 34],
         ],
         [
             'text' => 'Grafik Monitoring',
             'icon' => 'far fa-chart-bar fa-fw',
             'url' => '/mtc/listrik/monitoring/grafik',
-            'auth' => [16, 10],
+            'auth' => [16, 34],
         ],
 
         // [
@@ -1730,19 +1730,19 @@ return [
         ],
         [
             'header' => 'Setting',
-            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 34]
         ],
         [
             'text' => 'Ubah Password',
             'icon' => 'fa-solid fa-gear',
             'url' => '/edit_pwd',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 34]
         ],
         [
             'text' => 'Monitoring Lap. Teknis',
             'icon' => 'fa-solid fa-chart-line',
             'url' => 'https://docs.google.com/spreadsheets/d/1OxZY8JTqDBrIm89A9cTcTnRndRBOUCtnblY0f0F76p4/edit?usp=sharing',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
+            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 34]
         ],
     ],
 

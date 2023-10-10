@@ -55,9 +55,9 @@ class Divisi
             return redirect('/penjualan/dashboard');
         } else if ($request->user()->hasRole("22")) {
             return redirect('/lab/dashboard');
-        } else if ($request->user()->hasRole("14")) {
+        } else if ($request->user()->hasRole("14")|| $request->user()->hasRole("10")) {
             return redirect('/administrator/dashboard');
-        } else if ($request->user()->hasRole("16") || $request->user()->hasRole("10")) {
+        } else if ($request->user()->hasRole("16") || $request->user()->hasRole("34")) {
             return redirect('/mtc/air/masuk');
         }
     }
