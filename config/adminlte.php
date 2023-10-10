@@ -619,9 +619,19 @@ return [
             'auth' => [14, 10]
         ],
         [
-            'text' => 'Produk',
+            'header' => 'Produk',
+            'auth'   => [14, 10],
+        ],
+        [
+            'text' => 'Finish Goods',
             'url'  => '/administrator/produk',
-            'icon' => 'fas fa-table',
+            'icon' => 'fas fa-archive',
+            'auth' => [14, 10]
+        ],
+        [
+            'text' => 'Reworks',
+            'url'  => '/administrator/produk',
+            'icon' => 'fas fa-exclamation-triangle',
             'auth' => [14, 10]
         ],
         // [
