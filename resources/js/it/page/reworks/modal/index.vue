@@ -1,17 +1,38 @@
 <script>
-import axios from 'axios';
+import axios from 'axios'
 export default {
-    props: ['selectProduct', 'dialogCreate', 'product'],
+    props: ['selectReworks', 'showDialog', 'reworks'],
     data() {
         return {
             header: [
-                { text: 'Kelompok Produk', value: 'kelompok_produk_id' },
-                { text: 'Merk', value: 'merk' },
-                { text: 'Kode Produk', value: 'kode_produk' },
-                { text: 'Nama', value: 'nama' },
-                { text: 'Kategori', value: 'kategori' },
-                { text: 'No AKD', value: 'no_akd' },
-                { text: 'Status', value: 'status' },
+                {
+                    text: 'Kelompok Produk',
+                    value: 'kelompok_produk_id',
+                },
+                {
+                    text: 'Merk',
+                    value: 'merk',
+                },
+                {
+                    text: 'Kode Produk',
+                    value: 'kode_produk',
+                },
+                {
+                    text: 'Nama',
+                    value: 'nama',
+                },
+                {
+                    text: 'Kategori',
+                    value: 'kategori',
+                },
+                {
+                    text: 'No AKD',
+                    value: 'no_akd',
+                },
+                {
+                    text: 'Status',
+                    value: 'status',
+                },
             ],
             selectAll: false,
             category: null,
@@ -28,7 +49,7 @@ export default {
             merk: ['ELITECH', 'MENTOR', 'VANWARD', 'RGB'],
             rules: {
                 required: value => !!value || 'Required.',
-                mustBeNumber: value => isNaN(value) || 'Must be a number',
+                mustBeNumber: value => !isNaN(value) || 'Must be a number',
                 nameUnique: (id, value) => {
                     return id ? true :
                         !this.product.some(item => item.nama === value) || 'Nama produk sudah ada'
@@ -46,10 +67,10 @@ export default {
         },
         closeDialog() {
             this.$emit('closeDialog')
-            this.$emit('getProduct')
+            this.$emit('refresh')
         },
         tambah() {
-            this.selectProduct.push({
+            this.selectReworks.push({
                 kelompok_produk_id: '',
                 merk: '',
                 kode_produk: '',
@@ -57,34 +78,14 @@ export default {
                 produk_id: '',
                 no_akd: '',
                 status: '1',
-                gudang_barang_jadi: [
+                detailPaket: [
                     {
-                        stok: 0,
-                        stok_siap: 0,
-                        satuan_id: 2,
+                        nama_produk: '',
+                        jumlah: 0,
                     }
                 ]
             })
-        },
-        async simpan() {
-            const isValid = await this.$refs.formProducts.validate()
-            if (!isValid) return
-            const success = () => {
-                this.loading = false
-                this.$swal('Berhasil', 'Produk berhasil ditambahkan', 'success')
-                this.closeDialog()
-            }
-            const error = () => {
-                this.loading = false
-                this.$swal('Gagal', 'Produk gagal ditambahkan', 'error')
-            }
-            try {
-                this.loading = true
-                const { data } = await axios.post('/api/produk', this.selectProduct).then(success).catch(error)
-            } catch (error) {
-                console.log(error)
-            }
-        },
+        }
     },
     created() {
         this.getCategory()
@@ -102,19 +103,19 @@ export default {
 </script>
 <template>
     <div>
-        <v-dialog v-model="dialogCreate" persistent max-width="70%">
+        <v-dialog v-model="showDialog" persistent max-width="70%">
             <v-card>
                 <v-toolbar dark color="primary">
                     <v-btn icon dark @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
-                    <v-toolbar-title>Tambah Produk</v-toolbar-title>
+                    <v-toolbar-title>Tambah Reworks</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn @click="simpan" :loading="loading" :disabled="loading" text>Simpan</v-btn>
+                    <v-btn :loading="loading" :disabled="loading" text>Simpan</v-btn>
                 </v-toolbar>
 
                 <v-form ref="formProducts" v-model="valid" lazy-validation>
-                    <v-data-table :headers="header" :items="selectProduct">
+                    <v-data-table :headers="header" :items="selectReworks">
                         <template #top>
                             <div class="d-flex justify-end">
                                 <v-btn class="mr-1 mt-1" color="primary" @click="tambah">Tambah</v-btn>
@@ -129,7 +130,8 @@ export default {
                                 </td>
                                 <td>
                                     <v-autocomplete class="mt-5" v-model="item.merk" :items="merk" :rules="[rules.required]"
-                                        outlined dense></v-autocomplete>
+                                        outlined dense>
+                                    </v-autocomplete>
                                 </td>
                                 <td>
                                     <v-text-field type="number" class="mt-5" v-model="item.kode_produk"
@@ -146,16 +148,7 @@ export default {
                                         :rules="[rules.required]" outlined dense></v-autocomplete>
                                 </td>
                                 <td>
-                                    <v-text-field type="number" class="mt-5" v-model="item.no_akd"
-                                        :rules="[rules.mustBeNumber]" outlined dense></v-text-field>
-                                </td>
-                                <td>
                                     <v-switch class="mt-5 mx-1" v-model="item.status" color="primary"></v-switch>
-                                </td>
-                                <td v-if="!item.id">
-                                    <v-btn icon @click="selectProduct.splice(index, 1)">
-                                        <v-icon>mdi-delete</v-icon>
-                                    </v-btn>
                                 </td>
                             </tr>
                         </template>

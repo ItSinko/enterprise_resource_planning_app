@@ -1,5 +1,5 @@
 <script>
-import axios from 'axios';
+import axios from 'axios'; 
 import TableProduct from './table.vue'
 export default {
     components: { TableProduct },
