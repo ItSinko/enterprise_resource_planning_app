@@ -8,10 +8,10 @@ export default {
         return {
             search: '',
             header: [
-                { text: 'id', value: 'id' },
-                { text: 'nama', value: 'nama' },
-                { text: 'kategori', value: 'kategori' },
-                { text: 'status', value: 'status'}
+                { text: 'id', value: 'id', sortable: false },
+                { text: 'Nama', value: 'nama' },
+                { text: 'Kategori', value: 'kategori' },
+                { text: 'Status', value: 'status' }
             ],
             selectAll: false,
             selectProduct: [],
@@ -71,6 +71,7 @@ export default {
         <Modal
             @closeDialog="showDialog = false"
             @getProduct="getProduct"
+            v-if="showDialog"
             :selectProduct="selectProduct"
             :dialogCreate="showDialog"
             :product="product"
@@ -92,7 +93,6 @@ export default {
             </v-card>
         </div>
         <v-data-table
-        hide-default-header
         :headers="header"
         :items="product"
         :search="search"
@@ -105,25 +105,12 @@ export default {
             </div>
         </template>
 
-        <template #header>
-            <thead>
-                <tr>
+                <template #header.id>
                     <th class="text-left">
-                        <v-checkbox
-                            :indeterminate="selectProduct.length > 0 && selectProduct.length < product.length"
-                            @click.native="checkAll"
-                            v-model="selectAll"
-                        ></v-checkbox>
+                        <v-checkbox :indeterminate="selectProduct.length > 0 && selectProduct.length < product.length"
+                            @click.native="checkAll" v-model="selectAll"></v-checkbox>
                     </th>
-                    <th class="text-left">
-                        Nama Produk
-                    </th>
-                    <th class="text-left">
-                        Status
-                    </th>
-                </tr>
-            </thead>
-        </template>
+                </template>
 
         <template #item.id = "{ item }">
             <v-checkbox

@@ -17,10 +17,12 @@ class Produk extends Model
             ->withPivot('jumlah')
             ->withTimestamps();
     }
+
     public function GudangBarangJadi()
     {
         return $this->hasMany(GudangBarangJadi::class);
     }
+
     public function KelompokProduk()
     {
         return $this->belongsTo(KelompokProduk::class, 'kelompok_produk_id');
@@ -34,5 +36,10 @@ class Produk extends Model
     function product()
     {
         return $this->belongsTo(Mproduk::class, 'produk_id');
+    }
+
+    public function DetailProdukRw ()
+    {
+        return $this->hasMany(DetailProdukRw::class,'produk_parent_id');
     }
 }

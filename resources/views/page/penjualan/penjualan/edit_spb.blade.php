@@ -157,7 +157,7 @@
 @section('content')
     <section class="content">
         <div class="container-fluid">
-            @foreach ($spb as $e)
+
                 <div class="row justify-content-center">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="card">
@@ -596,29 +596,38 @@
 
                                                                                     <th width="20%">Harga</th>
                                                                                     <th width="20%">Subtotal</th>
+                                                                                    <th width="20%">PPN</th>
+                                                                                    <th width="10%">
+                                                                                        Stok Distributor <br>
+                                                                                        <input type="checkbox" class="checkAllDistributor">
+                                                                                    </th>
                                                                                     <th width="2%">Aksi</th>
                                                                                 </tr>
                                                                             </thead>
 
                                                                             <tbody>
 
-                                                                                <?php $produkpenjualan = 0; ?>
-                                                                                @if (isset($e->pesanan->detailpesanan))
-                                                                                    @foreach ($e->pesanan->detailpesanan as $f)
+
+                                                                                <?php
+                                                                                $produkpenjualan = 0;
+                                                                                $no= 1;
+                                                                                ?>
+                                                                                @if (count($item) > 0)
+                                                                                    @foreach ($item as $f)
                                                                                         <tr>
-                                                                                            <td>{{ $loop->iteration }}</td>
+                                                                                            <td>{{ $no++ }}</td>
                                                                                             <td>
                                                                                                 <div
                                                                                                     class="form-group select_item">
                                                                                                     <select
                                                                                                         name="penjualan_produk_id[]"
-                                                                                                        id="{{ $loop->iteration - 1 }}"
+                                                                                                        id="{{ $no - 2 }}"
                                                                                                         class="select2 form-control custom-select penjualan_produk_id @error('penjualan_produk_id') is-invalid @enderror"
                                                                                                         style="width:100%;">
                                                                                                         <option
-                                                                                                            value="{{ $f->penjualan_produk_id }}"
+                                                                                                            value="{{ $f['penjualan_produk_id'] }}"
                                                                                                             selected>
-                                                                                                            {{ $f->penjualanproduk->nama }}
+                                                                                                            {{ $f['nama'] }}
                                                                                                         </option>
                                                                                                     </select>
                                                                                                 </div>
@@ -629,11 +638,11 @@
                                                                                                                 Produk</b>
                                                                                                         </legend>
                                                                                                         <?php $variasi = 0; ?>
-                                                                                                        @foreach ($f->DetailPesananProduk as $g)
+                                                                                                        @foreach ($f['detail'] as $g)
                                                                                                             <div>
                                                                                                                 <div
                                                                                                                     class="card-body blue-bg">
-                                                                                                                    <h6>{{ $g->GudangBarangJadi->Produk->nama }}
+                                                                                                                    <h6>{{ $g['nama'] }}
                                                                                                                     </h6>
                                                                                                                     <select
                                                                                                                         class="form-control variasi"
@@ -643,12 +652,12 @@
                                                                                                                         data-attr="variasi{{ $variasi }}"
                                                                                                                         data-id="{{ $variasi }}">
                                                                                                                         <option
-                                                                                                                            value="{{ $g->GudangBarangJadi->id }}"
+                                                                                                                            value="{{ $g['gbj_id'] }}"
                                                                                                                             selected>
-                                                                                                                            @if (!empty(trim($g->GudangBarangJadi->nama)))
-                                                                                                                                {{ $g->GudangBarangJadi->nama }}
+                                                                                                                            @if (!empty(trim($g['variasi'])))
+                                                                                                                                {{ $g['variasi'] }}
                                                                                                                             @else
-                                                                                                                                {{ $g->GudangBarangJadi->Produk->nama }}
+                                                                                                                                {{ $g['nama'] }}
                                                                                                                             @endif
                                                                                                                         </option>
                                                                                                                     </select>
@@ -680,13 +689,8 @@
                                                                                                             name="produk_jumlah[{{ $produkpenjualan }}]"
                                                                                                             id="produk_jumlah{{ $produkpenjualan }}"
                                                                                                             style="width:100%;"
-                                                                                                            value="{{ $f->jumlah }}">
-                                                                                                        <div
-                                                                                                            class="input-group-append">
-                                                                                                            <span
-                                                                                                                class="input-group-text"
-                                                                                                                id="produk_satuan">pcs</span>
-                                                                                                        </div>
+                                                                                                            value="{{ $f['jumlah'] }}">
+
                                                                                                     </div>
                                                                                                     <small
                                                                                                         id="produk_ketersediaan"></small>
@@ -696,12 +700,7 @@
                                                                                             <td>
                                                                                                 <div
                                                                                                     class="form-group d-flex justify-content-center">
-                                                                                                    <div
-                                                                                                        class="input-group-prepend">
-                                                                                                        <span
-                                                                                                            class="input-group-text"
-                                                                                                            id="prdhrg">Rp</span>
-                                                                                                    </div>
+
                                                                                                     <input type="text"
                                                                                                         class="form-control produk_harga"
                                                                                                         name="produk_harga[{{ $produkpenjualan }}]"
@@ -709,25 +708,20 @@
                                                                                                         placeholder="Masukkan Harga"
                                                                                                         style="width:100%;"
                                                                                                         aria-describedby="prdhrg"
-                                                                                                        value="{{ number_format($f->harga, 0, ',', '.') }}" />
+                                                                                                        value="{{ number_format($f['harga'], 0, ',', '.') }}" />
                                                                                                 </div>
                                                                                             </td>
                                                                                             <td>
                                                                                                 <div
                                                                                                     class="form-group d-flex justify-content-center">
-                                                                                                    <div
-                                                                                                        class="input-group-prepend">
-                                                                                                        <span
-                                                                                                            class="input-group-text"
-                                                                                                            id="prdsub">Rp</span>
-                                                                                                    </div>
+
                                                                                                     <input type="text"
                                                                                                         class="form-control produk_subtotal"
                                                                                                         name="produk_subtotal[{{ $produkpenjualan }}]"
                                                                                                         id="produk_subtotal{{ $produkpenjualan }}"
                                                                                                         placeholder="Masukkan Subtotal"
                                                                                                         style="width:100%;"
-                                                                                                        value="{{ number_format($f->harga * $f->jumlah, 0, ',', '.') }}"
+                                                                                                        value="{{ number_format($f['harga'] * $f['jumlah'] + $f['ongkir'], 0, ',', '.') }}"
                                                                                                         aria-describedby="prdsub"
                                                                                                         readonly />
                                                                                                 </div>
@@ -737,19 +731,48 @@
                                                                                                     <input type="checkbox" class="custom-control-input produk_ppn"
                                                                                                     id="produk_ppn{{ $produkpenjualan }}"
                                                                                                     name="produk_ppn[{{ $produkpenjualan }}]"
-                                                                                                    value="{{ $f->ppn }}"
-                                                                                                    @if ($f->ppn == 1)
-                                                                                                        checked
-                                                                                                    @endif
+                                                                                                    value="{{ $f['ppn'] }}"
+                                                                                                    @if ($f['ppn'] == 1)
+                                                                                                    checked
+                                                                                                @endif
                                                                                                     >
                                                                                                     <label class="custom-control-label produk_ppn_label" for="produk_ppn{{ $produkpenjualan }}">
-                                                                                                        @if ($f->ppn == 1)
+                                                                                                        @if ($f['ppn'] == 1)
                                                                                                         PPN
                                                                                                     @else
                                                                                                         Non PPN
                                                                                                     @endif
                                                                                                     </label>
                                                                                                   </div>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <div
+                                                                                                    class="form-group d-flex align-items-center">
+                                                                                                    <input type="checkbox"
+                                                                                                        class="stok_distributor"
+                                                                                                        name="stok_distributor[{{ $produkpenjualan }}]"
+                                                                                                        id="stok_distributor{{ $produkpenjualan }}"
+                                                                                                        value="{{ $produkpenjualan }}"
+                                                                                                        @if ($f['jenis'] == 'dsb' )
+                                                                                                            checked
+                                                                                                        @endif
+                                                                                                        style="width:100%;" />
+                                                                                                </div>
+                                                                                                @if ($f['jenis'] == 'dsb' )
+                                                                                                <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" >No Seri</button>
+                                                                                                @else
+                                                                                                <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden >No Seri</button>
+                                                                                                 @endif
+
+                                                                                                <input type="hidden" name="noSeriDistributor[{{ $produkpenjualan }}]" class="noSeriDistributor" value="{{$f['seri']}}">
+                                                                                            </td>
+                                                                                            <td hidden>
+                                                                                                <input type="hidden"
+                                                                                                    class="rencana_id"
+                                                                                                    name="rencana_id[{{ $produkpenjualan }}]"
+                                                                                                    id="rencana_id{{ $produkpenjualan }}"
+                                                                                                    readonly
+                                                                                                    value="{{ $f['detail_rencana_penjualan_id'] }}">
                                                                                             </td>
                                                                                             <td>
                                                                                                 <a id="removerowproduk"><i
@@ -763,7 +786,8 @@
                                                                                     <tr>
                                                                                         <td>1</td>
                                                                                         <td>
-                                                                                            <div class="form-group">
+                                                                                            <div
+                                                                                                class="form-group select_item">
                                                                                                 <select
                                                                                                     name="penjualan_produk_id[0]"
                                                                                                     id="0"
@@ -789,27 +813,16 @@
                                                                                                         id="produk_jumlah"
                                                                                                         style="width:100%;"
                                                                                                         value="">
-                                                                                                    <div
-                                                                                                        class="input-group-append">
-                                                                                                        <span
-                                                                                                            class="input-group-text"
-                                                                                                            id="produk_satuan">pcs</span>
-                                                                                                    </div>
+
                                                                                                 </div>
                                                                                                 <small
                                                                                                     id="produk_ketersediaan"></small>
                                                                                             </div>
                                                                                         </td>
-
                                                                                         <td>
                                                                                             <div
                                                                                                 class="form-group d-flex justify-content-center">
-                                                                                                <div
-                                                                                                    class="input-group-prepend">
-                                                                                                    <span
-                                                                                                        class="input-group-text"
-                                                                                                        id="prdhrg">Rp</span>
-                                                                                                </div>
+
                                                                                                 <input type="text"
                                                                                                     class="form-control produk_harga"
                                                                                                     name="produk_harga[0]"
@@ -823,12 +836,7 @@
                                                                                         <td>
                                                                                             <div
                                                                                                 class="form-group d-flex justify-content-center">
-                                                                                                <div
-                                                                                                    class="input-group-prepend">
-                                                                                                    <span
-                                                                                                        class="input-group-text"
-                                                                                                        id="prdsub">Rp</span>
-                                                                                                </div>
+
                                                                                                 <input type="text"
                                                                                                     class="form-control produk_subtotal"
                                                                                                     name="produk_subtotal[0]"
@@ -843,9 +851,22 @@
                                                                                         <td>
                                                                                             <div class="custom-control custom-switch">
                                                                                                 <input type="checkbox" class="custom-control-input produk_ppn"
-                                                                                                id="produk_ppn0" name="produk_ppn[0]" value="1">
+                                                                                                id="produk_ppn0" name="produk_ppn[0]" value="1" checked>
                                                                                                 <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                                                                                               </div>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <div
+                                                                                                class="form-group d-flex align-items-center">
+                                                                                                <input type="checkbox"
+                                                                                                    class="stok_distributor"
+                                                                                                    name="stok_distributor[0]"
+                                                                                                    id="stok_distributor0"
+                                                                                                    value="0"
+                                                                                                    style="width:100%;" />
+                                                                                            </div>
+                                                                                            <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                                                                                            <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
                                                                                         </td>
                                                                                         <td>
                                                                                             <a id="removerowproduk"><i
@@ -854,7 +875,6 @@
                                                                                         </td>
                                                                                     </tr>
                                                                                 @endif
-
                                                                             </tbody>
                                                                             <tfoot>
                                                                                 <tr>
@@ -952,12 +972,7 @@
                                                                                                             id="part_jumlah{{ $loop->iteration - 1 }}"
                                                                                                             style="width:100%;"
                                                                                                             value="{{ $f->jumlah }}">
-                                                                                                        <div
-                                                                                                            class="input-group-append">
-                                                                                                            <span
-                                                                                                                class="input-group-text"
-                                                                                                                id="part_satuan">pcs</span>
-                                                                                                        </div>
+
                                                                                                     </div>
                                                                                                     <small
                                                                                                         id="part_ketersediaan"></small>
@@ -966,11 +981,7 @@
                                                                                             <td>
                                                                                                 <div
                                                                                                     class="form-group d-flex justify-content-center">
-                                                                                                    <div
-                                                                                                        class="input-group-prepend">
-                                                                                                        <span
-                                                                                                            class="input-group-text">Rp</span>
-                                                                                                    </div>
+
                                                                                                     <input type="text"
                                                                                                         class="form-control part_harga"
                                                                                                         name="part_harga[]"
@@ -983,11 +994,7 @@
                                                                                             <td>
                                                                                                 <div
                                                                                                     class="form-group d-flex justify-content-center">
-                                                                                                    <div
-                                                                                                        class="input-group-prepend">
-                                                                                                        <span
-                                                                                                            class="input-group-text">Rp</span>
-                                                                                                    </div>
+
                                                                                                     <input type="text"
                                                                                                         class="form-control part_subtotal"
                                                                                                         name="part_subtotal[]"
@@ -1088,11 +1095,7 @@
                                                                                     <td>
                                                                                         <div
                                                                                             class="form-group d-flex justify-content-center">
-                                                                                            <div
-                                                                                                class="input-group-prepend">
-                                                                                                <span
-                                                                                                    class="input-group-text">Rp</span>
-                                                                                            </div>
+
                                                                                             <input type="text"
                                                                                                 class="form-control "
                                                                                                 style="width:100%;"
@@ -1103,11 +1106,7 @@
                                                                                     <td>
                                                                                         <div
                                                                                             class="form-group d-flex justify-content-center">
-                                                                                            <div
-                                                                                                class="input-group-prepend">
-                                                                                                <span
-                                                                                                    class="input-group-text">Rp</span>
-                                                                                            </div>
+
                                                                                             <input type="text"
                                                                                                 class="form-control "
                                                                                                 style="width:100%;"
@@ -1170,8 +1169,9 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+
         </div>
+        @include('page.penjualan.penjualan.modalSeriDistributor')
     </section>
 @stop
 
@@ -1362,6 +1362,8 @@
 
             } else {
                 $('input[value="lainnya"]').prop('checked', true);
+                $('#perusahaan_pengiriman_nonakn').attr('readonly', false);
+                $('#alamat_pengiriman_nonakn').attr('readonly', false);
                 getekspedisiall()
             }
 
@@ -1782,6 +1784,10 @@
                     $(el).find('.produk_ppn_label').attr('for', 'produk_ppn' + j);
                     $(el).find('.produk_subtotal').attr('id', 'produk_subtotal' + j);
                     $(el).find('.produk_subtotal').attr('name', 'produk_subtotal[' + j + ']');
+                    $(el).find('.stok_distributor').attr('name', 'stok_distributor[' + j + ']');
+                    $(el).find('.stok_distributor').attr('id', 'stok_distributor' + j);
+                    $(el).find('.stok_distributor').attr('value', j);
+                    $(el).find('.noSeriDistributor').attr('name', 'noSeriDistributor[' + j + ']');
                     $(el).find('.detail_jual').attr('id', 'detail_jual' + j);
                     select_data($(el).find('.penjualan_produk_id').attr('id'));
                 });
@@ -1902,9 +1908,7 @@
                     <div class="form-group d-flex justify-content-center">
                         <div class="input-group">
                             <input type="number" class="form-control produk_jumlah" aria-label="produk_satuan" name="produk_jumlah[]" id="produk_jumlah" style="width:100%;">
-                            <div class="input-group-append">
-                                <span class="input-group-text" id="produk_satuan">pcs</span>
-                            </div>
+
                         </div>
                         <small id="produk_ketersediaan"></small>
                     </div>
@@ -1912,17 +1916,13 @@
 
                 <td>
                     <div class="form-group d-flex justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
-                        </div>
+
                         <input type="text" class="form-control produk_harga" name="produk_harga[]" id="produk_harga0" placeholder="Masukkan Harga" style="width:100%;"/>
                     </div>
                 </td>
                 <td>
                     <div class="form-group d-flex justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
-                        </div>
+
                         <input type="text" class="form-control produk_subtotal" name="produk_subtotal[]" id="produk_subtotal0" placeholder="Masukkan Subtotal" style="width:100%;" readonly/>
                     </div>
                 </td>
@@ -1932,6 +1932,20 @@
                         <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                     </div>
                 </td>
+                <td>
+                        <div
+                            class="form-group d-flex align-items-center">
+                            <input type="checkbox"
+                                class="stok_distributor"
+                                name="stok_distributor[0]"
+                                id="stok_distributor0"
+                                value="0"
+                                style="width:100%;" />
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                        <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                    </td>
+
                 <td>
                     <a id="removerowproduk"><i class="fas fa-minus" style="color: red;"></i></a>
                 </td>
@@ -2074,18 +2088,7 @@
 
             function load_variasi() {
                 produk = [];
-                produk = <?php
-                $prd = [];
-                if (isset($e->Pesanan)) {
-                    $p = [];
-                    if (isset($e->Pesanan->DetailPesanan)) {
-                        echo json_encode($e->Pesanan->DetailPesanan);
-                    } else {
-                        echo json_encode($prd);
-                    }
-                } else {
-                    echo json_encode($prd);
-                } ?>;
+                produk = <?php  echo json_encode($item)?>;
                 if (produk.length > 0) {
                     for (var w = 0; w < produk.length; w++) {
                         $.ajax({
@@ -2251,26 +2254,20 @@
                     <div class="form-group d-flex justify-content-center">
                         <div class="input-group">
                             <input type="number" class="form-control part_jumlah" aria-label="produk_satuan" name="part_jumlah[]" id="part_jumlah0" style="width:100%;">
-                            <div class="input-group-append">
-                                <span class="input-group-text" id="part_satuan">pcs</span>
-                            </div>
+
                         </div>
                         <small id="part_ketersediaan"></small>
                     </div>
                 </td>
                 <td>
                     <div class="form-group d-flex justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
-                        </div>
+
                         <input type="text" class="form-control part_harga" name="part_harga[]" id="part_harga0" placeholder="Masukkan Harga" style="width:100%;" />
                     </div>
                 </td>
                 <td>
                     <div class="form-group d-flex justify-content-center">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Rp</span>
-                        </div>
+
                         <input type="text" class="form-control part_subtotal" name="part_subtotal[]" id="part_subtotal0" placeholder="Masukkan Subtotal" style="width:100%;" readonly />
                     </div>
                 </td>
@@ -2352,6 +2349,54 @@
 
 
         });
+
+        $('.checkAllDistributor').click(function() {
+                if ($(this).is(':checked')) {
+                    $('.stok_distributor').prop('checked', true);
+                    // show all button
+                    $('.btnNoSeri').prop('hidden', false);
+                } else {
+                    $('.stok_distributor').prop('checked', false);
+                    // hide all button
+                    $('.btnNoSeri').prop('hidden', true);
+                }
+            });
+
+            $(document).on('click', '.stok_distributor', function() {
+                // check if checkbox is checked
+                if ($(this).is(':checked')) {
+                    // check if all checkboxes are selected find button hidden false
+                    $(this).closest('td').find('button').prop('hidden', false);
+                } else {
+                    // check if all checkboxes are selected find button hidden true
+                    $(this).closest('td').find('button').prop('hidden', true);
+                }
+
+
+            });
+
+
+            $(document).on('click', '.btnNoSeri', function() {
+                let indexDistributor = $(this).closest('tr').index();
+                $('.indexSeriDistributor').val(indexDistributor);
+                // find index by indexDistributor class noSeriDistributor
+                let noSeri = $('.noSeriDistributor').eq(indexDistributor).val();
+                $('.indexSeriDistributor').val(indexDistributor);
+                let jumlah = $('.produk_jumlah').eq(indexDistributor).val();
+                $('.jumlahSeriDistributor').val(jumlah);
+                // change array to string with comma
+                let noSeriArray = noSeri.split(',');
+                // remove empty string
+                noSeriArray = noSeriArray.filter(function (el) {
+                    return el != '';
+                });
+                // set value to input
+                $('.nomorSeriDistributor').val(noSeriArray);
+                // open modal Distributor
+                $('.modalDistributor').modal('show');
+
+            })
+
 
         $(function () {
             let customer = $('#customer_id').val();

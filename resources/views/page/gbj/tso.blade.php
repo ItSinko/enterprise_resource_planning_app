@@ -274,7 +274,7 @@
                 type: "post",
                 data: {gdg_brg_jadi_id: $(this).val()},
                 success: function(res) {
-                    $('span#stock').text(res.stok_siap);
+                    $('span#stock').text(res.jumlah);
                 }
             })
         })
@@ -326,13 +326,13 @@
                 qty: stok,
             },
             success: function (res) {
-                console.log(res);
-                if(res.stok < stok) {
+                console.log(res.jumlah);
+                if(res.jumlah < stok) {
                     Swal.fire({
                         position: 'center',
                         icon: 'error',
                         title: 'Stok Tidak Mencukupi',
-                        text: 'Stok gudang produk saat ini '+res.stok_siap,
+                        text: 'Stok gudang produk saat ini '+res.jumlah,
                         confirmButtonText: 'Oke',
                     })
                 } else {

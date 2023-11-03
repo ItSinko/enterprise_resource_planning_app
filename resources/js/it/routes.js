@@ -1,6 +1,7 @@
 import VueRouter from "vue-router";
 import Produk from "./page/produk";
 import Kategori from "./page/kategori";
+import ProdukRework from './page/produkRework'
 
 const routes = [
     {
@@ -12,6 +13,11 @@ const routes = [
         path: "/administrator/kategori_produk",
         component: Kategori,
         name: "kategori"
+    },
+    {
+        path: "/administrator/produk_rework",
+        component: ProdukRework,
+        name: "produkRework"
     }
 ];
 

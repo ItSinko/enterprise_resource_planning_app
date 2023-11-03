@@ -10,7 +10,7 @@ class SystemLog extends Model
     use HasFactory;
 
     protected $table = 'tbl_log';
-    protected $fillable = ['tipe', 'subjek', 'response', 'user_id'];
+    protected $fillable = ['header','tipe', 'subjek', 'response', 'user_id','status'];
     protected $connection = 'erp';
 
     function userid()

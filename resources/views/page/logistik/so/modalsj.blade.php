@@ -12,7 +12,7 @@
     display: none;
   }
 </style>
-<div class="modal fade" id="cetaksjmodal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="cetaksjmodal" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
@@ -142,7 +142,7 @@
                         <div class="col-lg-7 col-md-12">
                             <select class="select2 select-info form-control ekspedisi_id"
                                 name="ekspedisi" id="ekspedisi_id" style="width: 100%;">
-  
+
                             </select>
                             <div class="invalid-feedback" id="msgekspedisi_id"></div>
                             <label for="" id="ekspedisi_nama" class="col-form-label hide"></label>
@@ -195,7 +195,7 @@
                       <div class="form-group row">
                         <label for="" class="col-lg-5 col-md-12 col-form-label labelket">Kemasan</label>
                         <div class="col-lg-6 col-md-12 col-form-label">
-  
+
                           <div class="form-check form-check-inline">
                               <input type="radio" class="form-check-input" name="kemasan" id="kemasan0" value="peti" />
                               <label for="kemasan0" class="form-check-label">PETI</label>
@@ -337,7 +337,7 @@
   <script>
     $(document).on('click', '.noseri', function(){
       let index = $(this).data('index');
-      let noseri = $('.keterangannoseri'+index).val();
+      let noseri = $('.keterangannoseri'+index).val()
       //  change array to text with comma
       if (noseri != '') {
         noseri = noseri.join(', ');
@@ -440,28 +440,24 @@
         })
     }
 
+    let produk = [];
 
     $(document).on('click', '#check_all', function () {
       if (this.checked) {
-        $(document).find('.check_detail').each(function () {
-          this.checked = true;
-        });
+        // checked all data on datatable column 0
+        $('.tableproduk').DataTable().column(0).nodes().to$().find(':checkbox').prop('checked', true);
       } else {
-        $(document).find('.check_detail').each(function () {
-          this.checked = false;
-        });
+        $('.tableproduk').DataTable().column(0).nodes().to$().find(':checkbox').prop('checked', false);
       }
     });
 
+    let part = [];
+
     $(document).on('click', '#check_all_part', function () {
       if (this.checked) {
-        $(document).find('.check_detail_part').each(function () {
-          this.checked = true;
-        });
+        $('.tablepart').DataTable().column(0).nodes().to$().find(':checkbox').prop('checked', true);
       } else {
-        $(document).find('.check_detail_part').each(function () {
-          this.checked = false;
-        });
+        $('.tablepart').DataTable().column(0).nodes().to$().find(':checkbox').prop('checked', false);
       }
     });
 
@@ -514,7 +510,6 @@
           return el != '';
         });
 
-        console.log(dataform)
 
         if (cek.length != Object.keys(dataform).length) {
           Swal.fire({
@@ -525,47 +520,51 @@
           return false;
         }
     // find data on datatable is checked
-        let produk = [];
         let table = $('.tableproduk').DataTable();
-        let check = $(document).find('.check_detail');
+        let check = table.column(0).nodes().to$().find(':checkbox:checked');
+        produk = [];
+        // // push data to array
+        check.each(function () {
+          let row = table.row($(this).closest('tr'))
+          let rowData = row.data();
+          let rowIndex = row.index()
 
-        // push data to array
-        for (let i = 0; i < check.length; i++) {
-            if (check[i].checked) {
-                let row = table.row(i).node(); // Get the row node directly
-                let rowIndex = table.row(i).index();
-                let jumlahValue = $('.jumlah' + rowIndex).val(); // Access the input value directly
-                let keteranganValue = $('.keterangannoseri' + rowIndex).val(); // Access the hidden input value directly
+          let jumlahValue = $(this).closest('tr').find('.jumlah'+rowIndex).val();
+          let keteranganValue = $(this).closest('tr').find('.keterangannoseri'+rowIndex).val();
 
-                let rowData = table.row(row).data();
-                rowData['jumlah_noseri'] = jumlahValue; // Update the 'jumlah_noseri' property with the input value
-                rowData['noseri_selected'] = keteranganValue; // Update the 'noseri_selected' property with the hidden input value
+          rowData['jumlah_noseri'] = jumlahValue;
+          rowData['noseri_selected'] = keteranganValue;
 
-                if (rowData['noseri_selected'] == '') {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Nomor seri belum diisi!',
-                    })
-                    return false;
-                }
 
-                produk.push(rowData);
-            }
-        }
+        //   if (rowData['noseri_selected'] == '') {
+        //       Swal.fire({
+        //           icon: 'error',
+        //           title: 'Oops...',
+        //           text: 'Nomor seri belum diisi!',
+        //       })
+        //       return false;
+        //   }
 
-        let part = [];
+
+          produk.push(rowData);
+
+        });
+
+        // remove duplicate produk with Set
+        produk = [...new Set(produk)];
+
         let table_part = $('.tablepart').DataTable();
-        let check_part = $(document).find('.check_detail_part');
-
+        let check_part = table_part.column(0).nodes().to$().find(':checkbox:checked');
+        part = [];
         // push data to array
-        for (let i = 0; i < check_part.length; i++) {
-            if (check_part[i].checked) {
-                let row = table_part.row(i).node(); // Get the row node directly
-                let rowData = table_part.row(row).data();
-                part.push(rowData);
-            }
-        }
+        check_part.each(function () {
+          let row = table_part.row($(this).closest('tr'))
+          let rowData = row.data();
+          part.push(rowData);
+        });
+
+        // remove duplicate part with Set
+        part = [...new Set(part)];
 
         if(table.data().length > 0) {
           if(produk.length == 0 && part.length == 0){
@@ -594,7 +593,6 @@
           part: part,
           dataform: dataform
         }
-        console.log(kirim);
 
         // post data
         $.ajax({
@@ -628,6 +626,16 @@
           }
         })
 
+    });
+
+    // close modal reset form
+    $('#cetaksjmodal').on('hidden.bs.modal', function () {
+      $('#formcetaksj').trigger('reset');
+      $('.tableproduk').DataTable().clear().draw();
+      $('.tablepart').DataTable().clear().draw();
+      $('#ekspedisi_id').empty().trigger('change');
+      produk = [];
+      part = [];
     });
 
     $(document).on('change', 'input[type="radio"][name="pilihan_pengiriman"]', function () {

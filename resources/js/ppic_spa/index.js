@@ -7,6 +7,7 @@ import Vue from 'vue'
 import router from './router'
 import store from './store'
 import plugins from './plugins'
+import numberOnly from './plugins/numberOnly'
 import App from './App.vue'
 
 import axios from 'axios'
@@ -45,6 +46,7 @@ axios.defaults.headers.common = {
 
 Vue.use(VueSweetalert2);
 Vue.component('v-select', vSelect)
+Vue.use(numberOnly)
 
 new Vue({
     router,

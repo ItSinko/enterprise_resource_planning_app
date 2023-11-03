@@ -958,25 +958,31 @@
                     success: function(data) {
                         const ctx = $('#myChart');
                         const myChart = new Chart(ctx, {
-                            type: 'pie',
+                            type: 'bar',
                             data: {
                                 labels: [
                                     'Belum Vaksin',
                                     'Vaksin 1',
                                     'Vaksin 2',
                                     'Vaksin 3',
+                                    'Vaksin 4',
                                 ],
                                 datasets: [{
                                     label: 'Vaksinasi',
-                                    data: [10, data.tahap_1, data.tahap_2,
+                                    data: [
+                                        data.belum,
+                                    data.tahap_1,
+                                     data.tahap_2,
                                         data
-                                        .tahap_3
+                                        .tahap_3,   data
+                                        .tahap_4
                                     ],
                                     backgroundColor: [
                                         '#EFEFEF',
                                         'rgb(255, 221, 0)',
                                         'rgb(11, 171, 100)',
-                                        'rgb(8, 126, 225)'
+                                        'rgb(8, 126, 225)',
+                                        'rgb(255, 221, 0)'
                                     ],
                                     hoverOffset: 4
                                 }]

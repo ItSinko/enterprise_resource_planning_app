@@ -1,20 +1,19 @@
 <html>
     <head>
         <style>
-
             /** Define the margins of your page **/
             @page {
-                margin: 100px 30px 0px 13px;
-                /* page-break-inside: avoid !important; */
+                margin: 150px 25px;
             }
 
+           
             body {
               font-family: sans-serif;
             }
 
             main {
                 position: relative;
-                top: 140px;
+                top: 145px;
                 width: 100%;
                 padding-bottom: 300px;
                 font-size: 14px;
@@ -22,11 +21,11 @@
 
             header {
                 position: fixed;
-                top: -80px;
+                top: -120px;
                 left: 0px;
                 right: 0px;
                 height: 250px;
-                margin-bottom: 100px;
+                margin-bottom: 110px;
                 /** Extra personal styles **/
                 background-color: #ffffff;
                 color: rgb(0, 0, 0);
@@ -35,7 +34,6 @@
             }
 
             footer {
-
                 position: fixed;
                 bottom: -10px;
                 left: 0px;
@@ -70,13 +68,20 @@
       width: 40%;
     }
 
-    main>table{
-      page-break-inside: avoid !important;
+    main table{
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+      page-break-inside: auto;
       border-top: 1px solid #000000;
-      border-bottom: 1px solid #000000
+      border-bottom: 1px solid #000000;
     }
-    table{
-      table-layout: fixed; width: 100%; border-collapse: collapse;
+    table {
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
     }
         </style>
     </head>
@@ -344,16 +349,6 @@
                               {{ $item['nama'] }}
                           </td>
                           @php
-                              $jumlah = 0;
-                              if(isset($item['detail'])){
-                                  foreach ($item['detail'] as $key => $detail) {
-                                      // count array length of noseri
-                                      $jumlah += count($detail['seri']);
-                                  }
-                              } else {
-                                  $jumlah = $item['jumlah'];
-                              }
-
                               $satuan = null;
                               if(isset($item['detail'])){
                                   $satuan = $item['detail'][0]['satuan'];
@@ -362,7 +357,7 @@
                               }
                           @endphp
                           <td class="vera">
-                              {{ $jumlah }}.00
+                              {{  $item['jumlah'] }}.00
                           </td>
                           <td class="vera">
                               {{ $satuan }}
@@ -392,7 +387,9 @@
                   <div style="margin: 10px 0px;">
                     <b>Dimensi</b>
                   <br>
-                  {{ $data->dimensi}}
+                  @php
+                  echo nl2br($data->dimensi);
+              @endphp
                 @endif
                 @if($data->ekspedisi_terusan != "")
                   </div
@@ -401,7 +398,9 @@
                   @endif
                   >
                   <b>Ekspedisi Terusan : </b><br>
-                  {{ $data->ekspedisi_terusan}}
+                     @php
+                     echo nl2br($data->ekspedisi_terusan);
+                     @endphp
                   <br>
                   </div>
                 @endif

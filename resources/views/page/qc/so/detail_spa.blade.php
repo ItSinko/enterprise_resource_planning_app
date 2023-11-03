@@ -88,18 +88,18 @@
 
         /* @media screen and (min-width: 1440px) {
 
-                    section {
-                        font-size: 14px;
-                    }
+                                section {
+                                    font-size: 14px;
+                                }
 
-                    #detailmodal {
-                        font-size: 14px;
-                    }
+                                #detailmodal {
+                                    font-size: 14px;
+                                }
 
-                    .btn {
-                        font-size: 14px;
-                    }
-                } */
+                                .btn {
+                                    font-size: 14px;
+                                }
+                            } */
 
         @media screen and (min-width: 993px) {
 
@@ -338,6 +338,7 @@
                                                     <th>No Seri</th>
                                                     <th>Tanggal Uji</th>
                                                     <th>Hasil</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -389,6 +390,8 @@
             </div>
         </div>
     </section>
+    @include('page/gbj/modalserireworks/detailnoseri')
+
 @stop
 @section('adminlte_js')
     <script>
@@ -636,27 +639,47 @@
                     processing: '<i class="fa fa-spinner fa-spin"></i> Tunggu Sebentar'
                 },
                 columns: [{
-                    data: 'checkbox',
-                    className: 'nowrap-text align-center',
-                    orderable: false,
-                    searchable: false,
-                    visible: divisi == '23' ? true : false
-                }, {
-                    data: 'seri',
-                    className: 'nowrap-text align-center',
-                    orderable: true,
-                    searchable: true
-                }, {
-                    data: 'tgl_uji',
-                    className: 'nowrap-text align-center collapsable',
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: 'status',
-                    className: 'nowrap-text align-center',
-                    orderable: false,
-                    searchable: false
-                }]
+                        data: 'checkbox',
+                        className: 'nowrap-text align-center',
+                        orderable: false,
+                        searchable: false,
+                        visible: divisi == '23' ? true : false
+                    }, {
+                        data: 'seri',
+                        className: 'nowrap-text align-center',
+                        orderable: true,
+                        searchable: true
+                    }, {
+                        data: 'tgl_uji',
+                        className: 'nowrap-text align-center collapsable',
+                        orderable: false,
+                        searchable: false
+                    }, {
+                        data: 'status',
+                        className: 'nowrap-text align-center',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            if (data.cek_rw == 1) {
+                                return `
+                        <button type="button" class="btn btn-sm btn-outline-info buttonNoSeriDetail">
+                            <i class="fa fa-info-circle"></i>
+                            Detail No. Seri Produk
+                        </button> &nbsp;
+                        <a class="btn btn-sm btn-outline-primary" target="_blank" href="/produksiReworks/viewpackinglist/${data.id}">
+                            <i class="fa fa-eye"></i>
+                            Lihat Packing List
+                        </a>
+                        `
+                            } else {
+                                return ''
+                            }
+                        },
+                    }
+                ]
             });
 
             function listnoseri(seri_id, produk_id, pesanan_id) {
@@ -1000,6 +1023,54 @@
                     '/{{ $id }}').load();
 
 
+            });
+
+            
+            $(document).on('click', '.buttonNoSeriDetail', function() {
+                var table = $('#noseritable').DataTable();
+                var data = table.row($(this).closest('tr')).data();
+                var index = table.row($(this).closest('tr')).index();
+                const dateIndo = (date) => {
+                    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                    ];
+                    const d = new Date(date);
+                    return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                }
+
+                $('#nomor-seri-reworks').html(data.noseri);
+                $('#tgl-dibuat-reworks').html(dateIndo(data.created_at));
+                $('#packer-reworks').html(data.packer);
+                $('.tableprodukreworks').DataTable().clear().destroy();
+
+                let dataJson = data.item;
+
+                $('.tableprodukreworks').DataTable({
+                    data: dataJson,
+                    destroy: true,
+                    processing: true,
+                    serverSide: false,
+                    ordering: false,
+                    autoWidth: false,
+                    columns: [{
+                            data: null,
+                            // buat index
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return data.produk + ' ' + data.varian;
+                            }
+                        },
+                        {
+                            data: 'noseri',
+                        }
+                    ]
+                });
+                $('.modalDetailNoSeri').modal('show');
             });
 
         })

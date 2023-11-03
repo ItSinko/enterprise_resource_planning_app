@@ -112,7 +112,7 @@
                             {{ $e->Sparepart->nama }}
                         @else
                             {{ $e->PenjualanProduk->nama }}
-                            {{$d->GetProduk()}}
+                            {{$d->GetProduk($e->penjualan_produk_id)}}
                         @endif
 
                     </td>
@@ -125,7 +125,7 @@
                             @else
                                 {{ $e->PenjualanProduk->nama }}
                             @endif
-                            {{$d->GetProduk()}}
+                            {{$d->GetProduk($e->penjualan_produk_id)}}
                         @endif
 
                     </td>
@@ -285,7 +285,7 @@
                         @else
 
                             {{ $e->PenjualanProduk->nama }}
-                            {{$d->GetProduk()}}
+                            {{$d->GetProduk($e->penjualan_produk_id)}}
 
 
 
@@ -301,7 +301,7 @@
                             @else
                                 {{ $e->PenjualanProduk->nama }}
                             @endif
-                            {{$d->GetProduk()}}
+                            {{$d->GetProduk($e->penjualan_produk_id)}}
                         @endif
 
                     </td>

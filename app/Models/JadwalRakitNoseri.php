@@ -11,7 +11,7 @@ class JadwalRakitNoseri extends Model
     protected $connection = 'erp';
     protected $table = "jadwal_rakit_noseri";
 
-    protected $fillable = ['jadwal_id', 'noseri', 'status', 'date_in', 'waktu_tf', 'created_at', 'updated_at', 'no_bppb'];
+    protected $fillable = ['unit','th','bln','kedatangan','urutan','jadwal_id', 'noseri', 'status', 'date_in', 'waktu_tf', 'created_at', 'updated_at', 'no_bppb'];
 
     function header()
     {

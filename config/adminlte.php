@@ -611,6 +611,10 @@ return [
             'url'  => '/administrator/user',
         ],
         [
+            'header' => 'Produk',
+            'auth'   => [14]
+        ],
+        [
             'text' => 'Kategori Produk',
             'url'  => '/administrator/kategori_produk',
             'icon' => 'fas fa-table',
@@ -622,7 +626,12 @@ return [
             'icon' => 'fas fa-table',
             'auth' => [14]
         ],
-        // direksi and IT
+        [
+            'text' => 'Produk Rework',
+            'url'  => '/administrator/produk_rework',
+            'icon' => 'fas fa-table',
+            'auth' => [14]
+        ],
         [
             'text' => 'Jadwal Meeting',
             'url' => '/meeting/jadwalmeeting',
@@ -841,6 +850,18 @@ return [
                     'icon' => 'far fa-circle',
                     'text' => 'Perakitan Berlangsung',
                     'url' => 'produksi/jadwal_perakitan',
+                    'auth' => [17],
+                ],
+                [
+                    'icon' => 'far fa-circle',
+                    'text' => 'Permintaan Reworks',
+                    'url' => '/produksi/permintaanreworks',
+                    'auth' => [17],
+                ],
+                [
+                    'icon' => 'far fa-circle',
+                    'text' => 'Set Produk Reworks',
+                    'url' => '/produksi/prosesSetReworks',
                     'auth' => [17],
                 ],
                 [
@@ -1189,16 +1210,9 @@ return [
             'icon' => 'fas fa-history',
             'auth' => [13],
         ],
-
         [
             'header' => 'Data',
             'auth' => [13]
-        ],
-        [
-            'text' => 'Dalam Perakitan',
-            'url' => '/gbj/dp',
-            'icon' => 'fas fa-truck-loading',
-            'auth' => [13],
         ],
         [
             'text' => 'Selain Perakitan',
@@ -1212,7 +1226,28 @@ return [
             'icon' => 'fas fa-search',
             'auth' => [13]
         ],
-
+        [
+            'header' => 'Penerimaan Barang',
+            'auth' => [13]
+        ],
+        [
+            'text' => 'Penerimaan Finish Goods',
+            'url' => '/gbj/dp',
+            'icon' => 'fas fa-truck-loading',
+            'auth' => [13],
+        ],
+        // [
+        //     'text' => 'Penerimaan Penggantian Rework',
+        //     'url' => '/gbj/rework/penggantian-rework',
+        //     'icon' => 'fas fa-exchange-alt',
+        //     'auth' => [13],
+        // ],
+        [
+            'text' => 'Penerimaan Rework',
+            'url' => '/gbj/rework/penerimaan-rework',
+            'icon' => 'fas fa-check-circle',
+            'auth' => [13],
+        ],
         [
             'header' => 'Penjualan',
             'auth' => [13, 17, 31]
@@ -1237,6 +1272,12 @@ return [
             'text' => 'Berdasarkan SO',
             'url' => '/gbj/bso',
             'icon' => 'fas fa-swatchbook',
+            'auth' => [13],
+        ],
+        [
+            'text' => 'Permintaan Rework',
+            'url' => '/gbj/rework/permintaan-rework',
+            'icon' => 'fas fa-wrench',
             'auth' => [13],
         ],
         [
@@ -1734,45 +1775,8 @@ return [
             'auth' => [32],
         ],
         [
-            'header' => 'Meeting',
-            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
-        ],
-        // peserta meet
-        [
-            'text'        => 'Jadwal Meeting',
-            'url'         => '/meeting/jadwal_meet',
-            'icon'        => 'fa fa-calendar',
-            'auth'        => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
-        ],
-        [
             'header' => 'Setting',
-            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
-        ],
-        // hr
-        [
-            'header' => 'HR',
-            'auth' => [30],
-        ],
-        [
-            'text' => 'Meeting',
-            'url' => '/meeting/hr/',
-            'icon' => 'fas fa-users',
-            'auth' => [30],
-        ],
-        // data karyawan
-        [
-            'header' => 'Data Karyawan',
-            'auth' => [30],
-        ],
-        [
-            'text' => 'Karyawan',
-            'icon' => 'fas fa-users',
-            'url' => '/hr/karyawan',
-            'auth' => [30],
-        ],
-        [
-            'header' => 'Sistem',
-            'auth' => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14, 30]
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
         ],
         [
             'text' => 'Ubah Password',

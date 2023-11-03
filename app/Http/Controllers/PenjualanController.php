@@ -7,6 +7,7 @@ use App\Exports\LaporanPenjualanAll;
 use App\Models\Customer;
 use App\Models\DetailEkatalog;
 use App\Models\DetailPesanan;
+use App\Models\DetailPesananDsb;
 use App\Models\DetailPesananPart;
 use App\Models\DetailPesananProduk;
 use App\Models\DetailPesananProdukDsb;
@@ -19,6 +20,7 @@ use App\Models\GudangBarangJadi;
 use App\Models\Logistik;
 use App\Models\NoseriBarangJadi;
 use App\Models\NoseriDetailPesanan;
+use App\Models\NoseriDsb;
 use App\Models\OutgoingPesananPart;
 use App\Models\Pesanan;
 use App\Models\Spa;
@@ -41,6 +43,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as ValidationValidator;
 use Maatwebsite\Excel\Excel as ExcelExcel;
+use stdClass;
 use Symfony\Component\Console\Input\Input;
 use function PHPUnit\Framework\assertIsNotArray;
 
@@ -2489,7 +2492,7 @@ class PenjualanController extends Controller
                 ->leftJoin('detail_pesanan', 'detail_pesanan.id', '=', 'detail_pesanan_produk.detail_pesanan_id')
                 ->whereColumn('detail_pesanan.pesanan_id', 'ekatalog.pesanan_id')
                 ->limit(1);
-        }])->orderBy('tgl_kontrak_custom', 'ASC')->limit(20)->get();
+        }])->with(['Pesanan','Customer'])->orderBy('tgl_kontrak_custom', 'ASC')->limit(20)->get();
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('so', function ($data) {
@@ -2898,7 +2901,7 @@ class PenjualanController extends Controller
                             </a>';
                             if ($data->cseri <= 0) {
                                 $return .= '<hr class="separator">
-                                <a data-toggle="modal" data-target="#batalmodal" class="batalmodal" data-href="" data-id="' . $data->id . '" data-jenis="EKAT" data-provinsi="">
+                                <a data-toggle="modal" data-target="#batalmodal" class="batalmodal" data-href="" data-id="' . $data->id . '" data-jenis="EKAT"   data-pesanan-id="' . $data->Pesanan->id . '" data-provinsi="">
                                     <button class="dropdown-item" type="button">
                                         <i class="fas fa-times"></i>
                                         Batal
@@ -3254,7 +3257,7 @@ class PenjualanController extends Controller
                             $jumkirim = ($data->ckirimprd + $data->ckirimpart);
                             if ($jumkirim <= 0) {
                                 $return .= '<hr class="separator">
-                                <a data-toggle="modal" data-jenis="SPA" class="batalmodal" data-id="' . $data->id . '">
+                                <a data-toggle="modal" data-jenis="SPA" class="batalmodal" data-id="' . $data->id . '"  data-pesanan-id="' . $data->Pesanan->id . '" >
                                     <button class="dropdown-item" type="button" >
                                     <i class="fas fa-times"></i>
                                     Batal
@@ -3617,7 +3620,7 @@ class PenjualanController extends Controller
                             $jumkirim = ($data->ckirimprd + $data->ckirimpart);
                             if ($jumkirim <= 0) {
                                 $return .= '<hr class="separator">
-                                <a data-toggle="modal" data-jenis="SPA" class="batalmodal" data-id="' . $data->id . '">
+                                <a data-toggle="modal" data-jenis="SPA" class="batalmodal" data-id="' . $data->id . '"  data-pesanan-id="' . $data->Pesanan->id . '" >
                                     <button class="dropdown-item" type="button" >
                                     <i class="fas fa-times"></i>
                                     Batal
@@ -3697,6 +3700,7 @@ class PenjualanController extends Controller
     // Create
     public function create_penjualan(Request $request)
     {
+  //dd($request->all());
 
         if ($request->jenis_penjualan == 'ekatalog') {
             if ($request->status == 'sepakat' && ($request->namadistributor == 'belum' ||$request->provinsi == "NULL") ) {
@@ -3704,11 +3708,11 @@ class PenjualanController extends Controller
                         'message' => 'Cek Form Kembali',
                     ], 500);
             }
-            if ($request->no_po_ekat != NULL && ( $request->perusahaan_pengiriman_ekat == NULL || $request->alamat_pengiriman_ekat == NULL ||  $request->kemasan == NULL) ) {
-                    return response()->json([
-                        'message' => 'Cek Form Kembali',
-                    ], 500);
-            }
+            // if ($request->no_po_ekat != NULL && ( $request->perusahaan_pengiriman_ekat == NULL || $request->alamat_pengiriman_ekat == NULL ||  $request->kemasan == NULL) ) {
+            //         return response()->json([
+            //             'message' => 'Cek Form Kembali',
+            //         ], 500);
+            // }
             //dd($request);
             // $this->validate(
             //     $request,
@@ -3809,68 +3813,272 @@ class PenjualanController extends Controller
             if ($Ekatalog) {
                 if (($request->status == 'sepakat') || ($request->status == 'negosiasi')) {
 
-                    for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
-                        if (empty($request->produk_ongkir[$i])) {
-                            $ongkir[$i] = 0;
-                        } else {
-                            $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
-                        }
-                        $dekat = DetailPesanan::create([
-                            'pesanan_id' => $x,
-                            'penjualan_produk_id' => $request->penjualan_produk_id[$i],
-                            'detail_rencana_penjualan_id' => $request->rencana_id[$i],
-                            'jumlah' => $request->produk_jumlah[$i],
-                            'harga' => str_replace('.', "", $request->produk_harga[$i]),
-                            'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
-                            'ongkir' => $ongkir[$i],
-                        ]);
+                    if(isset($request->stok_distributor)){
+                        $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                        $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                        $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                        $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                        $produk_ongkir  = array_values(array_diff_key($request->produk_ongkir, $request->stok_distributor));
+                        $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
 
-                        if (!$dekat) {
-                            $bool = false;
-                        } else {
-                            for ($j = 0; $j < count($request->variasi[$i]); $j++) {
-                                $dekatp = DetailPesananProduk::create([
-                                    'detail_pesanan_id' => $dekat->id,
-                                    'gudang_barang_jadi_id' => $request->variasi[$i][$j]
-                                ]);
-                                if (!$dekatp) {
-                                    $bool = false;
-                                }
-                            }
-                        }
-                    }
+
+                        foreach ($request->stok_distributor as $key) {
+                          if (isset($request->penjualan_produk_id[$key])) {
+                              $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                          }
+                          if (isset($request->variasi[$key])) {
+                              $variasi_dsb[] = $request->variasi[$key];
+                          }
+                          if (isset($request->produk_jumlah[$key])) {
+                              $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                          }
+                          if (isset($request->produk_harga[$key])) {
+                              $produk_harga_dsb[] = $request->produk_harga[$key];
+                          }
+                          if (isset($request->produk_ongkir[$key])) {
+                              $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                          }
+                          if (isset($request->produk_ppn[$key])) {
+                              $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                          }
+                          if (isset($request->noSeriDistributor[$key])) {
+                              $noseri_dsb[] = $request->noSeriDistributor[$key];
+                          }
+                      }
+                          for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                              $dspa = DetailPesanan::create([
+                                  'pesanan_id' => $x,
+                                  'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                  'jumlah' => $produk_jumlah[$i],
+                                  'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                  'harga' => str_replace('.', "", $produk_harga[$i]),
+                                  'ongkir' =>  str_replace('.', "", $produk_ongkir[$i]),
+                              ]);
+
+                              for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                   DetailPesananProduk::create([
+                                  'detail_pesanan_id' => $dspa->id,
+                                  'gudang_barang_jadi_id' => $variasi[$i][$j]
+                              ]);
+                              }
+                          }
+
+                          for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                                $dsb = DetailPesananDsb::create([
+                              'pesanan_id' => $x,
+                              'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                              'jumlah' => $produk_jumlah_dsb[$i],
+                              'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                              'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                              'ongkir' => str_replace('.', "", $produk_ongkir_dsb[$i]),
+                          ]);
+
+                          if(isset ($noseri_dsb[$i])){
+                              $noseri = explode(',', $noseri_dsb[$i]);
+                              for ($j = 0; $j < count($noseri); $j++) {
+                                  NoseriDsb::create([
+                                      'detail_pesanan_dsb' => $dsb->id,
+                                      'noseri' => $noseri[$j]
+                                  ]);
+                              }
+
+                          }
+
+                              for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                                   DetailPesananProdukDsb::create([
+                                  'detail_pesanan_dsb_id' => $dsb->id,
+                                  'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                              ]);
+                              }
+                          }
+
+
+                      }else{
+                          for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                          $dspa = DetailPesanan::create([
+                              'pesanan_id' => $x,
+                              'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                              'jumlah' => $request->produk_jumlah[$i],
+                              'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                              'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                              'ongkir' => 0,
+                          ]);
+
+                          for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                              $dspap = DetailPesananProduk::create([
+                                  'detail_pesanan_id' => $dspa->id,
+                                  'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                              ]);
+                              if (!$dspap) {
+                                  $bool = false;
+                              }
+                           }
+                          }
+                      }
+                    // for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                    //     if (empty($request->produk_ongkir[$i])) {
+                    //         $ongkir[$i] = 0;
+                    //     } else {
+                    //         $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
+                    //     }
+                    //     $dekat = DetailPesanan::create([
+                    //         'pesanan_id' => $x,
+                    //         'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                    //         'detail_rencana_penjualan_id' => $request->rencana_id[$i],
+                    //         'jumlah' => $request->produk_jumlah[$i],
+                    //         'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                    //         'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                    //         'ongkir' => $ongkir[$i],
+                    //     ]);
+
+                    //     if (!$dekat) {
+                    //         $bool = false;
+                    //     } else {
+                    //         for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                    //             $dekatp = DetailPesananProduk::create([
+                    //                 'detail_pesanan_id' => $dekat->id,
+                    //                 'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                    //             ]);
+                    //             if (!$dekatp) {
+                    //                 $bool = false;
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 } else {
                     if ($request->isi_produk == "isi") {
-                        for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
-                            if (empty($request->produk_ongkir[$i])) {
-                                $ongkir[$i] = 0;
-                            } else {
-                                $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
-                            }
-                            $dekat = DetailPesanan::create([
-                                'pesanan_id' => $x,
-                                'penjualan_produk_id' => $request->penjualan_produk_id[$i],
-                                'detail_rencana_penjualan_id' => $request->rencana_id[$i],
-                                'jumlah' => $request->produk_jumlah[$i],
-                                'harga' => str_replace('.', "", $request->produk_harga[$i]),
-                                'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
-                                'ongkir' => $ongkir[$i],
-                            ]);
+                        // for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                        //     if (empty($request->produk_ongkir[$i])) {
+                        //         $ongkir[$i] = 0;
+                        //     } else {
+                        //         $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
+                        //     }
+                        //     $dekat = DetailPesanan::create([
+                        //         'pesanan_id' => $x,
+                        //         'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                        //         'detail_rencana_penjualan_id' => $request->rencana_id[$i],
+                        //         'jumlah' => $request->produk_jumlah[$i],
+                        //         'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                        //         'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                        //         'ongkir' => $ongkir[$i],
+                        //     ]);
 
-                            if (!$dekat) {
-                                $bool = false;
-                            } else {
-                                for ($j = 0; $j < count(array($request->variasi[$i])); $j++) {
-                                    $dekatp = DetailPesananProduk::create([
-                                        'detail_pesanan_id' => $dekat->id,
-                                        'gudang_barang_jadi_id' => $request->variasi[$i][$j]
-                                    ]);
-                                    if (!$dekatp) {
-                                        $bool = false;
-                                    }
-                                }
-                            }
-                        }
+                        //     if (!$dekat) {
+                        //         $bool = false;
+                        //     } else {
+                        //         for ($j = 0; $j < count(array($request->variasi[$i])); $j++) {
+                        //             $dekatp = DetailPesananProduk::create([
+                        //                 'detail_pesanan_id' => $dekat->id,
+                        //                 'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                        //             ]);
+                        //             if (!$dekatp) {
+                        //                 $bool = false;
+                        //             }
+                        //         }
+                        //     }
+                        // }
+                        if(isset($request->stok_distributor)){
+                            $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                            $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                            $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                            $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                            $produk_ongkir  = array_values(array_diff_key($request->produk_ongkir, $request->stok_distributor));
+                            $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
+
+
+                            foreach ($request->stok_distributor as $key) {
+                              if (isset($request->penjualan_produk_id[$key])) {
+                                  $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                              }
+                              if (isset($request->variasi[$key])) {
+                                  $variasi_dsb[] = $request->variasi[$key];
+                              }
+                              if (isset($request->produk_jumlah[$key])) {
+                                  $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                              }
+                              if (isset($request->produk_harga[$key])) {
+                                  $produk_harga_dsb[] = $request->produk_harga[$key];
+                              }
+                              if (isset($request->produk_ongkir[$key])) {
+                                  $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                              }
+                              if (isset($request->produk_ppn[$key])) {
+                                  $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                              }
+                              if (isset($request->noSeriDistributor[$key])) {
+                                  $noseri_dsb[] = $request->noSeriDistributor[$key];
+                              }
+                          }
+                              for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                                  $dspa = DetailPesanan::create([
+                                      'pesanan_id' => $x,
+                                      'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                      'jumlah' => $produk_jumlah[$i],
+                                      'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                      'harga' => str_replace('.', "", $produk_harga[$i]),
+                                      'ongkir' =>  str_replace('.', "", $produk_ongkir[$i]),
+                                  ]);
+
+                                  for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                       DetailPesananProduk::create([
+                                      'detail_pesanan_id' => $dspa->id,
+                                      'gudang_barang_jadi_id' => $variasi[$i][$j]
+                                  ]);
+                                  }
+                              }
+
+                              for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                                    $dsb = DetailPesananDsb::create([
+                                  'pesanan_id' => $x,
+                                  'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                                  'jumlah' => $produk_jumlah_dsb[$i],
+                                  'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                                  'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                                  'ongkir' => str_replace('.', "", $produk_ongkir_dsb[$i]),
+                              ]);
+
+                              if(isset ($noseri_dsb[$i])){
+                                  $noseri = explode(',', $noseri_dsb[$i]);
+                                  for ($j = 0; $j < count($noseri); $j++) {
+                                      NoseriDsb::create([
+                                          'detail_pesanan_dsb' => $dsb->id,
+                                          'noseri' => $noseri[$j]
+                                      ]);
+                                  }
+
+                              }
+
+                                  for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                                       DetailPesananProdukDsb::create([
+                                      'detail_pesanan_dsb_id' => $dsb->id,
+                                      'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                                  ]);
+                                  }
+                              }
+
+
+                          }else{
+                              for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                              $dspa = DetailPesanan::create([
+                                  'pesanan_id' => $x,
+                                  'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                                  'jumlah' => $request->produk_jumlah[$i],
+                                  'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                                  'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                                  'ongkir' => 0,
+                              ]);
+
+                              for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                                  $dspap = DetailPesananProduk::create([
+                                      'detail_pesanan_id' => $dspa->id,
+                                      'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                                  ]);
+                                  if (!$dspap) {
+                                      $bool = false;
+                                  }
+                               }
+                              }
+                          }
                     } else {
                         $bool = true;
                     }
@@ -3925,6 +4133,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                     'ket' => $request->keterangan,
                     'log' => 'po'
                 ]);
+               // $p = 'a';
             } else if ($request->jenis_penjualan == 'spb') {
                 $p = Spb::create([
                     'customer_id' => $request->customer_id,
@@ -3936,26 +4145,117 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             $bool = true;
             if ($p) {
                 if (in_array("produk", $request->jenis_pen)) {
-                    for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
-                        $dspa = DetailPesanan::create([
-                            'pesanan_id' => $x,
-                            'penjualan_produk_id' => $request->penjualan_produk_id[$i],
-                            'jumlah' => $request->produk_jumlah[$i],
-                            'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
-                            'harga' => str_replace('.', "", $request->produk_harga[$i]),
-                            'ongkir' => 0,
-                        ]);
+                        if(isset($request->stok_distributor)){
+                          $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                          $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                          $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                          $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                          $produk_ongkir  = array_values(array_diff_key($request->produk_ongkir, $request->stok_distributor));
+                          $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
 
-                        for ($j = 0; $j < count($request->variasi[$i]); $j++) {
-                            $dspap = DetailPesananProduk::create([
-                                'detail_pesanan_id' => $dspa->id,
-                                'gudang_barang_jadi_id' => $request->variasi[$i][$j]
-                            ]);
-                            if (!$dspap) {
-                                $bool = false;
+
+                          foreach ($request->stok_distributor as $key) {
+                            if (isset($request->penjualan_produk_id[$key])) {
+                                $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                            }
+                            if (isset($request->variasi[$key])) {
+                                $variasi_dsb[] = $request->variasi[$key];
+                            }
+                            if (isset($request->produk_jumlah[$key])) {
+                                $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                            }
+                            if (isset($request->produk_harga[$key])) {
+                                $produk_harga_dsb[] = $request->produk_harga[$key];
+                            }
+                            if (isset($request->produk_ongkir[$key])) {
+                                $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                            }
+                            if (isset($request->produk_ppn[$key])) {
+                                $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                            }
+                            if (isset($request->noSeriDistributor[$key])) {
+                                $noseri_dsb[] = $request->noSeriDistributor[$key];
                             }
                         }
-                    }
+                            for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                                $dspa = DetailPesanan::create([
+                                    'pesanan_id' => $x,
+                                    'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                    'jumlah' => $produk_jumlah[$i],
+                                    'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                    'harga' => str_replace('.', "", $produk_harga[$i]),
+                                    'ongkir' =>  str_replace('.', "", $produk_ongkir[$i]),
+                                ]);
+
+                                for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                     DetailPesananProduk::create([
+                                    'detail_pesanan_id' => $dspa->id,
+                                    'gudang_barang_jadi_id' => $variasi[$i][$j]
+                                ]);
+                                }
+                            }
+
+                            for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                                  $dsb = DetailPesananDsb::create([
+                                'pesanan_id' => $x,
+                                'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                                'jumlah' => $produk_jumlah_dsb[$i],
+                                'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                                'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                                'ongkir' => str_replace('.', "", $produk_ongkir_dsb[$i]),
+                            ]);
+
+                            // if($noseri_dsb[$i] != null){
+                            //     $noseri = explode(',', $noseri_dsb[$i]);
+                            //     for ($j = 0; $j < count($noseri); $j++) {
+                            //         NoseriDsb::create([
+                            //             'detail_pesanan_dsb' => $dsb->id,
+                            //             'noseri' => $noseri[$j]
+                            //         ]);
+                            //     }
+
+                            // }
+                            if(isset ($noseri_dsb[$i])){
+                                $noseri = explode(',', $noseri_dsb[$i]);
+                                for ($j = 0; $j < count($noseri); $j++) {
+                                    NoseriDsb::create([
+                                        'detail_pesanan_dsb' => $dsb->id,
+                                        'noseri' => $noseri[$j]
+                                    ]);
+                                }
+
+                            }
+                                for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                                     DetailPesananProdukDsb::create([
+                                    'detail_pesanan_dsb_id' => $dsb->id,
+                                    'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                                ]);
+                                }
+                            }
+                        }else{
+                            for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                            $dspa = DetailPesanan::create([
+                                'pesanan_id' => $x,
+                                'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                                'jumlah' => $request->produk_jumlah[$i],
+                                'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                                'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                                'ongkir' => 0,
+                            ]);
+
+                            for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                                $dspap = DetailPesananProduk::create([
+                                    'detail_pesanan_id' => $dspa->id,
+                                    'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                                ]);
+                                if (!$dspap) {
+                                    $bool = false;
+                                }
+                             }
+                            }
+                        }
+
+
                 }
                 if (in_array("sparepart", $request->jenis_pen)) {
                     for ($i = 0; $i < count($request->part_id); $i++) {
@@ -4015,8 +4315,10 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
         return response()->json([
             'message' => 'Cek Form Kembali',
         ], 500);
+
     }
     }
+
 
     public function view_so_ekatalog($value)
     {
@@ -4120,19 +4422,216 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
     {
         if ($jenis == 'ekatalog') {
             $ekatalog = Ekatalog::find($id);
-            return view('page.penjualan.penjualan.edit_ekatalog', ['e' => $ekatalog]);
+
+
+            foreach($ekatalog->Pesanan->DetailPesanan as $key_paket => $d){
+                $item[$key_paket] = array(
+                    'jenis' => 'po',
+                    'id' => $d->id,
+                    'detail_rencana_penjualan_id' => 0,
+                    'penjualan_produk_id' => $d->penjualan_produk_id,
+                    'nama' => $d->PenjualanProduk->nama,
+                    'jumlah' => $d->jumlah,
+                    'harga' => $d->harga,
+                    'ongkir' => $d->ongkir,
+                    'ppn' => $d->ppn,
+                    'detail' => array(),
+                    'seri' =>  ""
+                );
+                foreach ($d->DetailPesananProduk as $key_prd => $e) {
+                    $item[$key_paket]['detail'][$key_prd] = array(
+                        'id' => $e->id,
+                        'gbj_id' => $e->GudangBarangJadi->id,
+                        'nama' => $e->GudangBarangJadi->Produk->nama,
+                        'variasi' => $e->GudangBarangJadi->nama,
+
+                    );
+                }
+            }
+
+
+            if($ekatalog->Pesanan->DetailPesananDsb->isEmpty()){
+                $data = $item;
+            }else{
+                foreach($ekatalog->Pesanan->DetailPesananDsb as $key_paket => $d){
+                    if($d->NoseriDsb->isEmpty()){
+                        $seri =    "";
+                    }else{
+                        $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
+                    }
+
+                    $item_dsb[$key_paket] = array(
+                        'jenis' => 'dsb',
+                        'id' => $d->id,
+                        'detail_rencana_penjualan_id' => 0,
+                        'penjualan_produk_id' => $d->penjualan_produk_id,
+                        'nama' => $d->PenjualanProduk->nama,
+                        'jumlah' => $d->jumlah,
+                        'harga' => $d->harga,
+                        'ongkir' => $d->ongkir,
+                        'ppn' => $d->ppn,
+                        'detail' => array(),
+                        'seri' => $seri
+                    );
+
+                    foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
+                        $item_dsb[$key_paket]['detail'][$key_prd] = array(
+                            'id' => $e->id,
+                            'gbj_id' => $e->GudangBarangJadi->id,
+                            'nama' => $e->GudangBarangJadi->Produk->nama,
+                            'variasi' => $e->GudangBarangJadi->nama,
+                        );
+                    }
+                }
+                $data = array_merge($item, $item_dsb);
+            }
+           //return response()->json($data);
+             return view('page.penjualan.penjualan.edit_ekatalog', ['e' => $ekatalog,'item' => $data]);
         } else if ($jenis == 'spa') {
-            $spa = Spa::where('id', $id)->get();
-            return view('page.penjualan.penjualan.edit_spa', ['spa' => $spa]);
+            $spa = Spa::find($id);
+            if($spa->Pesanan->DetailPesananDsb->isEmpty() && $spa->Pesanan->DetailPesanan->isEmpty() ){
+                $data = array();
+            }else{
+            foreach($spa->Pesanan->DetailPesanan as $key_paket => $d){
+                $item[$key_paket] = array(
+                    'jenis' => 'po',
+                    'id' => $d->id,
+                    'detail_rencana_penjualan_id' => 0,
+                    'penjualan_produk_id' => $d->penjualan_produk_id,
+                    'nama' => $d->PenjualanProduk->nama,
+                    'jumlah' => $d->jumlah,
+                    'harga' => $d->harga,
+                    'ongkir' => $d->ongkir,
+                    'ppn' => $d->ppn,
+                    'detail' => array(),
+                    'seri' =>  ""
+                );
+                foreach ($d->DetailPesananProduk as $key_prd => $e) {
+                    $item[$key_paket]['detail'][$key_prd] = array(
+                        'id' => $e->id,
+                        'gbj_id' => $e->GudangBarangJadi->id,
+                        'nama' => $e->GudangBarangJadi->Produk->nama,
+                        'variasi' => $e->GudangBarangJadi->nama,
+
+                    );
+                }
+            }
+
+
+            if($spa->Pesanan->DetailPesananDsb->isEmpty()){
+                $data = $item;
+            }else{
+                foreach($spa->Pesanan->DetailPesananDsb as $key_paket => $d){
+                    if($d->NoseriDsb->isEmpty()){
+                        $seri =    "";
+                    }else{
+                        $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
+                    }
+
+                    $item_dsb[$key_paket] = array(
+                        'jenis' => 'dsb',
+                        'id' => $d->id,
+                        'detail_rencana_penjualan_id' => 0,
+                        'penjualan_produk_id' => $d->penjualan_produk_id,
+                        'nama' => $d->PenjualanProduk->nama,
+                        'jumlah' => $d->jumlah,
+                        'harga' => $d->harga,
+                        'ongkir' => $d->ongkir,
+                        'ppn' => $d->ppn,
+                        'detail' => array(),
+                        'seri' => $seri
+                    );
+
+                    foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
+                        $item_dsb[$key_paket]['detail'][$key_prd] = array(
+                            'id' => $e->id,
+                            'gbj_id' => $e->GudangBarangJadi->id,
+                            'nama' => $e->GudangBarangJadi->Produk->nama,
+                            'variasi' => $e->GudangBarangJadi->nama,
+                        );
+                    }
+                }
+                $data = array_merge($item, $item_dsb);
+            }
+        }
+          //  return response()->json($data);
+            return view('page.penjualan.penjualan.edit_spa', ['e' => $spa ,'item' => $data]);
         } else {
-            $spb = Spb::where('id', $id)->get();
-            return view('page.penjualan.penjualan.edit_spb', ['spb' => $spb]);
+            $spb = Spb::find($id);
+            if($spb->Pesanan->DetailPesananDsb->isEmpty() && $spb->Pesanan->DetailPesanan->isEmpty() ){
+                $data = array();
+            }else{
+            foreach($spb->Pesanan->DetailPesanan as $key_paket => $d){
+                $item[$key_paket] = array(
+                    'jenis' => 'po',
+                    'id' => $d->id,
+                    'detail_rencana_penjualan_id' => 0,
+                    'penjualan_produk_id' => $d->penjualan_produk_id,
+                    'nama' => $d->PenjualanProduk->nama,
+                    'jumlah' => $d->jumlah,
+                    'harga' => $d->harga,
+                    'ongkir' => $d->ongkir,
+                    'ppn' => $d->ppn,
+                    'detail' => array(),
+                    'seri' =>  ""
+                );
+                foreach ($d->DetailPesananProduk as $key_prd => $e) {
+                    $item[$key_paket]['detail'][$key_prd] = array(
+                        'id' => $e->id,
+                        'gbj_id' => $e->GudangBarangJadi->id,
+                        'nama' => $e->GudangBarangJadi->Produk->nama,
+                        'variasi' => $e->GudangBarangJadi->nama,
+
+                    );
+                }
+            }
+
+
+            if($spb->Pesanan->DetailPesananDsb->isEmpty()){
+                $data = $item;
+            }else{
+                foreach($spb->Pesanan->DetailPesananDsb as $key_paket => $d){
+                    if($d->NoseriDsb->isEmpty()){
+                        $seri =    "";
+                    }else{
+                        $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
+                    }
+
+                    $item_dsb[$key_paket] = array(
+                        'jenis' => 'dsb',
+                        'id' => $d->id,
+                        'detail_rencana_penjualan_id' => 0,
+                        'penjualan_produk_id' => $d->penjualan_produk_id,
+                        'nama' => $d->PenjualanProduk->nama,
+                        'jumlah' => $d->jumlah,
+                        'harga' => $d->harga,
+                        'ongkir' => $d->ongkir,
+                        'ppn' => $d->ppn,
+                        'detail' => array(),
+                        'seri' => $seri
+                    );
+
+                    foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
+                        $item_dsb[$key_paket]['detail'][$key_prd] = array(
+                            'id' => $e->id,
+                            'gbj_id' => $e->GudangBarangJadi->id,
+                            'nama' => $e->GudangBarangJadi->Produk->nama,
+                            'variasi' => $e->GudangBarangJadi->nama,
+                        );
+                    }
+                }
+                $data = array_merge($item, $item_dsb);
+            }
+            }
+
+            return view('page.penjualan.penjualan.edit_spb', ['e' => $spb,'item' => $data]);
         }
     }
     public function update_ekatalog(Request $request, $id)
     {
-        //dd($request->all());
-        if ($request->status_akn == 'sepakat' && ($request->namadistributor == 'belum' ||$request->provinsi == "NULL")) {
+
+          // dd($request->all());
+           if ($request->status_akn == 'sepakat' && ($request->namadistributor == 'belum' ||$request->provinsi == "NULL")) {
             return response()->json([
                 'message' => 'Cek Form Kembali',
             ], 500);
@@ -4162,7 +4661,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
 
             $akn = $c_akn;
         } else {
-            $akn = $ekatalog->no_paket;
+            $akn = $request->jenis_paket . $request->no_paket;
         }
 
 
@@ -4224,40 +4723,148 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                     $bool = false;
                 }
             }
+
+
+            $dsb = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                $q->where('pesanan_id', $poid);
+            })->get();
+
+            if (count($dsb) > 0) {
+                $deldspap = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                    $q->where('pesanan_id', $poid);
+                })->delete();
+                if (!$deldspap) {
+                    $bool = false;
+                }
+            }
+
+            $dsbpa = DetailPesananDsb::where('pesanan_id', $poid)->get();
+            if (count($dsbpa) > 0) {
+                $deldsbpa = DetailPesananDsb::where('pesanan_id', $poid)->delete();
+                if (!$deldsbpa) {
+                    $bool = false;
+                }
+            }
+
+
             if ($bool == true) {
                 if (($request->status_akn == "sepakat") || ($request->status_akn == "negosiasi")) {
+                    if(isset($request->stok_distributor)){
 
-                    for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
-                        if (empty($request->produk_ongkir[$i])) {
-                            $ongkir[$i] = 0;
-                        } else {
-                            $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
+                        //Distributor
+                        if(isset($request->stok_distributor)){
+                            $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                            $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                            $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                            $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                            $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
+                            $produk_ongkir  = array_values(array_diff_key($request->produk_ongkir, $request->stok_distributor));
+
+                            foreach ($request->stok_distributor as $key) {
+                              if (isset($request->penjualan_produk_id[$key])) {
+                                  $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                              }
+                              if (isset($request->variasi[$key])) {
+                                  $variasi_dsb[] = $request->variasi[$key];
+                              }
+                              if (isset($request->produk_jumlah[$key])) {
+                                  $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                              }
+                              if (isset($request->produk_harga[$key])) {
+                                  $produk_harga_dsb[] = $request->produk_harga[$key];
+                              }
+                              if (isset($request->produk_ongkir[$key])) {
+                                  $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                              }
+                              if (isset($request->produk_ppn[$key])) {
+                                  $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                              }
+                              if (isset($request->noSeriDistributor[$key])) {
+                                  $noseri_dsb[] = $request->noSeriDistributor[$key];
+                              }
+                          }
+
+
+                          for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                            $dspa = DetailPesanan::create([
+                                'pesanan_id' => $poid,
+                                'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                'jumlah' => $produk_jumlah[$i],
+                                'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                'harga' => str_replace('.', "", $produk_harga[$i]),
+                                'ongkir' =>  str_replace('.', "", $produk_ongkir[$i])
+                            ]);
+
+                            for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                 DetailPesananProduk::create([
+                                'detail_pesanan_id' => $dspa->id,
+                                'gudang_barang_jadi_id' => $variasi[$i][$j]
+                            ]);
+                            }
                         }
-                        $c = DetailPesanan::create([
-                            'pesanan_id' => $poid,
-                            'penjualan_produk_id' => $request->penjualan_produk_id[$i],
-                            'jumlah' => $request->produk_jumlah[$i],
-                            'harga' => str_replace('.', "", $request->produk_harga[$i]),
-                            'ongkir' => $ongkir[$i],
-                            'detail_rencana_penjualan_id' => $request->rencana_id[$i],
-                            'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
-                        ]);
-                        if ($c) {
-                            for ($j = 0; $j < count($request->variasi[$i]); $j++) {
-                                $v = DetailPesananProduk::create([
-                                    'detail_pesanan_id' => $c->id,
-                                    'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+
+
+
+                        for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                            $dsb = DetailPesananDsb::create([
+                          'pesanan_id' => $poid,
+                          'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                          'jumlah' => $produk_jumlah_dsb[$i],
+                          'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                          'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                          'ongkir' =>  str_replace('.', "", $produk_ongkir_dsb[$i])
+                      ]);
+
+                      if(isset ($noseri_dsb[$i])){
+                          $noseri = explode(',', $noseri_dsb[$i]);
+                          for ($j = 0; $j < count($noseri); $j++) {
+                              NoseriDsb::create([
+                                  'detail_pesanan_dsb' => $dsb->id,
+                                  'noseri' => $noseri[$j]
+                              ]);
+                          }
+
+                      }
+                          for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                               DetailPesananProdukDsb::create([
+                              'detail_pesanan_dsb_id' => $dsb->id,
+                              'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                          ]);
+                          }
+                      }
+                        }else{
+                            for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                                if (empty($request->produk_ongkir[$i])) {
+                                    $ongkir[$i] = 0;
+                                } else {
+                                    $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
+                                }
+                                $c = DetailPesanan::create([
+                                    'pesanan_id' => $poid,
+                                    'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                                    'jumlah' => $request->produk_jumlah[$i],
+                                    'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                                    'ongkir' => $ongkir[$i],
+                                    'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
                                 ]);
-                                if (!$v) {
+                                if ($c) {
+                                    for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                                        $v = DetailPesananProduk::create([
+                                            'detail_pesanan_id' => $c->id,
+                                            'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                                        ]);
+                                        if (!$v) {
+                                            $bool = false;
+                                        }
+                                    }
+                                } else {
                                     $bool = false;
                                 }
                             }
-                        } else {
-                            $bool = false;
                         }
-                    }
-                } elseif (($request->status_akn == "draft") || ($request->status_akn == "batal")) {
-                    if ($request->isi_produk == "isi") {
+
+
+                    }else{
                         for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
                             if (empty($request->produk_ongkir[$i])) {
                                 $ongkir[$i] = 0;
@@ -4270,7 +4877,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                                 'jumlah' => $request->produk_jumlah[$i],
                                 'harga' => str_replace('.', "", $request->produk_harga[$i]),
                                 'ongkir' => $ongkir[$i],
-                                'detail_rencana_penjualan_id' => $request->rencana_id[$i],
+
                                 'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
                             ]);
                             if ($c) {
@@ -4287,6 +4894,121 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                                 $bool = false;
                             }
                         }
+                    }
+
+                } elseif (($request->status_akn == "draft") || ($request->status_akn == "batal")) {
+                    if ($request->isi_produk == "isi") {
+                        if(isset($request->stok_distributor)){
+                            $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                            $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                            $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                            $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                            $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
+                            $produk_ongkir  = array_values(array_diff_key($request->produk_ongkir, $request->stok_distributor));
+
+                            foreach ($request->stok_distributor as $key) {
+                              if (isset($request->penjualan_produk_id[$key])) {
+                                  $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                              }
+                              if (isset($request->variasi[$key])) {
+                                  $variasi_dsb[] = $request->variasi[$key];
+                              }
+                              if (isset($request->produk_jumlah[$key])) {
+                                  $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                              }
+                              if (isset($request->produk_harga[$key])) {
+                                  $produk_harga_dsb[] = $request->produk_harga[$key];
+                              }
+                              if (isset($request->produk_ongkir[$key])) {
+                                  $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                              }
+                              if (isset($request->produk_ppn[$key])) {
+                                  $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                              }
+                              if (isset($request->noSeriDistributor[$key])) {
+                                  $noseri_dsb[] = $request->noSeriDistributor[$key];
+                              }
+                          }
+
+
+                          for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                            $dspa = DetailPesanan::create([
+                                'pesanan_id' => $poid,
+                                'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                'jumlah' => $produk_jumlah[$i],
+                                'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                'harga' => str_replace('.', "", $produk_harga[$i]),
+                                'ongkir' =>  str_replace('.', "", $produk_ongkir[$i])
+                            ]);
+
+                            for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                 DetailPesananProduk::create([
+                                'detail_pesanan_id' => $dspa->id,
+                                'gudang_barang_jadi_id' => $variasi[$i][$j]
+                            ]);
+                            }
+                        }
+
+
+
+                        for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                            $dsb = DetailPesananDsb::create([
+                          'pesanan_id' => $poid,
+                          'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                          'jumlah' => $produk_jumlah_dsb[$i],
+                          'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                          'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                          'ongkir' =>  str_replace('.', "", $produk_ongkir_dsb[$i])
+                      ]);
+
+                      if(isset ($noseri_dsb[$i])){
+                          $noseri = explode(',', $noseri_dsb[$i]);
+                          for ($j = 0; $j < count($noseri); $j++) {
+                              NoseriDsb::create([
+                                  'detail_pesanan_dsb' => $dsb->id,
+                                  'noseri' => $noseri[$j]
+                              ]);
+                          }
+
+                      }
+                          for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                               DetailPesananProdukDsb::create([
+                              'detail_pesanan_dsb_id' => $dsb->id,
+                              'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                          ]);
+                          }
+                      }
+                        }else{
+                            for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                                if (empty($request->produk_ongkir[$i])) {
+                                    $ongkir[$i] = 0;
+                                } else {
+                                    $ongkir[$i] =  str_replace('.', "", $request->produk_ongkir[$i]);
+                                }
+                                $c = DetailPesanan::create([
+                                    'pesanan_id' => $poid,
+                                    'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                                    'jumlah' => $request->produk_jumlah[$i],
+                                    'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                                    'ongkir' => $ongkir[$i],
+                                    'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                                ]);
+                                if ($c) {
+                                    for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                                        $v = DetailPesananProduk::create([
+                                            'detail_pesanan_id' => $c->id,
+                                            'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                                        ]);
+                                        if (!$v) {
+                                            $bool = false;
+                                        }
+                                    }
+                                } else {
+                                    $bool = false;
+                                }
+                            }
+                        }
+
                     }
                 }
             } else {
@@ -4309,7 +5031,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
     }
     public function update_spa(Request $request, $id)
     {
-       //dd($request->all());
+    //  dd($request->all());
         if ($request->perusahaan_pengiriman_nonakn == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL )  {
             return response()->json([
                 'message' => 'Cek Form Kembali',
@@ -4353,8 +5075,112 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                     }
                 }
 
+
+                $dsb = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                    $q->where('pesanan_id', $poid);
+                })->get();
+
+                if (count($dsb) > 0) {
+                    $deldspap = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                        $q->where('pesanan_id', $poid);
+                    })->delete();
+                    if (!$deldspap) {
+                        $bool = false;
+                    }
+                }
+
+                $dsbpa = DetailPesananDsb::where('pesanan_id', $poid)->get();
+                if (count($dsbpa) > 0) {
+                    $deldsbpa = DetailPesananDsb::where('pesanan_id', $poid)->delete();
+                    if (!$deldsbpa) {
+                        $bool = false;
+                    }
+                }
+
                 if ($request->jenis_pen) {
                     if (in_array("produk", $request->jenis_pen)) {
+                        //Distributor
+                        if(isset($request->stok_distributor)){
+
+
+                            $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                            $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                            $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                            $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                            $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
+
+
+                            foreach ($request->stok_distributor as $key) {
+                              if (isset($request->penjualan_produk_id[$key])) {
+                                  $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                              }
+                              if (isset($request->variasi[$key])) {
+                                  $variasi_dsb[] = $request->variasi[$key];
+                              }
+                              if (isset($request->produk_jumlah[$key])) {
+                                  $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                              }
+                              if (isset($request->produk_harga[$key])) {
+                                  $produk_harga_dsb[] = $request->produk_harga[$key];
+                              }
+                              if (isset($request->produk_ongkir[$key])) {
+                                  $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                              }
+                              if (isset($request->produk_ppn[$key])) {
+                                  $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                              }
+                              if (isset($request->noSeriDistributor[$key])) {
+                                  $noseri_dsb[] = $request->noSeriDistributor[$key];
+                              }
+                          }
+
+                          for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                            $dspa = DetailPesanan::create([
+                                'pesanan_id' => $poid,
+                                'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                'jumlah' => $produk_jumlah[$i],
+                                'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                'harga' => str_replace('.', "", $produk_harga[$i])
+                            ]);
+
+                            for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                 DetailPesananProduk::create([
+                                'detail_pesanan_id' => $dspa->id,
+                                'gudang_barang_jadi_id' => $variasi[$i][$j]
+                            ]);
+                            }
+                        }
+
+
+                          for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                            $dsb = DetailPesananDsb::create([
+                          'pesanan_id' => $poid,
+                          'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                          'jumlah' => $produk_jumlah_dsb[$i],
+                          'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                          'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                      ]);
+
+                      if(isset ($noseri_dsb[$i])){
+                          $noseri = explode(',', $noseri_dsb[$i]);
+                          for ($j = 0; $j < count($noseri); $j++) {
+                              NoseriDsb::create([
+                                  'detail_pesanan_dsb' => $dsb->id,
+                                  'noseri' => $noseri[$j]
+                              ]);
+                          }
+
+                      }
+
+                          for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                               DetailPesananProdukDsb::create([
+                              'detail_pesanan_dsb_id' => $dsb->id,
+                              'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                          ]);
+                          }
+                      }
+
+                        }else{
                         if ($dspa) {
                             for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
                                 $c = DetailPesanan::create([
@@ -4382,6 +5208,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                         } else {
                             $bool = false;
                         }
+                    }
                     } else {
                         $dspa = DetailPesanan::where('pesanan_id', $poid)->get();
                         if (count($dspa) > 0) {
@@ -4457,8 +5284,8 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
     }
     public function update_spb(Request $request, $id)
     {
-       // dd($request->all());
-        if ($request->perusahaan_pengiriman_nonakn == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL || $request->ekspedisi == NULL)  {
+     // dd($request->all());
+        if ($request->perusahaan_pengiriman_nonakn == NULL || $request->alamat_pengiriman == NULL ||  $request->kemasan == NULL )  {
             return response()->json([
                 'message' => 'Cek Form Kembali',
             ], 500);
@@ -4500,34 +5327,141 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
                         $bool = false;
                     }
                 }
+
+
+                $dsb = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                    $q->where('pesanan_id', $poid);
+                })->get();
+
+                if (count($dsb) > 0) {
+                    $deldspap = DetailPesananProdukDsb::whereHas('DetailPesananDsb', function ($q) use ($poid) {
+                        $q->where('pesanan_id', $poid);
+                    })->delete();
+                    if (!$deldspap) {
+                        $bool = false;
+                    }
+                }
+
+                $dsbpa = DetailPesananDsb::where('pesanan_id', $poid)->get();
+                if (count($dsbpa) > 0) {
+                    $deldsbpa = DetailPesananDsb::where('pesanan_id', $poid)->delete();
+                    if (!$deldsbpa) {
+                        $bool = false;
+                    }
+                }
+
+
                 if ($request->jenis_pen) {
                     if (in_array("produk", $request->jenis_pen)) {
-                        if ($dspa) {
-                            for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
-                                $c = DetailPesanan::create([
-                                    'pesanan_id' => $poid,
-                                    'penjualan_produk_id' => $request->penjualan_produk_id[$i],
-                                    'jumlah' => $request->produk_jumlah[$i],
-                                    'harga' => str_replace('.', "", $request->produk_harga[$i]),
-                                    'ppn' => isset($request->part_ppn[$i]) ? $request->part_ppn[$i] : 0,
-                                    'ongkir' => 0,
-                                ]);
-                                if (!$c) {
-                                    $bool = false;
-                                } else {
-                                    for ($j = 0; $j < count($request->variasi[$i]); $j++) {
-                                        $cd = DetailPesananProduk::create([
-                                            'detail_pesanan_id' => $c->id,
-                                            'gudang_barang_jadi_id' => $request->variasi[$i][$j]
-                                        ]);
-                                        if (!$cd) {
-                                            $bool = false;
+                        //Distributor
+
+                        if(isset($request->stok_distributor)){
+
+
+                            $penjualan_produk_id  = array_values(array_diff_key($request->penjualan_produk_id, $request->stok_distributor));
+                            $variasi  = array_values(array_diff_key($request->variasi, $request->stok_distributor));
+                            $produk_jumlah  = array_values(array_diff_key($request->produk_jumlah, $request->stok_distributor));
+                            $produk_harga  = array_values(array_diff_key($request->produk_harga, $request->stok_distributor));
+                            $produk_ppn  = array_values(array_diff_key($request->produk_ppn, $request->stok_distributor));
+
+
+                            foreach ($request->stok_distributor as $key) {
+                              if (isset($request->penjualan_produk_id[$key])) {
+                                  $penjualan_produk_id_dsb[] = $request->penjualan_produk_id[$key];
+                              }
+                              if (isset($request->variasi[$key])) {
+                                  $variasi_dsb[] = $request->variasi[$key];
+                              }
+                              if (isset($request->produk_jumlah[$key])) {
+                                  $produk_jumlah_dsb[] = $request->produk_jumlah[$key];
+                              }
+                              if (isset($request->produk_harga[$key])) {
+                                  $produk_harga_dsb[] = $request->produk_harga[$key];
+                              }
+                              if (isset($request->produk_ongkir[$key])) {
+                                  $produk_ongkir_dsb[] = $request->produk_ongkir[$key];
+                              }
+                              if (isset($request->produk_ppn[$key])) {
+                                  $produk_ppn_dsb[] = $request->produk_ppn[$key];
+                              }
+                              if (isset($request->noSeriDistributor[$key])) {
+                                  $noseri_dsb[] = $request->noSeriDistributor[$key];
+                              }
+                          }
+
+                          for ($i = 0; $i < count($penjualan_produk_id); $i++) {
+                            $dspa = DetailPesanan::create([
+                                'pesanan_id' => $poid,
+                                'penjualan_produk_id' => $penjualan_produk_id[$i],
+                                'jumlah' => $produk_jumlah[$i],
+                                'ppn' => isset($produk_ppn[$i]) ? $produk_ppn[$i] : 0,
+                                'harga' => str_replace('.', "", $produk_harga[$i])
+                            ]);
+
+                            for ($j = 0; $j < count($variasi[$i]); $j++) {
+                                 DetailPesananProduk::create([
+                                'detail_pesanan_id' => $dspa->id,
+                                'gudang_barang_jadi_id' => $variasi[$i][$j]
+                            ]);
+                            }
+                        }
+
+
+                          for ($i = 0; $i < count($penjualan_produk_id_dsb); $i++) {
+                            $dsb = DetailPesananDsb::create([
+                          'pesanan_id' => $poid,
+                          'penjualan_produk_id' => $penjualan_produk_id_dsb[$i],
+                          'jumlah' => $produk_jumlah_dsb[$i],
+                          'ppn' => isset($produk_ppn_dsb[$i]) ? $produk_ppn_dsb[$i] : 0,
+                          'harga' => str_replace('.', "", $produk_harga_dsb[$i]),
+                      ]);
+
+                      if(isset ($noseri_dsb[$i])){
+                          $noseri = explode(',', $noseri_dsb[$i]);
+                          for ($j = 0; $j < count($noseri); $j++) {
+                              NoseriDsb::create([
+                                  'detail_pesanan_dsb' => $dsb->id,
+                                  'noseri' => $noseri[$j]
+                              ]);
+                          }
+
+                      }
+
+                          for ($j = 0; $j < count($variasi_dsb[$i]); $j++) {
+                               DetailPesananProdukDsb::create([
+                              'detail_pesanan_dsb_id' => $dsb->id,
+                              'gudang_barang_jadi_id' => $variasi_dsb[$i][$j]
+                          ]);
+                          }
+                      }
+                        }else{
+                            if ($dspa) {
+                                for ($i = 0; $i < count($request->penjualan_produk_id); $i++) {
+                                    $c = DetailPesanan::create([
+                                        'pesanan_id' => $poid,
+                                        'penjualan_produk_id' => $request->penjualan_produk_id[$i],
+                                        'jumlah' => $request->produk_jumlah[$i],
+                                        'harga' => str_replace('.', "", $request->produk_harga[$i]),
+                                        'ppn' => isset($request->produk_ppn[$i]) ? $request->produk_ppn[$i] : 0,
+                                        'ongkir' => 0,
+                                    ]);
+                                    if (!$c) {
+                                        $bool = false;
+                                    } else {
+                                        for ($j = 0; $j < count($request->variasi[$i]); $j++) {
+                                            $cd = DetailPesananProduk::create([
+                                                'detail_pesanan_id' => $c->id,
+                                                'gudang_barang_jadi_id' => $request->variasi[$i][$j]
+                                            ]);
+                                            if (!$cd) {
+                                                $bool = false;
+                                            }
                                         }
                                     }
                                 }
+                            } else {
+                                $bool = false;
                             }
-                        } else {
-                            $bool = false;
                         }
                     } else {
                         $dspa = DetailPesanan::where('pesanan_id', $poid)->get();
@@ -5468,7 +6402,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             $q->where('status','sepakat');
         })
             ->whereBetween('tgl_po', [$tgl_awal, $tgl_akhir])
-            ->select('Pesanan.tgl_po')
+            ->select('pesanan.tgl_po')
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->tgl_po)->format('m');
@@ -5494,7 +6428,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
         //SPA
         $spa = Pesanan::Has('Spa')
             ->whereBetween('tgl_po', [$tgl_awal, $tgl_akhir])
-            ->select('Pesanan.tgl_po')
+            ->select('pesanan.tgl_po')
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->tgl_po)->format('m');
@@ -5521,7 +6455,7 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
         //SPB
         $spb = Pesanan::Has('Spb')
             ->whereBetween('tgl_po', [$tgl_awal, $tgl_akhir])
-            ->select('Pesanan.tgl_po')
+            ->select('pesanan.tgl_po')
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->tgl_po)->format('m');
@@ -7461,6 +8395,18 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             'status' => 200,
             'message' =>  'Berhasil',
             'data'    =>  $json_array
+        ], 200);
+    }
+    public function cancel_po($id)
+    {
+
+        $po = Pesanan::find($id);
+        $po->log_id = 20;
+        $po->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' =>  'Berhasil'
         ], 200);
     }
 

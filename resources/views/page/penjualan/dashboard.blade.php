@@ -511,7 +511,7 @@
 @stop
 @section('adminlte_js')
     <script>
-        $(function() { 
+        $(function() {
             $('#divisitable').DataTable({});
             var pengirimantable = $('#pengirimantable').DataTable({
                 processing: true,

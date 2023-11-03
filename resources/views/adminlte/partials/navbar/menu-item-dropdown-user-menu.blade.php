@@ -18,7 +18,7 @@
     <a href="https://forms.gle/fGiRwPTz4TB8dBFs6" class="nav-link" target="_blank">
         <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
         Lapor Kendala Teknis
-    </a>    
+    </a>
 </li>
 <li class="nav-item dropdown user-menu">
 
@@ -81,7 +81,7 @@
                 <div class="col-12 py-2">
                     <a class="dropdown-item float-right @if (!$profile_url) btn-block @endif"
                         href="#"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit(); localStorage.removeItem('lokal_token')">
                         <i class="fa fa-fw fa-power-off"></i>
                         {{ __('adminlte::adminlte.log_out') }}
                     </a>

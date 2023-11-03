@@ -21,6 +21,7 @@
         "laravel/ui": "^3.3",
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.23",
+        "picqer/php-barcode-generator": "^2.4",
         "pusher/pusher-php-server": "^7.0",
         "realrashid/sweet-alert": "^4.0",
         "tymon/jwt-auth": "^1.0",

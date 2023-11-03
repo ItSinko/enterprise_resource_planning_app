@@ -14,7 +14,6 @@ class JadwalPerakitan extends Model
     {
         return $this->belongsTo(GudangBarangJadi::class, 'produk_id');
     }
-
     function noseri()
     {
         return $this->hasMany(JadwalRakitNoseri::class, 'jadwal_id');

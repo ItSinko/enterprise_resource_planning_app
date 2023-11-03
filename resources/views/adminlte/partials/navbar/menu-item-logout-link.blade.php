@@ -7,7 +7,7 @@
 @endif
 
 <li class="nav-item">
-    <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit(); localStorage.removeItem('lokal_token')">
         <i class="fa fa-fw fa-power-off"></i>
         {{ __('adminlte.adminlte.log_out') }}
     </a>

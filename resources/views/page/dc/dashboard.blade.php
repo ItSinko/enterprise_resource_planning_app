@@ -290,7 +290,7 @@
                     <div class="col-lg-5 col-md-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4>Penjualan 2021</h4>
+                                <h4>Penjualan {{ date('Y') }}</h4>
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-12 d-flex">
                                         <div class="small-box bg-success flex-fill d-flex flex-column">

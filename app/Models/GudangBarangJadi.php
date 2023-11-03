@@ -277,6 +277,7 @@ class GudangBarangJadi extends Model
             $query->selectRaw('count(noseri_barang_jadi.id)')
                 ->from('noseri_barang_jadi')
                 ->where('noseri_barang_jadi.is_ready', '0')
+                ->where('noseri_barang_jadi.is_aktif', '1')
                 ->whereColumn('noseri_barang_jadi.gdg_barang_jadi_id', 'gdg_barang_jadi.id')
                 ->limit(1);
         }, 'count_ekat_sepakat' => function ($query) {
@@ -345,6 +346,6 @@ class GudangBarangJadi extends Model
         $jumlahstok = intval($data->count_barang);
         $hasil = $jumlahstok - $jumlahdiminta;
 
-        return $hasil;
+        return $data->count_barang;
     }
 }

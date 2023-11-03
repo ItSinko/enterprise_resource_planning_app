@@ -1014,173 +1014,200 @@
                                                                             <th width="15%">Harga</th>
                                                                             <th width="15%">Ongkir</th>
                                                                             <th width="15%">Subtotal</th>
+                                                                            <th width="15%">Pajak</th>
+                                                                            <th width="10%">
+                                                                                Stok Distributor <br>
+                                                                                <input type="checkbox" class="checkAllDistributor">
+                                                                            </th>
                                                                             <th width="5%">Aksi</th>
                                                                         </tr>
                                                                     </thead>
 
                                                                     <tbody>
-
-                                                                        <?php $produkpenjualan = 0; ?>
+                                                                        <?php $produkpenjualan = 0;  $no=1;?>
                                                                         @if (isset($e->pesanan))
-                                                                            @if (isset($e->pesanan->detailpesanan))
-                                                                                @foreach ($e->pesanan->detailpesanan as $f)
-                                                                                    <tr>
-                                                                                        <td>{{ $loop->iteration }}</td>
-                                                                                        <td>
-                                                                                            <div
-                                                                                                class="form-group select_item">
-                                                                                                <select
-                                                                                                    name="penjualan_produk_id[]"
-                                                                                                    id="{{ $loop->iteration - 1 }}"
-                                                                                                    class="select2 form-control custom-select penjualan_produk_id @error('penjualan_produk_id') is-invalid @enderror"
-                                                                                                    style="width:100%;">
-                                                                                                    <option
-                                                                                                        value="{{ $f->penjualan_produk_id }}"
-                                                                                                        selected>
-                                                                                                        {{ $f->penjualanproduk->nama }}
-                                                                                                    </option>
-                                                                                                </select>
-                                                                                            </div>
-                                                                                            <div class="detail_produk"
-                                                                                                id="detail_produk{{ $loop->iteration - 1 }}">
-                                                                                                <fieldset>
-                                                                                                    <legend><b>Detail
-                                                                                                            Produk</b>
-                                                                                                    </legend>
-                                                                                                    <?php $variasi = 0; ?>
-                                                                                                    @foreach ($f->DetailPesananProduk as $g)
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                class="card-body blue-bg">
-                                                                                                                <h6>{{ $g->GudangBarangJadi->Produk->nama }}
-                                                                                                                </h6>
-                                                                                                                <select
-                                                                                                                    class="form-control variasi"
-                                                                                                                    name="variasi[{{ $produkpenjualan }}][{{ $variasi }}]"
-                                                                                                                    id="variasi{{ $produkpenjualan }}{{ $variasi }}"
-                                                                                                                    style="width:100%;"
-                                                                                                                    data-attr="variasi{{ $variasi }}"
-                                                                                                                    data-id="{{ $variasi }}">
-                                                                                                                    <option
-                                                                                                                        value="{{ $g->GudangBarangJadi->id }}">
-                                                                                                                        @if (!empty(trim($g->GudangBarangJadi->nama)))
-                                                                                                                            {{ $g->GudangBarangJadi->nama }}
-                                                                                                                        @else
-                                                                                                                            {{ $g->GudangBarangJadi->Produk->nama }}
-                                                                                                                        @endif
-                                                                                                                    </option>
-                                                                                                                </select>
-                                                                                                                <span
-                                                                                                                    class=" invalid-feedback d-block ketstok"
-                                                                                                                    name="ketstok[{{ $produkpenjualan }}][{{ $variasi }}]"
-                                                                                                                    id="ketstok{{ $produkpenjualan }}{{ $variasi }}"
-                                                                                                                    data-attr="ketstok{{ $variasi }}"
-                                                                                                                    data-id="{{ $variasi }}"></span>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        <?php $variasi = $variasi + 1; ?>
-                                                                                                    @endforeach
-                                                                                                </fieldset>
-                                                                                            </div>
-                                                                                            <div class="detailjual"
-                                                                                                id="tes0">
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <div
-                                                                                                class="form-group d-flex justify-content-center">
-                                                                                                <div class="input-group">
-                                                                                                    <input type="number"
-                                                                                                        class="form-control produk_jumlah"
-                                                                                                        aria-label="produk_satuan"
-                                                                                                        name="produk_jumlah[{{ $produkpenjualan }}]"
-                                                                                                        id="produk_jumlah{{ $produkpenjualan }}"
-                                                                                                        style="width:100%;"
-                                                                                                        value="{{ $f->jumlah }}">
+                                                                            @if (count($item) > 0)
+                                                                            @foreach ($item as $f)
+                                                                            <tr>
+                                                                                <td>{{ $no++ }}</td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group select_item">
+                                                                                        <select
+                                                                                            name="penjualan_produk_id[]"
+                                                                                            id="{{ $no - 2 }}"
+                                                                                            class="select2 form-control custom-select penjualan_produk_id @error('penjualan_produk_id') is-invalid @enderror"
+                                                                                            style="width:100%;">
+                                                                                            <option
+                                                                                                value="{{ $f['penjualan_produk_id'] }}"
+                                                                                                selected>
+                                                                                                {{ $f['nama'] }}
+                                                                                            </option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="detail_produk"
+                                                                                        id="detail_produk{{ $no - 2 }}">
+                                                                                        <fieldset>
+                                                                                            <legend><b>Detail
+                                                                                                    Produk</b>
+                                                                                            </legend>
+                                                                                           {{-- sini --}}
+                                                                                           <?php $variasi = 0; ?>
+                                                                                           @foreach ($f['detail'] as $g)
+                                                                                               <div>
+                                                                                                   <div
+                                                                                                       class="card-body blue-bg">
+                                                                                                       <h6>{{ $g['nama'] }}
+                                                                                                       </h6>
+                                                                                                       <select
+                                                                                                           class="form-control variasi"
+                                                                                                           name="variasi[{{ $produkpenjualan }}][{{ $variasi }}]"
+                                                                                                           id="variasi{{ $produkpenjualan }}{{ $variasi }}"
+                                                                                                           style="width:100%;"
+                                                                                                           data-attr="variasi{{ $variasi }}"
+                                                                                                           data-id="{{ $variasi }}">
+                                                                                                           <option
+                                                                                                               value="{{ $g['gbj_id'] }}">
+                                                                                                               @if (!empty(trim($g['variasi'])))
+                                                                                                                   {{ $g['variasi'] }}
+                                                                                                               @else
+                                                                                                                   {{ $g['nama'] }}
+                                                                                                               @endif
+                                                                                                           </option>
+                                                                                                       </select>
+                                                                                                       <span
+                                                                                                           class=" invalid-feedback d-block ketstok"
+                                                                                                           name="ketstok[{{ $produkpenjualan }}][{{ $variasi }}]"
+                                                                                                           id="ketstok{{ $produkpenjualan }}{{ $variasi }}"
+                                                                                                           data-attr="ketstok{{ $variasi }}"
+                                                                                                           data-id="{{ $variasi }}"></span>
+                                                                                                   </div>
+                                                                                               </div>
+                                                                                               <?php $variasi = $variasi + 1; ?>
+                                                                                           @endforeach
+                                                                                        </fieldset>
+                                                                                    </div>
+                                                                                    <div class="detailjual"
+                                                                                        id="tes0">
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex justify-content-center">
+                                                                                        <div class="input-group">
+                                                                                            <input type="number"
+                                                                                                class="form-control produk_jumlah"
+                                                                                                aria-label="produk_satuan"
+                                                                                                name="produk_jumlah[{{ $produkpenjualan }}]"
+                                                                                                id="produk_jumlah{{ $produkpenjualan }}"
+                                                                                                style="width:100%;"
+                                                                                                value="{{ $f['jumlah'] }}">
 
-                                                                                                </div>
-                                                                                                <small
-                                                                                                    id="produk_ketersediaan"></small>
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <div
-                                                                                                class="form-group d-flex justify-content-center">
+                                                                                        </div>
+                                                                                        <small
+                                                                                            id="produk_ketersediaan"></small>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex justify-content-center">
 
-                                                                                                <input type="text"
-                                                                                                    class="form-control produk_harga"
-                                                                                                    name="produk_harga[{{ $produkpenjualan }}]"
-                                                                                                    id="produk_harga{{ $produkpenjualan }}"
-                                                                                                    placeholder="Masukkan Harga"
-                                                                                                    style="width:100%;"
-                                                                                                    aria-describedby="prdhrg"
-                                                                                                    value="{{ number_format($f->harga, 0, ',', '.') }}" />
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <div
-                                                                                                class="form-group d-flex justify-content-center">
+                                                                                        <input type="text"
+                                                                                            class="form-control produk_harga"
+                                                                                            name="produk_harga[{{ $produkpenjualan }}]"
+                                                                                            id="produk_harga{{ $produkpenjualan }}"
+                                                                                            placeholder="Masukkan Harga"
+                                                                                            style="width:100%;"
+                                                                                            aria-describedby="prdhrg"
+                                                                                            value="{{ number_format($f['harga'], 0, ',', '.') }}" />
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex justify-content-center">
 
-                                                                                                <input type="text"
-                                                                                                    class="form-control produk_ongkir"
-                                                                                                    name="produk_ongkir[{{ $produkpenjualan }}]"
-                                                                                                    id="produk_ongkir{{ $produkpenjualan }}"
-                                                                                                    placeholder="Masukkan Harga"
-                                                                                                    style="width:100%;"
-                                                                                                    aria-describedby="prdong"
-                                                                                                    value="{{ number_format($f->ongkir, 0, ',', '.') }}" />
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <div
-                                                                                                class="form-group d-flex justify-content-center">
+                                                                                        <input type="text"
+                                                                                            class="form-control produk_ongkir"
+                                                                                            name="produk_ongkir[{{ $produkpenjualan }}]"
+                                                                                            id="produk_ongkir{{ $produkpenjualan }}"
+                                                                                            placeholder="Masukkan Harga"
+                                                                                            style="width:100%;"
+                                                                                            aria-describedby="prdong"
+                                                                                            value="{{ number_format($f['ongkir'], 0, ',', '.') }}" />
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex justify-content-center">
 
-                                                                                                <input type="text"
-                                                                                                    class="form-control produk_subtotal"
-                                                                                                    name="produk_subtotal[{{ $produkpenjualan }}]"
-                                                                                                    id="produk_subtotal{{ $produkpenjualan }}"
-                                                                                                    placeholder="Masukkan Subtotal"
-                                                                                                    style="width:100%;"
-                                                                                                    value="{{ number_format($f->harga * $f->jumlah + $f->ongkir, 0, ',', '.') }}"
-                                                                                                    aria-describedby="prdsub"
-                                                                                                    readonly />
-                                                                                            </div>
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <div class="custom-control custom-switch">
-                                                                                                <input type="checkbox" class="custom-control-input produk_ppn"
-                                                                                                id="produk_ppn{{ $produkpenjualan }}"
-                                                                                                name="produk_ppn[{{ $produkpenjualan }}]"
-                                                                                                value="{{ $f->ppn }}"
-                                                                                                @if ($f->ppn == 1)
-                                                                                                    checked
-                                                                                                @endif
-                                                                                                >
+                                                                                        <input type="text"
+                                                                                            class="form-control produk_subtotal"
+                                                                                            name="produk_subtotal[{{ $produkpenjualan }}]"
+                                                                                            id="produk_subtotal{{ $produkpenjualan }}"
+                                                                                            placeholder="Masukkan Subtotal"
+                                                                                            style="width:100%;"
+                                                                                            value="{{ number_format($f['harga'] * $f['jumlah'] + $f['ongkir'], 0, ',', '.') }}"
+                                                                                            aria-describedby="prdsub"
+                                                                                            readonly />
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div class="custom-control custom-switch">
+                                                                                        <input type="checkbox" class="custom-control-input produk_ppn"
+                                                                                        id="produk_ppn{{ $produkpenjualan }}"
+                                                                                        name="produk_ppn[{{ $produkpenjualan }}]"
+                                                                                        value="{{ $f['ppn'] }}"
+                                                                                        @if ($f['ppn'] == 1)
+                                                                                            checked
+                                                                                        @endif
+                                                                                        >
 
-                                                                                                <label class="custom-control-label produk_ppn_label" for="produk_ppn{{ $produkpenjualan }}">
-                                                                                                @if ($f->ppn == 1)
-                                                                                                    PPN
-                                                                                                @else
-                                                                                                    Non PPN
-                                                                                                @endif
-                                                                                                </label>
-                                                                                              </div>
-                                                                                        </td>
-                                                                                        <td hidden><input type="hidden"
-                                                                                                class="rencana_id"
-                                                                                                name="rencana_id[{{ $produkpenjualan }}]"
-                                                                                                id="rencana_id{{ $produkpenjualan }}"
-                                                                                                readonly
-                                                                                                value="{{ $f->detail_rencana_penjualan_id }}">
-                                                                                        </td>
-                                                                                        <td>
-                                                                                            <a id="removerowproduk"><i
-                                                                                                    class="fas fa-minus"
-                                                                                                    style="color: red"></i></a>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <?php $produkpenjualan = $produkpenjualan + 1; ?>
-                                                                                @endforeach
+                                                                                        <label class="custom-control-label produk_ppn_label" for="produk_ppn{{ $produkpenjualan }}">
+                                                                                        @if ($f['ppn'] == 1)
+                                                                                            PPN
+                                                                                        @else
+                                                                                            Non PPN
+                                                                                        @endif
+                                                                                        </label>
+                                                                                      </div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex align-items-center">
+                                                                                        <input type="checkbox"
+                                                                                            class="stok_distributor"
+                                                                                            name="stok_distributor[{{ $produkpenjualan }}]"
+                                                                                            id="stok_distributor{{ $produkpenjualan }}"
+                                                                                            value="{{ $produkpenjualan }}"
+                                                                                            @if ($f['jenis'] == 'dsb' )
+                                                                                                checked
+                                                                                            @endif
+                                                                                            style="width:100%;" />
+                                                                                    </div>
+                                                                                    @if ($f['jenis'] == 'dsb' )
+                                                                                    <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" >No Seri</button>
+                                                                                    @else
+                                                                                    <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden >No Seri</button>
+                                                                                     @endif
+
+                                                                                    <input type="hidden" name="noSeriDistributor[{{ $produkpenjualan }}]" class="noSeriDistributor" value="{{$f['seri']}}">
+                                                                                </td>
+                                                                                <td hidden>
+                                                                                    <input type="hidden"
+                                                                                        class="rencana_id"
+                                                                                        name="rencana_id[{{ $produkpenjualan }}]"
+                                                                                        id="rencana_id{{ $produkpenjualan }}"
+                                                                                        readonly
+                                                                                        value="{{ $f['detail_rencana_penjualan_id'] }}">
+                                                                                </td>
+                                                                                <td>
+                                                                                    <a id="removerowproduk"><i
+                                                                                            class="fas fa-minus"
+                                                                                            style="color: red"></i></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <?php $produkpenjualan = $produkpenjualan + 1; ?>
+                                                                        @endforeach
                                                                             @else
                                                                                 <tr>
                                                                                     <td>1</td>
@@ -1267,6 +1294,19 @@
                                                                                             id="produk_ppn0" name="produk_ppn[0]" value="1" checked>
                                                                                             <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                                                                                           </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div
+                                                                                            class="form-group d-flex align-items-center">
+                                                                                            <input type="checkbox"
+                                                                                                class="stok_distributor"
+                                                                                                name="stok_distributor[0]"
+                                                                                                id="stok_distributor0"
+                                                                                                value="0"
+                                                                                                style="width:100%;" />
+                                                                                        </div>
+                                                                                        <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                                                                                        <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
                                                                                     </td>
                                                                                     <td hidden><input type="hidden"
                                                                                             class="rencana_id"
@@ -1365,6 +1405,19 @@
                                                                                         <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                                                                                       </div>
                                                                                 </td>
+                                                                                <td>
+                                                                                    <div
+                                                                                        class="form-group d-flex align-items-center">
+                                                                                        <input type="checkbox"
+                                                                                            class="stok_distributor"
+                                                                                            name="stok_distributor[0]"
+                                                                                            id="stok_distributor0"
+                                                                                            value="0"
+                                                                                            style="width:100%;" />
+                                                                                    </div>
+                                                                                    <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                                                                                    <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                                                                                </td>
                                                                                 <td hidden><input type="hidden"
                                                                                         class="rencana_id"
                                                                                         name="rencana_id[]"
@@ -1425,6 +1478,7 @@
                 </div>
             </div>
         </div>
+        @include('page.penjualan.penjualan.modalSeriDistributor')
     </section>
 @endsection
 
@@ -1566,12 +1620,15 @@
 
             if (alamat_pengiriman == alamat_customer) {
                 $('input[value="distributor"]').prop('checked', true);
+                getekspedisiall();
             } else if (alamat_pengiriman == alamat_instansi) {
                 $('input[value="instansi"]').prop('checked', true);
                 // ekspedisi(provinsi_instansi)
                 getekspedisiall();
             } else {
                 $('input[value="lainnya"]').prop('checked', true);
+                $('#perusahaan_pengiriman').attr('readonly', false);
+                $('#alamat_pengiriman').attr('readonly', false);
                 getekspedisiall();
             }
 
@@ -2252,6 +2309,10 @@
                     $(el).find('.produk_ppn_label').attr('for', 'produk_ppn' + j);
                     $(el).find('.produk_subtotal').attr('id', 'produk_subtotal' + j);
                     $(el).find('.produk_subtotal').attr('name', 'produk_subtotal[' + j + ']');
+                    $(el).find('.stok_distributor').attr('name', 'stok_distributor[' + j + ']');
+                    $(el).find('.stok_distributor').attr('id', 'stok_distributor' + j);
+                    $(el).find('.stok_distributor').attr('value', j);
+                    $(el).find('.noSeriDistributor').attr('name', 'noSeriDistributor[' + j + ']');
                     $(el).find('.rencana_id').attr('id', 'rencana_id' + j);
                     $(el).find('.rencana_id').attr('name', 'rencana_id[' + j + ']');
                     $(el).find('.detail_jual').attr('id', 'detail_jual' + j);
@@ -2434,6 +2495,19 @@
                             <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                         </div>
                     </td>
+                    <td>
+                        <div
+                            class="form-group d-flex align-items-center">
+                            <input type="checkbox"
+                                class="stok_distributor"
+                                name="stok_distributor[0]"
+                                id="stok_distributor0"
+                                value="0"
+                                style="width:100%;" />
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                        <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                    </td>
                     <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly></td>
                     <td>
                         <a id="removerowproduk"><i class="fas fa-minus" style="color: red;"></i></a>
@@ -2575,18 +2649,8 @@
 
             function load_variasi() {
                 produk = [];
-                produk = <?php
-                $prd = [];
-                if (isset($e->Pesanan)) {
-                    $p = [];
-                    if (isset($e->Pesanan->DetailPesanan)) {
-                        echo json_encode($e->Pesanan->DetailPesanan);
-                    } else {
-                        echo json_encode($prd);
-                    }
-                } else {
-                    echo json_encode($prd);
-                } ?>;
+                produk = <?php  echo json_encode($item)?>;
+                // console.log(produk)
                 if (produk.length > 0) {
                     for (var w = 0; w < produk.length; w++) {
                         $.ajax({
@@ -2824,6 +2888,19 @@
                                 <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                             </div>
                         </td>
+                        <td>
+                            <div
+                                class="form-group d-flex align-items-center">
+                                <input type="checkbox"
+                                    class="stok_distributor"
+                                    name="stok_distributor[0]"
+                                    id="stok_distributor0"
+                                    value="0"
+                                    style="width:100%;" />
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                            <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                        </td>
                         <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly value="` +
                     id + `"></td>
                         <td>
@@ -2924,6 +3001,53 @@
                 }
                 labelElement.text(label);
             });
+
+            $('.checkAllDistributor').click(function() {
+                if ($(this).is(':checked')) {
+                    $('.stok_distributor').prop('checked', true);
+                    // show all button
+                    $('.btnNoSeri').prop('hidden', false);
+                } else {
+                    $('.stok_distributor').prop('checked', false);
+                    // hide all button
+                    $('.btnNoSeri').prop('hidden', true);
+                }
+            });
+
+            $(document).on('click', '.stok_distributor', function() {
+                // check if checkbox is checked
+                if ($(this).is(':checked')) {
+                    // check if all checkboxes are selected find button hidden false
+                    $(this).closest('td').find('button').prop('hidden', false);
+                } else {
+                    // check if all checkboxes are selected find button hidden true
+                    $(this).closest('td').find('button').prop('hidden', true);
+                }
+
+
+            });
+
+
+            $(document).on('click', '.btnNoSeri', function() {
+                let indexDistributor = $(this).closest('tr').index();
+                $('.indexSeriDistributor').val(indexDistributor);
+                let jumlah = $('.produk_jumlah').eq(indexDistributor).val();
+                $('.jumlahSeriDistributor').val(jumlah);
+                // find index by indexDistributor class noSeriDistributor
+                let noSeri = $('.noSeriDistributor').eq(indexDistributor).val();
+                $('.indexSeriDistributor').val(indexDistributor);
+                // change array to string with comma
+                let noSeriArray = noSeri.split(',');
+                // remove empty string
+                noSeriArray = noSeriArray.filter(function (el) {
+                    return el != '';
+                });
+                // set value to input
+                $('.nomorSeriDistributor').val(noSeriArray);
+                // open modal Distributor
+                $('.modalDistributor').modal('show');
+
+            })
         });
     </script>
 @stop

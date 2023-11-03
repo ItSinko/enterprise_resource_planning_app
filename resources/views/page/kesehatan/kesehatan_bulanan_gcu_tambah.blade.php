@@ -233,15 +233,15 @@
 @endsection
 @section('adminlte_js')
     <script>
-        $(document).ready(function() {
-            $('#tabel_gcu').DataTable({
-                "scrollX": true,
-                "searching": false,
-                "paging": false,
-                "lengthChange": false,
-                "info": false
-            });
-        });
+        // $(document).ready(function() {
+        //     $('#tabel_gcu').DataTable({
+        //         "scrollX": true,
+        //         "searching": false,
+        //         "paging": false,
+        //         "lengthChange": false,
+        //         "info": false
+        //     });
+        // });
     </script>
     <script>
         $(function() {

@@ -168,121 +168,64 @@
                 </tr>
             </thead>
             <tbody>
-                @php $no = 0; @endphp
-                @foreach($data_produk as $e)
-                @if(isset($e->DetailPesananProduk))
-                @php $no =$loop->iteration; @endphp
+                @foreach ($data_produk as $key => $item)
                 <tr
-                @if(count ($e->NoseriDetailLogistik) <= 0)
-                style="border-bottom: 1px solid black"
-                @endif>
-
-                <td class="vera align-center">
-                    {{ $loop->iteration }}
-                </td>
-                <td class="vera">
-                    @if($e->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias != NULL)
-                    {{$e->DetailPesananProduk->DetailPesanan->PenjualanProduk->nama_alias}}
-                    @else
-                    {{$e->DetailPesananProduk->GudangBarangJadi->Produk->nama}} - {{$e->DetailPesananProduk->GudangBarangJadi->nama}}
-                    @endif
-                </td>
-                <td class="vera">
-                    {{$e->NoseriDetailLogistik->count()}}.00
-                </td>
-                </tr>
-                @if(count ($e->NoseriDetailLogistik) > 0)
-                <tr style="border-bottom: 1px solid black">
-                  <td class="vera" colspan="2">
-                      <b>No Seri</b> : <br>
-                      @foreach($e->NoseriDetailLogistik as $x)
-                      {{$x->NoseriDetailPesanan->NoseriTGbj->NoseriBarangJadi->noseri}}
-                      @if( !$loop->last)
-                      ,
-                      @endif
-                      @endforeach
-                   </td>
-                </tr>
-                @endif
-
-                @else
-                <tr >
-                    <td  class="vera align-center"> {{$loop->iteration + $no}}</td>
-                    {{-- <td>{{$e->DetailPesananPart->Sparepart->kode}}</td> --}}
-                    <td class="vera align-center">
-                        {{$e->DetailPesananPart->Sparepart->nama}}
-                    </td>
-                    <td  class="vera align-center">{{$e->DetailPesananPart->jumlah}}.00</td>
-
-                </tr>
-
-                @endif
-
-                @endforeach
-                {{-- @foreach ( $data->item as $key => $item)
-                <tr class="text-center"
-                @if(!isset($item->noseri))
+                @if(!isset($item['detail']))
                     style="border-bottom: 1px solid black"
                 @endif
                 >
-                    <td >{{ $key+1 }}.</td>
-                    <td class="text-left">{{ $item->nama }}</td>
-                    <td>
-                        @if(isset($item->noseri))
-                        {{$item->jumlah_noseri}}.00
-                        @else
-                        {{$item->jumlah}}.00
-                        @endif
-                    </td>
+                <td class="vera align-center">
+                    {{ $key+1 }}
+                </td>
+                <td class="vera">
+                    {{ $item['nama'] }}
+                </td>
+                <td class="vera">
+                    {{  $item['jumlah'] }}.00
+                </td>
                 </tr>
-                @if(isset($item->noseri))
+                @if(isset($item['detail']))
                 <tr style="border-bottom: 1px solid black">
-                    <td  ></td>
-                    <td colspan="2">
-                        <b>No Seri</b> :
-                    @php echo implode(', ',$item->noseri) @endphp
+                    <td></td>
+                    <td class="vera" colspan="2">
+                        <b>No Seri</b> : <br>
+                        @foreach ($item['detail'] as $key => $detail)
+                            {{ $detail['nama'] }} :
+
+                            @foreach ($detail['seri'] as $seriDetail)
+                                {{ $seriDetail['seri'] }}@if (!$loop->last),@endif
+                            @endforeach
+                            <br />
+                        @endforeach
                     </td>
                 </tr>
-                @endif
-                @endforeach  --}}
+            @endif
+                @endforeach
             </tbody>
+
             <tfoot class="text-center">
-                {{-- @php
-                    $totalproduk = 0;
-                    $totalpart = 0;
+                @php
+                $totalproduk = 0;
+                $totalpart = 0;
 
-                    foreach ($data->item as $item) {
-                        if ($item->jenis === 'produk') {
-                            $totalproduk += $item->jumlah_noseri;
-                        } elseif ($item->jenis === 'part') {
-                            $totalpart += $item->jumlah;
+                foreach ($data_produk as $item) {
+                    if ($item['jenis'] === 'produk') {
+                        foreach ($item['detail'] as $detail) {
+                            $totalproduk += $detail['jumlah_noseri'];
                         }
+                    } elseif ($item['jenis'] === 'sparepart') {
+                        $totalpart += $item['jumlah'];
                     }
+                }
 
-                    $total = $totalproduk + $totalpart;
-                @endphp
-                <tr>
-                    <td colspan="3">Total : {{ $total }}.00 Unit</td>
-                </tr>  --}}
+                $total = $totalproduk + $totalpart;
+            @endphp
+            <tr>
+                <td colspan="3">Total : {{ $total }}.00 Unit</td>
+            </tr>
             </tfoot>
         </table>
-        @if($data->dimensi != "")
-        <div style="margin: 10px 0px;">
-          <b>Dimensi</b>
-        <br>
-        {{ $data->dimensi}}
-      @endif
-      @if($data->ekspedisi_terusan != "")
-        </div
-        @if($data->dimensi == "")
-          style="margin: 10px 0px;"
-        @endif
-        >
-        <b>Ekspedisi Terusan : </b><br>
-        {{ $data->ekspedisi_terusan}}
-        <br>
-        </div>
-        @endif
+
     </main>
     <footer>
         <table>

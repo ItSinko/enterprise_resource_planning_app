@@ -23,7 +23,7 @@
                             <div class="row">
                                 <div class="col-8">
                                     <div class="row">
-                                        @if (Auth::user()->divisi_id != 2)
+                                        {{-- @if (Auth::user()->divisi_id != 2)
                                             <span class="float-left mr-1">
                                                 <button type="button" class="btn btn-success" id="downloadTemplate">
                                                     <i class="fas fa-download"></i>&nbsp;Template
@@ -42,7 +42,7 @@
                                                     <i class="fas fa-download"></i>&nbsp;Noseri
                                                 </a>
                                             </span>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -110,7 +110,7 @@
                                         <th>Merk</th>
                                         <th>Nama Produk</th>
                                         <th>Stok Gudang</th>
-                                        <th>Stok Penjualan</th>
+                                        {{-- <th>Stok Penjualan</th> --}}
                                         <th>Kelompok</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -271,7 +271,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-body">
                             <input type="text" name="" class="seri_id" hidden>
                             <input type="text" class="created_by" name="" id=""
@@ -289,7 +289,7 @@
                             </div>
                             <button class=" btn btn-primary tambah_noseri mt-2">Tambah</button>
                         </div>
-                    </div>
+                    </div> --}}
                     <form action="" id="noseriForm" name="noseriForm">
 
                         <div class="card card-primary card-outline card-outline-tabs">
@@ -636,6 +636,8 @@
             width: 100%;
         }
     </style>
+    @include('page/gbj/modalserireworks/detailnoseri')
+
 @stop
 
 @section('adminlte_js')
@@ -803,9 +805,9 @@
                     {
                         data: 'jumlah'
                     },
-                    {
-                        data: 'jumlah1'
-                    },
+                    // {
+                    //     data: 'jumlah1'
+                    // },
                     {
                         data: 'kelompok'
                     },
@@ -1289,8 +1291,21 @@
                         data: 'Layout'
                     },
                     {
-                        data: 'aksi'
+                        data: null,
+                        render: function(data, type, row) {
+                            if (data.item.length > 0) {
+                                return `
+                            <button type="button" class="btn btn-sm btn-outline-info detailnoseriproduk"><i class="fa fa-info-circle"></i> Detail No. Seri Produk
+                            </button>
+                            <a href="/produksiReworks/viewpackinglist/${data.id}" target="_blank" class="btn btn-sm btn-outline-warning"><i class="fa fa-eye"></i> Lihat Packing List
+                            </a>
+                        `
+                            } else {
+                                return ''
+                            }
+                        }
                     }
+
                 ],
                 "aoColumnDefs": [{
                         "bSearchable": true,
@@ -1869,6 +1884,57 @@
             });
             $('.edit-stok').modal('hide');
         }
+
+        $(document).on('click', '.detailnoseriproduk', function() {
+            var table = $('.scan-produk').DataTable();
+            var data = table.row($(this).closest('tr')).data();
+            var index = table.row($(this).closest('tr')).index();
+
+            const dateIndo = (date) => {
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+                const d = new Date(date);
+                return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+            }
+
+            $('#nomor-seri-reworks').html(data.noseri);
+            $('#tgl-dibuat-reworks').html(dateIndo(data.created_at));
+            $('#packer-reworks').html(data.packer);
+            $('.tableprodukreworks').DataTable().clear().destroy();
+
+            let dataJson = data.item;
+            if (data.item) {
+                $('.tableprodukreworks').DataTable({
+                    data: dataJson,
+                    destroy: true,
+                    processing: true,
+                    serverSide: false,
+                    ordering: false,
+                    autoWidth: false,
+                    columns: [{
+                            data: null,
+                            // buat index
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return data.produk + ' ' + data.varian;
+                            }
+                        },
+                        {
+                            data: 'noseri',
+                        }
+                    ]
+                });
+            }
+
+            $('.modalDetailNoSeri').modal('show');
+            // Do something with the data
+        });
     </script>
 
 @stop

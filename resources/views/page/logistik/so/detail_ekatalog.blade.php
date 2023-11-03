@@ -213,6 +213,12 @@
                                                     <div><small class="text-muted">Status</small></div>
                                                     <div class="align-center">{!! $status !!}</div>
                                                 </div>
+                                                {{-- <div class="margin">
+                                                    <button class="btn btn-outline-success">
+                                                        <i class="far fa-file-excel"></i>
+                                                        Export
+                                                    </button>
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -255,6 +261,12 @@
                                                     <div><b>{{ date('d-m-Y', strtotime($data->pesanan->tgl_po)) }}</b>
                                                     </div>
                                                 </div>
+                                                {{-- <div class="margin">
+                                                    <button class="btn btn-outline-success">
+                                                        <i class="far fa-file-excel"></i>
+                                                        Export
+                                                    </button>
+                                                </div> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -287,8 +299,9 @@
                                         @endif
                                         <li class="nav-item">
                                             <a class="nav-link @if ($proses == 'selesai') active @endif"
-                                                id="pills-selesai_kirim-tab" data-toggle="pill" href="#pills-selesai_kirim"
-                                                role="tab" aria-controls="pills-selesai_kirim"
+                                                id="pills-selesai_kirim-tab" data-toggle="pill"
+                                                href="#pills-selesai_kirim" role="tab"
+                                                aria-controls="pills-selesai_kirim"
                                                 @if ($proses == 'selesai') aria-selected="true" @else aria-selected="false" @endif>Sudah
                                                 Kirim</a>
                                         </li>
@@ -390,9 +403,13 @@
                                                             <div class="card removeboxshadow">
                                                                 <div class="card-header">
                                                                     <div class="d-flex bd-highlight">
-                                                                        <div class="p-2 flex-grow-1 bd-highlight">No Seri</div>
+                                                                        <div class="p-2 flex-grow-1 bd-highlight">No Seri
+                                                                        </div>
                                                                         <div class="p-2 bd-highlight">
-                                                                            <button class="btn btn-primary" data-toggle="modal" data-target="#modalautocheckbox">Pilih Nomor Seri Via Text</button>
+                                                                            <button class="btn btn-primary"
+                                                                                data-toggle="modal"
+                                                                                data-target="#modalautocheckbox">Pilih
+                                                                                Nomor Seri Via Text</button>
                                                                         </div>
                                                                     </div>
                                                                     @include('page.logistik.so.modalautocheckbox')
@@ -417,6 +434,7 @@
                                                                                         </div>
                                                                                     </th>
                                                                                     <th>No Seri</th>
+                                                                                    <th>Aksi</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody></tbody>
@@ -494,7 +512,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="editmodal" role="dialog" aria-labelledby="editmodal" aria-hidden="true" data-backdrop="static">
+                <div class="modal fade" id="editmodal" role="dialog" aria-labelledby="editmodal" aria-hidden="true"
+                    data-backdrop="static">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content" style="margin: 10px">
                             <div class="modal-header bg-info">
@@ -529,6 +548,8 @@
             </div>
         </div>
     </section>
+    @include('page/gbj/modalserireworks/detailnoseri')
+
 @stop
 @section('adminlte_js')
     <script>
@@ -850,7 +871,16 @@
                         produk_id: data_produk_id,
                         part_id: data_part_id,
                         part_jumlah: data_part_jumlah,
-                        nama_pic,telp_pic,no_sj_exist,ekspedisi_terusan,pilihan_pengiriman,perusahaan_pengiriman,alamat_pengiriman,kemasan,dimensi,keterangan_pengiriman
+                        nama_pic,
+                        telp_pic,
+                        no_sj_exist,
+                        ekspedisi_terusan,
+                        pilihan_pengiriman,
+                        perusahaan_pengiriman,
+                        alamat_pengiriman,
+                        kemasan,
+                        dimensi,
+                        keterangan_pengiriman
                     },
                     // beforeSend: function() {
                     //     swal.fire({
@@ -944,16 +974,17 @@
                 $.ajax({
                     url: "/api/logistik/so/data/detail/item/" + pesanan_id,
                     'dataType': 'json',
-                    success: function (data) {
+                    success: function(data) {
                         console.log(data)
-                        if(data.header.perusahaan_pengiriman && data.header.alamat_pengiriman) {
+                        if (data.header.perusahaan_pengiriman && data.header.alamat_pengiriman) {
                             // pilihan pengiriman == penjualan
                             $('#pilihan_pengiriman0').prop('checked', true)
                             $('#perusahaan_pengiriman').attr('readonly', true);
                             $('#alamat_pengiriman').attr('readonly', true);
-                            $('input[name="perusahaan_pengiriman"]').val(data.header.perusahaan_pengiriman)
+                            $('input[name="perusahaan_pengiriman"]').val(data.header
+                                .perusahaan_pengiriman)
                             $('input[name="alamat_pengiriman"]').val(data.header.alamat_pengiriman)
-                        }else{
+                        } else {
                             $('#pilihan_pengiriman1').prop('checked', true)
                             $('input[name="perusahaan_pengiriman"]').val('')
                             $('input[name="alamat_pengiriman"]').val('')
@@ -961,13 +992,13 @@
                             $('#alamat_pengiriman').attr('readonly', false);
                         }
 
-                        if(data.header.kemasan == 'peti') {
+                        if (data.header.kemasan == 'peti') {
                             $('input[name="kemasan"]').val('peti').prop('checked', true)
                         } else {
                             $('input[name="kemasan"]').val('nonpeti').prop('checked', true)
                         }
 
-                        if(data.header.ekspedisi) {
+                        if (data.header.ekspedisi) {
                             $('#pengiriman1').prop('checked', true)
                             $('#ekspedisi').removeClass('hide')
                             $('#nonekspedisi').addClass('hide')
@@ -1017,6 +1048,25 @@
                         {
                             data: 'no_seri'
                         },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if (data.cek_rw == 1) {
+                                    return `
+                                    <button class="btn btn-sm btn-outline-info buttonNoSeriDetail">
+                                        <i class="fa fa-info-circle"></i>
+                                        Detail No. Seri Produk
+                                    </button> &nbsp;
+                                    <a class="btn btn-sm btn-outline-primary" target="_blank" href="/produksiReworks/viewpackinglist/${data.id}">
+                                        <i class="fa fa-eye"></i>
+                                        Lihat Packing List
+                                    </a>
+                                `
+                                } else {
+                                    return ''
+                                }
+                            }
+                        }
                     ]
                 });
             }
@@ -1393,17 +1443,17 @@
                 validasi();
             });
 
-            $(document).on('change', 'input[type="radio"][name="pilihan_pengiriman"]', function () {
+            $(document).on('change', 'input[type="radio"][name="pilihan_pengiriman"]', function() {
                 let pilihan_pengiriman = $(this).val();
                 $('#perusahaan_pengiriman').attr('readonly', true);
                 $('#alamat_pengiriman').attr('readonly', true);
-                        // add placeholder
+                // add placeholder
                 $('#perusahaan_pengiriman').attr('placeholder', 'Masukkan Nama Perusahaan');
                 $('#alamat_pengiriman').removeClass('is-invalid');
                 // add placeholder
                 $('#alamat_pengiriman').attr('placeholder', 'Masukkan Alamat Pengiriman');
 
-                if(pilihan_pengiriman == 'lainnya'){
+                if (pilihan_pengiriman == 'lainnya') {
                     $('#perusahaan_pengiriman').attr('readonly', false);
                     $('#alamat_pengiriman').attr('readonly', false);
                 }
@@ -1616,6 +1666,53 @@
                     validasi();
                 });
             }
+
+            $(document).on('click', '.buttonNoSeriDetail', function() {
+                var table = $('#noseritable').DataTable();
+                var data = table.row($(this).closest('tr')).data();
+                var index = table.row($(this).closest('tr')).index();
+                const dateIndo = (date) => {
+                    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                    ];
+                    const d = new Date(date);
+                    return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                }
+
+                $('#nomor-seri-reworks').html(data.noseri);
+                $('#tgl-dibuat-reworks').html(dateIndo(data.created_at));
+                $('#packer-reworks').html(data.packer);
+                $('.tableprodukreworks').DataTable().clear().destroy();
+
+                let dataJson = data.item;
+
+                $('.tableprodukreworks').DataTable({
+                    data: dataJson,
+                    destroy: true,
+                    processing: true,
+                    serverSide: false,
+                    ordering: false,
+                    autoWidth: false,
+                    columns: [{
+                            data: null,
+                            // buat index
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return data.produk + ' ' + data.varian;
+                            }
+                        },
+                        {
+                            data: 'noseri',
+                        }
+                    ]
+                });
+                $('.modalDetailNoSeri').modal('show');
+            });
         })
     </script>
 @stop

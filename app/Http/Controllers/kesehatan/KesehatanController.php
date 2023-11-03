@@ -2215,24 +2215,57 @@ class KesehatanController extends Controller
         $tahap_1 = 0;
         $tahap_2 = 0;
         $tahap_3 = 0;
+        $tahap_4 = 0;
 
-        $karyawan = Karyawan::with('Vaksin_karyawan')->get();
+        $karyawan = Karyawan::with('Vaksin_karyawan')->where('is_aktif',1)->get();
 
+        // $vaksin = Vaksin_karyawan::all();
+        // foreach ($karyawan as $k) {
+        //     if ($k->Vaksin_karyawan->last()) {
+
+        //         if ($k->Vaksin_karyawan->last()->tahap == 1) {
+        //             $data['tahap_1'] = $tahap_1++;
+        //         }
+        //         if ($k->Vaksin_karyawan->last()->tahap == 2) {
+        //             $data['tahap_2'] = $tahap_2++;
+        //         }
+        //         if ($k->Vaksin_karyawan->last()->tahap == 3) {
+        //             $data['tahap_3'] = $tahap_3++;
+        //         }
+        //         if ($k->Vaksin_karyawan->last()->tahap == 4) {
+        //             $data['tahap_4'] = $tahap_4++;
+        //         }
+        //     }
+        // }
+
+        $tahapCounters = [
+            'tahap_1' => 0,
+            'tahap_2' => 0,
+            'tahap_3' => 0,
+            'tahap_4' => 0,
+
+        ];
+        $belum = Karyawan::doesntHave('Vaksin_karyawan')->where('is_aktif',1)->count();
+
+
+        // Loop through the karyawan records
         foreach ($karyawan as $k) {
-            if ($k->Vaksin_karyawan->last()) {
+            // Get the last Vaksin_karyawan record for each Karyawan
+            $lastVaksin = $k->Vaksin_karyawan->max('tahap');
 
-                if ($k->Vaksin_karyawan->last()->tahap == 1) {
-                    $data['tahap_1'] = $tahap_1++;
-                }
-                if ($k->Vaksin_karyawan->last()->tahap == 2) {
-                    $data['tahap_2'] = $tahap_2++;
-                }
-                if ($k->Vaksin_karyawan->last()->tahap == 3) {
-                    $data['tahap_3'] = $tahap_3++;
-                }
+            // Check if a last Vaksin_karyawan record exists and increment the corresponding tahap counter
+            if ($lastVaksin) {
+                $tahap = 'tahap_' . $lastVaksin;
+                $tahapCounters[$tahap]++;
             }
         }
-        return response()->json($data);
+        return response()->json([
+        'tahap_1' => $tahapCounters['tahap_1'],
+        'tahap_2' => $tahapCounters['tahap_2'],
+        'tahap_3' => $tahapCounters['tahap_3'],
+        'tahap_4' => $tahapCounters['tahap_4'],
+        'belum' => $belum
+    ]);
     }
 
 

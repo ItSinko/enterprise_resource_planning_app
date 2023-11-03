@@ -41,11 +41,8 @@
         }
 
         /* .dataTables_filter{
-                            display: none;
-                        } */
-        #DataTables_Table_1_filter {
-            display: none;
-        }
+                                                            display: none;
+                                                        } */
 
         .calendar-time {
             display: none;
@@ -117,7 +114,7 @@
     <!-- Modal -->
     <div class="modal fade modalRakit" id="" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -181,29 +178,18 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
+                            <div class="d-flex bd-highlight mb-3">
+                                <div class="p-2 bd-highlight">
                                     <div class="form-group">
                                         <label for="">Tanggal Pengiriman</label>
                                         <input type="text" class="form-control" id="tgl_perakitan" name="waktu_tf"
                                             placeholder="Tanggal Perakitan">
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
-                                    {{-- <div class="form-group">
-                                  <label for="">Tujuan</label>
-                                  <select name="ke" id="tujuanGudang" class="form-control">
-                                    <option value="13">Gudang Barang Jadi</option>
-                                    <option value="12">Gudang Karantina</option>
-                                  </select>
-                                </div> --}}
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Cari</label>
-                                        <input type="text" class="form-control" id="cari" name="cari"
-                                            placeholder="Cari">
-                                    </div>
+                                <div class="ml-auto p-2 bd-highlight">
+                                    <button class="btn btn-primary mt-5" data-toggle="modal"
+                                        data-target="#modalautocheckbox">Pilih
+                                        Nomor Seri Via Text</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -214,7 +200,7 @@
                                                 <tr>
                                                     <th><input type="checkbox" name="" id="head-cb"></th>
                                                     <th>Nomor Seri</th>
-                                                    <th>Aksi</th>
+                                                    {{-- <th>Aksi</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody class="scan"></tbody>
@@ -236,6 +222,8 @@
             </div>
         </div>
     </div>
+
+    @include('page.produksi.noseriviatext')
 
     <!-- Modal Transfer-->
     <div class="modal fade modalSeri" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -266,7 +254,7 @@
     {{-- Modal Transfer Sisa --}}
     <div class="modal fade modalTranfer" id="" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -584,16 +572,16 @@
                     {
                         data: "no_seri"
                     },
-                    {
-                        data: "id",
-                        render: function(data, type, row) {
-                            return '<button type="button" class="btn btn-outline-primary btn-sm detail" data-id="' +
-                                data + '" data-seri="' + row.no_seri +
-                                '"><i class="fas fa-edit"></i></button>&nbsp;<button type="button" class="btn btn-outline-danger btn-sm delete" data-id="' +
-                                data + '" data-seri="' + row.no_seri +
-                                '"><i class="fas fa-trash"></i></button>'
-                        }
-                    }
+                    // {
+                    //     data: "id",
+                    //     render: function(data, type, row) {
+                    //         return '<button type="button" class="btn btn-outline-primary btn-sm detail" data-id="' +
+                    //             data + '" data-seri="' + row.no_seri +
+                    //             '"><i class="fas fa-edit"></i></button>&nbsp;<button type="button" class="btn btn-outline-danger btn-sm delete" data-id="' +
+                    //             data + '" data-seri="' + row.no_seri +
+                    //             '"><i class="fas fa-trash"></i></button>'
+                    //     }
+                    // }
                 ],
                 columnDefs: [{
                     targets: [0],
@@ -607,18 +595,19 @@
                     style: 'multi'
                 },
             });
-            $('#cari').on('keyup', function() {
-                table.search($(this).val()).draw();
-            });
             $('#form-scan').on('submit', function(e) {
                 e.preventDefault();
                 var table = $('.scan-produk').DataTable();
-                var rows_select = table.column(0).checkboxes.selected();
                 const check_seri_length = [];
 
-                $.each(rows_select, function(index, rowId) {
-                    check_seri_length.push(rowId);
+                table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                    var data = this.data();
+                    var checkbox = $(this.node()).find('input[type="checkbox"]');
+                    if (checkbox.prop('checked')) {
+                        check_seri_length.push(data.noseri);
+                    }
                 });
+
                 Swal.fire({
                     title: 'Apakah Kamu Yakin?',
                     text: "Melakukan Perakitan di Tanggal " + new Date($('#tgl_perakitan').val())
@@ -643,12 +632,16 @@
                             showConfirmButton: false
                         });
 
-                        var rows_selected = table.column(0).checkboxes.selected();
                         const seri = [];
 
-                        $.each(rows_selected, function(index, rowId) {
-                            seri.push(rowId);
+                        table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                            var data = this.data();
+                            var checkbox = $(this.node()).find('input[type="checkbox"]');
+                            if (checkbox.prop('checked')) {
+                                seri.push(data.noseri);
+                            }
                         });
+
                         if (seri.length > 0) {
                             let tgl = $('#tgl_perakitan').val();
                             let today = new Date();
@@ -723,13 +716,18 @@
 
         // Produksi Checkbox
         $(document).on('click', '#checked', function() {
-            var table = $('.scan-produk').DataTable();
-            var rows_select = table.column(0).checkboxes.selected();
             const check_seri = [];
 
-            $.each(rows_select, function(index, rowId) {
-                check_seri.push(rowId);
+            var table = $('.scan-produk').DataTable();
+            // check datatable checkbox is true
+            table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                var data = this.data();
+                var checkbox = $(this.node()).find('input[type="checkbox"]');
+                if (checkbox.prop('checked')) {
+                    check_seri.push(data.noseri);
+                }
             });
+
             $('#no_seri').text(check_seri.length);
         });
 
@@ -888,7 +886,16 @@
 
         $('body').on('submit', '#formClose', function(e) {
             e.preventDefault();
-            $('#btnCloseSimpan').html('Sending..');
+
+            if ($('#keterangan_transfer').val() == '') {
+                Swal.fire(
+                    'Error!',
+                    'Keterangan tidak boleh kosong',
+                    'error'
+                )
+                return false;
+            }
+
             var formData = new FormData(this);
 
             Swal.fire({
@@ -907,6 +914,7 @@
                         allowOutsideClick: false,
                         showConfirmButton: false
                     });
+                    $('#btnCloseSimpan').html('Sending..');
                     $(this).prop('disabled', true);
                     $.ajax({
                         url: "/api/tfp/closeTransfer",

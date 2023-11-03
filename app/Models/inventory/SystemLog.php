@@ -11,5 +11,5 @@ class SystemLog extends Model
 
     protected $table = 'tbl_log';
     protected $connection = 'erp';
-    protected $fillable = ['tipe', 'subjek', 'response', 'user_id'];
+    protected $fillable = ['tipe', 'header','subjek', 'response', 'user_id'];
 }

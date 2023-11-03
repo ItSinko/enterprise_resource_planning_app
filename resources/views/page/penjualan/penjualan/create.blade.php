@@ -240,7 +240,7 @@
                                     <i class="fas fa-print"></i>
                                     Cetak SPPB
                                 </button>
-                                
+
                             </div>
                           </div>
                       </div>
@@ -428,7 +428,7 @@
                                                                 aria-selected="false">Pengiriman</a>
                                                         </li>
                                                         <li class="nav-item" role="presentation">
-                                                            <a class="nav-link disabled" id="pills-produk-tab"
+                                                            <a class="nav-link disabled d-none" id="pills-produk-tab"
                                                                 data-toggle="pill" href="#pills-produk" role="tab"
                                                                 aria-controls="pills-produk" aria-selected="false">Rencana
                                                                 Penjualan</a>
@@ -1081,7 +1081,7 @@
                                                                 id="produktable">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th colspan="7">
+                                                                        <th colspan="9">
                                                                             <button type="button"
                                                                                 class="btn btn-primary float-right"
                                                                                 id="addrowproduk">
@@ -1099,6 +1099,10 @@
                                                                         <th width="15%">Subtotal</th>
                                                                         <th width="15%">Pajak</th>
                                                                         <th hidden>ID_Rencana</th>
+                                                                        <th width="10%">
+                                                                            Stok Distributor <br>
+                                                                            <input type="checkbox" class="checkAllDistributor">
+                                                                        </th>
                                                                         <th width="5%">Aksi</th>
                                                                     </tr>
                                                                 </thead>
@@ -1171,6 +1175,19 @@
                                                                                 <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                                                                               </div>
                                                                         </td>
+                                                                        <td>
+                                                                            <div
+                                                                                class="form-group d-flex align-items-center">
+                                                                                <input type="checkbox"
+                                                                                    class="stok_distributor"
+                                                                                    name="stok_distributor[0]"
+                                                                                    id="stok_distributor0"
+                                                                                    value="0"
+                                                                                    style="width:100%;" />
+                                                                            </div>
+                                                                            <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                                                                            <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                                                                        </td>
                                                                         <td hidden><input type="hidden"
                                                                                 class="rencana_id" name="rencana_id[]"
                                                                                 id="rencana_id0" readonly></td>
@@ -1183,9 +1200,9 @@
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
-                                                                        <th colspan="6" style="text-align:right;">Total
+                                                                        <th colspan="7" style="text-align:right;">Total
                                                                             Harga</th>
-                                                                        <th id="totalhargaprd" class="align-right">Rp. 0
+                                                                        <th colspan="2" id="totalhargaprd" class="align-left">Rp. 0
                                                                         </th>
                                                                     </tr>
                                                                 </tfoot>
@@ -1415,6 +1432,7 @@
                 </div>
             </div>
         </div>
+        @include('page.penjualan.penjualan.modalSeriDistributor')
     </section>
 @stop
 
@@ -1441,7 +1459,7 @@
                 resetAllForm();
                 $('.alert-success').removeClass('hide')
             }
-        
+
             $(document).on('click', '.cetaksppb', function(e) {
                 e.preventDefault();
                 // open blank new tab /penjualan/penjualan/cetak_surat_perintah/{pesanan_id}
@@ -3096,6 +3114,19 @@
                             <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                             </div>
                     </td>
+                    <td>
+                        <div
+                            class="form-group d-flex align-items-center">
+                            <input type="checkbox"
+                                class="stok_distributor"
+                                name="stok_distributor[0]"
+                                id="stok_distributor0"
+                                value="0"
+                                style="width:100%;" />
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                        <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
+                    </td>
                     <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly value="` +
                     id + `"></td>
                     <td>
@@ -3214,6 +3245,10 @@
                     $(el).find('.produk_ppn_label').attr('for', 'produk_ppn' + j);
                     $(el).find('.produk_subtotal').attr('id', 'produk_subtotal' + j);
                     $(el).find('.produk_subtotal').attr('name', 'produk_subtotal[' + j + ']');
+                    $(el).find('.stok_distributor').attr('name', 'stok_distributor[' + j + ']');
+                    $(el).find('.stok_distributor').attr('id', 'stok_distributor' + j);
+                    $(el).find('.stok_distributor').attr('value', j);
+                    $(el).find('.noSeriDistributor').attr('name', 'noSeriDistributor[' + j + ']');
                     $(el).find('.rencana_id').attr('id', 'rencana_id' + j);
                     $(el).find('.rencana_id').attr('name', 'rencana_id[' + j + ']');
                     $(el).find('.detail_jual').attr('id', 'detail_jual' + j);
@@ -3266,6 +3301,19 @@
                         <input type="checkbox" class="custom-control-input produk_ppn" id="produk_ppn0" name="produk_ppn[0]" value="1" checked>
                         <label class="custom-control-label produk_ppn_label" for="produk_ppn0">PPN</label>
                         </div>
+                </td>
+                <td>
+                    <div
+                        class="form-group d-flex align-items-center">
+                        <input type="checkbox"
+                            class="stok_distributor"
+                            name="stok_distributor[0]"
+                            id="stok_distributor0"
+                            value="0"
+                            style="width:100%;" />
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-primary btnNoSeri" hidden>No Seri</button>
+                    <input type="hidden" name="noSeriDistributor[0]" class="noSeriDistributor">
                 </td>
                 <td hidden><input type="hidden" class="rencana_id" name="rencana_id[]" id="rencana_id0" readonly></td>
                 <td>
@@ -4064,6 +4112,54 @@
                 }
                 labelElement.text(label);
             });
+
+            $('.checkAllDistributor').click(function() {
+                if ($(this).is(':checked')) {
+                    $('.stok_distributor').prop('checked', true);
+                    // show all button
+                    $('.btnNoSeri').prop('hidden', false);
+                } else {
+                    $('.stok_distributor').prop('checked', false);
+                    // hide all button
+                    $('.btnNoSeri').prop('hidden', true);
+                }
+            });
+
+            $(document).on('click', '.stok_distributor', function() {
+                // check if checkbox is checked
+                if ($(this).is(':checked')) {
+                    // check if all checkboxes are selected find button hidden false
+                    $(this).closest('td').find('button').prop('hidden', false);
+                } else {
+                    // check if all checkboxes are selected find button hidden true
+                    $(this).closest('td').find('button').prop('hidden', true);
+                }
+
+
+            });
+
+
+            $(document).on('click', '.btnNoSeri', function() {
+                let indexDistributor = $(this).closest('tr').index();
+                // find produk_jumlah class by index
+                let jumlah = $('.produk_jumlah').eq(indexDistributor).val();
+                $('.jumlahSeriDistributor').val(jumlah);
+                $('.indexSeriDistributor').val(indexDistributor);
+                // find index by indexDistributor class noSeriDistributor
+                let noSeri = $('.noSeriDistributor').eq(indexDistributor).val();
+                $('.indexSeriDistributor').val(indexDistributor);
+                // change array to string with comma
+                let noSeriArray = noSeri.split(',');
+                // remove empty string
+                noSeriArray = noSeriArray.filter(function (el) {
+                    return el != '';
+                });
+                // set value to input
+                $('.nomorSeriDistributor').val(noSeriArray);
+                // open modal Distributor
+                $('.modalDistributor').modal('show');
+
+            })
 
         });
     </script>

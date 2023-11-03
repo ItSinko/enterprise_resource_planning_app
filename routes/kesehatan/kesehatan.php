@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-Route::group(['prefix' => '/kesehatan'], function () {
+Route::group(['prefix' => '/kesehatan', 'middleware' => 'auth'], function () {
 
 
     Route::group(['prefix' => '/klinik'], function () {
@@ -98,7 +98,7 @@ Route::group(['prefix' => '/kesehatan'], function () {
     });
 });
 
-Route::group(['prefix' => '/karyawan'], function () {
+Route::group(['prefix' => '/karyawan', 'middleware' => 'auth'], function () {
     // Route::group(['middleware' => ['divisi:kes']], function () {
     Route::get('/', [App\Http\Controllers\kesehatan\KaryawanController::class, 'karyawan_show']);
     Route::post('/data', [App\Http\Controllers\kesehatan\KaryawanController::class, 'karyawan_data']);
@@ -137,7 +137,7 @@ Route::group(['prefix' => '/karyawan'], function () {
     });
 });
 
-Route::group(['prefix' => '/obat'], function () {
+Route::group(['prefix' => '/obat', 'middleware' => 'auth'], function () {
     // Route::group(['middleware' => ['divisi:kes']], function () {
     Route::get('/', [App\Http\Controllers\kesehatan\KesehatanController::class, 'obat']);
     Route::post('/data', [App\Http\Controllers\kesehatan\KesehatanController::class, 'obat_data']);

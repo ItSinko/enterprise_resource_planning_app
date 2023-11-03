@@ -1408,22 +1408,24 @@
             })
 
             $(document).on('click', '.batalmodal', function(event) {
-                event.preventDefault();
+                var pid = $(this).attr("data-pesanan-id");
+                // console.log(id)
+                // alert(id);
+                // event.preventDefault();
                 var jenis = $(this).attr('data-jenis');
-                var id = $(this).attr("data-id");
-                console.log('/penjualan/penjualan/cancel/' + id + '/' + jenis);
+                console.log(jenis)
+                // var id = $(this).attr("data-id");
+                // console.log('/penjualan/penjualan/cancel/' + id + '/' + jenis);
                 $.ajax({
-                    url: '/penjualan/penjualan/cancel/' + id + '/' + jenis,
-                    beforeSend: function() {
-                        $('#loader').show();
-                    },
+                    url: '/penjualan/penjualan/cancel_po/' + pid,
                     success: function(result) {
-                        $('#detailmodal').modal("show");
-                        $('#detail').html(result).show();
-                        $('#detailmodal').find(".modal-header").removeClass(
-                            'bg-purple bg-orange bg-lightblue');
-                        $('#detailmodal').find(".modal-header").addClass('bg-dark');
-                        $('#detailmodal').find(".modal-header > h4").text('Pesanan Batal');
+                        location.reload();
+                        // $('#detailmodal').modal("show");
+                        // $('#detail').html(result).show();
+                        // $('#detailmodal').find(".modal-header").removeClass(
+                        //     'bg-purple bg-orange bg-lightblue');
+                        // $('#detailmodal').find(".modal-header").addClass('bg-dark');
+                        // $('#detailmodal').find(".modal-header > h4").text('Pesanan Batal');
                     },
                     complete: function() {
                         $('#loader').hide();

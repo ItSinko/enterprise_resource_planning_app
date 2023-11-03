@@ -388,13 +388,13 @@
 @section('adminlte_js')
     <script>
         $(document).ready(function() {
-            $('#tabel_berat').DataTable({
-                "scrollX": true,
-                "searching": false,
-                "paging": false,
-                "lengthChange": false,
-                "info": false
-            });
+            // $('#tabel_berat').DataTable({
+            //     "scrollX": true,
+            //     "searching": false,
+            //     "paging": false,
+            //     "lengthChange": false,
+            //     "info": false
+            // });
         });
     </script>
     <script>

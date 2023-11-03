@@ -226,7 +226,14 @@
                                 <div class="card-body">
                                     <h6><b>Detail Produk</b></h6>
                                     <div class="table-responsive overflowcard">
-                                        <?php $totalharga = 0; ?>
+                                        <?php $totalharga = 0;
+                                         $no_dsb = 0;
+                                         if (isset($data->Pesanan->detailpesanandsb)) {
+                                            $no = count($data->Pesanan->detailpesanandsb);
+                                        } else {
+                                            $no = 0;
+                                        }
+                                        ?>
                                         <?php $no = 0; ?>
                                         @if (isset($data->Pesanan))
                                             <table class="table"
@@ -246,6 +253,53 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @if (isset($data->Pesanan->detailpesanandsb))
+                                                        @foreach ($data->pesanan->detailpesanandsb as $e)
+                                                            <?php $no_dsb = $no_dsb + 1; ?>
+                                                            <tr>
+                                                                <td rowspan="{{ count($e->DetailPesananProdukDsb) + 1 }}"
+                                                                    class="nowraptxt">{{ $no_dsb }}
+                                                                </td>
+                                                                <td><b
+                                                                        class="wb">{{ $e->PenjualanProduk->nama }}</b>
+                                                                </td>
+                                                                <td class="nowraptxt"
+                                                                    style="vertical-align : middle;text-align:center;">
+                                                                    <span class="badge info-text">Stok
+                                                                        distributor</span>
+                                                                </td>
+                                                                <td class="nowraptxt">{{ $e->jumlah }}
+                                                                </td>
+                                                                <td rowspan="{{ count($e->DetailPesananProdukDsb) + 1 }}"
+                                                                    class="nowraptxt tabnum">@currency($e->harga)</td>
+                                                                <td rowspan="{{ count($e->DetailPesananProdukDsb) + 1 }}"
+                                                                    class="nowraptxt tabnum">@currency($e->harga * $e->jumlah + $e->ongkir)</td>
+                                                                <?php $totalharga = $totalharga + ($e->harga * $e->jumlah + $e->ongkir); ?>
+                                                            </tr>
+                                                            @if (isset($e->DetailPesananProdukDsb))
+                                                                @foreach ($e->DetailPesananProdukDsb as $l)
+                                                                    <tr>
+                                                                        <td><span class="text-muted">
+                                                                                @if (!empty($l->GudangBarangJadi->nama))
+                                                                                    {{ $l->GudangBarangJadi->Produk->nama }}
+                                                                                    -
+                                                                                    <b>{{ $l->GudangBarangJadi->nama }}</b>
+                                                                                @else
+                                                                                    {{ $l->GudangBarangJadi->Produk->nama }}
+                                                                                @endif
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>
+
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ $l->getJumlahPesanan() }}
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
                                                     @if (isset($data->Pesanan->detailpesanan))
                                                         @foreach ($data->pesanan->detailpesanan as $e)
                                                             <?php $no = $no + 1; ?>

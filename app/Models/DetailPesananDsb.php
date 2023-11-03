@@ -9,7 +9,7 @@ class DetailPesananDsb extends Model
 {
     protected $connection = 'erp';
     protected $table = 'detail_pesanan_dsb';
-    protected $fillable = ['pesanan_id', 'penjualan_produk_id', 'jumlah', 'harga', 'ongkir'];
+    protected $fillable = ['pesanan_id', 'penjualan_produk_id', 'jumlah', 'harga', 'ongkir','ppn'];
 
     public function Pesanan()
     {
@@ -22,5 +22,9 @@ class DetailPesananDsb extends Model
     public function DetailPesananProdukDsb()
     {
         return $this->hasMany(DetailPesananProdukDsb::class);
+    }
+    public function NoseriDsb()
+    {
+        return $this->hasMany(NoseriDsb::class,'detail_pesanan_dsb');
     }
 }

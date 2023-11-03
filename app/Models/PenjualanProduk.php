@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PenjualanProduk extends Model
 {
@@ -30,4 +31,5 @@ class PenjualanProduk extends Model
     {
         return $this->hasMany(DetailRencanaPenjualan::class);
     }
+
 }

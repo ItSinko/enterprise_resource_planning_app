@@ -14,7 +14,6 @@ export default {
             ],
             selectAll: false,
             category: null,
-            selectProduct: [],
             showDialog: false,
             kelompok: [
                 { text: 'Alat Kesehatan', value: 1},
@@ -33,6 +32,7 @@ export default {
                     !this.product.some(item => item.nama === value) || 'Nama produk sudah ada'
                 }
             },
+            loading: false,
         }
     },
     methods: {
@@ -68,12 +68,15 @@ export default {
             const isValid = await this.$refs.formProducts.validate()
             if (!isValid) return
             try {
+                this.loading = true
                 const { data } = await axios.post('/api/produk', this.selectProduct)
                 this.closeDialog()
                 this.$swal('Berhasil', 'Produk berhasil ditambahkan', 'success')
             } catch (error) {
                 console.log(error)
                 this.$swal('Gagal', 'Produk gagal ditambahkan', 'error')
+            } finally {
+                this.loading = false
             }
         },
     },
@@ -105,7 +108,7 @@ export default {
                     </v-btn>
                     <v-toolbar-title>Tambah Produk</v-toolbar-title>
                     <v-spacer></v-spacer>
-                    <v-btn @click="simpan" text>Simpan</v-btn>
+                    <v-btn @click="simpan" :loading="loading" :disabled="loading" text>Simpan</v-btn>
                 </v-toolbar>
 
                 <v-form ref="formProducts" v-model="valid" lazy-validation>

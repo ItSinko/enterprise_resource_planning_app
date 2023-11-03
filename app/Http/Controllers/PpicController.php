@@ -30,6 +30,8 @@ use App\Models\JadwalPerakitanRencana;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DetailLogistikPart;
 use App\Models\DetailPesananPart;
+use App\Models\DetailProdukRw;
+use App\Models\JadwalPerakitanRw;
 use App\Models\SystemLog;
 
 class PpicController extends Controller
@@ -77,6 +79,123 @@ class PpicController extends Controller
      * @param string $status status string
      * @return array collection of data
      */
+    public function show_perencanaan_rework()
+    {
+        $data = JadwalPerakitanRw::where('state', 17)->groupBy('urutan')->get();
+        if($data->isempty()){
+           $obj = array();
+
+        }else{
+            foreach($data as $d){
+                $obj[] = array(
+                    'id' => $d->id,
+                    'urutan' => $d->urutan,
+                    'produk_reworks_id' => $d->produk_reworks_id,
+                    'tanggal_mulai' => $d->tanggal_mulai,
+                    'tanggal_selesai' => $d->tanggal_selesai,
+                    'produk_id' => [
+                        'id' => $d->ProdukRw->id,
+                        'label' => $d->ProdukRw->nama,
+                    ],
+                    'jumlah' => $d->jumlah
+                );
+            }
+        }
+
+        return response()->json($obj);
+    }
+
+    public function show_pelaksanaan_rework()
+    {
+        $data = JadwalPerakitanRw::where('state', 18)->groupBy('urutan')->get();
+        if($data->isempty()){
+           $obj = array();
+
+        }else{
+            foreach($data as $d){
+                $obj[] = array(
+                    'id' => $d->id,
+                    'urutan' => $d->urutan,
+                    'produk_reworks_id' => $d->produk_reworks_id,
+                    'tanggal_mulai' => $d->tanggal_mulai,
+                    'tanggal_selesai' => $d->tanggal_selesai,
+                    'produk_id' => [
+                        'id' => $d->ProdukRw->id,
+                        'label' => $d->ProdukRw->nama,
+                    ],
+                    'jumlah' => $d->jumlah
+                );
+            }
+        }
+
+        return response()->json($obj);
+    }
+
+    public function delete_ppic_rework(Request $request)
+    {
+        $jumlah_tf = JadwalPerakitanRw::where('urutan',$request->urutan)->where('produk_reworks_id',$request->produk_reworks_id)->whereRaw('status_tf != 11')->count();
+        if($jumlah_tf > 0){
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal Di ubah',
+            ], 500);
+        }else{
+            $data = JadwalPerakitanRw::where('urutan',$request->urutan)->where('produk_reworks_id',$request->produk_reworks_id)->delete();
+        }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Berhasil',
+        ], 200);
+    }
+    public function update_ppic_rework(Request $request)
+    {
+        $jumlah_tf = JadwalPerakitanRw::where('urutan',$request->urutan)->where('produk_reworks_id',$request->produk_reworks_id)->whereRaw('status_tf != 11')->count();
+        $data = JadwalPerakitanRw::where('urutan',$request->urutan)->where('produk_reworks_id',$request->produk_reworks_id)->get();
+
+        if($jumlah_tf > 0){
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal Di ubah',
+            ], 500);
+        }else{
+            foreach($data as $d){
+                JadwalPerakitanRw::where('id', $d->id)
+                            ->update([
+                                'tanggal_mulai' => $request->tanggal_mulai,
+                                'tanggal_selesai' => $request->tanggal_selesai,
+                                'jumlah' => $request->jumlah
+                        ]);
+            }
+        }
+        return response()->json([
+            'status' => 200,
+            'message' => 'Berhasil',
+        ], 200);
+
+    }
+
+
+    public function edit_ppic_rework($id)
+    {
+        $data = JadwalPerakitanRw::where('id', $id)->groupBy('urutan')->get();
+        if($data->isempty()){
+           $obj = array();
+        }else{
+            foreach($data as $d){
+                $obj[] = array(
+                    'id' => $d->id,
+                    'urutan' => $d->urutan,
+                    'produk_reworks_id' => $d->produk_reworks_id,
+                    'tgl_mulai' => $d->tanggal_mulai,
+                    'tgl_selesai' => $d->tanggal_selesai,
+                    'nama' => $d->ProdukRw->nama,
+                    'jumlah' => $d->jumlah
+                );
+            }
+        }
+        return response()->json($obj);
+    }
+
     public function get_data_perakitan($status = "all")
     {
         $this->update_perakitan_status();
@@ -731,6 +850,94 @@ class PpicController extends Controller
      *
      * @return array collections of data perakitan after new data added
      */
+    public function create_data_perakitan_rework_perencanaan(Request $request)
+    {
+        try {
+            $detail = DetailProdukRw::where('produk_parent_id',$request->produk_id)->get();
+            //code...
+            $status = $this->change_status($request->status);
+            $state = $this->change_state($request->state);
+
+            $color = ["#007bff", "#6c757d", "#28a745", "#dc3545", "#ffc107", "#17a2b8"];
+            $selected_color = $color[array_rand($color)];
+
+           $cek = JadwalPerakitanRw::max('urutan');
+
+            foreach($detail as $d){
+                JadwalPerakitanRw::create([
+                    'no_bppb' => $request->no_bppb,
+                    'urutan' => $cek + 1,
+                    'produk_reworks_id' => $request->produk_id,
+                    'produk_id' => $d->produk_id,
+                    'jumlah' => $request->jumlah,
+                    'tanggal_mulai' => $request->tanggal_mulai,
+                    'tanggal_selesai' => $request->tanggal_selesai,
+                    'status' => NULL,
+                    'state' => 17,
+                    'konfirmasi' => $request->konfirmasi,
+                    'warna' => $selected_color,
+                    'status_tf' => 11,
+                ]);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Berhasil Ditambahkan',
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal Ditambahkan',
+            ], 500);
+        }
+
+
+    }
+    public function create_data_perakitan_rework_pelaksanaan(Request $request)
+    {
+        try {
+            $detail = DetailProdukRw::where('produk_parent_id',$request->produk_id)->get();
+            //code...
+            $status = $this->change_status($request->status);
+            $state = $this->change_state($request->state);
+
+            $color = ["#007bff", "#6c757d", "#28a745", "#dc3545", "#ffc107", "#17a2b8"];
+            $selected_color = $color[array_rand($color)];
+
+           $cek = JadwalPerakitanRw::max('urutan');
+
+            foreach($detail as $d){
+                JadwalPerakitanRw::create([
+                    'no_bppb' => $request->no_bppb,
+                    'urutan' => $cek + 1,
+                    'produk_reworks_id' => $request->produk_id,
+                    'produk_id' => $d->produk_id,
+                    'jumlah' => $request->jumlah,
+                    'tanggal_mulai' => $request->tanggal_mulai,
+                    'tanggal_selesai' => $request->tanggal_selesai,
+                    'status' => NULL,
+                    'state' => 18,
+                    'konfirmasi' => $request->konfirmasi,
+                    'warna' => $selected_color,
+                    'status_tf' => 11,
+                ]);
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Berhasil Ditambahkan',
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal Ditambahhkan',
+            ], 500);
+        }
+
+
+    }
+
+
     public function create_data_perakitan(Request $request)
     {
         $status = $this->change_status($request->status);
@@ -2515,5 +2722,33 @@ class PpicController extends Controller
     {
         $data = Pesanan::where('id', $id)->with(['Ekatalog.Provinsi', 'Spa.Customer.Provinsi', 'Spb.Customer.Provinsi'])->first();
         echo json_encode($data);
+    }
+
+    public function get_data_produk_id_gbj()
+    {
+        try {
+            $produk = Produk::all()->map(function ($item) {
+                return [
+                    // jika array ada satu get 0 jika lebih dari satu get 1
+                    'id' => count($item->GudangBarangJadi) > 0 ? $item->GudangBarangJadi[0]->id : null,
+                    'label' => $item->nama,
+                    'stok' => count($item->GudangBarangJadi) > 0 ? $item->GudangBarangJadi[0]->stok : 0,
+                    'gbj' => $item->GudangBarangJadi->map(function ($gbj) use ($item) {
+                        return [
+                            'id' => $gbj['id'],
+                            'label' => !empty($item->nama) ? $item->nama . ' ' . $gbj['nama'] : $gbj['nama'],
+                            'stok' => $gbj['stok'],
+                        ];
+                    }),
+                ];
+            });
+
+            return response()->json($produk);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }

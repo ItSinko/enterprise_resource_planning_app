@@ -120,7 +120,7 @@
 
     <!-- Modal Perakitan-->
     <div class="modal fade modalRakit">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -190,21 +190,18 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-4">
+                            <div class="d-flex bd-highlight mb-3">
+                                <div class="p-2 bd-highlight">
                                     <div class="form-group">
                                         <label for="">Tanggal Perakitan</label>
                                         <input type="text" class="form-control" id="tgl_perakitan"
                                             name="tgl_perakitan" placeholder="Tanggal Perakitan">
                                     </div>
                                 </div>
-                                <div class="col-sm-4"></div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label for="">Panjang Karakter No Seri</label>
-                                        <input type="text" name="" id="lengthNoSeri"
-                                            class="form-control number">
-                                    </div>
+                                <div class="ml-auto p-2 bd-highlight">
+                                    <button class="btn btn-primary mt-5" data-toggle="modal"
+                                        data-target="#modalautocheckbox">Pilih
+                                        Nomor Seri Via Text</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -234,6 +231,8 @@
             </div>
         </div>
     </div>
+
+    @include('page.produksi.noseriviatextperakitangenerate')
 
     <!-- Modal -->
     <div class="modal fade modalDetailTransfer">
@@ -677,6 +676,7 @@
                                             noseri: arr,
                                         },
                                         success: function(res) {
+                                            console.log(res);
                                             if (res.error == true) {
                                                 Swal.fire({
                                                     icon: 'error',
@@ -819,32 +819,41 @@
 
             // Produksi Tab
             $('.modalRakit').on('shown.bs.modal', function() {
-                $('.noseri:first').focus();
-                $('.scan-produk').DataTable().columns.adjust().draw();
+                const table = $('.scan-produk').DataTable()
+                // focus on the first input
+                setTimeout(() => {
+                    $('input.noseri').eq(0).focus()
+                }, 100);
             })
             $(document).on('keydown', 'input.noseri', function(e) {
-                const a = $(this).val();
-                const b = a.charAt(0);
-                const regex = /^[a-zA-Z\s]*$/;
-                const length = $('#lengthNoSeri').val();
-                $(this).attr('maxlength', length);
-                if (e.keyCode == 8) {} else if (!regex.test(b)) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Nomor seri harus berupa huruf.',
-                    }).then((result) => {
-                        if (result.value) {
-                            $(this).val('');
-                            $(this).focus();
-                        }
-                    });
-                } else if (a.length == length) {
-                    $(this).parent().parent().next().find('input.noseri').focus();
-                } else if (a.length > length) {
-                    $(this).val(a.substring(0, length));
+                // jika tombol enter ditekan maka akan focus ke input berikutnya
+                if (e.keyCode == 13) {
+                    e.preventDefault();
                     $(this).parent().parent().next().find('input.noseri').focus();
                 }
+
+                // const a = $(this).val();
+                // const b = a.charAt(0);
+                // const regex = /^[a-zA-Z\s]*$/;
+                // const length = $('#lengthNoSeri').val();
+                // $(this).attr('maxlength', length);
+                // if (e.keyCode == 8) {} else if (!regex.test(b)) {
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Oops...',
+                //         text: 'Nomor seri harus berupa huruf.',
+                //     }).then((result) => {
+                //         if (result.value) {
+                //             $(this).val('');
+                //             $(this).focus();
+                //         }
+                //     });
+                // } else if (a.length == length) {
+                //     $(this).parent().parent().next().find('input.noseri').focus();
+                // } else if (a.length > length) {
+                //     $(this).val(a.substring(0, length));
+                //     $(this).parent().parent().next().find('input.noseri').focus();
+                // }
             });
 
             $("#lengthNoSeri").on("change paste keyup", function(e) {

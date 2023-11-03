@@ -84,6 +84,7 @@
         </div>
     </div>
 
+
     <!-- Modal Add-->
     <div class="modal fade" id="addProdukModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
@@ -307,6 +308,8 @@
         </div>
     </div>
 
+    @include('page.gbj.modalserireworks.detailnoseri')
+
     <div class="modal fade modal-scan-edit" id="modal-scan-edit" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
@@ -399,7 +402,6 @@
             </form>
         </div>
     </div>
-
 @stop
 
 @section('adminlte_js')
@@ -513,8 +515,8 @@
                 "language": {
                     // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                     processing: "<span class='fa-stack fa-md'>\n\
-                                                                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                                                                            </span>&emsp;Mohon Tunggu ...",
+                                                                                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                                    </span>&emsp;Mohon Tunggu ...",
                 }
             });
             a.on('order.dt search.dt', function() {
@@ -722,8 +724,8 @@
                 "language": {
                     // "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Indonesian.json"
                     processing: "<span class='fa-stack fa-md'>\n\
-                                                                                                    <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
-                                                                                            </span>&emsp;Mohon Tunggu ...",
+                                                                                                            <i class='fa fa-spinner fa-spin fa-stack-2x fa-fw'></i>\n\
+                                                                                                    </span>&emsp;Mohon Tunggu ...",
                 }
             })
             // testing
@@ -834,6 +836,25 @@
                             }
                         }
                     },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            if (data.isaktif == 1) {
+                                return `
+                                <button class="btn btn-sm btn-outline-primary detailnoseriproduk">
+                                    <i class="fas fa-info-circle"></i>
+                                    Detail No. Seri Produk
+                                    </button>
+                                 <a class="btn btn-sm btn-outline-warning" href="/produksiReworks/viewpackinglist/${data.id}" target="_blank">
+                                    <i class="fas fa-eye"></i>
+                                    Lihat Packing List
+                                    </a>
+                                `
+                            } else {
+                                return ''
+                            }
+                        }
+                    }
                 ],
                 'select': {
                     'style': 'multi'
@@ -1476,6 +1497,57 @@
             $('#dpp').val(dpp);
             // change to first pagination
             $('.scan-produk').DataTable().page('first').draw('page');
+        });
+
+        $(document).on('click', '.detailnoseriproduk', function() {
+            var table = $('.scan-produk').DataTable();
+            var data = table.row($(this).closest('tr')).data();
+            var index = table.row($(this).closest('tr')).index();
+
+            const dateIndo = (date) => {
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+                const d = new Date(date);
+                return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+            }
+
+            $('#nomor-seri-reworks').html(data.noseri);
+            $('#tgl-dibuat-reworks').html(dateIndo(data.created_at));
+            $('#packer-reworks').html(data.packer);
+            $('.tableprodukreworks').DataTable().clear().destroy();
+
+            let dataJson = data.item;
+            if (data.item) {
+                $('.tableprodukreworks').DataTable({
+                    data: dataJson,
+                    destroy: true,
+                    processing: true,
+                    serverSide: false,
+                    ordering: false,
+                    autoWidth: false,
+                    columns: [{
+                            data: null,
+                            // buat index
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                return data.produk + ' ' + data.varian;
+                            }
+                        },
+                        {
+                            data: 'noseri',
+                        }
+                    ]
+                });
+            }
+
+            $('.modalDetailNoSeri').modal('show');
+            // Do something with the data
         });
     </script>
 @stop

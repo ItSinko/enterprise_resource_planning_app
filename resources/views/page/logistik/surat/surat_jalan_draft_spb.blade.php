@@ -169,18 +169,8 @@
                 >
                     <td >{{ $key+1 }}.</td>
                     <td class="text-left">{{ $item->nama }}</td>
-                    @php
-                      $jumlah = 0;
-                      if(isset($item->detail)){
-                        foreach ($item->detail as $key => $detail) {
-                          $jumlah += $detail->jumlah_noseri;
-                        }
-                      }else{
-                        $jumlah = $item->jumlah;
-                      }
-                    @endphp
                     <td>
-                      {{ $jumlah }}.00
+                      {{ $item->jumlah }}.00
                     </td>
                 </tr>
                 @if(isset($item->detail))
@@ -190,7 +180,7 @@
                         <b>No Seri</b> :
                         @foreach ($item->detail as $key => $detail)
                           @if ($key == count($item->detail) - 1)
-                            {{ $detail->nama }} : {{ implode(', ', $detail->noseri) }} 
+                            {{ $detail->nama }} : {{ implode(', ', $detail->noseri) }}
                           @else
                             {{ $detail->nama }} : {{ implode(', ', $detail->noseri) }} <br>
                           @endif
@@ -226,7 +216,9 @@
                 <div style="margin: 10px 0px;">
                 <b>Dimensi</b>
                 <br>
-                {{ $data->dimensi}}
+                @php
+                       echo nl2br($data->dimensi);
+                  @endphp
             @endif
             @if($data->ekspedisi_terusan != "")
                 </div
@@ -235,7 +227,9 @@
                 @endif
                 >
                 <b>Ekspedisi Terusan : </b><br>
-                {{ $data->ekspedisi_terusan}}
+                @php
+                echo nl2br($data->ekspedisi_terusan);
+                @endphp
                 <br>
                 </div>
         @endif

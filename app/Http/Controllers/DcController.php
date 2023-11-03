@@ -909,7 +909,7 @@ class DcController extends Controller
         //     $q->where('Pesanan.id', $id);
         // })->get();
         $data = DetailLogistik::whereHas('DetailPesananProduk.DetailPesanan.Pesanan', function ($q) use ($id) {
-            $q->where('Pesanan.id', $id);
+            $q->where('pesanan.id', $id);
         })->get();
         return datatables()->of($data)
             ->addIndexColumn()

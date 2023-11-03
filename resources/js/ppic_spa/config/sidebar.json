@@ -68,11 +68,11 @@
         ]
     },
     {
-        "header": "Fitur",
+        "header": "Jadwal Perakitan",
         "menu": [
             {
-                "text": "Jadwal Perakitan",
-                "icon": "fas fa-calendar-alt",
+                "text": "Finish Goods",
+                "icon": "fas fa-archive",
                 "submenu": [
                     {
                         "text": "Perencanaan",
@@ -81,6 +81,20 @@
                     {
                         "text": "Pelaksanaan",
                         "url": "/ppic/jadwal_pelaksanaan"
+                    }
+                ]
+            },
+            {
+                "text": "Reworks",
+                "icon": "fas fa-exclamation-triangle",
+                "submenu": [
+                    {
+                        "text": "Perencanaan",
+                        "url": "/ppic/jadwal_perencanaan_rework"
+                    },
+                    {
+                        "text": "Pelaksanaan",
+                        "url": "/ppic/jadwal_pelaksanaan_rework"
                     }
                 ]
             }
