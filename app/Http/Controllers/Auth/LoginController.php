@@ -104,6 +104,8 @@ class LoginController extends Controller
             return redirect('/mtc/air/masuk');
         } else if (auth()->user()->divisi_id == 14) {
             return redirect('/administrator/dashboard');
+        } else if (auth()->user()->divisi_id == 30) {
+            return redirect('/meeting/hr');
         }
 
         return redirect('/home');

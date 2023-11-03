@@ -1775,7 +1775,44 @@ return [
             'auth' => [32],
         ],
         [
+            'header' => 'Meeting',
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        // peserta meet
+        [
+            'text'        => 'Jadwal Meeting',
+            'url'         => '/meeting/jadwal_meet',
+            'icon'        => 'fa fa-calendar',
+            'auth'        => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        [
             'header' => 'Setting',
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        // hr
+        [
+            'header' => 'HR',
+            'auth' => [30],
+        ],
+        [
+            'text' => 'Meeting',
+            'url' => '/meeting/hr/',
+            'icon' => 'fas fa-users',
+            'auth' => [30],
+        ],
+        // data karyawan
+        // [
+        //     'header' => 'Data Karyawan',
+        //     'auth' => [30],
+        // ],
+        // [
+        //     'text' => 'Karyawan',
+        //     'icon' => 'fas fa-users',
+        //     'url' => '/hr/karyawan',
+        //     'auth' => [30],
+        // ],
+        [
+            'header' => 'Sistem',
             'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 14]
         ],
         [
