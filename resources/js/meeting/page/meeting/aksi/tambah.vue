@@ -108,7 +108,7 @@ export default {
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
                         <div class="col-sm-4">
-                            <timepicker v-model.number="meeting.mulai" :time="meeting.mulai" />
+                            <timepicker v-model.number="meeting.mulai" />
                             <!-- <input type="time" class="form-control" v-model="meeting.mulai"> -->
                         </div>
                         -
