@@ -1,11 +1,9 @@
 <script>
 import axios from 'axios'
 import VueSelect from 'vue-select'
-import timepicker from '../../../components/timepicker.vue'
 export default {
     components: {
         VueSelect,
-        timepicker
     },
     data() {
         return {
@@ -108,12 +106,11 @@ export default {
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
                         <div class="col-sm-4">
-                            <timepicker v-model.number="meeting.mulai" />
-                            <!-- <input type="time" class="form-control" v-model="meeting.mulai"> -->
+                            <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on" />
                         </div>
                         -
                         <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="meeting.selesai">
+                            <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on" />
                         </div>
                     </div>
                     <div class="form-group row">
