@@ -3,7 +3,7 @@ import Karyawan from "./page/karyawan";
 import TambahEditKaryawan from "./page/karyawan/tambahEdit.vue";
 import DetailKaryawan from "./page/karyawan/detail";
 
-const routes = [
+const routes = [ 
     {
         path: "/hr/karyawan",
         component: Karyawan,
