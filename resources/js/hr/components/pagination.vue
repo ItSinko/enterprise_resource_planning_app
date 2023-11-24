@@ -1,7 +1,7 @@
 <script>
 export default {
     props: {
-        DataTable: {
+        filteredDalamProses: {
             type: Array,
             required: true,
         },
@@ -11,72 +11,82 @@ export default {
             currentPage: 1,
             perPage: 10,
             loading: false,
-        }
+        };
     },
     methods: {
         nextPage() {
             if (this.currentPage < this.pages[this.pages.length - 1]) {
-                this.currentPage++
+                this.currentPage++;
             }
         },
         previousPage() {
             if (this.currentPage != 1) {
-                this.currentPage--
+                this.currentPage--;
             }
         },
         nowPage(page) {
-            if (page != '...') {
-                this.currentPage = page
+            if (page != "...") {
+                this.currentPage = page;
             }
         },
         disableClickPageThreeDots(page) {
-            return page === '...'
-        }
+            return page === "...";
+        },
     },
     computed: {
         renderPaginate() {
-            return this.DataTable.slice(
+            return this.filteredDalamProses.slice(
                 this.perPage * (this.currentPage - 1),
                 this.perPage * this.currentPage
             );
         },
         pages() {
-            let totalPages = Math.ceil(this.DataTable.length / this.perPage)
+            let totalPages = Math.ceil(
+                this.filteredDalamProses.length / this.perPage
+            );
 
-            let pages = []
+            let pages = [];
 
-            const totalPageNumber = this.currentPage + 4
+            const totalPageNumber = this.currentPage + 4;
 
             for (let i = 1; i <= totalPages; i++) {
                 if (i <= totalPageNumber && pages.length < 5) {
-                    pages.push(i)
+                    pages.push(i);
                 } else {
-                    pages.push('...')
-                    pages.push(totalPages)
-                    break
+                    pages.push("...");
+                    pages.push(totalPages);
+                    break;
                 }
             }
             if (this.currentPage > 5 && this.currentPage < totalPages) {
-                pages = [1, '...', this.currentPage - 1, this.currentPage, this.currentPage + 1, '...', totalPages]
+                pages = [
+                    1,
+                    "...",
+                    this.currentPage - 1,
+                    this.currentPage,
+                    this.currentPage + 1,
+                    "...",
+                    totalPages,
+                ];
             } else if (this.currentPage > 5 && this.currentPage == totalPages) {
-                pages = [1, '...', this.currentPage - 1, this.currentPage]
+                pages = [1, "...", this.currentPage - 1, this.currentPage];
             }
 
-            return pages
-        }
+            return pages;
+        },
     },
     mounted() {
-        this.$emit('updatePage', this.renderPaginate)
+        this.$emit("updateFilteredDalamProses", this.renderPaginate);
     },
     watch: {
         renderPaginate() {
-            this.$emit('updatePage', this.renderPaginate)
+            this.$emit("updateFilteredDalamProses", this.renderPaginate);
         },
-        DataTable() {
-            this.currentPage = 1
-        }
+        filteredDalamProses() {
+            this.currentPage = 1;
+        },
     },
-}
+};
 </script>
 <template>
     <div class="d-flex flex-row-reverse bd-highlight">
@@ -87,8 +97,8 @@ export default {
                 </li>
                 <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
                     :key="paginate">
-                    <a class="page-link" @click="nowPage(paginate)"
-                        :disabled="disableClickPageThreeDots(paginate)">{{ paginate }}</a>
+                    <a class="page-link" @click="nowPage(paginate)" :disabled="disableClickPageThreeDots(paginate)">{{
+                        paginate }}</a>
                 </li>
                 <li class="page-item">
                     <a class="page-link" :disabled="currentPage == pages[pages.length - 1]" @click="nextPage">Next</a>

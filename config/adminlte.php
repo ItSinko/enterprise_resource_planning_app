@@ -1786,8 +1786,15 @@ return [
             'auth'        => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
         [
-            'header' => 'Setting',
+            'header' => 'HR',
             'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+        ],
+        // peserta meet
+        [
+            'text'        => 'Form Pengajuan',
+            'url'         => '/hr/form_pengajuan',
+            'icon'        => 'fa fa-calendar',
+            'auth'        => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
         ],
         // hr
         [
