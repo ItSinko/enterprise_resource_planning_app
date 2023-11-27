@@ -4,6 +4,7 @@ import TambahEditKaryawan from "./page/karyawan/tambahEdit.vue";
 import DetailKaryawan from "./page/karyawan/detail";
 import FormPengajuan from "./page/pengajuan";
 import TambahEditForm from "./page/pengajuan/form";
+import DetailPengajuan from "./page/pengajuan/detail";
 
 const routes = [ 
     {
@@ -40,6 +41,11 @@ const routes = [
         path: "/hr/form_pengajuan/edit/:id",
         component: TambahEditForm,
         name: "edit-pengajuan"
+    },
+    {
+        path: "/hr/form_pengajuan/detail/:id",
+        component: DetailPengajuan,
+        name: "detail-pengajuan"
     }
 ]
 

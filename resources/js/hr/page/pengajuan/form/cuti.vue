@@ -78,9 +78,9 @@ export default {
         },
         'permohonanCuti.jenisCuti': function (val) {
             if (val == 'lain-lain') {
-                this.permohonanCuti.jenisLain = '';
+                this.permohonanCuti.jenisCutiLain = '';
             } else {
-                delete this.permohonanCuti.jenisLain;
+                delete this.permohonanCuti.jenisCutiLain;
             }
         }
     },

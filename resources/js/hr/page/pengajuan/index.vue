@@ -44,7 +44,7 @@ export default {
                 {
                     id: 4,
                     tgl_pelaporan: '23 Agustus 2021',
-                    jenis_pelaporan: 'aktif',
+                    jenis_pelaporan: 'Cuti',
                     status: 'aktif',
                 },
                 {
@@ -122,6 +122,9 @@ export default {
         },
         edit(id) {
             this.$router.push({ name: 'edit-pengajuan', params: { id } })
+        },
+        detail(id) {
+            this.$router.push({ name: 'detail-pengajuan', params: { id } })
         }
     },
 }
@@ -154,7 +157,7 @@ export default {
                     </template>
                     <template #item.aksi = "{item}">
                         <div>
-                            <button class="btn btn-sm btn-outline-info">
+                            <button class="btn btn-sm btn-outline-info" @click="detail(item.id)">
                                 <i class="fas fa-info-circle"></i>
                                 Detail
                             </button>
