@@ -1,6 +1,5 @@
 <script>
 import status from "../../components/status.vue";
-import date from "../../components/date.vue";
 import terlaksana from "./aksi/terlaksana.vue";
 import Edit from "./aksi/edit";
 import Batal from "./aksi/batal";
