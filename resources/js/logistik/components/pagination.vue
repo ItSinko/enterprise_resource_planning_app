@@ -91,7 +91,7 @@ export default {
         },
         filteredDalamProses() {
             this.currentPage = 1;
-        },
+        },  
     },
 };
 </script>

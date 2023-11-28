@@ -17,11 +17,12 @@ class AdministratorController extends Controller
 
     public function  get_change_status_user(Request $request)
     {
+
         $user = User::find($request->id);
-        if ($user->is_aktif == 0) {
-            $status = 1;
-        } else {
+        if ($user->is_aktif == 1) {
             $status = 0;
+        } else {
+            $status = 1;
         }
         $user->is_aktif = $status;
         $user->save();

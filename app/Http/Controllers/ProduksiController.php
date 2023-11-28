@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportRework;
 use App\Exports\NoseriRakitExport;
 use App\Models\DetailPesanan;
 use App\Models\DetailPesananProduk;
@@ -16,6 +17,7 @@ use App\Models\JadwalRakitNoseriRw;
 use App\Models\NoseriBarangJadi;
 use App\Models\NoseriTGbj;
 use App\Models\Pesanan;
+use App\Models\PetiRw;
 use App\Models\Produk;
 use App\Models\SeriDetailRw;
 use App\Models\SystemLog;
@@ -162,6 +164,10 @@ class ProduksiController extends Controller
     }
     function hapus_rw($id)
     {
+        return response()->json([
+            'status' => 200,
+            'message' =>  'Gagal Dihapus',
+        ], 500);
         DB::beginTransaction();
         try {
             //code...
@@ -206,6 +212,7 @@ class ProduksiController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' =>  'Gagal Dihapus',
+                'error' => $th->getMessage()
             ], 500);
         }
     }
@@ -481,16 +488,27 @@ class ProduksiController extends Controller
                     JadwalRakitNoseriRw::whereIn('noseri_id', $getIdSeri)->update(['status' => 12]);
 
 
-                    $items = NoseriBarangJadi::select('produk.nama as prd', 'gdg_barang_jadi.nama as varian', 'noseri_barang_jadi.id', 'noseri_barang_jadi.noseri')
+                    $items = NoseriBarangJadi::select('produk.nama as prd', 'gdg_barang_jadi.id as gbj_id','gdg_barang_jadi.nama as varian', 'noseri_barang_jadi.id', 'noseri_barang_jadi.noseri')
                         ->Join('gdg_barang_jadi', 'gdg_barang_jadi.id', '=', 'noseri_barang_jadi.gdg_barang_jadi_id')
                         ->Join('produk', 'produk.id', '=', 'gdg_barang_jadi.produk_id')
                         ->whereIN('noseri_barang_jadi.id', $getIdSeri)->get();
 
                     foreach ($items as $i) {
+                        if($i->gbj_id == 431){
+                            $varian = 'COKLAT';
+                        }elseif($i->gbj_id == 432){
+                            $varian = 'HIJAU';
+                        }elseif($i->gbj_id == 433){
+                            $varian = 'PUTIH';
+                        }elseif($i->gbj_id == 434){
+                            $varian = 'UNGU';
+                        }else{
+                            $varian = $i->varian;
+                        }
                         $item[] = array(
                             'id' => $i->id,
                             'noseri' => $i->noseri,
-                            'varian' => $i->varian,
+                            'varian' => $varian,
                             'produk' => $i->prd
                         );
                         NoseriBarangJadi::where('id', $i->id)
@@ -552,7 +570,6 @@ class ProduksiController extends Controller
                     ->pluck('noseri_barang_jadi.noseri')->toArray();
 
                 $missingIds = array_values(array_diff($seriValues, $seriGagal));
-
                 if ($belum == 0) {
 
                     return response()->json([
@@ -561,6 +578,22 @@ class ProduksiController extends Controller
                         'values' =>   $seriValues,
                     ], 500);
                 }
+
+                $getTerpakai = NoseriBarangJadi::Join('jadwal_rakit_noseri_rw', 'jadwal_rakit_noseri_rw.noseri_id', '=', 'noseri_barang_jadi.id')
+                ->where('jadwal_rakit_noseri_rw.status', 12)
+                ->whereIN('noseri_barang_jadi.noseri', $seriValues)
+                ->pluck('noseri_barang_jadi.noseri')->toArray();
+
+
+                if(count($getTerpakai) > 0){
+                    return response()->json([
+                        'status' => 200,
+                        'message' =>  'Terpakai Perakitan',
+                        'values' =>  $getTerpakai,
+                    ], 500);
+
+                }
+
                 return response()->json([
                     'status' => 200,
                     'message' =>  'Tidak ditemukan',
@@ -603,6 +636,61 @@ class ProduksiController extends Controller
     //         ], 500);
     //     }
     // }
+    function generate_seri_peti(Request $request)
+    {
+        // DB::beginTransaction();
+        $obj =  json_decode(json_encode($request->all()), FALSE);
+
+        $iterationNumber =  PetiRw::whereYear('created_at', (Carbon::now()->format('Y')))->max('no_urut') + 1;
+        foreach ($obj->seri as $index => $seri) {
+
+            $result[] =array(
+                'seri' => $seri,
+                'no_urut' => $iterationNumber
+            );
+
+            // Increment iteration number every 3rd item
+            if (($index + 1) % 3 === 0) {
+                $iterationNumber++;
+            }
+        }
+        //dd($result);
+
+
+        foreach($result as $n){
+        //    dd($n['seri']);
+            $id = NoseriBarangJadi::where('noseri',$n['seri'])->first();
+           // dd($id->id);
+            PetiRw::create([
+                'no_urut' => $n['no_urut'],
+                'noseri_id' => $id->id,
+                'noseri' => $n['seri'],
+                'packer' => 1,
+                'jadwal_perakitan_rw_id' => 2
+            ]);
+        }
+
+        // try {
+        //     //code...
+        //     foreach ($obj->seri as $f) {
+        //         JadwalRakitNoseri::create([
+        //             'jadwal_id' => 999,
+        //             'noseri' => $f,
+        //             'status' => 11,
+        //             'date_in' => Carbon::now()
+        //         ]);
+        //     }
+        //     DB::commit();
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        //     DB::rollBack();
+        //     return response()->json([
+        //         'status' => 200,
+        //         'message' =>  'Gagal Ditambahkan',
+        //         'error' => $th->getMessage()
+        //     ], 500);
+        // }
+    }
 
     function update_rw(Request $request, $id)
     {
@@ -927,7 +1015,9 @@ class ProduksiController extends Controller
     }
     function proses_rw_produk($id)
     {
-        $data = SeriDetailRw::leftJoin('noseri_barang_jadi', 'noseri_barang_jadi.id', '=', 'seri_detail_rw.noseri_id')
+        $data = SeriDetailRw::
+         select('seri_detail_rw.isi','noseri_barang_jadi.noseri','seri_detail_rw.noseri_id','seri_detail_rw.packer','noseri_barang_jadi.is_prd','seri_detail_rw.created_at','seri_detail_rw.updated_at')
+       ->leftJoin('noseri_barang_jadi', 'noseri_barang_jadi.id', '=', 'seri_detail_rw.noseri_id')
             ->where('urutan', $id)->get();
         $jadwal = JadwalPerakitanRw::addSelect([
             'set' => function ($q) {
@@ -948,9 +1038,11 @@ class ProduksiController extends Controller
                 $obj[] = array(
                     'id' => $d->noseri_id,
                     'noseri' => $d->noseri,
-                    'tgl_buat' => $d->created_at->format('Y-m-d'),
+                    'tgl_buat' => $d->created_at,
                     'packer' => $d->packer,
                     'status' => $d->is_prd == 0 ? 'Transfer' : 'Belum',
+                    'ket' =>  $d->updated_at <= $d->created_at ? false : true,
+                    'tgl_ubah' =>  $d->updated_at <= $d->created_at ? null : $d->updated_at,
                     'seri' => json_decode($d->isi)
                 );
             }
@@ -4562,5 +4654,11 @@ class ProduksiController extends Controller
         $pdf = PDF::loadview('page.produksi.printreworks.cetakbuktibarangjadi', compact('data'))->setPaper('a4', 'portrait');
         return $pdf->stream();
         // return view('page.produksi.printreworks.cetakpermintaanbarangjadi');
+    }
+
+    function export_rework_excel($urutan)
+    {
+        $waktu = Carbon::now();
+        return Excel::download(new ExportRework($urutan), 'PerakitanReworks  ' . $waktu->toDateTimeString() . '.xlsx');
     }
 }

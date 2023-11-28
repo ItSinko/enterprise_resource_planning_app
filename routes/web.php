@@ -12,6 +12,7 @@ use App\Http\Controllers\inventory\AlatujiController;
 use App\Http\Controllers\inventory\PerawatanController;
 use App\Http\Controllers\inventory\VerifikasiController;
 use App\Http\Controllers\inventory\KalibrasiPerbaikanController;
+use App\Http\Controllers\LogistikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +97,7 @@ Route::middleware('auth')->prefix('/manager-teknik')->group(function () {
 });
 
 Route::group(['prefix' => '/produksiReworks' , 'middleware' => 'auth'], function () {
+    Route::get('/export_excel/{id}', [ProduksiController::class, 'export_rework_excel']);
     Route::get('/cetak_seri_finish_goods/{seri}', [ProduksiController::class, 'cetak_seri_finish_goods']);
     Route::get('/cetak_seri_fg_medium', [ProduksiController::class, 'cetak_seri_finish_goods_medium']);
     Route::get('/cetak_seri_fg_small', [ProduksiController::class, 'cetak_seri_finish_goods_small']);;
@@ -105,6 +107,8 @@ Route::group(['prefix' => '/produksiReworks' , 'middleware' => 'auth'], function
     Route::get('/surat_permintaan/{id}', [ProduksiController::class, 'cetakSuratPermintaan']);
     Route::get('/surat_penyerahan/{id}/{divisi}', [ProduksiController::class, 'cetakSuratPenyerahan']);
     Route::get('/surat_pengiriman/{id}', [GudangController::class, 'cetakSuratPengantar']);
+    Route::get('/cetakpeti/{id}', [LogistikController::class, 'cetak_peti']);
+    Route::get('/viewpeti/{id}', [LogistikController::class, 'view_peti']);
 });
 
 Route::group(['prefix' => '/gbj', 'middleware' => 'auth'], function () {
@@ -351,6 +355,8 @@ Route::group(['prefix' => 'logistik', 'middleware' => 'auth'], function () {
             Route::view('/show', 'page.logistik.pengiriman.riwayat.show')->name('logistik.riwayat.show');
         });
         // });
+
+        Route::view('/{any?}', 'page.logistik.logistik')->where('any', '.*');
     });
 
     Route::group(['prefix' => '/pengiriman_retur'], function () {

@@ -34,6 +34,7 @@ mix.js('resources/js/it/app.js', 'public/native/js/it.js').vue();
 mix.js('resources/js/meeting/app.js', 'public/native/js/meeting.js').vue();
 mix.js('resources/js/hr/app.js', 'public/native/js/hr.js').vue();
 mix.js('resources/js/gbj/app.js', 'public/native/js/gbj.js').vue();
+mix.js('resources/js/logistik/app.js', 'public/native/js/logistik.js').vue();
 mix.js('resources/js/produksiNew/app.js', 'public/native/js/produksinew.js').vue();
 
 // mix.browserSync("http://localhost:8000")

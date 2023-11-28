@@ -1331,6 +1331,11 @@ return [
                     'url'   =>  '/logistik/pengiriman/show'
                 ],
                 [
+                    'text' => 'Pemetian',
+                    'icon' => 'far fa-circle',
+                    'url' => '/logistik/pengiriman/pemetian',
+                ],
+                [
                     'text'  =>  'Retur',
                     'icon'  =>  'far fa-circle',
                     'url'   =>  '/logistik/pengiriman_retur/show',

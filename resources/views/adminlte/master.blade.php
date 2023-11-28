@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="{{ asset('assets/adminlte/dist/css/adminlte.min.css') }}" />
 
 
-    <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet" />
+    {{-- <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet" /> --}}
 
     <link rel="stylesheet" href="{{ asset('assets/fontawesome-free/css/font-awesome.6.2.0.all.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendor/datepicker/datepicker.css') }}">
@@ -110,7 +110,7 @@
     <script src="{{ asset('vendor/jquery-ui/jquery-ui.js') }}"></script>
     <script src="{{ asset('assets/js/justgage.js') }}"></script>
     <script src="{{ asset('assets/js/raphael-2.1.4.min.js') }}"></script>
-    <script src="https://unpkg.com/cropperjs"></script>
+    {{-- <script src="https://unpkg.com/cropperjs"></script> --}}
 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -159,103 +159,103 @@
         // }
 
 
-        $(document).ready(function() {
+        // $(document).ready(function() {
 
-            var $modal = $('#profileImageModal');
+        //     var $modal = $('#profileImageModal');
 
-            var image = document.getElementById('sample_image');
+        //     var image = document.getElementById('sample_image');
 
-            var cropper;
+        //     var cropper;
 
-            $('#upload_image').change(function(event) {
-                var files = event.target.files;
+        //     $('#upload_image').change(function(event) {
+        //         var files = event.target.files;
 
-                var done = function(url) {
-                    image.src = url;
-                    $modal.modal('show');
-                };
+        //         var done = function(url) {
+        //             image.src = url;
+        //             $modal.modal('show');
+        //         };
 
-                if (files && files.length > 0) {
-                    reader = new FileReader();
-                    reader.onload = function(event) {
-                        done(reader.result);
-                    };
-                    reader.readAsDataURL(files[0]);
-                }
-            });
+        //         if (files && files.length > 0) {
+        //             reader = new FileReader();
+        //             reader.onload = function(event) {
+        //                 done(reader.result);
+        //             };
+        //             reader.readAsDataURL(files[0]);
+        //         }
+        //     });
 
-            $modal.on('shown.bs.modal', function() {
-                cropper = new Cropper(image, {
-                    aspectRatio: 1 / 1,
+        //     $modal.on('shown.bs.modal', function() {
+        //         cropper = new Cropper(image, {
+        //             aspectRatio: 1 / 1,
 
-                    dragMode: 'move',
-                    preview: 'preview',
-                    viewMode: 1,
-                });
-            }).on('hidden.bs.modal', function() {
-                cropper.destroy();
-                cropper = null;
-            });
+        //             dragMode: 'move',
+        //             preview: 'preview',
+        //             viewMode: 1,
+        //         });
+        //     }).on('hidden.bs.modal', function() {
+        //         cropper.destroy();
+        //         cropper = null;
+        //     });
 
-            $('#update_photo_profile').click(function() {
-                canvas = cropper.getCroppedCanvas({
-                    width: 542,
-                    height: 560
-                });
+        //     $('#update_photo_profile').click(function() {
+        //         canvas = cropper.getCroppedCanvas({
+        //             width: 542,
+        //             height: 560
+        //         });
 
-                canvas.toBlob(function(blob) {
-                    url = URL.createObjectURL(blob);
-                    var reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = function() {
-                        var base64data = reader.result;
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content')
-                            }
-                        });
-                        $.ajax({
-                            url: '/edit_profile_photo',
-                            method: 'POST',
-                            data: {
-                                image: base64data
-                            },
-                            success: function(data) {
+        //         canvas.toBlob(function(blob) {
+        //             url = URL.createObjectURL(blob);
+        //             var reader = new FileReader();
+        //             reader.readAsDataURL(blob);
+        //             reader.onloadend = function() {
+        //                 var base64data = reader.result;
+        //                 $.ajaxSetup({
+        //                     headers: {
+        //                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+        //                             'content')
+        //                     }
+        //                 });
+        //                 $.ajax({
+        //                     url: '/edit_profile_photo',
+        //                     method: 'POST',
+        //                     data: {
+        //                         image: base64data
+        //                     },
+        //                     success: function(data) {
 
-                                $modal.modal('hide');
-                                $('#uploaded_image').attr('src', data);
-                                if (data.data == 'success') {
-                                    Swal.fire({
-                                        title: 'Berhasil',
-                                        text: 'Foto user berhasil di ubah',
-                                        icon: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            event.preventDefault();
-                                            window.location.reload();
-                                        }
-                                    })
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Gagal Mengubah Foto',
-                                    })
-                                }
+        //                         $modal.modal('hide');
+        //                         $('#uploaded_image').attr('src', data);
+        //                         if (data.data == 'success') {
+        //                             Swal.fire({
+        //                                 title: 'Berhasil',
+        //                                 text: 'Foto user berhasil di ubah',
+        //                                 icon: 'success',
+        //                                 showCancelButton: false,
+        //                                 confirmButtonColor: '#3085d6',
+        //                                 cancelButtonColor: '#d33',
+        //                                 confirmButtonText: 'OK'
+        //                             }).then((result) => {
+        //                                 if (result.isConfirmed) {
+        //                                     event.preventDefault();
+        //                                     window.location.reload();
+        //                                 }
+        //                             })
+        //                         } else {
+        //                             Swal.fire({
+        //                                 icon: 'error',
+        //                                 title: 'Oops...',
+        //                                 text: 'Gagal Mengubah Foto',
+        //                             })
+        //                         }
 
 
-                            }
-                        });
-                    };
-                });
-            });
+        //                     }
+        //                 });
+        //             };
+        //         });
+        //     });
 
-        });
+        // });
     </script>
     @yield('master_js')
 </body>
