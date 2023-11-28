@@ -93,7 +93,7 @@ export default {
                     </tr>
                 </tbody>
             </table>
-            <pagination :DataTable="paginateData" @updatePage="updatePage" />
+            <pagination :filteredDalamProses="paginateData" @updateFilteredDalamProses="updatePage" />
         </div>
     </div>
 </template>

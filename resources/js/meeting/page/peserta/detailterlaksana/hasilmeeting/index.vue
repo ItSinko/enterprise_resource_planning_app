@@ -1,24 +1,24 @@
 <script>
-import pagination from "../../../../components/pagination.vue";
+import DataTable from '../../../../components/DataTable.vue';
 export default {
     props: ["meeting", "status"],
     components: {
-        pagination,
+        DataTable,
     },
     data() {
         return {
             search: "",
-            renderPaginate: [],
             formhasilmeeting: {
                 isi: "",
             },
             showModal: false,
+            headers: [
+                { text: "No", value: "no" },
+                { text: "Hasil Rapat", value: "isi" },
+            ]
         };
     },
     methods: {
-        updatePage(page) {
-            this.renderPaginate = page;
-        },
         saveHasilMeeting() {
             this.showModal = false;
             if (this.formhasilmeeting?.idx) {
@@ -33,17 +33,6 @@ export default {
         },
         close() {
             this.showModal = false;
-        },
-    },
-    computed: {
-        paginateData() {
-            return this.meeting.filter((data) => {
-                return Object.keys(data).some((key) => {
-                    return String(data[key])
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase());
-                });
-            });
         },
     },
 };
@@ -62,28 +51,13 @@ export default {
                     />
                 </div>
             </div>
-            <table class="table">
-                <thead class="text-center">
-                    <tr>
-                        <th>No</th>
-                        <th>Hasil Rapat</th>
-                    </tr>
-                </thead>
-                <tbody v-if="renderPaginate.length > 0">
-                    <tr v-for="(item, idx) in renderPaginate" :key="idx">
-                        <td class="text-center">{{ idx + 1 }}</td>
-                        <td>{{ item.isi }}</td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr>
-                        <td colspan="2" class="text-center">
-                            Data tidak ditemukan
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <pagination :DataTable="paginateData" @updatePage="updatePage" />
+           <DataTable :headers="headers" :items="meeting">
+            <template #item.no="{item, index}">
+                <div>
+                    {{ index + 1 }}
+                </div>
+            </template>
+            </DataTable>
         </div>
     </div>
 </template>

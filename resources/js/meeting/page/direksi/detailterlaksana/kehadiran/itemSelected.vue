@@ -1,38 +1,24 @@
 <script>
-import moment from "moment";
-import pagination from "../../../../components/pagination.vue";
+import DataTable from "../../../../components/DataTable.vue";
 import kehadiran from "../../../../components/kehadiran.vue";
 export default {
     components: {
-        pagination,
+        DataTable,
         kehadiran,
     },
     data() {
         return {
             search: "",
-            renderPaginate: [],
+            headers: [
+                { text: 'Nama Peserta', value: 'nama' },
+                { text: 'Divisi', value: 'divisi' },
+                { text: 'Kehadiran', value: 'kehadiran', sortable: false },
+                { text: 'Alasan', value: 'alasan' },
+                { text: 'Dokumen Pendukung Ketidakhadiran', value: 'dokumen_pendukung', sortable: false },
+            ]
         };
     },
     props: ["meeting"],
-    methods: {
-        formatDate(date) {
-            return moment(date).lang("id").format("dddd, DD MMMM YYYY");
-        },
-        updatePage(page) {
-            this.renderPaginate = page;
-        },
-    },
-    computed: {
-        paginateData() {
-            return this.meeting.filter((data) => {
-                return Object.keys(data).some((key) => {
-                    return String(data[key])
-                        .toLowerCase()
-                        .includes(this.search.toLowerCase());
-                });
-            });
-        },
-    },
 };
 </script>
 <template>
@@ -41,62 +27,27 @@ export default {
             <div class="d-flex flex-row-reverse bd-highlight">
                 <div class="p-2 bd-highlight">
                     <div class="input-group">
-                        <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Cari..."
-                            v-model="search"
-                        />
+                        <input type="text" class="form-control" placeholder="Cari..." v-model="search" />
                     </div>
                 </div>
             </div>
-            <table class="table">
-                <thead class="text-center">
-                    <tr>
-                        <th>Nama Peserta</th>
-                        <th>Divisi</th>
-                        <th>Kehadiran</th>
-                        <th>Alasan</th>
-                        <th>Dokumen Pendukung Ketidakhadiran</th>
-                    </tr>
-                </thead>
-                <tbody v-if="renderPaginate.length > 0">
-                    <tr v-for="(peserta, idx) in renderPaginate" :key="idx">
-                        <td>{{ peserta.nama }}</td>
-                        <td class="text-center">{{ peserta.divisi }}</td>
-                        <td class="text-center">
-                            <kehadiran :kehadiran="peserta.kehadiran" />
-                        </td>
-                        <td>{{ peserta.alasan ? peserta.alasan : '-' }}</td>
-                        <td class="text-center">
-                            <div v-if="peserta.dokumen_pendukung">
-                                <a
-                                    v-for="(
-                                        dokumen, idx
-                                    ) in peserta.dokumen_pendukung"
-                                    :key="idx"
-                                    :href="dokumen.link"
-                                    >{{ dokumen.nama
-                                    }}<span
-                                        v-if="
-                                            idx !=
-                                            peserta.dokumen_pendukung.length - 1
-                                        "
-                                        >,
-                                    </span>
-                                </a>
-                            </div>
-                            <span v-else>-</span>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr>
-                        <td colspan="5" class="text-center">Tidak ada data</td>
-                    </tr>
-                </tbody>
-            </table>
-            <pagination :DataTable="paginateData" @updatePage="updatePage" />
+            <DataTable :headers="headers" :items="meeting" :search="search">
+                <template #item.kehadiran="{ item }">
+                    <div>
+                        <kehadiran :kehadiran="item.kehadiran"></kehadiran>
+                    </div>
+                </template>
+                <template #item.dokumen_pendukung="{ item }">
+                    <div>
+                        <div v-if="item.dokumen_pendukung">
+                            <a v-for="(dokumen, idx) in item.dokumen_pendukung" :key="idx" :href="dokumen.link">
+                                {{ dokumen.nama }}<span v-if="idx != item.dokumen_pendukung.length - 1">, </span>
+                            </a>
+                        </div>
+                        <span v-else>-</span>
+                    </div>
+                </template>
+            </DataTable>
         </div>
     </div>
 </template>

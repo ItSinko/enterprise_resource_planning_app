@@ -227,8 +227,8 @@ export default {
                 </tbody>
             </table>
             <pagination
-                :DataTable="paginateData"
-                @updatePage="updatePage"
+                :filteredDalamProses="paginateData"
+                @updateFilteredDalamProses="updatePage"
                 v-if="status != 'menyusun_hasil_meeting'"
             />
         </div>

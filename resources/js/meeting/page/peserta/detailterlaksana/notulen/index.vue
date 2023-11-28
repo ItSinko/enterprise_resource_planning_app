@@ -1,5 +1,4 @@
 <script>
-import moment from "moment";
 import kehadiran from "../../../../components/kehadiran.vue";
 import pagination from "../../../../components/pagination.vue";
 import modal from "./modal.vue";
@@ -7,8 +6,8 @@ export default {
     props: ["meeting", "status"],
     components: {
         kehadiran,
-        pagination,
         modal,
+        pagination,
     },
     data() {
         return {
@@ -21,9 +20,6 @@ export default {
     methods: {
         updatePage(page) {
             this.renderPaginate = page;
-        },
-        formatDateTime(date) {
-            return moment(date).lang("id").format("DD/MM/YYYY HH:mm");
         },
         close() {
             this.showModal = false;
@@ -98,7 +94,7 @@ export default {
                         <td class="text-center">
                             <div v-if="item.kesesuaian">
                                 {{ item.penanggungjawab }},
-                                {{ formatDateTime(item.created_at) }}
+                                {{ dateTimeFormat(item.created_at) }}
                             </div>
                             <div v-else>-</div>
                         </td>
@@ -120,7 +116,7 @@ export default {
                     </tr>
                 </tbody>
             </table>
-            <pagination :DataTable="paginateData" @updatePage="updatePage" />
+            <pagination :filteredDalamProses="paginateData" @updateFilteredDalamProses="updatePage" />
         </div>
     </div>
 </template>
