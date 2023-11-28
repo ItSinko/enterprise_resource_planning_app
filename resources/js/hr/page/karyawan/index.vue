@@ -189,6 +189,12 @@ export default {
                     </div>
                 </div>
                 <DataTable :headers="headers" :items="paginateData" :search="search">
+                    <template #header.kelamin>
+                        <div>
+                            
+                        </div>
+                    </template>
+
                     <template #item.karyawan="{ item }">
                         <div class="d-flex bd-highlight">
                             <div class="p-2 bd-highlight">
