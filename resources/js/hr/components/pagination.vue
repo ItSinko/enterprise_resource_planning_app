@@ -74,6 +74,13 @@ export default {
 
             return pages;
         },
+        showPagesInformation() {
+            if (this.filteredDalamProses.length > 0) {
+                let start = this.perPage * (this.currentPage - 1) + 1;
+                let end = this.renderPaginate.length
+                return `Showing ${start} to ${end} of ${this.filteredDalamProses.length} entries`;
+            }
+        },
     },
     mounted() {
         this.$emit("updateFilteredDalamProses", this.renderPaginate);
@@ -89,21 +96,24 @@ export default {
 };
 </script>
 <template>
-    <div class="d-flex flex-row-reverse bd-highlight">
-        <nav aria-label="...">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
-                </li>
-                <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
-                    :key="paginate">
-                    <a class="page-link" @click="nowPage(paginate)" :disabled="disableClickPageThreeDots(paginate)">{{
-                        paginate }}</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" :disabled="currentPage == pages[pages.length - 1]" @click="nextPage">Next</a>
-                </li>
-            </ul>
-        </nav>
+    <div class="d-flex bd-highlight">
+        <div class="p-2 flex-grow-1 bd-highlight">{{ showPagesInformation }}</div>
+        <div class="p-2 bd-highlight">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == 1" @click="previousPage">Previous</a>
+                    </li>
+                    <li class="page-item" :class="paginate == currentPage ? 'active' : ''" v-for="paginate in pages"
+                        :key="paginate">
+                        <a class="page-link" @click="nowPage(paginate)" :disabled="disableClickPageThreeDots(paginate)">{{
+                            paginate }}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" :disabled="currentPage == pages[pages.length - 1]" @click="nextPage">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </template>
