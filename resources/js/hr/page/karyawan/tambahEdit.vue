@@ -48,6 +48,15 @@ export default {
                 'Outsourcing',
                 'Magang'
             ],
+            jabatanKaryawan: [
+                'President Director',
+                'Director',
+                'General Manager',
+                'Manager',
+                'Superintendent',
+                'Supervisor',
+                'Staff',
+            ],
             form: {
                 image: null,
                 nama_pegawai: null,
@@ -441,7 +450,7 @@ export default {
                                     <div class="col-6">
                                         <div class="form-group">
                                             <label for="">Jabatan <span class="text-red">*</span></label>
-                                            <input type="text" class="form-control" v-model="form.jabatan" placeholder="">
+                                            <v-select :options="jabatanKaryawan" v-model="form.jabatan"/>
                                         </div>
                                         <div class="form-group">
                                             <label for="">Divisi <span class="text-red">*</span></label>

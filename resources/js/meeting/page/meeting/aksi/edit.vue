@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             karyawan: [],
-                hourRangeAkhir: [],
+            hourRangeAkhir: [],
         }
     },
     methods: {
@@ -51,7 +51,7 @@ export default {
             }
             return true
         },
-                calculateHourAkhir() {
+        calculateHourAkhir() {
             if (this.meeting.mulai !== '') {
                 const waktu_awal = this.meeting.mulai.split(':')
                 const hour = []
@@ -82,14 +82,15 @@ export default {
 }
 </script>
 <template>
-    <div class="modal fade modalMeetingEdit" id="modelId" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade modalMeetingEdit" id="modelId" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Jadwal Meeting</h5>
-                        <button type="button" class="close" @click="closeModal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <button type="button" class="close" @click="closeModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -102,28 +103,33 @@ export default {
                     </div>
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
-                            <div class="col-sm-4">
-                                <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on" @input="calculateHourAkhir" />
-                            </div>
-                            -
-                            <div class="col-sm-4">
-                                <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on" :hour-range="hourRangeAkhir" />
-                            </div>
+                        <div class="col-sm-4">
+                            <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on"
+                                @input="calculateHourAkhir" />
+                        </div>
+                        -
+                        <div class="col-sm-4">
+                            <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on"
+                                :hour-range="hourRangeAkhir" />
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">
                             <label for="">Notulen</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.notulen"/>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id"
+                                v-model="meeting.notulen" />
                         </div>
                         <div class="col">
                             <label for="">Moderator</label>
-                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.moderator"/>
+                            <vue-select :options="karyawan" label="nama" :reduce="karyawan => karyawan.id"
+                                v-model="meeting.moderator" />
                         </div>
                     </div>
                     <!-- diubah ke peserta seperti tambah dan value jumlah peserta menghitung array peserta -->
                     <div class="form-group">
                         <label for="">Peserta Meeting</label>
-                        <vue-select multiple :options="karyawan" label="nama" :reduce="karyawan => karyawan.id" v-model="meeting.peserta"/>
+                        <vue-select multiple :options="karyawan" label="nama" :reduce="karyawan => karyawan.id"
+                            v-model="meeting.peserta" />
                     </div>
                     <div class="form-group">
                         <label for="">Lokasi Meeting</label>
@@ -137,8 +143,7 @@ export default {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @click="closeModal">Keluar</button>
                     <button type="button" class="btn btn-primary" @click="simpan">Simpan</button>
-                </div>
             </div>
         </div>
     </div>
-</template>
+</div></template>

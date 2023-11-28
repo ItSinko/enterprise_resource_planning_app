@@ -23,8 +23,8 @@ export default {
                     link: '#'
                 },
                 {
-                    name: 'Laporan Kehadiran',
-                    link: '/hr/form_pengajuan'
+                    name: this.$route?.params.link ? 'Laporan Pengajuan' : 'Laporan Kehadiran',
+                    link: this.$route?.params.link ? this.$route.params.link : '/hr/form_pengajuan'
                 },
                 {
                     name: 'Detail Pengajuan',

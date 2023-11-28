@@ -1796,7 +1796,7 @@ return [
         ],
         [
             'header' => 'HR',
-            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2]
+            'auth'   => [26, 28,  17, 9, 13, 23, 15, 12, 16, 31, 2, 30]
         ],
         // peserta meet
         [
@@ -1807,12 +1807,14 @@ return [
         ],
         // hr
         [
-            'header' => 'HR',
+            'text' => 'Meeting',
+            'url' => '/meeting/hr/',
+            'icon' => 'fas fa-users',
             'auth' => [30],
         ],
         [
-            'text' => 'Meeting',
-            'url' => '/meeting/hr/',
+            'text' => 'Pengajuan Kehadiran',
+            'url' => '/hr/kehadiran/',
             'icon' => 'fas fa-users',
             'auth' => [30],
         ],

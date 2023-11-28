@@ -5,6 +5,7 @@ import DetailKaryawan from "./page/karyawan/detail";
 import FormPengajuan from "./page/pengajuan";
 import TambahEditForm from "./page/pengajuan/form";
 import DetailPengajuan from "./page/pengajuan/detail";
+import Kehadiran from "./page/pengajuan/atasan";
 
 const routes = [ 
     {
@@ -46,6 +47,11 @@ const routes = [
         path: "/hr/form_pengajuan/detail/:id",
         component: DetailPengajuan,
         name: "detail-pengajuan"
+    },
+    {
+        path: "/hr/kehadiran/",
+        component: Kehadiran,
+        name: "kehadiran"
     }
 ]
 
