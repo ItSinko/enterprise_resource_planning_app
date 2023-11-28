@@ -2,6 +2,9 @@ import VueRouter from "vue-router";
 import Karyawan from "./page/karyawan";
 import TambahEditKaryawan from "./page/karyawan/tambahEdit.vue";
 import DetailKaryawan from "./page/karyawan/detail";
+import FormPengajuan from "./page/pengajuan";
+import TambahEditForm from "./page/pengajuan/form";
+import DetailPengajuan from "./page/pengajuan/detail";
 
 const routes = [ 
     {
@@ -24,6 +27,26 @@ const routes = [
         component: DetailKaryawan,
         name: "detail-karyawan"
     },
+    {
+        path: "/hr/form_pengajuan",
+        component: FormPengajuan,
+        name: "form-pengajuan"
+    },
+    {
+        path: "/hr/form_pengajuan/tambah",
+        component: TambahEditForm,
+        name: "tambah-pengajuan"
+    },
+    {
+        path: "/hr/form_pengajuan/edit/:id",
+        component: TambahEditForm,
+        name: "edit-pengajuan"
+    },
+    {
+        path: "/hr/form_pengajuan/detail/:id",
+        component: DetailPengajuan,
+        name: "detail-pengajuan"
+    }
 ]
 
 const router = new VueRouter({

@@ -9,6 +9,7 @@ export default {
     data() {
         return {
             karyawan: [],
+                hourRangeAkhir: [],
         }
     },
     methods: {
@@ -50,6 +51,18 @@ export default {
             }
             return true
         },
+                calculateHourAkhir() {
+            if (this.meeting.mulai !== '') {
+                const waktu_awal = this.meeting.mulai.split(':')
+                const hour = []
+                for (let i = waktu_awal[0]; i <= 23; i++) {
+                    hour.push(i)
+                }
+                this.hourRangeAkhir = hour
+            } else {
+                this.hourRangeAkhir = []
+            }
+        },
         async getDataKaryawan() {
             try {
                 const response = await axios.get('/api/karyawan_all')
@@ -89,13 +102,13 @@ export default {
                     </div>
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
-                        <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="meeting.mulai">
-                        </div>
-                        -
-                        <div class="col-sm-4">
-                            <input type="time" class="form-control" v-model="meeting.selesai">
-                        </div>
+                            <div class="col-sm-4">
+                                <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on" @input="calculateHourAkhir" />
+                            </div>
+                            -
+                            <div class="col-sm-4">
+                                <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on" :hour-range="hourRangeAkhir" />
+                            </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">

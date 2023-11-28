@@ -102,7 +102,7 @@ export default {
                                         <input type="text" v-model="search" class="form-control" placeholder="Cari...">
                                     </div>
                                 </div>
-                                <DataTable :items="dataSelected.data" :headers="headers">
+                                <DataTable :items="dataSelected.data" :headers="headers" :search="search">
                                     <template #item.no="{ item, index }">
                                         {{ index + 1 }}
                                     </template>

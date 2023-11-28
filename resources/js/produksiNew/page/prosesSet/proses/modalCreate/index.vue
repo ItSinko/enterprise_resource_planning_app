@@ -17,7 +17,8 @@ export default {
             noseriGeneratePackingList: [],
             isError: false,
             errorValue: '',
-            idGenerate: null
+            idGenerate: null,
+            loading: false,
         }
     },
     methods: {
@@ -55,13 +56,13 @@ export default {
             if (e.target.value) {
                 // jika value nya ada 13 digit, maka akan otomatis ke inputan selanjutnya
                 // if (e.target.value.length === 13) {
-                    const cek = this.noseri.filter((data) => {
-                        return data.seri.trim() === '';
-                    });
+                const cek = this.noseri.filter((data) => {
+                    return data.seri.trim() === '';
+                });
 
-                    if (!this.isError && !this.selectSeri?.id && cek.length === 0) {
-                        this.generateSeri();
-                    }
+                if (!this.isError && !this.selectSeri?.id && cek.length === 0) {
+                    this.generateSeri();
+                }
                 if (idx < this.noseri.length - 1) {
 
                     this.$refs.noseri[idx + 1].focus();
@@ -85,6 +86,14 @@ export default {
             });
 
             if (noSeriUnique.length !== this.noseri.length) {
+                this.isError = true
+                this.errorValue = 'tidak boleh sama'
+                this.noseri = this.noseri.map((data) => {
+                    if (this.noseri.findIndex((data2) => data2.seri === data.seri) !== this.noseri.lastIndexOf(data)) {
+                        data.error = true
+                    }
+                    return data
+                })
                 this.$swal({
                     title: 'Gagal!',
                     text: 'No. Seri tidak boleh sama',
@@ -107,6 +116,7 @@ export default {
             if (!this.isDisable && cek.length === 0 && noSeriUnique.length === this.noseri.length) {
                 try {
                     this.isDisable = true;
+                    this.loading = true;
                     const { data } = await axios.post('/api/prd/rw/gen', {
                         ...this.$store.state.setSeri,
                         noseri: this.noseri
@@ -146,6 +156,8 @@ export default {
                     }
 
                     this.isDisable = false
+                } finally {
+                    this.loading = false;
                 }
             }
 
@@ -187,6 +199,7 @@ export default {
             if (!this.isDisable && cek.length === 0 && noSeriUnique.length === this.noseri.length) {
                 try {
                     this.isDisable = true;
+                    this.loading = true;
                     const { data } = await axios.put(`/api/prd/rw/gen/${this.selectSeri.id}`, {
                         noseri: this.noseri
                     }, {
@@ -224,6 +237,8 @@ export default {
                     }
 
                     this.isDisable = false
+                } finally {
+                    this.loading = false;
                 }
             }
         },
@@ -297,86 +312,90 @@ export default {
                         </button>
                     </div>
                     <div class="modal-body">
-                       
-                            <div class="row">
-                                <div class="col">
-                                    <form>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>No. Seri</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(data, idx) in noseri" :key="idx">
-                                                    <td>
-                                                        <input type="text" class="form-control" v-model="data.seri"
-                                                            :class="data.error ? 'is-invalid' : ''"
-                                                            @keyup.enter="autoTab($event, idx)" ref="noseri"
-                                                            :disabled="isDisable">
-                                                        <div class="invalid-feedback">
-                                                            Nomor Seri {{ errorValue }}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </form>
-                                </div>
-                                <div class="col" v-if="hasilGenerate">
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="">Nomor Seri</label>
-                                            <div class="card nomor-so">
-                                                <div class="card-body">
-                                                    <span id="so">{{ hasilGenerate }}</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex bd-highlight">
-                                                <div class="p-2 flex-grow-1 bd-highlight">
-                                                    <button class="btn btn-sm btn-outline-primary" @click="cetakSeri">
-                                                        Cetak No. Seri <i class="fa fa-print"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="p-2 bd-highlight">
-                                                    <!-- bentuk modal untuk view nya -->
-                                                    <button class="btn btn-sm btn-outline-info" @click="lihatSeri">
-                                                        View No. Seri <i class="fa fa-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
 
-                                            <!-- dokumen -->
-                                            <label for="">Dokumen Packing List</label>
-                                            <generatePackingList :dataTable="noseriGeneratePackingList" />
+                        <div class="row">
+                            <div class="col">
+                                <form>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>No. Seri</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(data, idx) in noseri" :key="idx">
+                                                <td>
+                                                    <input type="text" class="form-control" v-model="data.seri"
+                                                        :class="data.error ? 'is-invalid' : ''"
+                                                        @keyup.enter="autoTab($event, idx)" ref="noseri"
+                                                        :disabled="isDisable">
+                                                    <div class="invalid-feedback">
+                                                        Nomor Seri {{ errorValue }}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                            <div class="col" v-if="hasilGenerate">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="">Nomor Seri</label>
+                                        <div class="card nomor-so">
+                                            <div class="card-body">
+                                                <span id="so">{{ hasilGenerate }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex bd-highlight">
+                                            <div class="p-2 flex-grow-1 bd-highlight">
+                                                <button class="btn btn-sm btn-outline-primary" @click="cetakSeri">
+                                                    Cetak No. Seri <i class="fa fa-print"></i>
+                                                </button>
+                                            </div>
+                                            <div class="p-2 bd-highlight">
+                                                <!-- bentuk modal untuk view nya -->
+                                                <button class="btn btn-sm btn-outline-info" @click="lihatSeri">
+                                                    View No. Seri <i class="fa fa-eye"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 
-                                            <div class="d-flex bd-highlight">
-                                                <div class="p-2 flex-grow-1 bd-highlight">
-                                                    <button class="btn btn-sm btn-outline-primary"
-                                                        @click="cetakPackingList">
-                                                        Cetak Packing List <i class="fa fa-print"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="p-2 bd-highlight">
-                                                    <!-- bentuk pdf untuk view nya -->
-                                                    <button class="btn btn-sm btn-outline-info" @click="viewPackingList">
-                                                        Lihat Packing List <i class="fa fa-eye"></i>
-                                                    </button>
-                                                </div>
+                                        <!-- dokumen -->
+                                        <label for="">Dokumen Packing List</label>
+                                        <generatePackingList :dataTable="noseriGeneratePackingList" />
+
+                                        <div class="d-flex bd-highlight">
+                                            <div class="p-2 flex-grow-1 bd-highlight">
+                                                <button class="btn btn-sm btn-outline-primary" @click="cetakPackingList">
+                                                    Cetak Packing List <i class="fa fa-print"></i>
+                                                </button>
+                                            </div>
+                                            <div class="p-2 bd-highlight">
+                                                <!-- bentuk pdf untuk view nya -->
+                                                <button class="btn btn-sm btn-outline-info" @click="viewPackingList">
+                                                    Lihat Packing List <i class="fa fa-eye"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                     <div class="d-flex bd-highlight mb-3 mx-3">
                         <div class="mr-auto p-2 bd-highlight">
-                            <button class="btn btn-success" :disabled="isDisable" @click="selectSeri?.id ? updateSeri() : generateSeri()">
-                                {{ selectSeri?.id ? 'Simpan' : 'Generate' }}
+                            <button class="btn btn-success" :disabled="isDisable"
+                                @click="selectSeri?.id ? updateSeri() : generateSeri()">
+                                {{ loading ? 'Loading...' : (selectSeri?.id ? 'Simpan' : 'Generate') }}
+                                <div class="spinner-border spinner-border-sm" role="status" v-if="loading">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
                             </button>
                         </div>
                         <div class="p-2 bd-highlight ml-auto">
-                            <button type="button" class="btn btn-primary" @click="resetModal" v-if="!selectSeri?.id">Reset</button>
+                            <button type="button" class="btn btn-primary" @click="resetModal"
+                                v-if="!selectSeri?.id">Reset</button>
                         </div>
                     </div>
                 </div>
