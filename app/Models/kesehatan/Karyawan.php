@@ -3,6 +3,8 @@
 namespace App\Models\kesehatan;
 
 use App\Models\Divisi;
+use App\Models\HasilNotulen;
+use App\Models\PesertaMeeting;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +15,7 @@ class Karyawan extends Model
     protected $table = 'karyawans';
     protected $connection = 'kesehatan';
     protected $fillable = ['nama', 'kode_karyawan', 'divisi_id', 'jabatan', 'foto', 'tgllahir', 'tgl_kerja', 'kelamin', 'is_aktif'];
+
 
     public function User()
     {
@@ -33,6 +36,10 @@ class Karyawan extends Model
     public function Vaksin_karyawan()
     {
         return $this->hasMany(Vaksin_karyawan::class);
+    }
+    public function PesertaMeeting()
+    {
+        return $this->hasMany(PesertaMeeting::class,'karyawan_id');
     }
     public function Riwayat_penyakit()
     {

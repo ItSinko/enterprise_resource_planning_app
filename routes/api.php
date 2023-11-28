@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\PpicController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\SparepartController;
@@ -332,6 +333,28 @@ Route::prefix('/tfp')->group(function () {
     Route::post('/updateChecked', [ProduksiController::class, 'checkedNoseri']);
 });
 
+Route::prefix('/hr')->group(function () {
+    Route::prefix('/meet')->group(function () {
+        Route::prefix('/jadwal')->group(function () {
+            Route::post('/', [MeetingController::class, 'store_jadwal_meet']);
+            Route::get('/', [MeetingController::class, 'show_jadwal_meet']);
+            Route::get('/{id}', [MeetingController::class, 'detail_jadwal_meet']);
+            Route::put('/{id}', [MeetingController::class, 'update_jadwal_meet']);
+            Route::delete('/{id}', [MeetingController::class, 'update_jadwal_meet']);
+        });
+        Route::prefix('/notulen')->group(function () {
+            Route::post('/', [MeetingController::class, 'store_notulen_meet']);
+            Route::get('/{id}', [MeetingController::class, 'show_notulen_meet']);
+        });
+        Route::prefix('/hasil')->group(function () {
+            Route::post('/', [MeetingController::class, 'store_hasil_meet']);
+            Route::get('/{id}', [MeetingController::class, 'show_hasil_meet']);
+            Route::get('/edit/{id}', [MeetingController::class, 'edit_hasil_meet']);
+            Route::put('/{id}', [MeetingController::class, 'update_hasil_meet']);
+            Route::delete('/{id}', [MeetingController::class, 'delete_hasil_meet']);
+        });
+    });
+});
 Route::prefix('/prd')->group(function () {
     Route::prefix('/fg')->group(function () {
         Route::post('/gen', [ProduksiController::class, 'generate_fg']);
