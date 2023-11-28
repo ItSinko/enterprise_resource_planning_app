@@ -633,6 +633,10 @@ return [
             'auth' => [14]
         ],
         [
+            'header' => 'Meeting',
+            'auth'   => [14]
+        ],
+        [
             'text' => 'Jadwal Meeting',
             'url' => '/meeting/jadwalmeeting',
             'icon' => 'fas fa-calendar-alt',
