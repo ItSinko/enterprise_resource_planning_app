@@ -5,7 +5,7 @@ import DetailKaryawan from "./page/karyawan/detail";
 import FormPengajuan from "./page/pengajuan";
 import TambahEditForm from "./page/pengajuan/form";
 import DetailPengajuan from "./page/pengajuan/detail";
-import Kehadiran from "./page/pengajuan/atasan";
+import Kehadiran from "./page/pengajuan/kehadiran";
 
 const routes = [ 
     {
