@@ -31,19 +31,20 @@ export default {
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" id="pills-atasan-tab" data-toggle="pill" data-target="#pills-atasan"
-                    type="button" role="tab" aria-controls="pills-atasan" aria-selected="true">Atasan</a>
+                    type="button" role="tab" aria-controls="pills-atasan" aria-selected="true">HRD</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="pills-hrd-tab" data-toggle="pill" data-target="#pills-hrd" type="button" role="tab"
-                    aria-controls="pills-hrd" aria-selected="false">HRD</a>
+                    aria-controls="pills-hrd" aria-selected="false">Atasan</a>
             </li>
         </ul>
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-atasan" role="tabpanel" aria-labelledby="pills-atasan-tab">
-                <atasan />
+                <hrd />
             </div>
             <div class="tab-pane fade" id="pills-hrd" role="tabpanel" aria-labelledby="pills-hrd-tab">
-                <hrd />
+                <atasan />
+
             </div>
         </div>
     </div>
