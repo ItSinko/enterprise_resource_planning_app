@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
+                        {{-- <div class="card-header">
                             <div class="row">
                                 <div class="col-8">
                                     <div class="row">
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered" id="gudang-barang" style="width: 100%">
@@ -271,7 +271,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-body">
                             <input type="text" name="" class="seri_id" hidden>
                             <input type="text" class="created_by" name="" id=""
@@ -289,7 +289,7 @@
                             </div>
                             <button class=" btn btn-primary tambah_noseri mt-2">Tambah</button>
                         </div>
-                    </div>
+                    </div> --}}
                     <form action="" id="noseriForm" name="noseriForm">
 
                         <div class="card card-primary card-outline card-outline-tabs">

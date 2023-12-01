@@ -20,7 +20,7 @@ export default {
                     link: '/logistik/dashboard'
                 },
                 {
-                    name: 'Pemetian',
+                    name: 'Set Pemetian',
                     link: '/logistik/pengiriman/pemetian'
                 },
                 {

@@ -2601,6 +2601,13 @@ class PenjualanController extends Controller
                         ->join('produk', 'produk.id', '=', 'detail_penjualan_produk.produk_id')
                         ->whereColumn('detail_pesanan.pesanan_id', 'ekatalog.pesanan_id');
                 },
+                'cjumlahdsb' => function ($q) {
+                    $q->selectRaw('sum(detail_pesanan_dsb.jumlah * detail_penjualan_produk.jumlah)')
+                        ->from('detail_pesanan_dsb')
+                        ->join('detail_penjualan_produk', 'detail_penjualan_produk.penjualan_produk_id', '=', 'detail_pesanan_dsb.penjualan_produk_id')
+                        ->join('produk', 'produk.id', '=', 'detail_penjualan_produk.produk_id')
+                        ->whereColumn('detail_pesanan_dsb.pesanan_id', 'ekatalog.pesanan_id');
+                },
                 'cgudang' => function ($q) {
                     $q->selectRaw('count(detail_pesanan_produk.id)')
                         ->from('detail_pesanan_produk')
@@ -2717,7 +2724,7 @@ class PenjualanController extends Controller
                         //     </button>
                         // </a>';
                     } else {
-                        $hitung = floor((($data->cseri / $data->cjumlah) * 100));
+                        $hitung = floor((($data->cseri / ($data->cjumlah + $data->cjumlahdsb )) * 100));
                         if ($hitung > 0) {
                             $datas = '<div class="progress">
                                 <div class="progress-bar bg-success" role="progressbar" aria-valuenow="' . $hitung . '"  style="width: ' . $hitung . '%" aria-valuemin="0" aria-valuemax="100">' . $hitung . '%</div>
@@ -2741,7 +2748,7 @@ class PenjualanController extends Controller
                     if ($data->status == "batal") {
                         $datas .= 'batal';
                     } else {
-                        $hitung = floor((($data->cseri / $data->cjumlah) * 100));
+                        $hitung = floor((($data->cseri / ($data->cjumlah + $data->cjumlahdsb )) * 100));
                         if ($hitung > 0) {
                             $datas = $hitung;
                         } else {
@@ -3790,7 +3797,6 @@ class PenjualanController extends Controller
                 $nopaket = "";
             }
 
-
             $Ekatalog = Ekatalog::create([
                 'customer_id' => $c_id,
                 'provinsi_id' => $request->provinsi == 'NULL' ? NULL : $request->provinsi,
@@ -4453,38 +4459,78 @@ if( $request->perusahaan_pengiriman != NULL && $request->alamat_pengiriman != NU
             if($ekatalog->Pesanan->DetailPesananDsb->isEmpty()){
                 $data = $item;
             }else{
-                foreach($ekatalog->Pesanan->DetailPesananDsb as $key_paket => $d){
-                    if($d->NoseriDsb->isEmpty()){
-                        $seri =    "";
-                    }else{
-                        $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
-                    }
+                if($ekatalog->Pesanan->DetailPesanan->isEmpty()){
+                    foreach($ekatalog->Pesanan->DetailPesananDsb as $key_paket => $d){
+                        if($d->NoseriDsb->isEmpty()){
+                            $seri =    "";
+                        }else{
+                            $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
+                        }
 
-                    $item_dsb[$key_paket] = array(
-                        'jenis' => 'dsb',
-                        'id' => $d->id,
-                        'detail_rencana_penjualan_id' => 0,
-                        'penjualan_produk_id' => $d->penjualan_produk_id,
-                        'nama' => $d->PenjualanProduk->nama,
-                        'jumlah' => $d->jumlah,
-                        'harga' => $d->harga,
-                        'ongkir' => $d->ongkir,
-                        'ppn' => $d->ppn,
-                        'detail' => array(),
-                        'seri' => $seri
-                    );
-
-                    foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
-                        $item_dsb[$key_paket]['detail'][$key_prd] = array(
-                            'id' => $e->id,
-                            'gbj_id' => $e->GudangBarangJadi->id,
-                            'nama' => $e->GudangBarangJadi->Produk->nama,
-                            'variasi' => $e->GudangBarangJadi->nama,
+                        $item_dsb[$key_paket] = array(
+                            'jenis' => 'dsb',
+                            'id' => $d->id,
+                            'detail_rencana_penjualan_id' => 0,
+                            'penjualan_produk_id' => $d->penjualan_produk_id,
+                            'nama' => $d->PenjualanProduk->nama,
+                            'jumlah' => $d->jumlah,
+                            'harga' => $d->harga,
+                            'ongkir' => $d->ongkir,
+                            'ppn' => $d->ppn,
+                            'detail' => array(),
+                            'seri' => $seri
                         );
+
+                        foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
+                            $item_dsb[$key_paket]['detail'][$key_prd] = array(
+                                'id' => $e->id,
+                                'gbj_id' => $e->GudangBarangJadi->id,
+                                'nama' => $e->GudangBarangJadi->Produk->nama,
+                                'variasi' => $e->GudangBarangJadi->nama,
+                            );
+                        }
                     }
+                    $data = $item_dsb;
+                }else{
+                    foreach($ekatalog->Pesanan->DetailPesananDsb as $key_paket => $d){
+                        if($d->NoseriDsb->isEmpty()){
+                            $seri =    "";
+                        }else{
+                            $seri =    implode(',', collect($d->NoseriDsb->pluck("noseri"))->toArray());
+                        }
+
+                        $item_dsb[$key_paket] = array(
+                            'jenis' => 'dsb',
+                            'id' => $d->id,
+                            'detail_rencana_penjualan_id' => 0,
+                            'penjualan_produk_id' => $d->penjualan_produk_id,
+                            'nama' => $d->PenjualanProduk->nama,
+                            'jumlah' => $d->jumlah,
+                            'harga' => $d->harga,
+                            'ongkir' => $d->ongkir,
+                            'ppn' => $d->ppn,
+                            'detail' => array(),
+                            'seri' => $seri
+                        );
+
+                        foreach ($d->DetailPesananProdukDsb as $key_prd => $e) {
+                            $item_dsb[$key_paket]['detail'][$key_prd] = array(
+                                'id' => $e->id,
+                                'gbj_id' => $e->GudangBarangJadi->id,
+                                'nama' => $e->GudangBarangJadi->Produk->nama,
+                                'variasi' => $e->GudangBarangJadi->nama,
+                            );
+                        }
+                    }
+                    $data = array_merge($item, $item_dsb);
                 }
-                $data = array_merge($item, $item_dsb);
+
+
+
+
             }
+
+
            //return response()->json($data);
              return view('page.penjualan.penjualan.edit_ekatalog', ['e' => $ekatalog,'item' => $data]);
         } else if ($jenis == 'spa') {

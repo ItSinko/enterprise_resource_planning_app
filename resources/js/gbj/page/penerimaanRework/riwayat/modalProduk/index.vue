@@ -1,10 +1,10 @@
 <script>
-import pagination from '../../../../components/pagination.vue';
+import DataTable from '../../../../components/DataTable.vue';
 import modalDetail from './noseri.vue'
 export default {
     props: ['dataSelected'],
     components: {
-        pagination,
+        DataTable,
         modalDetail,
     },
     data() {
@@ -15,6 +15,14 @@ export default {
             dataSeriSelected: null,
             dataModalDetail: null,
             showModalDetail: false,
+            headers: [
+                { text: 'No.', value: 'no', sortable: false },
+                { text: 'No Seri', value: 'noseri' },
+                { text: 'Tanggal Dibuat', value: 'tgl_buat', align: 'text-left' },
+                { text: 'Layout', value: 'layout', align: 'text-left' },
+                { text: 'Packer', value: 'packer', align: 'text-left' },
+                { text: 'Aksi', value: 'aksi', align: 'text-left' },
+            ]
         }
     },
     methods: {
@@ -53,6 +61,12 @@ export default {
             this.$nextTick(() => {
                 $('.modalProduk').modal('show')
             })
+        },
+                lihatPackingList(id) {
+            window.open(`/produksiReworks/viewpackinglist/${id}`, '_blank');
+        },
+        cetakPackingList(id) {
+            window.open(`/produksiReworks/cetakpackinglist?data=[${id}]`, '_blank');
         },
     },
     computed: {
@@ -114,47 +128,23 @@ export default {
                                         <input type="text" v-model="search" class="form-control" placeholder="Cari...">
                                     </div>
                                 </div>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nomor Seri</th>
-                                            <th>Tanggal Dibuat</th>
-                                            <th>Layout</th>
-                                            <th>Packer</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="renderPaginate.length > 0">
-                                        <tr v-for="(data, index) in renderPaginate" :key="index">
-                                            <td>{{ index + 1 }}</td>
-                                            <td>{{ data.noseri }}</td>
-                                            <td>{{ dateFormat(data.tgl_buat) }}</td>
-                                            <td>{{ data.layout?.label }}</td>
-                                            <td>{{ data.packer ?? '-' }}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-info" @click="detailProdukSeri(data)">
-                                                    <i class="fa fa-info-circle"></i> Detail No. Seri Produk
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-success"><i class="fa fa-eye"></i> Lihat
-                                                    Packing List
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-primary"><i class="fa fa-print"></i>
-                                                    Cetak Packing List
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="4" class="text-center">
-                                                Tidak ada data
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <pagination :filteredDalamProses="filteredDalamProses"
-                                    @updateFilteredDalamProses="updateFilteredDalamProses" />
+                                <DataTable :headers="headers" :items="dataSelected.item" :search="search">
+                                    <template #item.aksi="{ item }">
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-info" @click="detailProdukSeri(item)">
+                                                <i class="fa fa-info-circle"></i> Detail No. Seri Produk
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" @click="lihatPackingList(item.id)"><i
+                                                    class="fa fa-eye"></i> Lihat
+                                                Packing List
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary" @click="cetakPackingList(item.id)"><i
+                                                    class="fa fa-print"></i>
+                                                Cetak Packing List
+                                            </button>
+                                        </div>
+                                    </template>
+                                </DataTable>
                             </div>
                         </div>
                     </div>

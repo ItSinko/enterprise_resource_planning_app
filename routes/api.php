@@ -619,6 +619,16 @@ Route::prefix('/qc')->group(function () {
 
 Route::prefix('/logistik')->group(function () {
     Route::get('rw', [App\Http\Controllers\LogistikController::class, 'reworks_show']);
+    Route::group(['prefix' => '/rw/pack'], function () {
+        Route::get('show', [App\Http\Controllers\LogistikController::class, 'pack_reworks_show']);
+        Route::post('store/{id}', [App\Http\Controllers\LogistikController::class, 'pack_reworks_store'])->middleware('jwt.verify');
+        Route::get('detail/{id}', [App\Http\Controllers\LogistikController::class, 'pack_reworks_detail']);
+        Route::get('details/{id}', [App\Http\Controllers\LogistikController::class, 'pack_reworks_details']);
+    });
+    Route::group(['prefix' => '/rw/pack_wilayah'], function () {
+        Route::post('store/{urutan}', [App\Http\Controllers\LogistikController::class, 'pack_wilayah_reworks_store']);
+        Route::get('show/{urutan}', [App\Http\Controllers\LogistikController::class, 'pack_wilayah_reworks_show']);
+    });
     Route::group(['prefix' => '/rw/peti'], function () {
         Route::get('detail/{urut}', [App\Http\Controllers\LogistikController::class, 'peti_reworks_detail']);
         Route::post('store/{id}', [App\Http\Controllers\LogistikController::class, 'peti_reworks_store'])->middleware('jwt.verify');

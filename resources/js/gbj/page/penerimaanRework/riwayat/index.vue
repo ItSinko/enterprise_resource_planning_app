@@ -25,6 +25,14 @@ export default {
         detail(data) {
             this.dataSelected = JSON.parse(JSON.stringify(data))
 
+            this.dataSelected.item = this.dataSelected.item.map((item, index) => {
+                item.no = index + 1;
+                item.tgl_buat = this.dateFormat(item.tgl_buat);
+                item.layout = item.layout ? item.layout.label : '-';
+                item.packer = item.packer ? item.packer : '-';
+                return item
+            })
+
             this.showModal = true
             this.$nextTick(() => {
                 $('.modalProduk').modal('show')
