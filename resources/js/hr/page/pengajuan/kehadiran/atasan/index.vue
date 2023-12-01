@@ -26,6 +26,16 @@ export default {
                     jenis: 'Izin Keperluan Kantor',
                 },
             ],
+                        dataRiwayat: [
+                {
+                    id: 1,
+                    nama: 'Prita Hanifah',
+                    bagian: 'General Affair',
+                    tanggal: '03 Januari 2021',
+                    tgl_pengajuan: '2021-01-03',
+                    jenis: 'Izin Keperluan Kantor',
+                }
+            ],
         }
     },
 }
@@ -48,8 +58,9 @@ export default {
                     <pengajuan :dataTable="dataPengajuan" />
                 </div>
                 <div class="tab-pane fade" id="pills-riwayatAtasan" role="tabpanel" aria-labelledby="pills-riwayatAtasan-tab">
-                    <riwayat />
+                    <riwayat :dataTable="dataRiwayat" />
                 </div>
             </div>
+        </div>
     </div>
-</div></template>
+</template> 

@@ -138,6 +138,23 @@ export default {
                 <input type="text" v-model="search" class="form-control">
             </div>
         </div>
-        <DataTable :headers="headers" :items="filterData" :search="search" />
+        <DataTable :headers="headers" :items="filterData" :search="search" >
+            <template #item.aksi="{item}">
+                <div>
+                    <button class="btn btn-sm btn-outline-success" @click="setuju(item)">
+                        <i class="fas fa-check"></i>
+                        Setujui
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" @click="tolak(item)">
+                        <i class="fas fa-times"></i>
+                        Tolak
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" @click="detail(item)">
+                        <i class="fas fa-info-circle"></i>
+                        Detail
+                    </button>
+                </div>
+            </template>
+        </DataTable>
     </div>
 </template>

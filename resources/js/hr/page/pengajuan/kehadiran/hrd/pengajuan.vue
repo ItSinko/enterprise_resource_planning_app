@@ -212,11 +212,8 @@ export default {
                         <i class="fas fa-info-circle"></i>
                         Detail
                     </button>
-
                 </div>
             </template>
-
-
         </DataTable>
     </div>
 </template>
