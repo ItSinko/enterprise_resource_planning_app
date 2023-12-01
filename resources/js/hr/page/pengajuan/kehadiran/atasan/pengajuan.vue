@@ -138,8 +138,56 @@ export default {
                 <input type="text" v-model="search" class="form-control">
             </div>
         </div>
-        <DataTable :headers="headers" :items="filterData" :search="search" >
-            <template #item.aksi="{item}">
+        <DataTable :headers="headers" :items="filterData" :search="search">
+            <template #header.tanggal>
+                <span class="text-bold pr-2">Tanggal Pengajuan</span>
+                <span class="filter">
+                    <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                    <form id="filter_ekat">
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="jenis_penjualan">Tanggal Awal</label>
+                                            <input type="date" class="form-control" v-model="tanggalAwal"
+                                                :max="tanggalAkhir">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="jenis_penjualan">Tanggal Akhir</label>
+                                            <input type="date" class="form-control" v-model="tanggalAkhir"
+                                                :min="tanggalAwal">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </span>
+            </template>
+            <template #header.bagian>
+                <span class="text-bold pr-2">Bagian</span>
+                <span class="filter">
+                    <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-filter"></i>
+                    </a>
+                    <form id="filter_ekat">
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-3">
+                                <div class="form-group font-weight-normal">
+                                    <label for="">Bagian</label>
+                                    <v-select :options="getAllBagianUnique" v-model="bagianFilter" multiple></v-select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </span>
+            </template>
+            <template #item.aksi="{ item }">
                 <div>
                     <button class="btn btn-sm btn-outline-success" @click="setuju(item)">
                         <i class="fas fa-check"></i>

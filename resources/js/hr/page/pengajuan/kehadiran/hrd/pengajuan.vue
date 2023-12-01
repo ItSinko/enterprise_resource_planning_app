@@ -119,7 +119,7 @@ export default {
                 }))
             }
 
-            if(this.bagianFilter.length > 0) {
+            if (this.bagianFilter.length > 0) {
                 filtered = this.renderNo(filtered.filter(data => {
                     return this.bagianFilter.includes(data.bagian)
                 }))
@@ -183,8 +183,8 @@ export default {
                         <div class="dropdown-menu">
                             <div class="px-3 py-3">
                                 <div class="form-group font-weight-normal">
-                                  <label for="">Bagian</label>
-                                  <v-select :options="getAllBagianUnique" v-model="bagianFilter" multiple></v-select>
+                                    <label for="">Bagian</label>
+                                    <v-select :options="getAllBagianUnique" v-model="bagianFilter" multiple></v-select>
                                 </div>
                             </div>
                         </div>
