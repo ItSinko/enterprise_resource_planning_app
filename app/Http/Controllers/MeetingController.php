@@ -304,6 +304,7 @@ class MeetingController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Gagal',
+            'error' => $th->getMessage()
         ], 500);
     }
     }
