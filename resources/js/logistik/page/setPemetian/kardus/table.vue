@@ -35,7 +35,9 @@ export default {
                     <td>{{ data.sudah }}</td>
                     <td>{{ data.belum }}</td>
                     <td>
-                        <button class="btn btn-outline-primary btn-sm" @click="setKardus(data.id)">Set Kardus</button>
+                        <button class="btn btn-outline-primary btn-sm" @click="setKardus(data.id)">
+                            <i class="fas fa-pencil-alt"></i>
+                            Set Kardus</button>
                     </td>
                 </tr>
             </tbody>

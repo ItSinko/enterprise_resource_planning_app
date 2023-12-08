@@ -606,19 +606,23 @@
                         orderable: false,
                         searchable: false
                     },
-                    {
+                    { 
                         data: null,
                         render: function(data, type, row) {
+                            if (data.item.length > 0) {
                             return `
                         <button class="btn btn-sm btn-outline-info buttonNoSeriDetail">
                             <i class="fa fa-info-circle"></i>
                             Detail No. Seri Produk
                         </button> &nbsp;
-                        <a class="btn btn-sm btn-outline-primary" href="/produksiReworks/viewpackinglist/1">
+                        <a class="btn btn-sm btn-outline-primary" href="/produksiReworks/viewpackinglist/${data.id}" target="_blank">
                             <i class="fa fa-eye"></i>
                             Lihat Packing List
                         </a>
                         `
+                    } else {
+                        return ''
+                    }
                         },
                     }
                 ]

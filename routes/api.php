@@ -141,6 +141,7 @@ Route::prefix('/penjualan')->group(function () {
     // Route::post('create', [App\Http\Controllers\PenjualanController::class, 'create_penjualan']);
     Route::post('/penjualan/data/{jenis}/{status}/{tahun}', [App\Http\Controllers\PenjualanController::class, 'penjualan_data']);
     Route::get('/ekatalog_data/{akn}', [App\Http\Controllers\PenjualanController::class, 'get_data_ekatalog_emindo']);
+    Route::get('/laporan', [App\Http\Controllers\PenjualanController::class, 'get_laporans']);
     Route::get('/spa_data/{po}', [App\Http\Controllers\PenjualanController::class, 'get_data_spa_emindo']);
     Route::get('check_ekatalog/{akn}', [App\Http\Controllers\PenjualanController::class, 'cek_paket']);
     Route::get('penjualan_emindo', [App\Http\Controllers\PenjualanController::class, 'penjualan_data_emindo']);
@@ -426,12 +427,12 @@ Route::prefix('/prd')->group(function () {
     Route::get('/testing', [ProduksiController::class, 'change_jadwal']);
 
     // kirim
-    Route::get('/kirim', [ProduksiController::class, 'getSelesaiRakit'])->middleware('jwt.verify');
+    Route::get('/kirim', [ProduksiController::class, 'getSelesaiRakit']);
     Route::get('/headerSeri/{id}', [ProduksiController::class, 'getHeaderSeri']);
     Route::get('/historySeri/{id}/{value}', [ProduksiController::class, 'historySeri']);
     Route::get('/riwayat_seri_rakit/{id}/{value}', [ProduksiController::class, 'get_detail_noseri_rakit']);
     Route::get('/detailSeri1/{id}/{value}', [ProduksiController::class, 'detailSeri1']);
-    Route::post('/send', [ProduksiController::class, 'kirimseri']);
+    Route::post('/send', [ProduksiController::class, 'kirimseri'])->middleware('jwt.verify');
     Route::post('/terimaseri', [ProduksiController::class, 'terimaseri']);
     Route::post('/delete', [ProduksiController::class, 'deleteNoseri']);
     Route::post('/deleteAll', [ProduksiController::class, 'deleteAllSeri']);
@@ -443,7 +444,7 @@ Route::prefix('/prd')->group(function () {
         Route::post('/rakit/h', [ProduksiController::class, 'h_rakit']);
         Route::post('/unit/h', [ProduksiController::class, 'h_unit']);
         Route::get('/header/{id}', [ProduksiController::class, 'header_his_rakit']);
-        Route::post('/pengiriman', [ProduksiController::class, 'h_pengiriman'])->middleware('jwt.verify');
+        Route::get('/pengiriman', [ProduksiController::class, 'h_pengiriman']);
     });
 });
 

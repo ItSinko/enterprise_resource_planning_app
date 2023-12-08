@@ -30,7 +30,9 @@ export default {
                     <td>{{ data.sudah }}</td>
                     <td>{{ data.belum }}</td>
                     <td>
-                        <button class="btn btn-outline-primary btn-sm" @click="setPemetian(data.id)">Set Pemetian</button>
+                        <button class="btn btn-outline-primary btn-sm" @click="setPemetian(data.id)">
+                            <i class="fas fa-pencil-alt"></i>
+                            Set Pemetian</button>
                     </td>
                 </tr>
             </tbody>

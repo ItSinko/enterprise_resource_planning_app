@@ -62,7 +62,7 @@ export default {
                     return {
                         ...item,
                         no: index + 1,
-                        tanggal_dibuat: this.dateFormat(item.tgl_buat),
+                        tanggal_dibuat: this.dateTimeFormat(item.tgl_buat),
                     }
                 })
             } catch (error) {
@@ -188,7 +188,7 @@ export default {
             <div class="card-body">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 flex-grow-1 bd-highlight">
-                        <button class="btn btn-primary" @click="openModalCreate">
+                        <button class="btn btn-primary" @click="openModalCreate" v-if="$route.params.belum !== 0">
                             <i class="fas fa-plus"></i>
                             Tambah
                         </button>

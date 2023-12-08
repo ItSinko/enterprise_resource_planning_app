@@ -172,11 +172,7 @@ class QcController extends Controller
                 ->where('noseri_barang_jadi.gdg_barang_jadi_id', $id)
                 ->get();
         }
-
-
-
         // return response()->json($noseri);
-
         return datatables()->of($data)
             ->addIndexColumn()
             ->addColumn('checkbox', function ($data) {

@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        {{-- <div class="card-header">
+                        <div class="card-header">
                             <div class="row">
                                 <div class="col-8">
                                     <div class="row">
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                         <!-- /.card-header -->
                         <div class="card-body">
                             <table class="table table-bordered" id="gudang-barang" style="width: 100%">

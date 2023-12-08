@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportPackWilayah;
 use App\Exports\LaporanLogistik;
 use App\Exports\LaporanPenjualanAll;
 use App\Models\DetailLogistik;
@@ -5602,7 +5603,7 @@ class LogistikController extends Controller
 
     public function pack_reworks_store(Request $request,$urutan){
 
-        // DB::beginTransaction();
+        DB::beginTransaction();
         try {
             //code...
         $obj =  json_decode(json_encode($request->all()), FALSE);
@@ -5614,6 +5615,7 @@ class LogistikController extends Controller
         $cekJumlahAvailable = PackRw::where('pack_rw_head_id',$urutan)->count();
         $tersedia = $getPack->jumlah - $cekJumlahAvailable;
 
+      //  dd($seriValues);
         if(count($seriValues) == count($cekSeri)){
             if($cekPeti > 0){
                 $getUsed = PackRw::whereIn('noseri',$seriValues)->pluck('noseri')->toArray();
@@ -5648,11 +5650,6 @@ class LogistikController extends Controller
                         'values' => [],
                     ], 200);
                 }
-
-
-
-
-
             }
            }else{
 
@@ -5770,7 +5767,7 @@ class LogistikController extends Controller
             foreach($data as $d){
                 $obj[] = array(
                     'id' => $d->noseri_id,
-                    'tgl_buat' => $d->created_at->format('Y-m-d'),
+                    'tgl_buat' => $d->created_at,
                     'noseri' => $d->noseri,
                     'packer' =>  $d->user_id,
                 );
@@ -6060,6 +6057,12 @@ class LogistikController extends Controller
         return view('page.produksi.printreworks.viewpeti', compact('loadView'));
     }
 
+    public function export_pack_wilayah_excel($id) {
+        $waktu = Carbon::now();
+
+        $wilayah = PackRwHead::find($id);
+        return Excel::download(new ExportPackWilayah($id), 'ExportPackWilayah  '.$wilayah->prov.'-'.$wilayah->kota.' ' . $waktu->toDateTimeString() . '.xlsx');
+    }
     public function cetak_peti($id) {
         $loadView = $this->peti_reworks_detail($id);
         $pdf = PDF::loadView('page.produksi.printreworks.cetakpeti', compact('loadView'))->setPaper('a5', 'landscape');

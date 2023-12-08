@@ -3302,55 +3302,26 @@ class ProduksiController extends Controller
         group by jp.id
         having jp.jumlah != cast(sum(case when jrn.status = 14 then 1 else 0 end) as SIGNED)");
 
-            return datatables()->of($data)
-                ->addColumn('periode', function ($d) {
-                    if (isset($d->tanggal_mulai)) {
-                        return Carbon::parse($d->tanggal_mulai)->isoFormat('MMMM');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('start', function ($d) {
-                    if (isset($d->tanggal_mulai)) {
-                        return Carbon::parse($d->tanggal_mulai)->isoFormat('D MMM YYYY');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('end', function ($d) {
-                    if (isset($d->tanggal_selesai)) {
-                        return Carbon::parse($d->tanggal_selesai)->isoFormat('D MMM YYYY');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('produk', function ($d) {
-                    return $d->produkk;
-                })
-                ->addColumn('jml', function ($d) {
-                    return  $d->jumlah . ' Unit<br><span class="badge badge-dark">Terisi: ' . $d->jml_all . ' Unit</span>';
-                })
-                ->addColumn('action', function ($d) {
-                    if ($d->jml_rakit != 0) {
-                        return '<a data-toggle="modal" data-target="#detailmodal" class="detailmodal" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jumlah . '" data-prd="' . $d->produk_id . '">
-                                      <button class="btn btn-outline-success btn-sm"><i class="far fa-edit"></i> Transfer</button>
-                                  </a>&nbsp;
-                                  <a data-toggle="modal" data-target="#detailmodalTransfer" class="detailmodalTransfer" data-attr=""  data-id="' . $d->id . '" data-jml="' . $d->jml_rakit . '" data-prd="' . $d->produk_id . '">
-                                      <button class="btn btn-outline-danger btn-sm"><i class="far fa-edit"></i> Transfer Sisa Produk</button>
-                                  </a>';
-                    }
-                })
-                ->addColumn('progress', function ($d) {
-                    $a = $d->perc_kirim == null ? '0.00' : $d->perc_kirim;
-                    $b = $d->perc_rakit == null ? '0.00' : $d->perc_rakit;
-                    return '<span class="badge badge-success">Terkirim: ' . $d->jml_kirim . ' Unit (' . $a . '%)</span>
-                          <br><span class="badge badge-dark">Rakit: ' . $d->jml_rakit . ' Unit (' . $b . '%)</span>';
-                })
-                ->addColumn('no_bppb', function ($d) {
-                    return $d->no_bppb == null ? '-' : $d->no_bppb;
-                })
-                ->rawColumns(['action', 'status', 'jml', 'progress'])
-                ->make(true);
+            $data = collect($data)->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'produk_id' => $item->produk_id,
+                    'no_bppb' => $item->no_bppb ? $item->no_bppb : '-',
+                    'tanggal_mulai' => $item->tanggal_mulai ? $item->tanggal_mulai : '-',
+                    'tanggal_selesai' => $item->tanggal_selesai ? $item->tanggal_selesai : '-',
+                    'selisih' => $item->selisih,
+                    'nama_produk' => $item->produkk,
+                    'jumlah' => $item->jumlah,
+                    'jml_kirim' => $item->jml_kirim,
+                    'jml_rakit' => $item->jml_rakit,
+                    'jml_all' => $item->jml_all,
+                    'perc_kirim' => $item->perc_kirim,
+                    'perc_isi' => $item->perc_isi,
+                    'perc_rakit' => $item->perc_rakit,
+                ];
+            });
+
+            return response()->json($data);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -3579,15 +3550,16 @@ class ProduksiController extends Controller
                 ->whereRaw("date_format(waktu_tf, '%Y-%m-%d %H:%i') = ?", [$dd])
                 // ->whereRaw("date_format(date_in, '%Y-%m-%d %H:%i') = ?", [$rakit])
                 ->get();
-            return datatables()->of($data)
-                ->addColumn('checkbox', function ($d) {
-                    return '<input type="checkbox" name="noseri[]" id="noseri" value="' . $d->id . '" class="cb-child">';
-                })
-                ->addColumn('no_seri', function ($d) {
-                    return $d->noseri;
-                })
-                ->rawColumns(['checkbox'])
-                ->make(true);
+                return response()->json($data);
+            // return datatables()->of($data)
+            //     ->addColumn('checkbox', function ($d) {
+            //         return '<input type="checkbox" name="noseri[]" id="noseri" value="' . $d->id . '" class="cb-child">';
+            //     })
+            //     ->addColumn('no_seri', function ($d) {
+            //         return $d->noseri;
+            //     })
+            //     ->rawColumns(['checkbox'])
+            //     ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -3653,15 +3625,7 @@ class ProduksiController extends Controller
             $data = JadwalRakitNoseri::whereHas('header', function ($q) use ($id) {
                 $q->where('produk_id', $id);
             })->whereNull('waktu_tf')->where('jadwal_id', $jadwal)->get();
-            return datatables()->of($data)
-                ->addColumn('no_seri', function ($d) {
-                    return $d->noseri;
-                })
-                ->addColumn('id', function ($d) {
-                    return $d->id;
-                })
-                ->rawColumns(['checkbox'])
-                ->make(true);
+            return response()->json($data);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -3680,7 +3644,7 @@ class ProduksiController extends Controller
             $header->ke = 13;
             $header->jenis = 'masuk';
             $header->created_at = Carbon::now();
-            $header->created_by = $request->userid;
+            $header->created_by = auth()->user()->id;
             $header->save();
 
             $detail = new TFProduksiDetail();
@@ -3689,7 +3653,7 @@ class ProduksiController extends Controller
             $detail->qty = count($request->noseri);
             $detail->jenis = 'masuk';
             $detail->created_at = Carbon::now();
-            $detail->created_by = $request->userid;
+            $detail->created_by = auth()->user()->id;
             $detail->save();
 
             $check_array = $request->noseri;
@@ -3705,7 +3669,7 @@ class ProduksiController extends Controller
                             'jenis' => 'MASUK',
                             'is_aktif' => 0,
                             'created_at' => Carbon::now(),
-                            'created_by' => $request->userid,
+                            'created_by' => auth()->user()->id,
                         ]
                     );
                     $seriid = $seri->id;
@@ -3716,10 +3680,10 @@ class ProduksiController extends Controller
                     $serit->layout_id = 1;
                     $serit->jenis = 'MASUK';
                     $serit->created_at = Carbon::now();
-                    $serit->created_by = $request->userid;
+                    $serit->created_by = auth()->user()->id;
                     $serit->save();
                 }
-                JadwalRakitNoseri::where('jadwal_id', $request->jadwal_id)->whereIn('noseri', [$request->noseri[$key]])->update(['waktu_tf' => $request->tgl_transfer, 'status' => 14, 'transfer_by' => $request->userid]);
+                JadwalRakitNoseri::where('jadwal_id', $request->jadwal_id)->whereIn('noseri', [$request->noseri[$key]])->update(['waktu_tf' => $request->tgl_transfer, 'status' => 14, 'transfer_by' => auth()->user()->id]);
             }
 
             $obj = [
@@ -3735,7 +3699,7 @@ class ProduksiController extends Controller
                 'tipe' => 'Produksi',
                 'subjek' => 'Pengiriman Noseri Produksi',
                 'response' => json_encode($obj),
-                'user_id' => $request->userid
+                'user_id' => auth()->user()->id
             ]);
 
             return response()->json(['msg' => 'Berhasil Transfer ke Gudang']);
@@ -4487,35 +4451,37 @@ class ProduksiController extends Controller
                 ->whereNotNull('jadwal_rakit_noseri.waktu_tf')
                 ->get()->sortByDesc('waktu_tf');
 
-            return datatables()->of($d)
-                ->addColumn('day_kirim', function ($d) {
-                    if (isset($d->waktu_tf)) {
-                        return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->isoFormat('dddd, D MMMM Y');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('day_kirim_filter', function ($d) {
-                    if (isset($d->waktu_tf)) {
-                        return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->format('Y-m-d');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('time_kirim', function ($d) {
-                    if (isset($d->waktu_tf)) {
-                        return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->format('H:i');
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('bppb', function ($d) {
-                    return $d->no_bppb == null ? '-' : $d->no_bppb;
-                })
-                ->addColumn('jml', function ($d) {
-                    return $d->jml . ' Unit';
-                })
-                ->make(true);
+            return response()->json(array_values($d->toArray()));
+
+            // return datatables()->of($d)
+            //     ->addColumn('day_kirim', function ($d) {
+            //         if (isset($d->waktu_tf)) {
+            //             return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->isoFormat('dddd, D MMMM Y');
+            //         } else {
+            //             return '-';
+            //         }
+            //     })
+            //     ->addColumn('day_kirim_filter', function ($d) {
+            //         if (isset($d->waktu_tf)) {
+            //             return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->format('Y-m-d');
+            //         } else {
+            //             return '-';
+            //         }
+            //     })
+            //     ->addColumn('time_kirim', function ($d) {
+            //         if (isset($d->waktu_tf)) {
+            //             return Carbon::createFromFormat('Y-m-d H:i:s', $d->waktu_tf)->format('H:i');
+            //         } else {
+            //             return '-';
+            //         }
+            //     })
+            //     ->addColumn('bppb', function ($d) {
+            //         return $d->no_bppb == null ? '-' : $d->no_bppb;
+            //     })
+            //     ->addColumn('jml', function ($d) {
+            //         return $d->jml . ' Unit';
+            //     })
+            //     ->make(true);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => true,
@@ -4673,9 +4639,9 @@ class ProduksiController extends Controller
         // return view('page.produksi.printreworks.cetakpermintaanbarangjadi');
     }
 
-    function export_rework_excel($urutan)
+    function export_pack_wilayah_excel($id)
     {
         $waktu = Carbon::now();
-        return Excel::download(new ExportRework($urutan), 'PerakitanReworks  ' . $waktu->toDateTimeString() . '.xlsx');
+        return Excel::download(new ExportRework($id), 'PerakitanReworks  ' . $waktu->toDateTimeString() . '.xlsx');
     }
 }
