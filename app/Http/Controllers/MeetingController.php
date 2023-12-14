@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HasilMeeting;
 use App\Models\HasilNotulen;
 use App\Models\JadwalMeeting;
+use App\Models\kesehatan\Karyawan;
 use App\Models\PesertaMeeting;
 use App\Models\RiwayatJadwalMeeting;
 use Carbon\Carbon;
@@ -50,7 +51,7 @@ class MeetingController extends Controller
             return response()->json([
                 'status' => 200,
                 'message' => 'Berhasil Ditambahkan',
-            ], 500);
+            ], 200);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -288,11 +289,11 @@ class MeetingController extends Controller
                     "id"=> $d->id,
                     "urutan"=> 'Meet-'.$d->urutan,
                     "judul"=> $d->judul,
-                    "tgl_meeting"=> $d->tgl_meeting,
+                    "tanggal"=> $d->tgl_meeting,
                     "mulai"=>  $d->mulai,
                     "selesai"=>$d->selesai,
                     "lokasi"=>  $d->lokasi,
-                    "status"=>  $d->status == 1 ? 'Belum Terlaksana' : 'Menyusun Hasil', //1=belum 2=dilaksanakan
+                    "status"=>  $d->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting', //1=belum 2=dilaksanakan
                     "notulen"=>  $d->notulen,
                     "moderator"=>  $d->moderator,
                     "deskripsi"=> $d->deskripsi
@@ -353,9 +354,9 @@ class MeetingController extends Controller
             $obj->mulai =  $data->mulai;
             $obj->selesai=  $data->selesai;
             $obj->lokasi =  $data->lokasi;
-            $obj->status =  $data->status;
-            $obj->notulen =   $data->notulen;
-            $obj->moderator =   $data->moderator;
+            $obj->status =  $data->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
+            $obj->notulen =   Karyawan::find($data->notulen)->nama;
+            $obj->moderator =   Karyawan::find($data->moderator)->nama;
             $obj->deskripsi =  $data->deskripsi;
 
             if(count($data->RiwayatJadwalMeeting) > 0){

@@ -7,6 +7,7 @@ import terlaksana from "./aksi/terlaksana.vue";
 import Edit from "./aksi/edit";
 import Batal from "./aksi/batal";
 import catatan from "./aksi/catatan_peserta";
+import axios from 'axios';
 export default {
     components: {
         Header,
@@ -32,37 +33,12 @@ export default {
                 },
             ],
             search: '',
-            dataTable: [
-                {
-                    id: 1,
-                    nama: 'Meeting 1',
-                    tanggal: '12 Januari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    // count array peserta
-                    jumlah_peserta: 10,
-                    peserta: null,
-                    status: 'menyusun_hasil_meeting',
-                    lokasi: 'Gedung A',
-                },
-                {
-                    id: 2,
-                    nama: 'Meeting 2',
-                    tanggal: '12 Januari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    // count array peserta
-                    jumlah_peserta: 10,
-                    peserta: null,
-                    status: 'belum_terlaksana',
-                    lokasi: 'Gedung A',
-                },
-            ],
+            dataTable: [],
             headers: [
                 { text: 'No', value: 'no', sortable: false },
-                { text: 'Nomor Meeting', value: 'no_meet' },
-                { text: 'Judul Meeting', value: 'nama' },
-                { text: 'Tanggal', value: 'tanggal' },
+                { text: 'Nomor Meeting', value: 'urutan' },
+                { text: 'Judul Meeting', value: 'judul' },
+                { text: 'Tanggal', value: 'tanggal_meet' },
                 { text: 'Mulai', value: 'mulai' },
                 { text: 'Selesai', value: 'selesai' },
                 { text: 'Lokasi', value: 'lokasi' },
@@ -74,28 +50,7 @@ export default {
             modalTambah: false,
             // selesai
             searchSelesai: '',
-            dataTableSelesai: [
-                {
-                    id: 3,
-                    nama: 'Meeting 2',
-                    tanggal: '12 Januari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    jumlah_peserta: 10,
-                    status: 'terlaksana',
-                    lokasi: 'Gedung A',
-                },
-                {
-                    id: 4,
-                    nama: 'Meeting 3',
-                    tanggal: '12 Januari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    jumlah_peserta: 10,
-                    status: 'batal',
-                    lokasi: 'Gedung A',
-                }
-            ],
+            dataTableSelesai: [],
             dataTerlaksana: {},
             modalTerlaksana: false,
             editData: null,
@@ -107,6 +62,23 @@ export default {
         }
     },
     methods: {
+        async getData() {
+            try {
+                this.$store.dispatch('setLoading', true)
+                const { data:belum_terlaksana } = await axios.get('/api/hr/meet/jadwal')
+                this.dataTable = belum_terlaksana.map((item, index) => {
+                    return {
+                        ...item,
+                        no: index + 1,
+                        tanggal_meet: this.dateFormat(item.tanggal),
+                    }
+                })
+            } catch (error) {
+                console.log(error)      
+            } finally {
+                this.$store.dispatch('setLoading', false)
+            }
+        },
         tambahMeeting() {
             this.modalTambah = true
             this.$nextTick(() => {
@@ -174,14 +146,17 @@ export default {
             }
         },
     },
+    created() {
+        this.getData()
+    },  
 }
 </script>
 <template>
     <div>
         <Header :title="title" :breadcumbs="breadcumbs" />
-        <Tambah v-if="modalTambah" @closeModal="closeTambah" />
+        <Tambah v-if="modalTambah" @closeModal="closeTambah" @refresh="getData" />
         <Batal :meeting="batalData" v-if="modalBatal" @closeModal="resetBatal" />
-        <Edit :meeting="editData" v-if="modalEdit" @closeModal="resetEdit" />
+        <Edit :meeting="editData" v-if="modalEdit" @closeModal="resetEdit" @refresh="getData" />
         <terlaksana :meeting="dataTerlaksana" v-if="modalTerlaksana" @closeModal="resetTerlaksana" />
         <catatan :meeting="catatanData" v-if="modalCatatan" @closeModal="resetCatatan" />
         <div class="card">
@@ -214,16 +189,6 @@ export default {
                         </div>
 
                         <DataTable :headers="headers" :items="dataTable" :search="search">
-                            <template #item.no="{ item, index }">
-                                <div>
-                                    {{ index + 1 }}
-                                </div>
-                            </template>
-                            <template #item.no_meet="{ item, index }">
-                                <div>
-                                    Meet-{{ index + 1 }}
-                                </div>
-                            </template>
                             <template #item.status="{ item }">
                                 <div>
                                     <status :status="item.status" />

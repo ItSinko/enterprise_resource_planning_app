@@ -48,7 +48,7 @@ export default {
                                 </div>
                                 <div class="margin">
                                     <b id="distributor">{{
-                                        meeting.no_meeting
+                                        meeting.urutan
                                     }}</b>
                                 </div>
                                 <small class="text-muted">Notulen</small>

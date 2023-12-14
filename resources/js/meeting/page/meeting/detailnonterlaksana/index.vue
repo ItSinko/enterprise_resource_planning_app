@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import Header from "../../../components/header.vue";
 import HeaderDetail from "./header.vue";
 import Item from "./item.vue";
@@ -25,122 +26,7 @@ export default {
                     link: "/meeting/hr/detail",
                 },
             ],
-            meeting: [
-                {
-                    id: 1,
-                    no_meeting: "Meet-1",
-                    judul: "Meeting 1",
-                    deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    tanggal: "2023-01-01",
-                    notulen: "Notulen 1",
-                    moderator: "Moderator 1",
-                    mulai: "08:00",
-                    selesai: "09:00",
-                    jumlah_peserta: 10,
-                    status: "belum_terlaksana",
-                    alasan_perubahan_meeting: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    lokasi: "Gedung A",
-                    peserta: [
-                        {
-                            nama: "Peserta 1",
-                            divisi: "Divisi 1",
-                            kehadiran: "hadir",
-                        },
-                        {
-                            nama: "Peserta 2",
-                            divisi: "Divisi 2",
-                            kehadiran: "tidak_hadir",
-                            alasan: "Catatan Peserta 2",
-                            dokumen_pendukung: [
-                                {
-                                    nama: "Dokumen 1",
-                                    link: "#",
-                                },
-                                {
-                                    nama: "Dokumen 2",
-                                    link: "#",
-                                },
-                            ],
-                        },
-                    ]
-                },
-                {
-                    id: 2,
-                    no_meeting: "Meet-1",
-                    judul: "Meeting 1",
-                    deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    tanggal: "2023-02-01",
-                    notulen: "Notulen 1",
-                    moderator: "Moderator 1",
-                    mulai: "09:00",
-                    selesai: "10:00",
-                    jumlah_peserta: 10,
-                    status: "batal",
-                    lokasi: "Gedung A",
-                    alasan_pembatalan_meeting: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    peserta: [
-                        {
-                            nama: "Peserta 3",
-                            divisi: "Divisi 3",
-                            kehadiran: "hadir",
-                        },
-                        {
-                            nama: "Peserta 4",
-                            divisi: "Divisi 4",
-                            kehadiran: "tidak_hadir",
-                            alasan: "Catatan Peserta 2",
-                            dokumen_pendukung: [
-                                {
-                                    nama: "Dokumen 1",
-                                    link: "#",
-                                },
-                                {
-                                    nama: "Dokumen 2",
-                                    link: "#",
-                                },
-                            ],
-                        },
-                    ]
-                },
-                {
-                    id: 2,
-                    no_meeting: "Meet-1",
-                    judul: "Meeting 1",
-                    deskripsi: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    tanggal: "2023-02-01",
-                    notulen: "Notulen 1",
-                    moderator: "Moderator 1",
-                    mulai: "09:00",
-                    selesai: "10:00",
-                    jumlah_peserta: 10,
-                    status: "batal",
-                    lokasi: "Gedung A",
-                    alasan_pembatalan_meeting: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-                    peserta: [
-                        {
-                            nama: "Peserta 3",
-                            divisi: "Divisi 3",
-                            kehadiran: "hadir",
-                        },
-                        {
-                            nama: "Peserta 4",
-                            divisi: "Divisi 4",
-                            kehadiran: "tidak_hadir",
-                            alasan: "Catatan Peserta 2",
-                            dokumen_pendukung: [
-                                {
-                                    nama: "Dokumen 1",
-                                    link: "#",
-                                },
-                                {
-                                    nama: "Dokumen 2",
-                                    link: "#",
-                                },
-                            ],
-                        },
-                    ]
-                },
-            ],
+            meeting: [],
             itemMeetingSelected: [],
             selectedData: 0,
         };
@@ -156,9 +42,21 @@ export default {
             this.selectedData = idx;
             this.itemMeetingSelected = JSON.parse(JSON.stringify(item));
         },
+        async getDetail() {
+            try {
+                this.$store.dispatch("setLoading", true);
+                const { data } = await axios.get(`/api/hr/meet/jadwal/${this.$route.params.id}`);
+                this.meeting.push(data);
+                this.itemMeetingSelected = this.meeting[0];
+            } catch (error) {
+                console.log(error);
+            } finally {
+                this.$store.dispatch("setLoading", false);
+            }
+        }
     },
     created() {
-        this.itemMeetingSelected = this.meeting[0];
+        this.getDetail();
     },
     computed: {
         lengthMeeting() {

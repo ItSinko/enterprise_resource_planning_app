@@ -25,32 +25,6 @@ export default {
                 e.preventDefault();
             }
         },
-        cekMulaiSelesai() {
-            if (this.meeting.mulai > this.meeting.selesai) {
-                this.$swal({
-                    title: 'Perhatian!',
-                    text: 'Jam mulai tidak boleh lebih besar dari jam selesai',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                })
-                this.meeting.mulai = ''
-                return false
-            }
-            return true
-        },
-        cekSelesaiMulai() {
-            if (this.meeting.selesai < this.meeting.mulai) {
-                this.$swal({
-                    title: 'Perhatian!',
-                    text: 'Jam selesai tidak boleh lebih kecil dari jam mulai',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                })
-                this.meeting.selesai = ''
-                return false
-            }
-            return true
-        },
         calculateHourAkhir() {
             if (this.meeting.mulai !== '') {
                 const waktu_awal = this.meeting.mulai.split(':')
@@ -72,8 +46,38 @@ export default {
             }
         },
         simpan() {
-            this.cekMulaiSelesai()
-            this.cekSelesaiMulai()
+            if (this.meeting.mulai > this.meeting.selesai) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Jam mulai tidak boleh lebih besar dari jam selesai',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                this.meeting.mulai = ''
+                return
+            }
+
+            if (this.meeting.selesai < this.meeting.mulai) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Jam selesai tidak boleh lebih kecil dari jam mulai',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                this.meeting.selesai = ''
+                return
+            }
+
+            try {
+                axios.put(`/api/hr/meet/jadwal/${this.meeting?.id}`, this.meeting)
+                this.closeModal()
+                this.$emit('refresh')
+                this.$swal('Berhasil!', 'Jadwal Meeting berhasil diubah', 'success')
+            } catch (error) {
+                console.log(error)
+                this.$swal('Gagal!', 'Jadwal Meeting gagal diubah', 'error')
+            }
+            
         }
     },
     mounted() {

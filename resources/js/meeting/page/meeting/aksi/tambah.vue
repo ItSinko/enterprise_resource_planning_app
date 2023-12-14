@@ -45,32 +45,6 @@ export default {
                 console.log(error)
             }
         },
-        cekMulaiSelesai() {
-            if (this.meeting.mulai > this.meeting.selesai) {
-                this.$swal({
-                    title: 'Perhatian!',
-                    text: 'Jam mulai tidak boleh lebih besar dari jam selesai',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                })
-                this.meeting.mulai = ''
-                return false
-            }
-            return true
-        },
-        cekSelesaiMulai() {
-            if (this.meeting.selesai < this.meeting.mulai) {
-                this.$swal({
-                    title: 'Perhatian!',
-                    text: 'Jam selesai tidak boleh lebih kecil dari jam mulai',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                })
-                this.meeting.selesai = ''
-                return false
-            }
-            return true
-        },
         calculateHourAkhir() {
             if (this.meeting.mulai !== '') {
                 const waktu_awal = this.meeting.mulai.split(':')
@@ -83,9 +57,48 @@ export default {
                 this.hourRangeAkhir = []
             }
         },
-        simpan() {
-            this.cekMulaiSelesai()
-            this.cekSelesaiMulai()
+        async simpan() {
+            if (this.meeting.mulai > this.meeting.selesai) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Jam mulai tidak boleh lebih besar dari jam selesai',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                this.meeting.mulai = ''
+                return
+            }
+
+            if (this.meeting.selesai < this.meeting.mulai) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Jam selesai tidak boleh lebih kecil dari jam mulai',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                this.meeting.selesai = ''
+                return
+            }
+
+            try {
+                await axios.post('/api/hr/meet/jadwal', this.meeting)
+                this.$swal({
+                    title: 'Berhasil!',
+                    text: 'Berhasil menyimpan data',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                })
+                this.$emit('refresh')
+                this.closeModal()
+            } catch {
+                console.log(error)
+                this.$swal({
+                    title: 'Gagal!',
+                    text: 'Gagal menyimpan data',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+            }
         }
     },
     mounted() {
@@ -120,11 +133,13 @@ export default {
                     <div class="form-group row">
                         <label for="mulai" class="col-sm-2 col-form-label">Jam</label>
                         <div class="col-sm-4">
-                            <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on" @input="calculateHourAkhir" />
+                            <vue-timepicker v-model="meeting.mulai" input-width="100%" autocomplete="on"
+                                @input="calculateHourAkhir" />
                         </div>
                         -
                         <div class="col-sm-4">
-                            <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on" :hour-range="hourRangeAkhir" />
+                            <vue-timepicker v-model="meeting.selesai" input-width="100%" autocomplete="on"
+                                :hour-range="hourRangeAkhir" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -154,5 +169,5 @@ export default {
                     <button type="button" class="btn btn-primary" @click="simpan">Simpan</button>
                 </div>
             </div>
-    </div>
+        </div>
 </div></template>
