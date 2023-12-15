@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use stdClass;
+use Carbon\Carbon;
 use App\Models\HasilMeeting;
 use App\Models\HasilNotulen;
-use App\Models\JadwalMeeting;
-use App\Models\kesehatan\Karyawan;
-use App\Models\PesertaMeeting;
-use App\Models\RiwayatJadwalMeeting;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\JadwalMeeting;
+use App\Models\PesertaMeeting;
+use App\Models\kesehatan\Karyawan;
 use Illuminate\Support\Facades\DB;
-use stdClass;
+use App\Models\RiwayatJadwalMeeting;
 
 class MeetingController extends Controller
 {
     //
     public function store_jadwal_meet(Request $request){
+        dd($request->all());
         DB::beginTransaction();
         try {
             //code...
@@ -296,7 +297,10 @@ class MeetingController extends Controller
                     "status"=>  $d->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting', //1=belum 2=dilaksanakan
                     "notulen"=>  $d->notulen,
                     "moderator"=>  $d->moderator,
-                    "deskripsi"=> $d->deskripsi
+                    "deskripsi"=> $d->deskripsi,
+                    "peserta" => PesertaMeeting::select('karyawan_id')->where('meeting_id', $d->id)->get()->map(function($item){
+                        return $item->karyawan_id;
+                    }),
                 ];
             }
         }
@@ -361,7 +365,7 @@ class MeetingController extends Controller
 
             if(count($data->RiwayatJadwalMeeting) > 0){
                 foreach($data->RiwayatJadwalMeeting as $p){
-                    $riwayat[] =  json_decode($p->isi);
+                    $riwayat[] =  json_decode($p);
                 }
                  $obj->riwayat = $riwayat;
            }else{

@@ -46,7 +46,12 @@ export default {
             try {
                 this.$store.dispatch("setLoading", true);
                 const { data } = await axios.get(`/api/hr/meet/jadwal/${this.$route.params.id}`);
-                this.meeting.push(data);
+                this.meeting = data.riwayat;
+                if (this.meeting.length == data.riwayat.length) {
+                    let dataSementara = data;
+                    delete dataSementara.riwayat;
+                    this.meeting.push(dataSementara);
+                }
                 this.itemMeetingSelected = this.meeting[0];
             } catch (error) {
                 console.log(error);
