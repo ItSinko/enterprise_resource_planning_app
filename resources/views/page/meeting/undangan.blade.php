@@ -46,24 +46,25 @@
         margin-left: 0;
     }
 
-    .fixed-bottom {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-    .footer-undangan{
-        text-align: right;
+    .footer-undangan {
         font-size: 12px;
+        text-align: right;
     }
-    footer {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
+
+    .lampiran {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .page-break {
+        page-break-after: always;
     }
 </style>
 
-<body class="table">
-    <table>
+<body>
+    <table class="table">
         <tr class="judul">
             <td style="border-right: 1px solid black;"><span class="company">PT SINKO PRIMA ALLOY</span></td>
             <td><span class="undangan">UNDANGAN RAPAT</span></td>
@@ -71,7 +72,7 @@
         <tr>
             <td colspan="2" class="header-undangan">
                 <span>Surabaya, <b>22 Agustus 2023</b></span><br>
-                <span>Kepada Yth: <b>Nama Peserta</b></span>
+                <span>Kepada Yth: <b>Terlampir</b></span>
             </td>
         </tr>
         <tr>
@@ -139,9 +140,9 @@
                     HRD selambatnya 3 (tiga) hari sebelum tanggal pelaksanaan Rapat.</p>
             </td>
         </tr>
-    </table>
-    <footer>
-        <table style="width: 100%">
+        <tr>
+            <td colspan="2" class="body-undangan">
+                <table style="width: 100%">
                     <tr>
                         <td>Dibuat oleh,</td>
                         <td style="width: 20%"></td>
@@ -160,9 +161,61 @@
                         </td>
                     </tr>
                 </table>
-    </footer>
+            </td>
+        </tr>
+    </table>
     <p class="footer-undangan">Nomor Dokumen : SPA-FR/DIR-09, Tanggal Terbit : 02 Mei 2017, Revisi : 01</p>
-</body>
 
+    <div class="page-break"></div>
+    <p class="lampiran">LAMPIRAN</p>
+    @php
+        // buat array peserta rapat
+        $peserta = ['Tan Evi Anggraini - HRD', 'Zakkiyatul Barizza - HRD', 'Elita Cindy - PPIC', 'Kukuh Setya - PPIC', 'Bangkit Nata Satria - PPIC'];
+
+        // jika kurang dari 20, buat array kosong dengan isi ...
+        if (count($peserta) < 20) {
+            $kosong = array_fill(count($peserta), 20 - count($peserta), '...');
+        } else {
+            $kosong = [];
+        }
+
+        // gabungkan array peserta rapat dengan array kosong
+        $peserta = array_merge($peserta, $kosong);
+    @endphp
+
+    <p>Turut mengundang peserta rapat:</p>
+    {{-- bagi setiap per 10 --}}
+    @for ($i = 0; $i < count($peserta); $i += 20)
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 50%">
+                    <table>
+                        @for ($j = $i; $j < $i + 10; $j++)
+                            @if (isset($peserta[$j]))
+                                <tr>
+                                    <td style="width: 5%">{{ $j + 1 }}.</td>
+                                    <td style="width: 45%">{{ $peserta[$j] }}</td>
+                                </tr>
+                            @endif
+                        @endfor
+                    </table>
+                </td>
+                <td style="width: 50%">
+                    <table>
+                        @for ($j = $i + 10; $j < $i + 20; $j++)
+                        @if (isset($peserta[$j]))
+                            <tr>
+                                <td style="width: 5%">{{ $j + 1 }}.</td>
+                                <td style="width: 45%">{{ $peserta[$j] }}</td>
+                            </tr>
+                        @endif
+                        @endfor
+                    </table>
+                </td>
+            </tr>
+        </table>
+    @endfor
+
+</body>
 
 </html>
