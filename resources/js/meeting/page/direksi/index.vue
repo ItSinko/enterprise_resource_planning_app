@@ -2,6 +2,7 @@
 import Header from '../../components/header.vue';
 import DataTable from '../../components/DataTable.vue';
 import status from '../../components/status.vue';
+import axios from 'axios';
 export default {
     components: {
         Header,
@@ -22,64 +23,14 @@ export default {
                 },
             ],
             search: '',
-            dataTable: [
-                {
-                    id: 1,
-                    nama: 'Meeting 1',
-                    tanggal: '2023-01-01',
-                    tgl_meet: '02 Januari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    // count array peserta
-                    jumlah_peserta: 10,
-                    peserta: null,
-                    status: 'menyusun_hasil_meeting',
-                    lokasi: 'Gedung A',
-                },
-                {
-                    id: 2,
-                    nama: 'Meeting 2',
-                    tanggal: '2023-02-01',
-                    tgl_meet: '02 Februari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    // count array peserta
-                    jumlah_peserta: 10,
-                    peserta: null,
-                    status: 'belum_terlaksana',
-                    lokasi: 'Gedung A',
-                },
-            ],
+            dataTable: [],
             searchSelesai: '',
-            dataTableSelesai: [
-                {
-                    id: 3,
-                    nama: 'Meeting 2',
-                    tanggal: '2023-02-01',
-                    tgl_meet: '02 Februari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    jumlah_peserta: 10,
-                    status: 'terlaksana',
-                    lokasi: 'Gedung A',
-                },
-                {
-                    id: 4,
-                    nama: 'Meeting 3',
-                    tanggal: '2023-02-01',
-                    tgl_meet: '02 Februari 2023',
-                    mulai: '08:00',
-                    selesai: '09:00',
-                    jumlah_peserta: 10,
-                    status: 'batal',
-                    lokasi: 'Gedung A',
-                }
-            ],
+            dataTableSelesai: [],
             headers: [
                 { text: 'No', value: 'no', sortable: false },
-                { text: 'Nomor Meeting', value: 'no_meet' },
-                { text: 'Judul Meeting', value: 'nama' },
-                { text: 'Tanggal', value: 'tgl_meet' },
+                { text: 'Nomor Meeting', value: 'urutan' },
+                { text: 'Judul Meeting', value: 'judul' },
+                { text: 'Tanggal', value: 'tanggal_meet' },
                 { text: 'Mulai', value: 'mulai' },
                 { text: 'Selesai', value: 'selesai' },
                 { text: 'Jumlah Peserta', value: 'jumlah_peserta' },
@@ -90,6 +41,23 @@ export default {
         }
     },
     methods: {
+                async getData() {
+            try {
+                this.$store.dispatch('setLoading', true)
+                const { data: belum_terlaksana } = await axios.get('/api/hr/meet/jadwal')
+                this.dataTable = belum_terlaksana.map((item, index) => {
+                    return {
+                        ...item,
+                        no: index + 1,
+                        tanggal_meet: this.dateFormat(item.tanggal),
+                    }
+                })
+            } catch (error) {
+                console.log(error)
+            } finally {
+                this.$store.dispatch('setLoading', false)
+            }
+        },
         detail(id, status) {
             if (status == "terlaksana" || status == "menyusun_hasil_meeting") {
                 this.$router.push({
@@ -103,6 +71,9 @@ export default {
                 });
             }
         },
+    },
+        created() {
+        this.getData()
     },
 }
 </script>
@@ -136,16 +107,6 @@ export default {
                         </div>
 
                         <DataTable :headers="headers" :items="dataTable">
-                            <template #item.no="{ item, index }">
-                                <div>
-                                    {{ index + 1 }}
-                                </div>
-                            </template>
-                            <template #item.no_meet="{ item, index }">
-                                <div>
-                                    Meet-{{ index + 1 }}
-                                </div>
-                            </template>
                             <template #item.status="{ item }">
                                 <div>
                                     <status :status="item.status" />

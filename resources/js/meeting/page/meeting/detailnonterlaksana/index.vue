@@ -48,9 +48,10 @@ export default {
                 const { data } = await axios.get(`/api/hr/meet/jadwal/${this.$route.params.id}`);
                 this.meeting = data.riwayat;
                 if (this.meeting.length == data.riwayat.length) {
-                    let dataSementara = data;
-                    delete dataSementara.riwayat;
-                    this.meeting.push(dataSementara);
+                    // let dataSementara = data;
+                    // delete dataSementara.riwayat;
+                    // this.meeting.push(dataSementara);
+                    console.log('oke');
                 }
                 this.itemMeetingSelected = this.meeting[0];
             } catch (error) {

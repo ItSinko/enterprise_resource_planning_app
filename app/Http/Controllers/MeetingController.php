@@ -365,7 +365,12 @@ class MeetingController extends Controller
 
             if(count($data->RiwayatJadwalMeeting) > 0){
                 foreach($data->RiwayatJadwalMeeting as $p){
-                    $riwayat[] =  json_decode($p);
+                    $riwayat[] =  json_decode($p->isi);
+                    $riwayat[count($riwayat)-1]->ket = $p->ket;
+                    $riwayat[count($riwayat)-1]->urutan = 'Meet-'.$data->urutan;
+                    $riwayat[count($riwayat)-1]->notulen = Karyawan::find($data->notulen)->nama;
+                    $riwayat[count($riwayat)-1]->moderator = Karyawan::find($data->moderator)->nama;
+                    $riwayat[count($riwayat)-1]->status =  $data->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakanq
                 }
                  $obj->riwayat = $riwayat;
            }else{
