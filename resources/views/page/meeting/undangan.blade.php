@@ -55,10 +55,15 @@
         text-align: right;
         font-size: 12px;
     }
+    footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
 </style>
 
-<body>
-    <table class="table">
+<body class="table">
+    <table>
         <tr class="judul">
             <td style="border-right: 1px solid black;"><span class="company">PT SINKO PRIMA ALLOY</span></td>
             <td><span class="undangan">UNDANGAN RAPAT</span></td>
@@ -66,7 +71,7 @@
         <tr>
             <td colspan="2" class="header-undangan">
                 <span>Surabaya, <b>22 Agustus 2023</b></span><br>
-                <span>Kepada Yth: <b>Terlampir</b></span>
+                <span>Kepada Yth: <b>Nama Peserta</b></span>
             </td>
         </tr>
         <tr>
@@ -134,9 +139,9 @@
                     HRD selambatnya 3 (tiga) hari sebelum tanggal pelaksanaan Rapat.</p>
             </td>
         </tr>
-        <tr>
-            <td colspan="2" class="body-undangan">
-                <table style="width: 100%">
+    </table>
+    <footer>
+        <table style="width: 100%">
                     <tr>
                         <td>Dibuat oleh,</td>
                         <td style="width: 20%"></td>
@@ -155,9 +160,7 @@
                         </td>
                     </tr>
                 </table>
-            </td>
-        </tr>
-    </table>
+    </footer>
     <p class="footer-undangan">Nomor Dokumen : SPA-FR/DIR-09, Tanggal Terbit : 02 Mei 2017, Revisi : 01</p>
 </body>
 
