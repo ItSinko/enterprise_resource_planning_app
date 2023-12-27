@@ -13,6 +13,7 @@ use App\Http\Controllers\inventory\PerawatanController;
 use App\Http\Controllers\inventory\VerifikasiController;
 use App\Http\Controllers\inventory\KalibrasiPerbaikanController;
 use App\Http\Controllers\LogistikController;
+use App\Http\Controllers\MeetingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -526,6 +527,10 @@ Route::view('/uit', 'page.login_page.index');
 
 Route::view('/hr/{any?}', 'page.hr.index')->where('any', '.*');
 Route::view('/meeting/{any?}', 'page.meeting.index')->where('any', '.*');
+
+Route::group(['prefix' => '/pdfmeet'], function () {
+    Route::get('/undangan/{id}', [MeetingController::class, 'cetakUndangan']);
+});
 
 Route::namespace('v2')->group(__DIR__ . '/kesehatan/kesehatan.php');
 Route::namespace('lab')->group(__DIR__ . '/inventory/web.php');

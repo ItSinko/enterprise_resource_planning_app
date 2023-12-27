@@ -12,6 +12,7 @@ use App\Models\PesertaMeeting;
 use App\Models\kesehatan\Karyawan;
 use Illuminate\Support\Facades\DB;
 use App\Models\RiwayatJadwalMeeting;
+use PDF;
 
 class MeetingController extends Controller
 {
@@ -390,5 +391,9 @@ class MeetingController extends Controller
         ], 500);
     }
 
+    }
+
+    public function cetakUndangan($id) {
+        return PDF::loadView('page.meeting.undangan', compact('id'))->setPaper('a4', 'potrait')->stream('undangan.pdf');
     }
 }
