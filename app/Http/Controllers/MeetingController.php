@@ -367,7 +367,7 @@ class MeetingController extends Controller
             if(count($data->RiwayatJadwalMeeting) > 0){
                 foreach($data->RiwayatJadwalMeeting as $p){
                     $riwayat[] =  json_decode($p->isi);
-                    $riwayat[count($riwayat)-1]->ket = $p->ket;
+                    $riwayat[count($riwayat)-1]->alasan_perubahan_meeting = $p->ket;
                     $riwayat[count($riwayat)-1]->urutan = 'Meet-'.$data->urutan;
                     $riwayat[count($riwayat)-1]->notulen = Karyawan::find($data->notulen)->nama;
                     $riwayat[count($riwayat)-1]->moderator = Karyawan::find($data->moderator)->nama;

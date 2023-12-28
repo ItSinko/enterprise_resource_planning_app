@@ -57,16 +57,17 @@
             border: 1px solid black;
             padding: 5px;
         }
-        .text-center{
+
+        .text-center {
             text-align: center;
-        }   
+        }
 
         footer {
             position: fixed;
             bottom: 0;
             width: 100%;
         }
-        
+
         .table-footer {
             width: 100%;
             padding-left: 20px;
@@ -127,10 +128,7 @@
             ],
         ];
 
-        $hasil = [
-            'Pertemuan perlu dicatat secara tertulis sehingga hasil meeting dapat diketahui oleh setiap department.',
-            'Perlu dilakukan meeting lanjutan mengenai…..'
-        ]
+        $hasil = ['Pertemuan perlu dicatat secara tertulis sehingga hasil meeting dapat diketahui oleh setiap department.', 'Perlu dilakukan meeting lanjutan mengenai…..'];
 
     @endphp
     <table class="table-body">
@@ -190,12 +188,16 @@
             <tr>
                 <td colspan="3" style="height: 10%"></td>
             </tr>
-                        <tr>
-                <td class="text-center"><hr></td>
+            <tr>
+                <td class="text-center">
+                    <hr>
+                </td>
                 <td style="width: 45%"></td>
-                <td class="text-center"><hr></td>
+                <td class="text-center">
+                    <hr>
+                </td>
             </tr>
-                        <tr>
+            <tr>
                 <td class="text-center">Tan Evi Anggraini</td>
                 <td style="width: 45%"></td>
                 <td class="text-center">Yukiyasu</td>
