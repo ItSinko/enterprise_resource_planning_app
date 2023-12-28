@@ -530,6 +530,7 @@ Route::view('/meeting/{any?}', 'page.meeting.index')->where('any', '.*');
 
 Route::group(['prefix' => '/pdfmeet'], function () {
     Route::get('/undangan/{id}', [MeetingController::class, 'cetakUndangan']);
+    Route::get('/hasil/{id}', [MeetingController::class, 'cetakHasil']);
 });
 
 Route::namespace('v2')->group(__DIR__ . '/kesehatan/kesehatan.php');

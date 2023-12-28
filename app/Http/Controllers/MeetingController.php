@@ -396,4 +396,9 @@ class MeetingController extends Controller
     public function cetakUndangan($id) {
         return PDF::loadView('page.meeting.undangan', compact('id'))->setPaper('a4', 'potrait')->stream('undangan.pdf');
     }
+
+    public function cetakHasil($id)
+    {
+        return PDF::loadView('page.meeting.hasil', compact('id'))->setPaper('a4', 'potrait')->stream('undangan.pdf');
+    }
 }
