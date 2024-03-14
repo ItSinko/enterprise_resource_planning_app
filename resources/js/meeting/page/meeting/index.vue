@@ -65,7 +65,7 @@ export default {
         async getData() {
             try {
                 this.$store.dispatch('setLoading', true)
-                const { data:belum_terlaksana } = await axios.get('/api/hr/meet/jadwal')
+                const { data: belum_terlaksana } = await axios.get('/api/hr/meet/jadwal')
                 this.dataTable = belum_terlaksana.map((item, index) => {
                     return {
                         ...item,
@@ -74,7 +74,7 @@ export default {
                     }
                 })
             } catch (error) {
-                console.log(error)      
+                console.log(error)
             } finally {
                 this.$store.dispatch('setLoading', false)
             }
@@ -145,10 +145,13 @@ export default {
                 });
             }
         },
+        cetakUndangan(id) {
+            window.open(`/api/hr/meet/jadwal/print/${id}`, "_blank");
+        },
     },
     created() {
         this.getData()
-    },  
+    },
 }
 </script>
 <template>
@@ -204,7 +207,7 @@ export default {
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         v-if="item.status == 'belum_terlaksana'">
                                         <a>
-                                            <button class="dropdown-item" type="button">
+                                            <button class="dropdown-item" type="button" @click="cetakUndangan(item.id)">
                                                 <i class="fas fa-print"></i>
                                                 Cetak Undangan Meeting
                                             </button>
@@ -265,7 +268,8 @@ export default {
                                     </div>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         v-else-if="item.status == 'batal'">
-                                        <button class="dropdown-item" type="button" @click="detail(item.id, item.status)">
+                                        <button class="dropdown-item" type="button"
+                                            @click="detail(item.id, item.status)">
                                             <i class="fas fa-eye"></i>
                                             Detail
                                         </button>
@@ -280,7 +284,8 @@ export default {
                             </div>
                             <div class="p-2 bd-highlight">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Cari..." v-model="searchSelesai">
+                                    <input type="text" class="form-control" placeholder="Cari..."
+                                        v-model="searchSelesai">
                                 </div>
                             </div>
                         </div>
@@ -372,7 +377,8 @@ export default {
                                     </div>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                         v-else-if="item.status == 'batal'">
-                                        <button class="dropdown-item" type="button" @click="detail(item.id, item.status)">
+                                        <button class="dropdown-item" type="button"
+                                            @click="detail(item.id, item.status)">
                                             <i class="fas fa-eye"></i>
                                             Detail
                                         </button>

@@ -16,6 +16,10 @@ export default {
         changeFormatDate(date) {
             return moment(date).lang("id").format("dddd, DD MMMM YYYY");
         },
+        cetakUndangan() {
+            let id = this.$router.params.id;
+            window.open(`/api/hr/meet/jadwal/print/${id}`, "_blank");
+        },
     },
     computed: {
         showImageFail() {
@@ -48,8 +52,8 @@ export default {
                                 </div>
                                 <div class="margin">
                                     <b id="distributor">{{
-                                        meeting.urutan
-                                    }}</b>
+                    meeting.urutan
+                }}</b>
                                 </div>
                                 <small class="text-muted">Notulen</small>
                                 <div class="margin">
@@ -72,8 +76,8 @@ export default {
                                 </div>
                                 <div class="margin">
                                     <b id="distributor">{{
-                                        changeFormatDate(meeting.tanggal)
-                                    }}</b>
+                    changeFormatDate(meeting.tanggal)
+                }}</b>
                                 </div>
                                 <small class="text-muted">Waktu</small>
                                 <div class="margin">
@@ -97,8 +101,8 @@ export default {
                                     </div>
                                     <div>
                                         <b id="no_so">{{
-                                            meeting.jumlah_peserta
-                                        }}
+                    meeting.jumlah_peserta
+                }}
                                             Peserta</b>
                                     </div>
                                 </div>
@@ -118,14 +122,10 @@ export default {
                                     </div>
                                     <div>
                                         <b id="no_so">
-                                            <a :href="'/meeting/hr/undangan/' +
-                                                meeting.id
-                                                " target="_blank">
-                                                <button class="btn btn-success btn-sm mr-2 mb-2">
-                                                    <i class="fas fa-print"></i>
-                                                    Undangan Meeting
-                                                </button>
-                                            </a>
+                                            <button class="btn btn-success btn-sm mr-2 mb-2" @click="cetakUndangan">
+                                                <i class="fas fa-print"></i>
+                                                Undangan Meeting
+                                            </button>
                                         </b>
                                     </div>
                                 </div>
@@ -139,8 +139,8 @@ export default {
                                     </div>
                                     <div>
                                         <b id="no_so">{{
-                                            meeting.deskripsi
-                                        }}</b>
+                    meeting.deskripsi
+                }}</b>
                                     </div>
                                 </div>
                                 <div v-if="meeting.alasan_perubahan_meeting">
@@ -148,8 +148,8 @@ export default {
                                     <div class="margin">
                                         <div class="badge badge-danger">
                                             {{
-                                                meeting.alasan_perubahan_meeting
-                                            }}
+                    meeting.alasan_perubahan_meeting
+                }}
                                         </div>
                                     </div>
                                 </div>
@@ -158,8 +158,8 @@ export default {
                                     <div class="margin">
                                         <div class="badge badge-danger">
                                             {{
-                                                meeting.alasan_pembatalan_meeting
-                                            }}
+                    meeting.alasan_pembatalan_meeting
+                }}
                                         </div>
                                     </div>
                                 </div>
@@ -182,7 +182,8 @@ export default {
                             <a class="nav-link btn-sm text-capitalize" :class="{ active: idx === 0 }"
                                 :id="'pills-' + item.jenis + '-tab'" data-toggle="pill"
                                 :data-target="'#pills-' + item.jenis" type="button" role="tab"
-                                :aria-controls="'pills-' + item.jenis" aria-selected="true" @click="selectItem(item, idx)">
+                                :aria-controls="'pills-' + item.jenis" aria-selected="true"
+                                @click="selectItem(item, idx)">
                                 {{ item.jenis }}
                             </a>
                         </li>
