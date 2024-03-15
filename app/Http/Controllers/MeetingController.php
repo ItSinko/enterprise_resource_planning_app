@@ -66,6 +66,7 @@ class MeetingController extends Controller
 
     public function store_notulen_meet(Request $request)
     {
+        dd($request->all());
         DB::beginTransaction();
         try {
             //code...

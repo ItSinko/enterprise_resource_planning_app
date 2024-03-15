@@ -10,6 +10,7 @@ import VueTimepicker from 'vue2-timepicker'
 import dateFormat from "./plugins/dateFormat";
 import numberOnly from "./plugins/numberOnly";
 import dateTimeFormat from "./plugins/dateTimeFormat";
+import timeFormat from './plugins/timeFormat';
 import 'vue2-timepicker/dist/VueTimepicker.css'
 import "vue-select/dist/vue-select.css";
 
@@ -21,6 +22,7 @@ Vue.component('vue-timepicker', VueTimepicker)
 Vue.use(dateFormat);
 Vue.use(numberOnly);
 Vue.use(dateTimeFormat);
+Vue.use(timeFormat);
 
 const store = new Vuex.Store(storeData);
 

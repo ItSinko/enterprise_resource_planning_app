@@ -77,7 +77,6 @@ export default {
                 console.log(error)
                 this.$swal('Gagal!', 'Jadwal Meeting gagal diubah', 'error')
             }
-            
         }
     },
     mounted() {
@@ -147,7 +146,8 @@ export default {
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @click="closeModal">Keluar</button>
                     <button type="button" class="btn btn-primary" @click="simpan">Simpan</button>
+                </div>
             </div>
         </div>
     </div>
-</div></template>
+</template>

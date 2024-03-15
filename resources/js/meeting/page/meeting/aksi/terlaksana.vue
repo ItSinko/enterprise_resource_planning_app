@@ -103,8 +103,9 @@ export default {
                 this.meeting.selesai != this.cloneMeeting.selesai
             ) {
                 return true;
+            } else {
+                return false;
             }
-            return false;
         },
     },
 };
@@ -206,18 +207,19 @@ export default {
                                         aria-selected="true">Foto</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="pills-video-tab" data-toggle="pill" data-target="#pills-video"
-                                        type="button" role="tab" aria-controls="pills-video" aria-selected="false">Video</a>
+                                    <a class="nav-link" id="pills-video-tab" data-toggle="pill"
+                                        data-target="#pills-video" type="button" role="tab" aria-controls="pills-video"
+                                        aria-selected="false">Video</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="pills-rekaman-tab" data-toggle="pill"
-                                        data-target="#pills-rekaman" type="button" role="tab" aria-controls="pills-rekaman"
-                                        aria-selected="false">Rekaman Suara</a>
+                                        data-target="#pills-rekaman" type="button" role="tab"
+                                        aria-controls="pills-rekaman" aria-selected="false">Rekaman Suara</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="pills-lainnya-tab" data-toggle="pill"
-                                        data-target="#pills-lainnya" type="button" role="tab" aria-controls="pills-rekaman"
-                                        aria-selected="false">Dokumen Lainnya</a>
+                                        data-target="#pills-lainnya" type="button" role="tab"
+                                        aria-controls="pills-rekaman" aria-selected="false">Dokumen Lainnya</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="pills-tabContent">

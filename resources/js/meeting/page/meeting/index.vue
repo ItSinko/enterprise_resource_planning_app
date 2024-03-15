@@ -71,6 +71,8 @@ export default {
                         ...item,
                         no: index + 1,
                         tanggal_meet: this.dateFormat(item.tanggal),
+                        mulai: this.timeFormat(item.mulai),
+                        selesai: this.timeFormat(item.selesai),
                     }
                 })
             } catch (error) {

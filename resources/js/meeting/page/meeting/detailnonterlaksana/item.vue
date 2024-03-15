@@ -11,7 +11,7 @@ export default {
             search: "",
             headers: [
                 { text: 'Nama Peserta', value: 'nama' },
-                { text: 'Divisi', value: 'divisi' },
+                { text: 'Divisi', value: 'jabatan' },
                 { text: 'Kehadiran', value: 'kehadiran' },
                 { text: 'Alasan', value: 'alasan' },
                 { text: 'Dokumen Pendukung Ketidakhadiran', value: 'dokumen_pendukung' },

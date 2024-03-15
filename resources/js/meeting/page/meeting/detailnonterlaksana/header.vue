@@ -17,8 +17,11 @@ export default {
             return moment(date).lang("id").format("dddd, DD MMMM YYYY");
         },
         cetakUndangan() {
-            let id = this.$router.params.id;
+            let id = this.$route.params.id;
             window.open(`/api/hr/meet/jadwal/print/${id}`, "_blank");
+        },
+        changeTextareaToHtml(text) {
+            return text.replace(/\n/g, "<br>");
         },
     },
     computed: {
@@ -138,9 +141,7 @@ export default {
                                         <small class="text-muted">Deskripsi</small>
                                     </div>
                                     <div>
-                                        <b id="no_so">{{
-                    meeting.deskripsi
-                }}</b>
+                                        <b id="no_so"><span v-html="changeTextareaToHtml(meeting.deskripsi)"></span></b>
                                     </div>
                                 </div>
                                 <div v-if="meeting.alasan_perubahan_meeting">
