@@ -165,6 +165,7 @@ export default {
         <terlaksana :meeting="dataTerlaksana" v-if="modalTerlaksana" @closeModal="resetTerlaksana" />
         <catatan :meeting="catatanData" v-if="modalCatatan" @closeModal="resetCatatan" />
         <div class="card">
+        
             <div class="card-body">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
