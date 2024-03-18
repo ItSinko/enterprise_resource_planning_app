@@ -18,7 +18,7 @@ class MeetingController extends Controller
 {
     //
     public function store_jadwal_meet(Request $request){
-        dd($request->all());
+        //dd($request->all());
         DB::beginTransaction();
         try {
             //code...
@@ -59,7 +59,7 @@ class MeetingController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 200,
-                'message' => 'Gagal Di Tambahkan',
+                'message' => 'Gagal Di Tambahkan'.$th->getMessage(),
             ], 500);
         }
     }
