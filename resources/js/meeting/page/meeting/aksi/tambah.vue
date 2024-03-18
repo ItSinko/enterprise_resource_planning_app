@@ -20,8 +20,8 @@ export default {
                 jumlah_peserta: '',
                 lokasi: '',
                 peserta: [],
-                hourRangeAkhir: [],
-            }
+            },
+            hourRangeAkhir: [0, 23]
         }
     },
     methods: {
@@ -54,7 +54,7 @@ export default {
                 }
                 this.hourRangeAkhir = hour
             } else {
-                this.hourRangeAkhir = []
+                this.hourRangeAkhir = [0, 23]
             }
         },
         async simpan() {
@@ -82,7 +82,7 @@ export default {
 
             try {
                 await axios.post('/api/hr/meet/jadwal', this.meeting)
-                this.$swal({
+                swal.fire({
                     title: 'Berhasil!',
                     text: 'Berhasil menyimpan data',
                     icon: 'success',
@@ -92,7 +92,7 @@ export default {
                 this.closeModal()
             } catch {
                 console.log(error)
-                this.$swal({
+                swal.fire({
                     title: 'Gagal!',
                     text: 'Gagal menyimpan data',
                     icon: 'error',
@@ -170,4 +170,5 @@ export default {
                 </div>
             </div>
         </div>
-</div></template>
+    </div>
+</template>

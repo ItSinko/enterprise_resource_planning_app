@@ -38,6 +38,7 @@
 
     .core-undangan {
         padding-left: 25px;
+        width: 100%;
     }
 
     hr {
@@ -64,6 +65,9 @@
 </style>
 
 <body>
+    @php
+        // dd($data->peserta);
+    @endphp
     <table class="table">
         <tr class="judul">
             <td style="border-right: 1px solid black;"><span class="company">PT SINKO PRIMA ALLOY</span></td>
@@ -71,7 +75,7 @@
         </tr>
         <tr>
             <td colspan="2" class="header-undangan">
-                <span>Surabaya, <b>22 Agustus 2023</b></span><br>
+                <span>Surabaya, <b>{{ Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}</b></span> <br>
                 <span>Kepada Yth: <b>Terlampir</b></span>
             </td>
         </tr>
@@ -91,7 +95,7 @@
                     <tr>
                         <td>Perihal</td>
                         <td>:</td>
-                        <td><b>Presentasi dan Pemahaman SCM</b></td>
+                        <td><b>{{ $data->judul }}</b></td>
                     </tr>
                 </table>
             </td>
@@ -99,7 +103,7 @@
         <tr>
             <td colspan="2" class="body-undangan">
                 <p>Dengan hormat,</p>
-                <p>Mengharapkan kehadiran Bapak / Ibu untuk menghadiri Rapat <b>Presentasi dan Pemahaman SCM</b> <br>
+                <p>Mengharapkan kehadiran Bapak / Ibu untuk menghadiri Rapat <b>{{ $data->judul }}</b> <br>
                     yang akan diselenggarakan pada :</p>
             </td>
         </tr>
@@ -107,28 +111,30 @@
             <td colspan="2">
                 <table class="core-undangan">
                     <tr>
-                        <td>Hari / Tanggal</td>
-                        <td>:</td>
-                        <td><b>Kamis, 24 Agustus 2023</b></td>
+                        <td style="width: 20%">Hari / Tanggal</td>
+                        <td style="width: 5%">:</td>
+                        <td>
+                            <b>{{ Carbon\Carbon::parse($data->tgl_meeting)->locale('id')->translatedFormat('l, d F Y') }}</b>
+                        </td>
                     </tr>
                     <tr>
                         <td>Waktu</td>
                         <td>:</td>
-                        <td><b>13.00 WIB - 15.00 WIB</b></td>
+                        <td><b>{{ Carbon\Carbon::parse($data->mulai)->format('H:i') }} WIB -
+                                {{ Carbon\Carbon::parse($data->selesai)->format('H:i') }} WIB</b></td>
                     </tr>
                     <tr>
                         <td>Tempat</td>
                         <td>:</td>
-                        <td><b>Ruang Meeting Lantai Blok E-7</b></td>
+                        <td><b>{{ $data->lokasi }}</b></td>
                     </tr>
                     <tr>
                         <td style="vertical-align: top">Agenda / Materi</td>
                         <td style="vertical-align: top">:</td>
-                        <td><b>- Presentasi Oleh PPIC <br>
-                                - Presentasi Oleh Departemen <br>
-                                - Tanggapan dari Direksi <br>
-                                - Solusi dari IT
-                            </b></td>
+                        {{-- html dari deskripsi --}}
+                        <td>
+                            {!! nl2br($data->deskripsi) !!}
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -170,9 +176,13 @@
     <p class="lampiran">LAMPIRAN</p>
     @php
         // buat array peserta rapat
-        $peserta = ['Tan Evi Anggraini - HRD', 'Zakkiyatul Barizza - HRD', 'Elita Cindy - PPIC', 'Kukuh Setya - PPIC', 'Bangkit Nata Satria - PPIC'];
+        $peserta = [];
 
-        // jika kurang dari 20, buat array kosong dengan isi ...
+        // isi array peserta rapat
+        foreach ($data->peserta as $item) {
+            $peserta[] = $item['nama'] . ' - ' . $item['jabatan'];
+        }
+
         if (count($peserta) < 20) {
             $kosong = array_fill(count($peserta), 20 - count($peserta), '...');
         } else {
@@ -203,12 +213,12 @@
                 <td style="width: 50%">
                     <table>
                         @for ($j = $i + 10; $j < $i + 20; $j++)
-                        @if (isset($peserta[$j]))
-                            <tr>
-                                <td style="width: 5%">{{ $j + 1 }}.</td>
-                                <td style="width: 45%">{{ $peserta[$j] }}</td>
-                            </tr>
-                        @endif
+                            @if (isset($peserta[$j]))
+                                <tr>
+                                    <td style="width: 5%">{{ $j + 1 }}.</td>
+                                    <td style="width: 45%">{{ $peserta[$j] }}</td>
+                                </tr>
+                            @endif
                         @endfor
                     </table>
                 </td>

@@ -53,7 +53,7 @@ export default {
                     // this.meeting.push(dataSementara);
                     console.log('oke');
                 }
-                this.itemMeetingSelected = this.meeting[0];
+                this.itemMeetingSelected = this.meeting[0] == undefined || this.meeting[0] == null ? data : this.meeting[0];
             } catch (error) {
                 console.log(error);
             } finally {

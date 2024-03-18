@@ -11,14 +11,19 @@ export default {
             search: "",
             headers: [
                 { text: 'Nama Peserta', value: 'nama' },
-                { text: 'Divisi', value: 'divisi' },
+                { text: 'Divisi', value: 'jabatan' },
                 { text: 'Kehadiran', value: 'kehadiran' },
                 { text: 'Alasan', value: 'alasan' },
                 { text: 'Dokumen Pendukung Ketidakhadiran', value: 'dokumen_pendukung' },
             ]
         };
     },
-    props: ["meeting"],
+    props: {
+        meeting: {
+            type: Array,
+            default: () => [],
+        },
+    },
 };
 </script>
 <template>
@@ -33,14 +38,15 @@ export default {
                 </div>
             </div>
             <DataTable :headers="headers" :items="meeting" :search="search">
-                <template #item.kehadiran="{item}">
+                <template #item.kehadiran="{ item }">
                     <div>
                         <kehadiran :kehadiran="item.kehadiran"></kehadiran>
                     </div>
                 </template>
                 <template #item.dokumen_pendukung="{ item }">
                     <div v-if="item.dokumen_pendukung">
-                        <a v-for="(dokumen, idx) in item.dokumen_pendukung" :key="idx" :href="dokumen.link">{{ dokumen.nama
+                        <a v-for="(dokumen, idx) in item.dokumen_pendukung" :key="idx" :href="dokumen.link">{{
+                            dokumen.nama
                         }}<span v-if="idx != item.dokumen_pendukung.length - 1">, </span>
                         </a>
                     </div>

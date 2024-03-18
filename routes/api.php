@@ -340,6 +340,7 @@ Route::prefix('/hr')->group(function () {
             Route::post('/', [MeetingController::class, 'store_jadwal_meet']);
             Route::get('/', [MeetingController::class, 'show_jadwal_meet']);
             Route::get('/{id}', [MeetingController::class, 'detail_jadwal_meet']);
+            Route::get('/print/{id}', [MeetingController::class, 'cetakUndangan']);
             Route::put('/{id}', [MeetingController::class, 'update_jadwal_meet']);
             Route::delete('/{id}', [MeetingController::class, 'update_jadwal_meet']);
         });
@@ -350,6 +351,7 @@ Route::prefix('/hr')->group(function () {
         Route::prefix('/hasil')->group(function () {
             Route::post('/', [MeetingController::class, 'store_hasil_meet']);
             Route::get('/{id}', [MeetingController::class, 'show_hasil_meet']);
+            Route::get('/print/{id}', [MeetingController::class, 'cetakHasil']);
             Route::get('/edit/{id}', [MeetingController::class, 'edit_hasil_meet']);
             Route::put('/{id}', [MeetingController::class, 'update_hasil_meet']);
             Route::delete('/{id}', [MeetingController::class, 'delete_hasil_meet']);
