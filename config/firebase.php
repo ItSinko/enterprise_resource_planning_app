@@ -128,7 +128,7 @@ return [
                  * override it here.
                  */
 
-                'default_bucket' => env('erp-meeting-582e6.appspot.com'),
+                'default_bucket' => env('FIREBASE_STORAGE_DEFAULT_BUCKET'),
             ],
 
             /*

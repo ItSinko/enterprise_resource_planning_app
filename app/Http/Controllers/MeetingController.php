@@ -15,6 +15,7 @@ use App\Models\RiwayatJadwalMeeting;
 use Kreait\Firebase\Exception\FirebaseException;
 use Google\Cloud\Firestore\FirestoreClient;
 use PDF;
+use Illuminate\Support\Str;
 
 class MeetingController extends Controller
 {
@@ -705,7 +706,10 @@ class MeetingController extends Controller
 
         $image = $request->file('image'); //image file from frontend
 
-        $student   = app('firebase.firestore')->database()->collection('Images');
+        $randomCollectionName = uniqid('collection_', false);
+        $randomCollectionName = Str::uuid()->toString();
+
+        $student   = app('firebase.firestore')->database()->collection($randomCollectionName);
         $firebase_storage_path = 'Images/';
         $name     = $student->id();
         $localfolder = public_path('firebase-temp-uploads') .'/';
@@ -713,10 +717,11 @@ class MeetingController extends Controller
         $file      = $name. '.' . $extension;
         if ($image->move($localfolder, $file)) {
           $uploadedfile = fopen($localfolder.$file, 'r');
-          app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
+         $x =  app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
+         $downloadUrl = $x->signedUrl(new \DateTime('+1 hour'));
           unlink($localfolder . $file);
 
         }
-        return back()->withInput();
+        return $downloadUrl;
     }
 }
