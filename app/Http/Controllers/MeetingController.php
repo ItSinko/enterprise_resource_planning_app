@@ -702,7 +702,7 @@ class MeetingController extends Controller
 
     public function upload_dokumen(Request $request)
     {
-        //
+
         $image = $request->file('image'); //image file from frontend
 
         $student   = app('firebase.firestore')->database()->collection('Images');
@@ -714,7 +714,6 @@ class MeetingController extends Controller
         if ($image->move($localfolder, $file)) {
           $uploadedfile = fopen($localfolder.$file, 'r');
           app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
-          //will remove from local laravel folder
           unlink($localfolder . $file);
 
         }
