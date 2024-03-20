@@ -43,9 +43,28 @@ export default {
                 this.karyawan = response.data
             } catch (error) {
                 console.log(error)
+            } finally {
+                this.meeting.alasan = ''
             }
         },
         simpan() {
+            const cekNotNull = Object.values(this.meeting).every(val => {
+                if (Array.isArray(val)) {
+                    return val.length > 0
+                }
+                return val !== ''
+            })
+
+            if (!cekNotNull) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Data tidak boleh kosong',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                return
+            }
+
             if (this.meeting.mulai > this.meeting.selesai) {
                 this.$swal({
                     title: 'Perhatian!',

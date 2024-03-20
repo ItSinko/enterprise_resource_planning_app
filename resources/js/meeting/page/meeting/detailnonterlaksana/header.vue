@@ -104,7 +104,7 @@ export default {
                                     </div>
                                     <div>
                                         <b id="no_so">{{
-                    meeting.jumlah_peserta
+                    meeting.peserta.length
                 }}
                                             Peserta</b>
                                     </div>

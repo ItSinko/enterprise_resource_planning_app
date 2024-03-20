@@ -16,8 +16,6 @@ export default {
                 tanggal: '',
                 mulai: '',
                 selesai: '',
-                // jumlah tetap ada di belakang
-                jumlah_peserta: '',
                 lokasi: '',
                 peserta: [],
             },
@@ -58,6 +56,24 @@ export default {
             }
         },
         async simpan() {
+            // cek apakah ada data yang kosong atau array kosong
+            const cekNotNull = Object.values(this.meeting).every(val => {
+                if (Array.isArray(val)) {
+                    return val.length > 0
+                }
+                return val !== ''
+            })
+
+            if (!cekNotNull) {
+                this.$swal({
+                    title: 'Perhatian!',
+                    text: 'Data tidak boleh kosong',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                })
+                return
+            }
+
             if (this.meeting.mulai > this.meeting.selesai) {
                 this.$swal({
                     title: 'Perhatian!',
