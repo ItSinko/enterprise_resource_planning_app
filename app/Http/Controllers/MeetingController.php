@@ -12,6 +12,8 @@ use App\Models\PesertaMeeting;
 use App\Models\kesehatan\Karyawan;
 use Illuminate\Support\Facades\DB;
 use App\Models\RiwayatJadwalMeeting;
+use Kreait\Firebase\Exception\FirebaseException;
+use Google\Cloud\Firestore\FirestoreClient;
 use PDF;
 
 class MeetingController extends Controller
@@ -696,5 +698,26 @@ class MeetingController extends Controller
     public function cetakHasil($id)
     {
         return PDF::loadView('page.meeting.hasil', compact('id'))->setPaper('a4', 'potrait')->stream('undangan.pdf');
+    }
+
+    public function upload_dokumen(Request $request)
+    {
+        //
+        $image = $request->file('image'); //image file from frontend
+
+        $student   = app('firebase.firestore')->database()->collection('Images');
+        $firebase_storage_path = 'Images/';
+        $name     = $student->id();
+        $localfolder = public_path('firebase-temp-uploads') .'/';
+        $extension = $image->getClientOriginalExtension();
+        $file      = $name. '.' . $extension;
+        if ($image->move($localfolder, $file)) {
+          $uploadedfile = fopen($localfolder.$file, 'r');
+          app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
+          //will remove from local laravel folder
+          unlink($localfolder . $file);
+
+        }
+        return back()->withInput();
     }
 }

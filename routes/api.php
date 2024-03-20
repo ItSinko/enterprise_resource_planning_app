@@ -355,6 +355,7 @@ Route::prefix('/hr')->group(function () {
             Route::get('/{id}', [MeetingController::class, 'show_notulen_meet']);
         });
         Route::prefix('/hasil')->group(function () {
+            Route::post('/dokumen', [MeetingController::class, 'upload_dokumen']);
             Route::post('/', [MeetingController::class, 'store_hasil_meet']);
             Route::get('/{id}', [MeetingController::class, 'show_hasil_meet']);
             Route::get('/print/{id}', [MeetingController::class, 'cetakHasil']);
