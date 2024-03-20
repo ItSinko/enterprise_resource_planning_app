@@ -16,3 +16,4 @@ yarn-error.log
 /.vscode
 mix-manifest.json
 package-lock.json
+firebase_credentials.json
