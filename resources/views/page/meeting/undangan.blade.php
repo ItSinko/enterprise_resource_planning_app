@@ -66,7 +66,7 @@
 
 <body>
     @php
-        // dd($data->peserta);
+        // dd($data->judul);
     @endphp
     <table class="table">
         <tr class="judul">

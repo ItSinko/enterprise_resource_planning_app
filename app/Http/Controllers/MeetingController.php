@@ -18,13 +18,12 @@ class MeetingController extends Controller
 {
     //
     public function store_jadwal_meet(Request $request){
-        //dd($request->all());
         DB::beginTransaction();
         try {
             //code...
-            $max = JadwalMeeting::whereYear('created_at', (Carbon::now()->format('Y')))->max('urutan');
+            $max = JadwalMeeting::whereYear('created_at', now()->year)->max('urutan')+1;
             $jm =   JadwalMeeting::create([
-                "urutan" => $max + 1,
+                "urutan" => $max,
                 "judul" => $request->judul,
                 "tgl_meeting" => $request->tanggal,
                 "mulai" =>  $request->mulai,
@@ -46,14 +45,11 @@ class MeetingController extends Controller
                     ]);
                 }
             }
-
-
-
             DB::commit();
             return response()->json([
                 'status' => 200,
                 'message' => 'Berhasil Ditambahkan',
-            ], 200);
+            ], 500);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
@@ -92,6 +88,8 @@ class MeetingController extends Controller
     }
     public function store_hasil_meet(Request $request)
     {
+        $obj =  json_decode(json_encode($request->all()), FALSE);
+        dd($obj);
         DB::beginTransaction();
         try {
             //code...
@@ -202,6 +200,27 @@ class MeetingController extends Controller
             ], 500);
         }
     }
+
+    public function batal_jadwal_meet(Request $request)
+    {
+        try {
+            //code...
+            $data = JadwalMeeting::find($request->id);
+            $data->status = 0;
+            $data->save();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Berhasil Diubah',
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal',
+            ], 500);
+        }
+    }
+
     public function update_jadwal_meet(Request $request, $id)
     {
         DB::beginTransaction();
@@ -227,6 +246,7 @@ class MeetingController extends Controller
                             'id' => $p->id,
                             'karyawan_id' => $p->id,
                             'nama' => $p->Karyawan->nama,
+                            'jabatan' => $p->Karyawan->Divisi->nama,
                             'status' => $p->status,
                             'ket' => $p->ket,
                         ];
@@ -285,17 +305,160 @@ class MeetingController extends Controller
         }
     }
 
-    public function show_jadwal_meet()
+    public function update_hadir_jadwal_meet(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            //code...
+            PesertaMeeting::where(['id' => $request->id])->update(['status' => $request->status]);
+            DB::commit();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Berhasil Diubah',
+            ], 200);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal Di Ubah',
+            ], 500);
+        }
+
+    }
+
+    public function show_jadwal_meet_person_belum($id)
     {
 
         try {
             //code...
-            $data = JadwalMeeting::all();
+            $data = PesertaMeeting::
+            leftJoin('jadwal_meeting','jadwal_meeting.id','=','peserta_meeting.meeting_id')
+            ->where('karyawan_id',$id)
+            ->whereIN('jadwal_meeting.status',[1])
+            ->with('JadwalMeeting')->get();
 
             if ($data->isEmpty()) {
                 $obj = array();
             } else {
                 foreach ($data as $d) {
+                    if($d->status == 1){
+                        $status_peserta = 'Hadir';
+                    }elseif($d->status == 2){
+                        $status_peserta = 'Tidak Hadir';
+                    }else{
+                        $status_peserta = 'Belum Mengisi';
+                    }
+
+                    if($d->JadwalMeeting->status == 1){
+                        $status_meet = 'Belum Terlaksana';
+                    }elseif($d->JadwalMeeting->status == 2){
+                        $status_meet = 'Terlaksana';
+                    }else{
+                        $status_meet = 'Batal';
+                    }
+
+                    $obj[] = (object)[
+                        "id" => $d->id,
+                        "urutan" => 'Meet-' . $d->JadwalMeeting->urutan,
+                        "judul" => $d->JadwalMeeting->judul,
+                        "tanggal" => $d->JadwalMeeting->tgl_meeting,
+                        "mulai" =>  $d->JadwalMeeting->mulai,
+                        "selesai" => $d->JadwalMeeting->selesai,
+                        "lokasi" =>  $d->JadwalMeeting->lokasi,
+                        "status" =>  $status_meet,
+                        "status_peserta" =>  $status_peserta,
+                        "moderator" =>  $d->JadwalMeeting->moderator,
+                        "deskripsi" => $d->JadwalMeeting->deskripsi,
+                    ];
+                }
+            }
+            return response()->json($obj);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function show_jadwal_meet_person_selesai($id)
+    {
+        try {
+            //code...
+            $data = PesertaMeeting::
+            leftJoin('jadwal_meeting','jadwal_meeting.id','=','peserta_meeting.meeting_id')
+            ->where('karyawan_id',$id)
+            ->whereIN('jadwal_meeting.status',[0,2])
+            ->with('JadwalMeeting')->get();
+
+            if ($data->isEmpty()) {
+                $obj = array();
+            } else {
+                foreach ($data as $d) {
+                    if($d->status == 1){
+                        $status_peserta = 'Hadir';
+                    }elseif($d->status == 2){
+                        $status_peserta = 'Tidak Hadir';
+                    }else{
+                        $status_peserta = 'Belum Mengisi';
+                    }
+
+                    if($d->JadwalMeeting->status == 1){
+                        $status_meet = 'Belum Terlaksana';
+                    }elseif($d->JadwalMeeting->status == 2){
+                        $status_meet = 'Terlaksana';
+                    }else{
+                        $status_meet = 'Batal';
+                    }
+
+                    $obj[] = (object)[
+                        "id" => $d->id,
+                        "urutan" => 'Meet-' . $d->JadwalMeeting->urutan,
+                        "judul" => $d->JadwalMeeting->judul,
+                        "tanggal" => $d->JadwalMeeting->tgl_meeting,
+                        "mulai" =>  $d->JadwalMeeting->mulai,
+                        "selesai" => $d->JadwalMeeting->selesai,
+                        "lokasi" =>  $d->JadwalMeeting->lokasi,
+                        "status" =>  $status_meet,
+                        "status_peserta" =>  $status_peserta,
+                        "moderator" =>  $d->JadwalMeeting->moderator,
+                        "deskripsi" => $d->JadwalMeeting->deskripsi,
+                    ];
+                }
+            }
+            return response()->json($obj);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function show_jadwal_meet()
+    {
+
+        try {
+            //code...
+            $data = JadwalMeeting::where('status',1)->get();
+
+            if ($data->isEmpty()) {
+                $obj = array();
+            } else {
+                foreach ($data as $d) {
+                    if($d->status == 1){
+                        $status_meet = 'Belum Terlaksana';
+                    }elseif($d->status == 2){
+                        $status_meet = 'Terlaksana';
+                    }else{
+                        $status_meet = 'Batal';
+                    }
+
                     $obj[] = (object)[
                         "id" => $d->id,
                         "urutan" => 'Meet-' . $d->urutan,
@@ -304,7 +467,7 @@ class MeetingController extends Controller
                         "mulai" =>  $d->mulai,
                         "selesai" => $d->selesai,
                         "lokasi" =>  $d->lokasi,
-                        "status" =>  $d->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting', //1=belum 2=dilaksanakan
+                        "status" =>  $status_meet,
                         "notulen" =>  $d->notulen,
                         "moderator" =>  $d->moderator,
                         "deskripsi" => $d->deskripsi,
@@ -314,6 +477,7 @@ class MeetingController extends Controller
                     ];
                 }
             }
+
             return response()->json($obj);
         } catch (\Throwable $th) {
             return response()->json([
@@ -357,68 +521,167 @@ class MeetingController extends Controller
             ], 500);
         }
     }
-    public function detail_jadwal_meet($id)
+
+    public function detail_jadwal_meet_person($id)
     {
         try {
             //code...
-            $data = JadwalMeeting::find($id);
-            if ($data) {
-                $obj = new stdClass();
-                $obj->urutan =  'Meet-' . $data->urutan;
-                $obj->judul = $data->judul;
-                $obj->tgl_meeting =  $data->tgl_meeting;
-                $obj->mulai =  $data->mulai;
-                $obj->selesai =  $data->selesai;
-                $obj->lokasi =  $data->lokasi;
-                $obj->status =  $data->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
-                $obj->notulen =   Karyawan::find($data->notulen)->nama;
-                $obj->moderator =   Karyawan::find($data->moderator)->nama;
-                $obj->deskripsi =  $data->deskripsi;
-                $obj->peserta = PesertaMeeting::select('karyawan_id')
-                    ->where('meeting_id', $data->id)
-                    ->get()
-                    ->map(function ($item) {
-                        return [
-                            'id' => $item->karyawan_id,
-                            'nama' => Karyawan::find($item->karyawan_id)->nama,
-                            'jabatan' => Karyawan::find($item->karyawan_id)->Divisi->nama,
-                        ];
-                    })
-                    ->toArray();
+            $detail = PesertaMeeting::find($id);
 
-                if (count($data->RiwayatJadwalMeeting) > 0) {
-                    foreach ($data->RiwayatJadwalMeeting as $p) {
-                        $riwayat[] =  json_decode($p->isi);
-                        $riwayat[count($riwayat) - 1]->alasan_perubahan_meeting = $p->ket;
-                        $riwayat[count($riwayat) - 1]->urutan = 'Meet-' . $data->urutan;
-                        $riwayat[count($riwayat) - 1]->notulen = Karyawan::find($data->notulen)->nama;
-                        $riwayat[count($riwayat) - 1]->moderator = Karyawan::find($data->moderator)->nama;
-                        $riwayat[count($riwayat) - 1]->status =  $data->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakanq
-                        $riwayat[count($riwayat) - 1]->peserta =
-                        PesertaMeeting::select('karyawan_id')
-                        ->where('meeting_id', $data->id)
-                        ->get()
-                        ->map(function ($item) {
-                            return [
-                                'id' => $item->karyawan_id,
-                                'nama' => Karyawan::find($item->karyawan_id)->nama,
-                                'jabatan' => Karyawan::find($item->karyawan_id)->Divisi->nama,
-                            ];
-                        })->toArray();
-                    }
-                    $obj->riwayat = $riwayat;
-                } else {
-                    $obj->riwayat = array();
+            $jadwal = JadwalMeeting::find($detail->meeting_id);
+
+            //Peserta
+            $peserta = array();
+            $riwayat = array();
+            if ($jadwal->PesertaMeeting->count() > 0){
+                foreach($jadwal->PesertaMeeting as $j){
+                    $peserta[] = array(
+                        'id' => $j->id,
+                        'nama' => $j->Karyawan->nama,
+                        'jabatan' => $j->Karyawan->Divisi->nama
+                    );
                 }
-
-                return $obj;
-            } else {
-                $data = array();
             }
+
+            if($jadwal->RiwayatJadwalMeeting->count() > 0){
+                foreach($jadwal->RiwayatJadwalMeeting as $j){
+                    $x = json_decode($j->isi);
+                    $riwayat[] =  array(
+                        'urutan' =>  'Meet-' . $x->urutan,
+                        'judul' => $x->judul,
+                        'tgl_meeting' => $x->tgl_meeting,
+                        'mulai' =>  $x->mulai,
+                        'selesai' =>  $x->selesai,
+                        'lokasi' =>  $x->lokasi,
+                        'status' =>  $x->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting', //1=belum 2=dilaksanakan
+                        'notulen' =>   Karyawan::find($x->notulen)->nama,
+                        'moderator' =>   Karyawan::find($x->moderator)->nama,
+                        'deskripsi' =>  $x->deskripsi,
+                        'peserta' =>  $x->peserta,
+                        'alasan_perubahan_meeting' =>  $j->ket,
+                    );
+
+                }
+            }
+
+            $obj = new stdClass();
+            $obj->urutan =  'Meet-' . $jadwal->urutan;
+            $obj->judul = $jadwal->judul;
+            $obj->tgl_meeting =  $jadwal->tgl_meeting;
+            $obj->mulai =  $jadwal->mulai;
+            $obj->selesai =  $jadwal->selesai;
+            $obj->lokasi =  $jadwal->lokasi;
+            $obj->status =  $jadwal->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
+            $obj->notulen =   Karyawan::find($jadwal->notulen)->nama;
+            $obj->moderator =   Karyawan::find($jadwal->moderator)->nama;
+            $obj->deskripsi =  $jadwal->deskripsi;
+            $obj->peserta =  $peserta;
+
+            $riwayat[] =  $obj;
+
+            $newobj = new stdClass();
+            $newobj->urutan =  'Meet-' . $jadwal->urutan;
+            $newobj->judul = $jadwal->judul;
+            $newobj->tgl_meeting =  $jadwal->tgl_meeting;
+            $newobj->mulai =  $jadwal->mulai;
+            $newobj->selesai =  $jadwal->selesai;
+            $newobj->lokasi =  $jadwal->lokasi;
+            $newobj->status =  $jadwal->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
+            $newobj->notulen =   Karyawan::find($jadwal->notulen)->nama;
+            $newobj->moderator =   Karyawan::find($jadwal->moderator)->nama;
+            $newobj->deskripsi =  $jadwal->deskripsi;
+            $newobj->riwayat =  $riwayat;
+
+
+            $data = array(
+                'kehadiran' => $newobj
+            );
+
+            return $data;
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 200,
+                'message' => 'Gagal'.$th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function detail_jadwal_meet($id)
+    {
+        try {
+            $jadwal = JadwalMeeting::find($id);
+
+            //Peserta
+            $peserta = array();
+            $riwayat = array();
+            if ($jadwal->PesertaMeeting->count() > 0){
+                foreach($jadwal->PesertaMeeting as $j){
+                    $peserta[] = array(
+                        'id' => $j->id,
+                        'nama' => $j->Karyawan->nama,
+                        'jabatan' => $j->Karyawan->Divisi->nama
+                    );
+                }
+            }
+
+
+            if($jadwal->RiwayatJadwalMeeting->count() > 0){
+                foreach($jadwal->RiwayatJadwalMeeting as $j){
+                    $x = json_decode($j->isi);
+                    $riwayat[] =  array(
+                        'urutan' =>  'Meet-' . $x->urutan,
+                        'judul' => $x->judul,
+                        'tgl_meeting' => $x->tgl_meeting,
+                        'mulai' =>  $x->mulai,
+                        'selesai' =>  $x->selesai,
+                        'lokasi' =>  $x->lokasi,
+                        'status' =>  $x->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting', //1=belum 2=dilaksanakan
+                        'notulen' =>   Karyawan::find($x->notulen)->nama,
+                        'moderator' =>   Karyawan::find($x->moderator)->nama,
+                        'deskripsi' =>  $x->deskripsi,
+                        'peserta' =>  $x->peserta,
+                        'alasan_perubahan_meeting' =>  $j->ket,
+                    );
+
+                }
+            }
+
+            $obj = new stdClass();
+            $obj->urutan =  'Meet-' . $jadwal->urutan;
+            $obj->judul = $jadwal->judul;
+            $obj->tgl_meeting =  $jadwal->tgl_meeting;
+            $obj->mulai =  $jadwal->mulai;
+            $obj->selesai =  $jadwal->selesai;
+            $obj->lokasi =  $jadwal->lokasi;
+            $obj->status =  $jadwal->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
+            $obj->notulen =   Karyawan::find($jadwal->notulen)->nama;
+            $obj->moderator =   Karyawan::find($jadwal->moderator)->nama;
+            $obj->deskripsi =  $jadwal->deskripsi;
+            $obj->peserta =  $peserta;
+
+            $riwayat[] =  $obj;
+
+            $newobj = new stdClass();
+            $newobj->urutan =  'Meet-' . $jadwal->urutan;
+            $newobj->judul = $jadwal->judul;
+            $newobj->tgl_meeting =  $jadwal->tgl_meeting;
+            $newobj->mulai =  $jadwal->mulai;
+            $newobj->selesai =  $jadwal->selesai;
+            $newobj->lokasi =  $jadwal->lokasi;
+            $newobj->status =  $jadwal->status == 1 ? 'belum_terlaksana' : 'menyusun_hasil_meeting'; //1=belum 2=dilaksanakan
+            $newobj->notulen =   Karyawan::find($jadwal->notulen)->nama;
+            $newobj->moderator =   Karyawan::find($jadwal->moderator)->nama;
+            $newobj->deskripsi =  $jadwal->deskripsi;
+            $newobj->peserta =  $peserta;
+            $newobj->riwayat =  $riwayat;
+
+            return $newobj;
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => 200,
-                'message' => 'Gagal',
+                'message' => 'Gagal'.$th->getMessage(),
             ], 500);
         }
     }

@@ -342,7 +342,13 @@ Route::prefix('/hr')->group(function () {
             Route::get('/{id}', [MeetingController::class, 'detail_jadwal_meet']);
             Route::get('/print/{id}', [MeetingController::class, 'cetakUndangan']);
             Route::put('/{id}', [MeetingController::class, 'update_jadwal_meet']);
-            Route::delete('/{id}', [MeetingController::class, 'update_jadwal_meet']);
+            Route::post('/batal', [MeetingController::class, 'batal_jadwal_meet']);
+        });
+        Route::prefix('/jadwal_person')->group(function () {
+            Route::get('/show_belum/{id}', [MeetingController::class, 'show_jadwal_meet_person_belum']);
+            Route::get('/detail/{id}', [MeetingController::class, 'detail_jadwal_meet_person']);
+            Route::get('/show_selesai/{id}', [MeetingController::class, 'show_jadwal_meet_person_selesai']);
+            Route::post('/kehadiran', [MeetingController::class, 'update_hadir_jadwal_meet']);
         });
         Route::prefix('/notulen')->group(function () {
             Route::post('/', [MeetingController::class, 'store_notulen_meet']);
