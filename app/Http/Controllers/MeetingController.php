@@ -703,25 +703,47 @@ class MeetingController extends Controller
 
     public function upload_dokumen(Request $request)
     {
+        foreach($request->file('image') as $image){
+            $randomCollectionName = uniqid('collection_', false);
+            $randomCollectionName = Str::uuid()->toString();
 
-        $image = $request->file('image'); //image file from frontend
+            $set = app('firebase.firestore')->database()->collection($randomCollectionName);
+            $firebase_storage_path = 'Images/';
+            $name = $set->id();
+            $localfolder = public_path('firebase-temp-uploads') .'/';
+            $extension = $image->getClientOriginalExtension();
+            $file      = $name. '.' . $extension;
 
-        $randomCollectionName = uniqid('collection_', false);
-        $randomCollectionName = Str::uuid()->toString();
-
-        $student   = app('firebase.firestore')->database()->collection($randomCollectionName);
-        $firebase_storage_path = 'Images/';
-        $name     = $student->id();
-        $localfolder = public_path('firebase-temp-uploads') .'/';
-        $extension = $image->getClientOriginalExtension();
-        $file      = $name. '.' . $extension;
-        if ($image->move($localfolder, $file)) {
-          $uploadedfile = fopen($localfolder.$file, 'r');
-         $x =  app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
-         $downloadUrl = $x->signedUrl(new \DateTime('+1 hour'));
-          unlink($localfolder . $file);
-
+            if ($image->move($localfolder, $file)) {
+                     $uploadedfile = fopen($localfolder.$file, 'r');
+                     $x =  app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
+                     $downloadUrl[] = $x->signedUrl(new \DateTime('+1 hour'));
+                     unlink($localfolder . $file);
+                    }
         }
         return $downloadUrl;
     }
+    // public function upload_dokumen(Request $request)
+    // {
+    //     dd($request->all());
+    //     $image = $request->file('image'); //image file from frontend
+
+    //     $randomCollectionName = uniqid('collection_', false);
+    //     $randomCollectionName = Str::uuid()->toString();
+
+    //     $student   = app('firebase.firestore')->database()->collection($randomCollectionName);
+    //     $firebase_storage_path = 'Images/';
+    //     $name     = $student->id();
+    //     $localfolder = public_path('firebase-temp-uploads') .'/';
+    //     $extension = $image->getClientOriginalExtension();
+    //     $file      = $name. '.' . $extension;
+    //     if ($image->move($localfolder, $file)) {
+    //       $uploadedfile = fopen($localfolder.$file, 'r');
+    //      $x =  app('firebase.storage')->getBucket()->upload($uploadedfile, ['name' => $firebase_storage_path . $file]);
+    //      $downloadUrl = $x->signedUrl(new \DateTime('+1 hour'));
+    //       unlink($localfolder . $file);
+
+    //     }
+    //     return $downloadUrl;
+    // }
 }
